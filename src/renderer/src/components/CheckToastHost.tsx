@@ -50,7 +50,7 @@ function CheckToastHost(): React.JSX.Element {
             {current.title}
           </AlertTitle>
           {current.message ? (
-            <Typography variant="body2" sx={{ opacity: 0.92, lineHeight: 1.45 }}>
+            <Typography variant="body2" sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}>
               {current.message}
             </Typography>
           ) : null}

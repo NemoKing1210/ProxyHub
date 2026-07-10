@@ -18,6 +18,7 @@ import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
 import { skipsDomainChecks } from '../../../shared/utils/proxy-format'
 import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { useSettingsStore } from './settingsStore'
+import { useAutoCheckStore } from './autoCheckStore'
 import { getEnabledCheckDomains } from '../../../shared/types/settings'
 
 interface ProxyState {
@@ -422,6 +423,11 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     if (targets.length === 0 || get().isCheckingAll) return
 
     const isAutoChecking = options?.source === 'auto'
+
+    if (!isAutoChecking && useSettingsStore.getState().settings.autoCheckEnabled) {
+      useAutoCheckStore.getState().bumpSchedule()
+    }
+
     const { checkAllMode } = useSettingsStore.getState().settings
     const checkOptions = getCheckOptions()
     const ids = targets.map((proxy) => proxy.id)

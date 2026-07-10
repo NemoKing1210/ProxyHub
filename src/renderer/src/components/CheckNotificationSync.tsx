@@ -2,15 +2,24 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
-import { buildBatchCheckToast, buildSingleCheckToast } from '../utils/check-toast'
+import {
+  buildBatchCheckToast,
+  buildSingleCheckToast,
+  type BatchCheckResultEntry
+} from '../utils/check-toast'
 import { showCheckNotification } from '../utils/show-check-notification'
+
+interface BatchCheckState {
+  alive: number
+  dead: number
+  suppressNotification: boolean
+  results: BatchCheckResultEntry[]
+}
 
 function CheckNotificationSync(): null {
   const { t } = useTranslation()
   const isCheckingAll = useProxyStore((state) => state.isCheckingAll)
-  const batchRef = useRef<{ alive: number; dead: number; suppressNotification: boolean } | null>(
-    null
-  )
+  const batchRef = useRef<BatchCheckState | null>(null)
   const wasCheckingAllRef = useRef(false)
 
   useEffect(() => {
@@ -21,14 +30,15 @@ function CheckNotificationSync(): null {
       batchRef.current = {
         alive: 0,
         dead: 0,
-        suppressNotification: isAutoChecking && !autoCheckNotifications
+        suppressNotification: isAutoChecking && !autoCheckNotifications,
+        results: []
       }
     } else if (!isCheckingAll && wasCheckingAllRef.current && batchRef.current) {
-      const { alive, dead, suppressNotification } = batchRef.current
+      const { alive, dead, suppressNotification, results } = batchRef.current
       const total = alive + dead
 
       if (total > 0 && !suppressNotification) {
-        void showCheckNotification(buildBatchCheckToast(alive, dead, t))
+        void showCheckNotification(buildBatchCheckToast(alive, dead, t, results))
       }
 
       batchRef.current = null
@@ -52,6 +62,9 @@ function CheckNotificationSync(): null {
         } else {
           batch.dead += 1
         }
+
+        const proxy = useProxyStore.getState().proxies.find((item) => item.id === result.id)
+        batch.results.push({ result, proxy })
         return
       }
 

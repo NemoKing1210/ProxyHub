@@ -23,12 +23,17 @@ import {
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { outlineVariant, surfaceContainer } from '../theme'
 import BackupProxySelectionList from './BackupProxySelectionList'
+import { BackupUnlockSection } from './BackupPasswordFields'
 
 interface BackupImportPreviewDialogProps {
   open: boolean
   preview: BackupPreview | null
+  importPassword: string
+  onImportPasswordChange: (value: string) => void
+  onPreviewChange: (preview: BackupPreview) => void
   onClose: () => void
-  onConfirm: (mode: BackupImportMode, proxyIds?: string[]) => Promise<void>
+  onError: (message: string) => void
+  onConfirm: (mode: BackupImportMode, proxyIds?: string[], password?: string) => Promise<void>
 }
 
 interface PreviewRowProps {
@@ -56,48 +61,106 @@ function PreviewRow({ label, value }: PreviewRowProps): React.JSX.Element {
   )
 }
 
+function resolveBackupError(
+  t: (key: string, options?: Record<string, unknown>) => string,
+  error: { code: string; message: string }
+): string {
+  const messageKey = `settings.backup.errors.${error.code}`
+  const localized = t(messageKey, { defaultValue: '' })
+
+  return (
+    localized ||
+    t('settings.backup.importError', {
+      message: error.message
+    })
+  )
+}
+
 function BackupImportPreviewDialog({
   open,
   preview,
+  importPassword,
+  onImportPasswordChange,
+  onPreviewChange,
   onClose,
+  onError,
   onConfirm
 }: BackupImportPreviewDialogProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
   const [importMode, setImportMode] = useState<BackupImportMode>('merge')
   const [isImporting, setIsImporting] = useState(false)
+  const [isUnlocking, setIsUnlocking] = useState(false)
+  const [unlockError, setUnlockError] = useState<string | undefined>()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
 
+  const isLocked = preview?.encrypted === true && preview.decrypted !== true
+
   const backupProxies = useMemo(
-    () => (preview ? mapBackupRecordsToProxies(preview.backupProxies) : []),
-    [preview]
+    () => (preview && !isLocked ? mapBackupRecordsToProxies(preview.backupProxies) : []),
+    [preview, isLocked]
   )
 
   const backupGroups = useMemo(
-    () => (preview ? mapBackupRecordsToGroups(preview.backupGroups) : []),
-    [preview]
+    () => (preview && !isLocked ? mapBackupRecordsToGroups(preview.backupGroups) : []),
+    [preview, isLocked]
   )
 
   useEffect(() => {
-    if (!open || !preview) {
+    if (!open || !preview || isLocked) {
       return
     }
 
     setImportMode('merge')
     setIsImporting(false)
+    setUnlockError(undefined)
     setSelectedIds(new Set(preview.backupProxies.map((proxy) => proxy.id)))
-  }, [open, preview?.filePath, preview])
+  }, [open, preview?.filePath, preview, isLocked])
+
+  useEffect(() => {
+    if (!open) {
+      setUnlockError(undefined)
+      setIsUnlocking(false)
+    }
+  }, [open])
 
   const handleClose = (): void => {
-    if (isImporting) {
+    if (isImporting || isUnlocking) {
       return
     }
 
     onClose()
   }
 
+  const handleUnlock = async (): Promise<void> => {
+    if (!preview || isUnlocking) {
+      return
+    }
+
+    setIsUnlocking(true)
+    setUnlockError(undefined)
+
+    try {
+      const response = await window.api.unlockBackupPreview({
+        filePath: preview.filePath,
+        password: importPassword
+      })
+
+      if ('error' in response) {
+        setUnlockError(resolveBackupError(t, response.error))
+        return
+      }
+
+      onPreviewChange(response.preview)
+    } catch {
+      onError(t('settings.backup.importError', { message: t('settings.backup.errors.unknown') }))
+    } finally {
+      setIsUnlocking(false)
+    }
+  }
+
   const handleConfirm = async (): Promise<void> => {
-    if (!preview || isImporting) {
+    if (!preview || isImporting || isLocked) {
       return
     }
 
@@ -112,7 +175,8 @@ function BackupImportPreviewDialog({
     try {
       await onConfirm(
         importMode,
-        includesProxies ? [...selectedIds] : undefined
+        includesProxies ? [...selectedIds] : undefined,
+        preview.encrypted ? importPassword : undefined
       )
       onClose()
     } finally {
@@ -122,7 +186,7 @@ function BackupImportPreviewDialog({
 
   const includesProxies = preview?.kind === 'full' || preview?.kind === 'proxies'
   const includesSettings = preview?.hasSettings
-  const canImport = !includesProxies || selectedIds.size > 0
+  const canImport = !isLocked && (!includesProxies || selectedIds.size > 0)
 
   return (
     <Dialog
@@ -142,7 +206,9 @@ function BackupImportPreviewDialog({
         {preview && (
           <Stack spacing={2}>
             <Typography variant="body2" color="text.secondary">
-              {t('settings.backup.previewDescription')}
+              {isLocked
+                ? t('settings.backup.previewDescriptionEncrypted')
+                : t('settings.backup.previewDescription')}
             </Typography>
 
             <Box
@@ -175,131 +241,162 @@ function BackupImportPreviewDialog({
                 label={t('settings.backup.previewKind')}
                 value={t(`settings.backup.kindLabels.${preview.kind}`)}
               />
+              {preview.encrypted && (
+                <>
+                  <Divider />
+                  <PreviewRow
+                    label={t('settings.backup.previewEncryption')}
+                    value={t('settings.backup.previewEncrypted')}
+                  />
+                </>
+              )}
             </Box>
 
-            {includesProxies && (
-              <Box
-                sx={{
-                  px: 1.75,
-                  py: 0.5,
-                  borderRadius: 2.5,
-                  bgcolor: surfaceContainer(theme, 'low'),
-                  boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-                }}
-              >
-                <PreviewRow
-                  label={t('settings.backup.previewProxies')}
-                  value={preview.proxyCount}
-                />
-                <Divider />
-                <PreviewRow label={t('settings.backup.previewGroups')} value={preview.groupCount} />
-                <Divider />
-                <PreviewRow
-                  label={t('settings.backup.previewFavorites')}
-                  value={preview.favoriteCount}
-                />
-                <Divider />
-                <PreviewRow
-                  label={t('settings.backup.previewEnabledProxies')}
-                  value={preview.enabledProxyCount}
-                />
-              </Box>
-            )}
-
-            {includesSettings && (
-              <Box
-                sx={{
-                  px: 1.75,
-                  py: 0.5,
-                  borderRadius: 2.5,
-                  bgcolor: surfaceContainer(theme, 'low'),
-                  boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-                }}
-              >
-                <PreviewRow
-                  label={t('settings.backup.previewSettings')}
-                  value={t('settings.backup.previewSettingsIncluded')}
-                />
-                <Divider />
-                <PreviewRow
-                  label={t('settings.backup.previewCheckDomains')}
-                  value={preview.checkDomainCount}
-                />
-                <Divider />
-                <PreviewRow
-                  label={t('settings.backup.previewAutoCheck')}
-                  value={
-                    preview.autoCheckEnabled
-                      ? t('settings.backup.previewEnabled')
-                      : t('settings.backup.previewDisabled')
-                  }
-                />
-              </Box>
-            )}
-
-            {includesProxies && backupProxies.length > 0 && (
-              <Box>
-                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                  {t('settings.backup.importSelectProxies')}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                  {t('settings.backup.importSelectProxiesHint')}
-                </Typography>
-                <BackupProxySelectionList
-                  proxies={backupProxies}
-                  groups={backupGroups}
-                  selectedIds={selectedIds}
-                  onSelectedIdsChange={setSelectedIds}
-                  disabled={isImporting}
-                />
-              </Box>
-            )}
-
-            <Box>
-              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                {t('settings.backup.importMode')}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.25 }}>
-                {importMode === 'replace'
-                  ? t('settings.backup.importModeReplaceHint')
-                  : t('settings.backup.importModeMergeHint')}
-              </Typography>
-              <ToggleButtonGroup
-                value={importMode}
-                exclusive
-                onChange={(_event, value: BackupImportMode | null) => {
-                  if (value) {
-                    setImportMode(value)
+            {isLocked ? (
+              <BackupUnlockSection
+                password={importPassword}
+                onPasswordChange={(value) => {
+                  onImportPasswordChange(value)
+                  if (unlockError) {
+                    setUnlockError(undefined)
                   }
                 }}
-                fullWidth
+                onUnlock={handleUnlock}
+                isUnlocking={isUnlocking}
+                error={unlockError}
                 disabled={isImporting}
-                sx={{
-                  '& .MuiToggleButton-root': {
-                    py: 1.05
-                  }
-                }}
-              >
-                <ToggleButton value="merge">{t('settings.backup.importModeMerge')}</ToggleButton>
-                <ToggleButton value="replace">{t('settings.backup.importModeReplace')}</ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
+              />
+            ) : (
+              <>
+                {includesProxies && (
+                  <Box
+                    sx={{
+                      px: 1.75,
+                      py: 0.5,
+                      borderRadius: 2.5,
+                      bgcolor: surfaceContainer(theme, 'low'),
+                      boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
+                    }}
+                  >
+                    <PreviewRow
+                      label={t('settings.backup.previewProxies')}
+                      value={preview.proxyCount}
+                    />
+                    <Divider />
+                    <PreviewRow label={t('settings.backup.previewGroups')} value={preview.groupCount} />
+                    <Divider />
+                    <PreviewRow
+                      label={t('settings.backup.previewFavorites')}
+                      value={preview.favoriteCount}
+                    />
+                    <Divider />
+                    <PreviewRow
+                      label={t('settings.backup.previewEnabledProxies')}
+                      value={preview.enabledProxyCount}
+                    />
+                  </Box>
+                )}
+
+                {includesSettings && (
+                  <Box
+                    sx={{
+                      px: 1.75,
+                      py: 0.5,
+                      borderRadius: 2.5,
+                      bgcolor: surfaceContainer(theme, 'low'),
+                      boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
+                    }}
+                  >
+                    <PreviewRow
+                      label={t('settings.backup.previewSettings')}
+                      value={t('settings.backup.previewSettingsIncluded')}
+                    />
+                    <Divider />
+                    <PreviewRow
+                      label={t('settings.backup.previewCheckDomains')}
+                      value={preview.checkDomainCount}
+                    />
+                    <Divider />
+                    <PreviewRow
+                      label={t('settings.backup.previewAutoCheck')}
+                      value={
+                        preview.autoCheckEnabled
+                          ? t('settings.backup.previewEnabled')
+                          : t('settings.backup.previewDisabled')
+                      }
+                    />
+                  </Box>
+                )}
+
+                {includesProxies && backupProxies.length > 0 && (
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                      {t('settings.backup.importSelectProxies')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                      {t('settings.backup.importSelectProxiesHint')}
+                    </Typography>
+                    <BackupProxySelectionList
+                      proxies={backupProxies}
+                      groups={backupGroups}
+                      selectedIds={selectedIds}
+                      onSelectedIdsChange={setSelectedIds}
+                      disabled={isImporting}
+                    />
+                  </Box>
+                )}
+
+                <Box>
+                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                    {t('settings.backup.importMode')}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1.25 }}>
+                    {importMode === 'replace'
+                      ? t('settings.backup.importModeReplaceHint')
+                      : t('settings.backup.importModeMergeHint')}
+                  </Typography>
+                  <ToggleButtonGroup
+                    value={importMode}
+                    exclusive
+                    onChange={(_event, value: BackupImportMode | null) => {
+                      if (value) {
+                        setImportMode(value)
+                      }
+                    }}
+                    fullWidth
+                    disabled={isImporting}
+                    sx={{
+                      '& .MuiToggleButton-root': {
+                        py: 1.05
+                      }
+                    }}
+                  >
+                    <ToggleButton value="merge">{t('settings.backup.importModeMerge')}</ToggleButton>
+                    <ToggleButton value="replace">
+                      {t('settings.backup.importModeReplace')}
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Box>
+              </>
+            )}
           </Stack>
         )}
       </DialogContent>
 
       <DialogActions sx={{ px: 3, pb: 2.5 }}>
-        <Button onClick={handleClose} disabled={isImporting}>
+        <Button onClick={handleClose} disabled={isImporting || isUnlocking}>
           {t('common.cancel')}
         </Button>
-        <Button
-          variant="contained"
-          onClick={() => void handleConfirm()}
-          disabled={!preview || isImporting || !canImport}
-          startIcon={isImporting ? <CircularProgress size={18} color="inherit" /> : undefined}
-        >
-          {t('settings.backup.previewConfirm')}
-        </Button>
+        {!isLocked && (
+          <Button
+            variant="contained"
+            onClick={() => void handleConfirm()}
+            disabled={!preview || isImporting || !canImport}
+            startIcon={isImporting ? <CircularProgress size={18} color="inherit" /> : undefined}
+          >
+            {t('settings.backup.previewConfirm')}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   )

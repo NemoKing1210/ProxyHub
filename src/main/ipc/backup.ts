@@ -5,19 +5,31 @@ import type {
   BackupExportKind,
   BackupExportRequest,
   BackupExportResponse,
+  BackupFileV1,
   BackupImportRequest,
   BackupImportResponse,
   BackupParseErrorCode,
-  BackupPreviewResponse
+  BackupPreviewResponse,
+  BackupUnlockPreviewRequest
 } from '../../shared/types/backup'
+import type { ProxyGroup } from '../../shared/types/proxy-group'
+import type { Proxy } from '../../shared/types/proxy'
+import type { AppSettings } from '../../shared/types/settings'
 import {
   BackupParseError,
   applyBackupImport,
-  buildBackupFile,
+  buildBackupPayload,
   buildBackupPreview,
-  parseBackupFile,
-  resolveBackupExportProxies
+  buildLockedBackupPreview,
+  createBackupFileV1FromEncrypted,
+  isEncryptedBackupFile,
+  parseBackupEnvelopeFromContent,
+  parsePayloadFromString,
+  resolveBackupExportProxies,
+  serializeEncryptedBackupFile,
+  serializePlainBackupFile
 } from '../../shared/utils/backup'
+import { encryptBackupPayload, decryptBackupPayload } from '../utils/backup-crypto'
 import {
   getGroups,
   getProxies,
@@ -91,6 +103,60 @@ export function serializeBackupError(error: unknown): {
   return { code: 'unknown', message: 'Unknown import error' }
 }
 
+interface BackupContentInput {
+  kind: BackupExportKind
+  proxies: Proxy[]
+  groups: ProxyGroup[]
+  settings: AppSettings
+  appVersion: string
+  password?: string
+}
+
+function createBackupContent(input: BackupContentInput): string {
+  const exportedAt = new Date().toISOString()
+  const payload = buildBackupPayload(input)
+
+  if (input.password) {
+    const { ciphertext, encryption } = encryptBackupPayload(
+      `${JSON.stringify(payload)}\n`,
+      input.password
+    )
+
+    return serializeEncryptedBackupFile({
+      exportedAt,
+      appVersion: input.appVersion,
+      payloadKind: input.kind,
+      encryption,
+      payload: ciphertext
+    })
+  }
+
+  return serializePlainBackupFile(payload, input.appVersion, exportedAt)
+}
+
+function loadBackupFile(content: string, password?: string): BackupFileV1 {
+  const envelope = parseBackupEnvelopeFromContent(content)
+
+  if (!isEncryptedBackupFile(envelope)) {
+    return envelope
+  }
+
+  if (!password) {
+    throw new BackupParseError('password_required', 'Backup password is required')
+  }
+
+  let plaintext: string
+
+  try {
+    plaintext = decryptBackupPayload(envelope.payload, envelope.encryption, password)
+  } catch {
+    throw new BackupParseError('wrong_password', 'Wrong backup password')
+  }
+
+  const payload = parsePayloadFromString(plaintext)
+  return createBackupFileV1FromEncrypted(envelope, payload)
+}
+
 export function registerBackupIpc(): void {
   ipcMain.handle(
     'backup:export',
@@ -119,12 +185,13 @@ export function registerBackupIpc(): void {
 
       const exportData = resolveBackupExportProxies(proxies, groups, request.proxyIds)
 
-      const content = buildBackupFile({
+      const content = createBackupContent({
         kind,
         proxies: exportData.proxies,
         groups: exportData.groups,
         settings,
-        appVersion
+        appVersion,
+        password: request.password
       })
 
       await writeFile(dialogResult.filePath, content, 'utf-8')
@@ -141,7 +208,16 @@ export function registerBackupIpc(): void {
 
     try {
       const content = await readFile(picked.filePath, 'utf-8')
-      const backup = parseBackupFile(content)
+      const envelope = parseBackupEnvelopeFromContent(content)
+
+      if (isEncryptedBackupFile(envelope)) {
+        return {
+          canceled: false,
+          preview: buildLockedBackupPreview(envelope, picked.filePath, basename(picked.filePath))
+        }
+      }
+
+      const backup = loadBackupFile(content)
 
       return {
         canceled: false,
@@ -153,11 +229,43 @@ export function registerBackupIpc(): void {
   })
 
   ipcMain.handle(
+    'backup:unlock-preview',
+    async (_event, request: BackupUnlockPreviewRequest): Promise<BackupPreviewResponse> => {
+      try {
+        const content = await readFile(request.filePath, 'utf-8')
+        const envelope = parseBackupEnvelopeFromContent(content)
+
+        if (!isEncryptedBackupFile(envelope)) {
+          const backup = loadBackupFile(content)
+          return {
+            canceled: false,
+            preview: buildBackupPreview(backup, request.filePath, basename(request.filePath))
+          }
+        }
+
+        const backup = loadBackupFile(content, request.password)
+
+        return {
+          canceled: false,
+          preview: buildBackupPreview(backup, request.filePath, basename(request.filePath), {
+            encrypted: true,
+            decrypted: true,
+            envelopeKind: envelope.payloadKind,
+            schemaVersion: envelope.version
+          })
+        }
+      } catch (error) {
+        return { canceled: false, error: serializeBackupError(error) }
+      }
+    }
+  )
+
+  ipcMain.handle(
     'backup:import',
     async (_event, request: BackupImportRequest): Promise<BackupImportResponse> => {
       try {
         const content = await readFile(request.filePath, 'utf-8')
-        const backup = parseBackupFile(content)
+        const backup = loadBackupFile(content, request.password)
 
         const [proxies, groups, settings] = await Promise.all([
           getProxies(),

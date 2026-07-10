@@ -12,6 +12,7 @@ function AutoCheckSync(): null {
   )
   const autoCheckScope = useSettingsStore((state) => state.settings.autoCheckScope)
   const autoCheckGroupIds = useSettingsStore((state) => state.settings.autoCheckGroupIds)
+  const scheduleEpoch = useAutoCheckStore((state) => state.scheduleEpoch)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
@@ -71,7 +72,7 @@ function AutoCheckSync(): null {
 
       useAutoCheckStore.getState().setNextCheckAt(null)
     }
-  }, [autoCheckEnabled, autoCheckIntervalMinutes, autoCheckScope, autoCheckGroupIds])
+  }, [autoCheckEnabled, autoCheckIntervalMinutes, autoCheckScope, autoCheckGroupIds, scheduleEpoch])
 
   return null
 }

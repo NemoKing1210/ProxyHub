@@ -263,7 +263,10 @@
     "batchAllAlive": "全 {{total}} 件のプロキシが稼働中",
     "batchAllDead": "全 {{total}} 件のプロキシが停止",
     "batchPartial": "{{total}} 件中 {{alive}} 件稼働、{{dead}} 件停止",
-    "batchEmptyTitle": "プロキシは確認されませんでした"
+    "batchEmptyTitle": "プロキシは確認されませんでした",
+    "detailedAliveLine": "{{name}} — Alive · {{details}}",
+    "detailedAliveLinePlain": "{{name}} — Alive",
+    "detailedDeadLine": "{{name}} — Dead · {{error}}"
   },
   "settings": {
     "title": "設定",
@@ -369,8 +372,20 @@
         "proxies": "プロキシのみ",
         "settings": "設定のみ"
       },
-      "securityWarning": "バックアップファイルには平文のプロキシ認証情報が含まれます。安全に保管してください。",
-      "formatHint": "ファイルはバージョン付き ProxyChecker JSON 形式（.pcbackup.json）を使用します。",
+      "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
+      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "protectWithPassword": "Protect with password",
+      "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
+      "exportPassword": "Backup password",
+      "exportPasswordConfirm": "Confirm password",
+      "passwordTooShort": "Password must be at least {{min}} characters",
+      "passwordMismatch": "Passwords do not match",
+      "importPassword": "Backup password",
+      "unlockBackup": "Unlock backup",
+      "encryptedHint": "This backup is password-protected. Enter the password to preview and import its contents.",
+      "previewDescriptionEncrypted": "This backup is encrypted. Unlock it to review proxies, groups, and settings before importing.",
+      "previewEncryption": "Protection",
+      "previewEncrypted": "Password encrypted",
       "exportSelectTitle": "エクスポートするプロキシを選択",
       "exportSelectDescription": "バックアップファイルに含めるプロキシを選択してください。",
       "exportSelectDescriptionFull": "エクスポートするプロキシを選択してください。アプリ設定もすべてエクスポートされます。",
@@ -395,6 +410,8 @@
         "invalid_format": "認識できないバックアップ形式",
         "unsupported_version": "サポートされていないバックアップバージョン",
         "invalid_payload": "バックアップファイルが不完全または破損しています",
+        "password_required": "バックアップパスワードが必要です",
+        "wrong_password": "バックアップパスワードが正しくありません",
         "unknown": "不明なエラー"
       }
     },

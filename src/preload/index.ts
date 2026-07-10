@@ -60,6 +60,7 @@ const api: AppAPI = {
   },
   exportBackup: (request) => ipcRenderer.invoke('backup:export', request),
   previewBackup: () => ipcRenderer.invoke('backup:preview'),
+  unlockBackupPreview: (request) => ipcRenderer.invoke('backup:unlock-preview', request),
   importBackup: (request) => ipcRenderer.invoke('backup:import', request)
 }
 

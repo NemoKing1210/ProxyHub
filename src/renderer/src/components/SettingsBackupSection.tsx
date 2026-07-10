@@ -20,8 +20,10 @@ import type { Proxy } from '../../../shared/types/proxy'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import BackupExportProxiesDialog from './BackupExportProxiesDialog'
 import BackupImportPreviewDialog from './BackupImportPreviewDialog'
+import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
 import ContentSection from './ContentSection'
 import { outlineVariant, surfaceContainer } from '../theme'
+import { BACKUP_MIN_PASSWORD_LENGTH } from '../../../shared/constants/backup-crypto'
 
 interface SettingsBackupSectionProps {
   proxies: Proxy[]
@@ -71,12 +73,52 @@ function SettingsBackupSection({
   const [previewOpen, setPreviewOpen] = useState(false)
   const [preview, setPreview] = useState<BackupPreview | null>(null)
   const [exportSelectOpen, setExportSelectOpen] = useState(false)
+  const [protectWithPassword, setProtectWithPassword] = useState(false)
+  const [exportPassword, setExportPassword] = useState('')
+  const [exportPasswordConfirm, setExportPasswordConfirm] = useState('')
+  const [importPassword, setImportPassword] = useState('')
+
+  const resolveExportPassword = (): string | undefined => {
+    if (!protectWithPassword) {
+      return undefined
+    }
+
+    return exportPassword
+  }
+
+  const validateExportPassword = (): boolean => {
+    const error = validateBackupExportPassword(
+      protectWithPassword,
+      exportPassword,
+      exportPasswordConfirm
+    )
+
+    if (error === 'too_short') {
+      onError(t('settings.backup.passwordTooShort', { min: BACKUP_MIN_PASSWORD_LENGTH }))
+      return false
+    }
+
+    if (error === 'mismatch') {
+      onError(t('settings.backup.passwordMismatch'))
+      return false
+    }
+
+    return true
+  }
 
   const runExport = async (proxyIds?: string[]): Promise<void> => {
+    if (!validateExportPassword()) {
+      return
+    }
+
     setIsExporting(true)
 
     try {
-      const response = await window.api.exportBackup({ kind: exportKind, proxyIds })
+      const response = await window.api.exportBackup({
+        kind: exportKind,
+        proxyIds,
+        password: resolveExportPassword()
+      })
 
       if (response.canceled) {
         return
@@ -93,6 +135,10 @@ function SettingsBackupSection({
 
   const handleExport = (): void => {
     if (isExporting || isSelectingFile) {
+      return
+    }
+
+    if (!validateExportPassword()) {
       return
     }
 
@@ -131,6 +177,7 @@ function SettingsBackupSection({
       }
 
       setPreview(response.preview)
+      setImportPassword('')
       setPreviewOpen(true)
     } catch {
       onError(t('settings.backup.importError', { message: t('settings.backup.errors.unknown') }))
@@ -139,7 +186,11 @@ function SettingsBackupSection({
     }
   }
 
-  const handleConfirmImport = async (mode: BackupImportMode, proxyIds?: string[]): Promise<void> => {
+  const handleConfirmImport = async (
+    mode: BackupImportMode,
+    proxyIds?: string[],
+    password?: string
+  ): Promise<void> => {
     if (!preview) {
       return
     }
@@ -147,7 +198,8 @@ function SettingsBackupSection({
     const response = await window.api.importBackup({
       filePath: preview.filePath,
       mode,
-      proxyIds
+      proxyIds,
+      password
     })
 
     if ('error' in response) {
@@ -166,6 +218,7 @@ function SettingsBackupSection({
   const handleClosePreview = (): void => {
     setPreviewOpen(false)
     setPreview(null)
+    setImportPassword('')
   }
 
   const handleCloseExportSelect = (): void => {
@@ -226,6 +279,18 @@ function SettingsBackupSection({
               <ToggleButton value="proxies">{t('settings.backup.exportKindProxies')}</ToggleButton>
               <ToggleButton value="settings">{t('settings.backup.exportKindSettings')}</ToggleButton>
             </ToggleButtonGroup>
+
+            <Box sx={{ mb: 2 }}>
+              <BackupPasswordFields
+                enabled={protectWithPassword}
+                onEnabledChange={setProtectWithPassword}
+                password={exportPassword}
+                onPasswordChange={setExportPassword}
+                confirmPassword={exportPasswordConfirm}
+                onConfirmPasswordChange={setExportPasswordConfirm}
+                disabled={isBusy}
+              />
+            </Box>
 
             <Button
               variant="contained"
@@ -291,7 +356,11 @@ function SettingsBackupSection({
       <BackupImportPreviewDialog
         open={previewOpen}
         preview={preview}
+        importPassword={importPassword}
+        onImportPasswordChange={setImportPassword}
+        onPreviewChange={setPreview}
         onClose={handleClosePreview}
+        onError={onError}
         onConfirm={handleConfirmImport}
       />
     </>

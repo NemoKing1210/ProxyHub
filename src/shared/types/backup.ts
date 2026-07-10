@@ -6,6 +6,17 @@ export const BACKUP_FORMAT_ID = 'proxychecker-backup' as const
 
 export const BACKUP_SCHEMA_VERSION = 1 as const
 
+export const BACKUP_ENCRYPTED_SCHEMA_VERSION = 2 as const
+
+export interface BackupEncryptionMeta {
+  algorithm: 'AES-256-GCM'
+  kdf: 'PBKDF2-SHA256'
+  iterations: number
+  salt: string
+  iv: string
+  tag: string
+}
+
 export type BackupExportKind = 'full' | 'proxies' | 'settings'
 
 export type BackupPayloadKind = BackupExportKind
@@ -59,11 +70,25 @@ export interface BackupFileV1 {
   payload: BackupPayloadV1
 }
 
+export interface BackupFileV2Encrypted {
+  format: typeof BACKUP_FORMAT_ID
+  version: typeof BACKUP_ENCRYPTED_SCHEMA_VERSION
+  exportedAt: string
+  appVersion: string
+  payloadKind: BackupPayloadKind
+  encryption: BackupEncryptionMeta
+  payload: string
+}
+
+export type BackupFile = BackupFileV1 | BackupFileV2Encrypted
+
 export type BackupParseErrorCode =
   | 'invalid_json'
   | 'invalid_format'
   | 'unsupported_version'
   | 'invalid_payload'
+  | 'password_required'
+  | 'wrong_password'
 
 export interface BackupImportResult {
   kind: BackupPayloadKind
@@ -112,6 +137,8 @@ export interface BackupPreview {
   schemaVersion: number
   appVersion: string
   exportedAt: string
+  encrypted: boolean
+  decrypted: boolean
   kind: BackupPayloadKind
   proxyCount: number
   groupCount: number
@@ -149,10 +176,17 @@ export type BackupPreviewResponse =
 export interface BackupExportRequest {
   kind: BackupExportKind
   proxyIds?: string[]
+  password?: string
 }
 
 export interface BackupImportRequest {
   filePath: string
   mode: BackupImportMode
   proxyIds?: string[]
+  password?: string
+}
+
+export interface BackupUnlockPreviewRequest {
+  filePath: string
+  password: string
 }

@@ -1,0 +1,2 @@
+export const BACKUP_KDF_ITERATIONS = 600_000
+export const BACKUP_MIN_PASSWORD_LENGTH = 8

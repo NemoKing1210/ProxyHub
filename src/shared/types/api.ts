@@ -3,7 +3,8 @@ import type {
   BackupExportResponse,
   BackupImportRequest,
   BackupImportResponse,
-  BackupPreviewResponse
+  BackupPreviewResponse,
+  BackupUnlockPreviewRequest
 } from './backup'
 import type { ThemeMode } from '../types/settings'
 import type { AppInfo } from './app'
@@ -37,5 +38,6 @@ export interface AppAPI {
   onCheckAllState: (callback: (active: boolean) => void) => () => void
   exportBackup: (request: BackupExportRequest) => Promise<BackupExportResponse>
   previewBackup: () => Promise<BackupPreviewResponse>
+  unlockBackupPreview: (request: BackupUnlockPreviewRequest) => Promise<BackupPreviewResponse>
   importBackup: (request: BackupImportRequest) => Promise<BackupImportResponse>
 }

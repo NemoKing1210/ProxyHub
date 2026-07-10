@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.28.0] - 2026-07-10
+
+### Added
+
+- Backup password protection: optionally encrypt proxies and settings inside `.pcbackup.json` exports (format v2) using AES-256-GCM with PBKDF2 key derivation; encrypted backups require the password to preview and import
+
+### Changed
+
+- Auto-check countdown resets when you manually run **Check all**, so the next scheduled auto-check starts from the full interval again
+- Check notifications: for batches of up to 5 proxies, show per-proxy details; for larger batches, show a summary
+
 ## [1.27.0] - 2026-07-10
 
 ### Added

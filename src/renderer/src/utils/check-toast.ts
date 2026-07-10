@@ -3,6 +3,13 @@ import type { Proxy, ProxyCheckResult } from '../../../shared/types/proxy'
 import { formatProxyAddress } from '../../../shared/utils/proxy-format'
 import type { ToastSeverity } from '../store/toastStore'
 
+export const CHECK_TOAST_DETAIL_THRESHOLD = 5
+
+export interface BatchCheckResultEntry {
+  result: ProxyCheckResult
+  proxy?: Proxy
+}
+
 interface ToastPayload {
   severity: ToastSeverity
   title: string
@@ -57,6 +64,51 @@ function buildAliveDetails(result: ProxyCheckResult, t: TFunction): string | und
   return parts.length > 0 ? parts.join(' · ') : undefined
 }
 
+function buildDetailedBatchMessage(entries: BatchCheckResultEntry[], t: TFunction): string {
+  return entries
+    .map(({ result, proxy }) => {
+      const name = resolveProxyName(proxy, result)
+      const isAlive = result.status === 'alive'
+
+      if (isAlive) {
+        const details = buildAliveDetails(result, t)
+        return details
+          ? t('checkToast.detailedAliveLine', { name, details })
+          : t('checkToast.detailedAliveLinePlain', { name })
+      }
+
+      return t('checkToast.detailedDeadLine', {
+        name,
+        error: resolveDeadMessage(result, t)
+      })
+    })
+    .join('\n')
+}
+
+function resolveBatchSeverity(alive: number, dead: number): ToastSeverity {
+  if (dead === 0) {
+    return 'success'
+  }
+
+  if (alive === 0) {
+    return 'error'
+  }
+
+  return 'warning'
+}
+
+function resolveBatchSummaryMessage(alive: number, dead: number, total: number, t: TFunction): string {
+  if (dead === 0) {
+    return t('checkToast.batchAllAlive', { total })
+  }
+
+  if (alive === 0) {
+    return t('checkToast.batchAllDead', { total })
+  }
+
+  return t('checkToast.batchPartial', { alive, dead, total })
+}
+
 export function buildSingleCheckToast(
   result: ProxyCheckResult,
   proxy: Proxy | undefined,
@@ -78,7 +130,8 @@ export function buildSingleCheckToast(
 export function buildBatchCheckToast(
   alive: number,
   dead: number,
-  t: TFunction
+  t: TFunction,
+  entries: BatchCheckResultEntry[] = []
 ): ToastPayload {
   const total = alive + dead
 
@@ -90,24 +143,16 @@ export function buildBatchCheckToast(
     }
   }
 
-  let severity: ToastSeverity
-  let message: string
-
-  if (dead === 0) {
-    severity = 'success'
-    message = t('checkToast.batchAllAlive', { total })
-  } else if (alive === 0) {
-    severity = 'error'
-    message = t('checkToast.batchAllDead', { total })
-  } else {
-    severity = 'warning'
-    message = t('checkToast.batchPartial', { alive, dead, total })
-  }
+  const severity = resolveBatchSeverity(alive, dead)
+  const useDetailedMessage =
+    entries.length > 0 && entries.length <= CHECK_TOAST_DETAIL_THRESHOLD
 
   return {
     severity,
     title: t('checkToast.batchTitle'),
-    message,
-    duration: 5500
+    message: useDetailedMessage
+      ? buildDetailedBatchMessage(entries, t)
+      : resolveBatchSummaryMessage(alive, dead, total, t),
+    duration: useDetailedMessage ? Math.min(12000, 5000 + entries.length * 1200) : 5500
   }
 }

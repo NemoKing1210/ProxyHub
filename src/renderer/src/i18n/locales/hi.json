@@ -264,7 +264,10 @@
     "batchAllAlive": "सभी {{total}} प्रॉक्सी सक्रिय हैं",
     "batchAllDead": "सभी {{total}} प्रॉक्सी निष्क्रिय हैं",
     "batchPartial": "{{total}} में से {{alive}} सक्रिय, {{dead}} निष्क्रिय",
-    "batchEmptyTitle": "कोई प्रॉक्सी जांची नहीं गई"
+    "batchEmptyTitle": "कोई प्रॉक्सी जांची नहीं गई",
+    "detailedAliveLine": "{{name}} — Alive · {{details}}",
+    "detailedAliveLinePlain": "{{name}} — Alive",
+    "detailedDeadLine": "{{name}} — Dead · {{error}}"
   },
   "settings": {
     "title": "सेटिंग्स",
@@ -370,8 +373,20 @@
         "proxies": "केवल प्रॉक्सी",
         "settings": "केवल सेटिंग्स"
       },
-      "securityWarning": "बैकअप फ़ाइलों में प्रॉक्सी क्रेडेंशियल्स सादे पाठ में होते हैं। इन्हें सुरक्षित रखें।",
-      "formatHint": "फ़ाइलें संस्करणयुक्त ProxyChecker JSON प्रारूप (.pcbackup.json) का उपयोग करती हैं।",
+      "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
+      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "protectWithPassword": "Protect with password",
+      "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
+      "exportPassword": "Backup password",
+      "exportPasswordConfirm": "Confirm password",
+      "passwordTooShort": "Password must be at least {{min}} characters",
+      "passwordMismatch": "Passwords do not match",
+      "importPassword": "Backup password",
+      "unlockBackup": "Unlock backup",
+      "encryptedHint": "This backup is password-protected. Enter the password to preview and import its contents.",
+      "previewDescriptionEncrypted": "This backup is encrypted. Unlock it to review proxies, groups, and settings before importing.",
+      "previewEncryption": "Protection",
+      "previewEncrypted": "Password encrypted",
       "exportSelectTitle": "निर्यात के लिए प्रॉक्सी चुनें",
       "exportSelectDescription": "बैकअप फ़ाइल में शामिल करने के लिए प्रॉक्सी चुनें।",
       "exportSelectDescriptionFull": "निर्यात के लिए प्रॉक्सी चुनें। ऐप की सभी सेटिंग्स भी निर्यात की जाएँगी।",
@@ -396,6 +411,8 @@
         "invalid_format": "अपरिचित बैकअप प्रारूप",
         "unsupported_version": "असमर्थित बैकअप संस्करण",
         "invalid_payload": "बैकअप फ़ाइल अधूरी या क्षतिग्रस्त है",
+        "password_required": "Backup password is required",
+        "wrong_password": "Wrong backup password",
         "unknown": "अज्ञात त्रुटि"
       }
     },

@@ -263,7 +263,10 @@
     "batchAllAlive": "Todos os {{total}} proxies estão ativos",
     "batchAllDead": "Todos os {{total}} proxies estão inativos",
     "batchPartial": "{{alive}} ativos, {{dead}} inativos de {{total}}",
-    "batchEmptyTitle": "Nenhum proxy verificado"
+    "batchEmptyTitle": "Nenhum proxy verificado",
+    "detailedAliveLine": "{{name}} — Alive · {{details}}",
+    "detailedAliveLinePlain": "{{name}} — Alive",
+    "detailedDeadLine": "{{name}} — Dead · {{error}}"
   },
   "settings": {
     "title": "Configurações",
@@ -369,8 +372,20 @@
         "proxies": "Somente proxies",
         "settings": "Somente configurações"
       },
-      "securityWarning": "Arquivos de backup contêm credenciais de proxy em texto simples. Armazene-os com segurança.",
-      "formatHint": "Os arquivos usam o formato JSON versionado do ProxyChecker (.pcbackup.json).",
+      "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
+      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "protectWithPassword": "Protect with password",
+      "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
+      "exportPassword": "Backup password",
+      "exportPasswordConfirm": "Confirm password",
+      "passwordTooShort": "Password must be at least {{min}} characters",
+      "passwordMismatch": "Passwords do not match",
+      "importPassword": "Backup password",
+      "unlockBackup": "Unlock backup",
+      "encryptedHint": "This backup is password-protected. Enter the password to preview and import its contents.",
+      "previewDescriptionEncrypted": "This backup is encrypted. Unlock it to review proxies, groups, and settings before importing.",
+      "previewEncryption": "Protection",
+      "previewEncrypted": "Password encrypted",
       "exportSelectTitle": "Selecionar proxies para exportar",
       "exportSelectDescription": "Escolha quais proxies incluir no arquivo de backup.",
       "exportSelectDescriptionFull": "Escolha os proxies para exportar. Todas as configurações do app também serão exportadas.",
@@ -395,6 +410,8 @@
         "invalid_format": "Formato de backup não reconhecido",
         "unsupported_version": "Versão de backup não suportada",
         "invalid_payload": "Arquivo de backup incompleto ou corrompido",
+        "password_required": "Senha do backup é obrigatória",
+        "wrong_password": "Senha do backup incorreta",
         "unknown": "Erro desconhecido"
       }
     },

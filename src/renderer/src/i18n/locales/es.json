@@ -263,7 +263,10 @@
     "batchAllAlive": "Los {{total}} proxies están activos",
     "batchAllDead": "Los {{total}} proxies están inactivos",
     "batchPartial": "{{alive}} activos, {{dead}} inactivos de {{total}}",
-    "batchEmptyTitle": "No se comprobaron proxies"
+    "batchEmptyTitle": "No se comprobaron proxies",
+    "detailedAliveLine": "{{name}} — Alive · {{details}}",
+    "detailedAliveLinePlain": "{{name}} — Alive",
+    "detailedDeadLine": "{{name}} — Dead · {{error}}"
   },
   "settings": {
     "title": "Ajustes",
@@ -369,8 +372,20 @@
         "proxies": "Solo proxies",
         "settings": "Solo ajustes"
       },
-      "securityWarning": "Los archivos de copia contienen credenciales de proxy en texto plano. Guárdelos de forma segura.",
-      "formatHint": "Los archivos usan el formato JSON versionado de ProxyChecker (.pcbackup.json).",
+      "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
+      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "protectWithPassword": "Protect with password",
+      "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
+      "exportPassword": "Backup password",
+      "exportPasswordConfirm": "Confirm password",
+      "passwordTooShort": "Password must be at least {{min}} characters",
+      "passwordMismatch": "Passwords do not match",
+      "importPassword": "Backup password",
+      "unlockBackup": "Unlock backup",
+      "encryptedHint": "This backup is password-protected. Enter the password to preview and import its contents.",
+      "previewDescriptionEncrypted": "This backup is encrypted. Unlock it to review proxies, groups, and settings before importing.",
+      "previewEncryption": "Protection",
+      "previewEncrypted": "Password encrypted",
       "exportSelectTitle": "Seleccionar proxies para exportar",
       "exportSelectDescription": "Elija qué proxies incluir en el archivo de copia de seguridad.",
       "exportSelectDescriptionFull": "Elija los proxies a exportar. También se exportarán todos los ajustes de la aplicación.",
@@ -395,6 +410,8 @@
         "invalid_format": "Formato de copia no reconocido",
         "unsupported_version": "Versión de copia no compatible",
         "invalid_payload": "El archivo de copia está incompleto o dañado",
+        "password_required": "Se requiere la contraseña de la copia",
+        "wrong_password": "Contraseña de copia incorrecta",
         "unknown": "Error desconocido"
       }
     },

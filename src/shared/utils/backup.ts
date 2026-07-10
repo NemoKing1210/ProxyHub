@@ -1,6 +1,8 @@
 import { normalizeCountryCode } from '../constants/proxy-countries'
 import type {
+  BackupFile,
   BackupFileV1,
+  BackupFileV2Encrypted,
   BackupGroupRecord,
   BackupImportMode,
   BackupImportResult,
@@ -10,9 +12,11 @@ import type {
   BackupPreview,
   BackupProxiesPayload,
   BackupProxyRecord,
-  BackupExportKind
+  BackupExportKind,
+  BackupEncryptionMeta
 } from '../types/backup'
 import {
+  BACKUP_ENCRYPTED_SCHEMA_VERSION,
   BACKUP_FORMAT_ID,
   BACKUP_SCHEMA_VERSION
 } from '../types/backup'
@@ -46,6 +50,14 @@ interface BackupBuildInput {
   groups: ProxyGroup[]
   settings: AppSettings
   appVersion: string
+}
+
+interface EncryptedBackupSerializeInput {
+  exportedAt: string
+  appVersion: string
+  payloadKind: BackupPayloadKind
+  encryption: BackupEncryptionMeta
+  payload: string
 }
 
 interface StoreSnapshot {
@@ -316,6 +328,34 @@ function parsePayloadV1(value: unknown): BackupPayloadV1 {
   return payload
 }
 
+function normalizeEncryptionMeta(value: unknown): BackupEncryptionMeta | null {
+  if (!isRecord(value)) {
+    return null
+  }
+
+  if (
+    value.algorithm !== 'AES-256-GCM' ||
+    value.kdf !== 'PBKDF2-SHA256' ||
+    typeof value.iterations !== 'number' ||
+    !Number.isInteger(value.iterations) ||
+    value.iterations < 1 ||
+    typeof value.salt !== 'string' ||
+    typeof value.iv !== 'string' ||
+    typeof value.tag !== 'string'
+  ) {
+    return null
+  }
+
+  return {
+    algorithm: 'AES-256-GCM',
+    kdf: 'PBKDF2-SHA256',
+    iterations: value.iterations,
+    salt: value.salt,
+    iv: value.iv,
+    tag: value.tag
+  }
+}
+
 function parseBackupV1(raw: Record<string, unknown>): BackupFileV1 {
   if (raw.format !== BACKUP_FORMAT_ID) {
     throw new BackupParseError('invalid_format', 'Unrecognized backup format')
@@ -341,8 +381,60 @@ function parseBackupV1(raw: Record<string, unknown>): BackupFileV1 {
   }
 }
 
-export function buildBackupFile(input: BackupBuildInput): string {
-  const exportedAt = new Date().toISOString()
+function parseBackupV2Encrypted(raw: Record<string, unknown>): BackupFileV2Encrypted {
+  if (raw.format !== BACKUP_FORMAT_ID) {
+    throw new BackupParseError('invalid_format', 'Unrecognized backup format')
+  }
+
+  if (raw.version !== BACKUP_ENCRYPTED_SCHEMA_VERSION) {
+    throw new BackupParseError('unsupported_version', 'Unsupported backup version')
+  }
+
+  const exportedAt = normalizeIsoDate(raw.exportedAt)
+  const appVersion = typeof raw.appVersion === 'string' ? raw.appVersion.trim() : ''
+  const payloadKind = normalizePayloadKind(raw.payloadKind)
+  const encryption = normalizeEncryptionMeta(raw.encryption)
+
+  if (!exportedAt || !appVersion || !payloadKind || !encryption) {
+    throw new BackupParseError('invalid_payload', 'Backup metadata is incomplete')
+  }
+
+  if (typeof raw.payload !== 'string' || !raw.payload.trim()) {
+    throw new BackupParseError('invalid_payload', 'Backup payload is invalid')
+  }
+
+  return {
+    format: BACKUP_FORMAT_ID,
+    version: BACKUP_ENCRYPTED_SCHEMA_VERSION,
+    exportedAt,
+    appVersion,
+    payloadKind,
+    encryption,
+    payload: raw.payload
+  }
+}
+
+function parseBackupEnvelope(raw: Record<string, unknown>): BackupFile {
+  if (raw.format !== BACKUP_FORMAT_ID) {
+    throw new BackupParseError('invalid_format', 'Unrecognized backup format')
+  }
+
+  if (raw.version === BACKUP_SCHEMA_VERSION) {
+    return parseBackupV1(raw)
+  }
+
+  if (raw.version === BACKUP_ENCRYPTED_SCHEMA_VERSION) {
+    return parseBackupV2Encrypted(raw)
+  }
+
+  throw new BackupParseError('unsupported_version', 'Unsupported backup version')
+}
+
+export function isEncryptedBackupFile(file: BackupFile): file is BackupFileV2Encrypted {
+  return file.version === BACKUP_ENCRYPTED_SCHEMA_VERSION
+}
+
+export function buildBackupPayload(input: BackupBuildInput): BackupPayloadV1 {
   const payload: BackupPayloadV1 = {
     kind: input.kind
   }
@@ -358,18 +450,65 @@ export function buildBackupFile(input: BackupBuildInput): string {
     payload.settings = normalizeSettings(input.settings)
   }
 
+  return payload
+}
+
+export function serializePlainBackupFile(
+  payload: BackupPayloadV1,
+  appVersion: string,
+  exportedAt = new Date().toISOString()
+): string {
   const file: BackupFileV1 = {
     format: BACKUP_FORMAT_ID,
     version: BACKUP_SCHEMA_VERSION,
     exportedAt,
-    appVersion: input.appVersion,
+    appVersion,
     payload
   }
 
   return `${JSON.stringify(file, null, 2)}\n`
 }
 
-export function parseBackupFile(content: string): BackupFileV1 {
+export function serializeEncryptedBackupFile(input: EncryptedBackupSerializeInput): string {
+  const file: BackupFileV2Encrypted = {
+    format: BACKUP_FORMAT_ID,
+    version: BACKUP_ENCRYPTED_SCHEMA_VERSION,
+    exportedAt: input.exportedAt,
+    appVersion: input.appVersion,
+    payloadKind: input.payloadKind,
+    encryption: input.encryption,
+    payload: input.payload
+  }
+
+  return `${JSON.stringify(file, null, 2)}\n`
+}
+
+export function parsePayloadFromString(content: string): BackupPayloadV1 {
+  let parsed: unknown
+
+  try {
+    parsed = JSON.parse(content)
+  } catch {
+    throw new BackupParseError('invalid_payload', 'Backup payload is invalid')
+  }
+
+  return parsePayloadV1(parsed)
+}
+
+export function createBackupFileV1FromEncrypted(
+  file: BackupFileV2Encrypted,
+  payload: BackupPayloadV1
+): BackupFileV1 {
+  return {
+    format: BACKUP_FORMAT_ID,
+    version: BACKUP_SCHEMA_VERSION,
+    exportedAt: file.exportedAt,
+    appVersion: file.appVersion,
+    payload
+  }
+}
+
+export function parseBackupEnvelopeFromContent(content: string): BackupFile {
   let raw: unknown
 
   try {
@@ -382,37 +521,65 @@ export function parseBackupFile(content: string): BackupFileV1 {
     throw new BackupParseError('invalid_format', 'Unrecognized backup format')
   }
 
-  return parseBackupV1(raw)
+  return parseBackupEnvelope(raw)
 }
 
 export function buildBackupPreview(
   backup: BackupFileV1,
   filePath: string,
-  fileName: string
+  fileName: string,
+  options?: { encrypted?: boolean; decrypted?: boolean; envelopeKind?: BackupPayloadKind; schemaVersion?: number }
 ): BackupPreview {
   const proxies = backup.payload.proxies?.items ?? []
   const groups = backup.payload.proxies?.groups ?? []
   const settings = backup.payload.settings
   const hasSettings = backup.payload.kind === 'settings' || backup.payload.kind === 'full'
+  const encrypted = options?.encrypted === true
+  const decrypted = options?.decrypted ?? !encrypted
 
   return {
     filePath,
     fileName,
     format: backup.format,
-    schemaVersion: backup.version,
+    schemaVersion: options?.schemaVersion ?? backup.version,
     appVersion: backup.appVersion,
     exportedAt: backup.exportedAt,
-    kind: backup.payload.kind,
-    proxyCount: proxies.length,
-    groupCount: groups.length,
-    favoriteCount: proxies.filter((proxy) => proxy.isFavorite).length,
-    enabledProxyCount: proxies.filter((proxy) => proxy.isEnabled !== false).length,
-    hasSettings,
-    checkDomainCount: settings?.checkDomains.length ?? 0,
-    autoCheckEnabled: settings?.autoCheckEnabled === true,
-    backupProxies: proxies,
-    backupGroups: groups
+    encrypted,
+    decrypted,
+    kind: options?.envelopeKind ?? backup.payload.kind,
+    proxyCount: decrypted ? proxies.length : 0,
+    groupCount: decrypted ? groups.length : 0,
+    favoriteCount: decrypted ? proxies.filter((proxy) => proxy.isFavorite).length : 0,
+    enabledProxyCount: decrypted ? proxies.filter((proxy) => proxy.isEnabled !== false).length : 0,
+    hasSettings: decrypted ? hasSettings : options?.envelopeKind === 'settings' || options?.envelopeKind === 'full',
+    checkDomainCount: decrypted ? (settings?.checkDomains.length ?? 0) : 0,
+    autoCheckEnabled: decrypted ? settings?.autoCheckEnabled === true : false,
+    backupProxies: decrypted ? proxies : [],
+    backupGroups: decrypted ? groups : []
   }
+}
+
+export function buildLockedBackupPreview(
+  file: BackupFileV2Encrypted,
+  filePath: string,
+  fileName: string
+): BackupPreview {
+  const placeholder: BackupFileV1 = {
+    format: BACKUP_FORMAT_ID,
+    version: BACKUP_SCHEMA_VERSION,
+    exportedAt: file.exportedAt,
+    appVersion: file.appVersion,
+    payload: {
+      kind: file.payloadKind
+    }
+  }
+
+  return buildBackupPreview(placeholder, filePath, fileName, {
+    encrypted: true,
+    decrypted: false,
+    envelopeKind: file.payloadKind,
+    schemaVersion: file.version
+  })
 }
 
 function backupRecordToProxy(record: BackupProxyRecord): Proxy {

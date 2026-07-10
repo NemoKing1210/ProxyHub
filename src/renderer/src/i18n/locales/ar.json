@@ -264,7 +264,10 @@
     "batchAllAlive": "جميع {{total}} بروكسيات نشطة",
     "batchAllDead": "جميع {{total}} بروكسيات غير نشطة",
     "batchPartial": "{{alive}} نشطة و{{dead}} غير نشطة من {{total}}",
-    "batchEmptyTitle": "لم يُفحص أي بروكسي"
+    "batchEmptyTitle": "لم يُفحص أي بروكسي",
+    "detailedAliveLine": "{{name}} — Alive · {{details}}",
+    "detailedAliveLinePlain": "{{name}} — Alive",
+    "detailedDeadLine": "{{name}} — Dead · {{error}}"
   },
   "settings": {
     "title": "الإعدادات",
@@ -370,8 +373,20 @@
         "proxies": "البروكسيات فقط",
         "settings": "الإعدادات فقط"
       },
-      "securityWarning": "تحتوي ملفات النسخ الاحتياطي على بيانات اعتماد البروكسي بنص عادي. احفظها بأمان.",
-      "formatHint": "تستخدم الملفات صيغة ProxyChecker JSON ذات الإصدار (.pcbackup.json).",
+      "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
+      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "protectWithPassword": "Protect with password",
+      "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
+      "exportPassword": "Backup password",
+      "exportPasswordConfirm": "Confirm password",
+      "passwordTooShort": "Password must be at least {{min}} characters",
+      "passwordMismatch": "Passwords do not match",
+      "importPassword": "Backup password",
+      "unlockBackup": "Unlock backup",
+      "encryptedHint": "This backup is password-protected. Enter the password to preview and import its contents.",
+      "previewDescriptionEncrypted": "This backup is encrypted. Unlock it to review proxies, groups, and settings before importing.",
+      "previewEncryption": "Protection",
+      "previewEncrypted": "Password encrypted",
       "exportSelectTitle": "اختر البروكسيات للتصدير",
       "exportSelectDescription": "اختر البروكسيات التي تريد تضمينها في ملف النسخة الاحتياطية.",
       "exportSelectDescriptionFull": "اختر البروكسيات للتصدير. سيتم أيضًا تصدير جميع إعدادات التطبيق.",
@@ -396,6 +411,8 @@
         "invalid_format": "صيغة نسخة احتياطية غير معروفة",
         "unsupported_version": "إصدار نسخة احتياطية غير مدعوم",
         "invalid_payload": "ملف النسخة الاحتياطية غير مكتمل أو تالف",
+        "password_required": "كلمة مرور النسخة الاحتياطية مطلوبة",
+        "wrong_password": "كلمة مرور النسخة الاحتياطية غير صحيحة",
         "unknown": "خطأ غير معروف"
       }
     },
