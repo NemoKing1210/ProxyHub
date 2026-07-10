@@ -1,36 +1,28 @@
-import type { Proxy, ProxyAnonymityLevel, ProxyProtocol } from '../../../shared/types/proxy'
+import type { Proxy } from '../../../shared/types/proxy'
+import {
+  DEFAULT_PROXY_LIST_FILTERS,
+  type ProxyFavoriteFilter,
+  type ProxyListFilters,
+  type ProxyStatusFilter
+} from '../../../shared/types/proxy-list-view'
+import {
+  MAX_LATENCY_FILTER_DEFAULT_MS,
+  MAX_LATENCY_FILTER_MAX_MS,
+  MAX_LATENCY_FILTER_MIN_MS,
+  MAX_LATENCY_FILTER_STEP_MS
+} from '../../../shared/types/proxy-list-view.constants'
 import { matchesProxySearch } from './proxy-search'
 
-export type ProxyFavoriteFilter = 'all' | 'favorites' | 'nonFavorites'
+export type { ProxyFavoriteFilter, ProxyListFilters, ProxyStatusFilter }
 
-export type ProxyStatusFilter = 'all' | 'alive' | 'dead'
+export { DEFAULT_PROXY_LIST_FILTERS }
 
-export interface ProxyListFilters {
-  searchQuery: string
-  countryCode: string
-  city: string
-  protocol: ProxyProtocol | ''
-  anonymityLevel: ProxyAnonymityLevel | ''
-  favorite: ProxyFavoriteFilter
-  status: ProxyStatusFilter
-  maxLatencyMs: number | null
+export {
+  MAX_LATENCY_FILTER_DEFAULT_MS,
+  MAX_LATENCY_FILTER_MAX_MS,
+  MAX_LATENCY_FILTER_MIN_MS,
+  MAX_LATENCY_FILTER_STEP_MS
 }
-
-export const DEFAULT_PROXY_LIST_FILTERS: ProxyListFilters = {
-  searchQuery: '',
-  countryCode: '',
-  city: '',
-  protocol: '',
-  anonymityLevel: '',
-  favorite: 'all',
-  status: 'all',
-  maxLatencyMs: null
-}
-
-export const MAX_LATENCY_FILTER_MIN_MS = 50
-export const MAX_LATENCY_FILTER_MAX_MS = 2000
-export const MAX_LATENCY_FILTER_DEFAULT_MS = 300
-export const MAX_LATENCY_FILTER_STEP_MS = 50
 
 export function getProxyDisplayLatency(proxy: Proxy): number | undefined {
   return (

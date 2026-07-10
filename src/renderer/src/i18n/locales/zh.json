@@ -51,6 +51,27 @@
       "clear": "清除搜索",
       "pending": "搜索中…"
     },
+    "sort": {
+      "title": "排序",
+      "hint": "选择代理在列表中的显示顺序。",
+      "fieldLabel": "排序方式",
+      "directionLabel": "排序方向",
+      "asc": "升序",
+      "desc": "降序",
+      "fields": {
+        "createdAt": "添加日期",
+        "checkedAt": "最近检查",
+        "latency": "延迟",
+        "status": "状态",
+        "country": "国家",
+        "city": "城市",
+        "label": "名称",
+        "protocol": "协议",
+        "host": "主机",
+        "port": "端口",
+        "anonymityLevel": "匿名性"
+      }
+    },
     "deleteConfirm": {
       "title": "删除代理？",
       "message": "确定要删除 {{name}} 吗？此操作无法撤销。"

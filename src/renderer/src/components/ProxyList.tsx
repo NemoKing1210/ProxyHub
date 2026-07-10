@@ -13,14 +13,10 @@ import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
 import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
 import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
 import { filterEnabledProxies } from '../../../shared/utils/proxy-enabled'
+import { useProxyListViewState } from '../hooks/useProxyListViewState'
 import { useProxyStore } from '../store/proxyStore'
-import {
-  DEFAULT_PROXY_LIST_FILTERS,
-  filterProxies,
-  hasActiveFilters,
-  type ProxyListFilters as ProxyListFiltersState
-} from '../utils/filter-proxies'
-import { sortProxiesByFavorite } from '../utils/sort-proxies'
+import { filterProxies, hasActiveFilters } from '../utils/filter-proxies'
+import { sortProxies, sortProxiesByFavorite } from '../utils/sort-proxies'
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
@@ -29,6 +25,7 @@ import ProxyDetailsDialog from './ProxyDetailsDialog'
 import ProxyFormDialog from './ProxyFormDialog'
 import ProxyListFilters from './ProxyListFilters'
 import ProxyListSearch from './ProxyListSearch'
+import ProxyListSort from './ProxyListSort'
 
 function toProxyInput(values: ProxyFormValues): ProxyInput {
   return {
@@ -74,7 +71,16 @@ function ProxyList(): React.JSX.Element {
   const [dialogMode, setDialogMode] = useState<'add' | 'edit'>('add')
   const [editingProxy, setEditingProxy] = useState<Proxy | undefined>()
   const [deletingProxy, setDeletingProxy] = useState<Proxy | undefined>()
-  const [filters, setFilters] = useState<ProxyListFiltersState>(DEFAULT_PROXY_LIST_FILTERS)
+  const {
+    filters,
+    sortField,
+    sortDirection,
+    setFilters,
+    updateFilters,
+    setSortField,
+    setSortDirection,
+    resetFilters
+  } = useProxyListViewState()
 
   useEffect(() => {
     void loadProxies()
@@ -118,10 +124,10 @@ function ProxyList(): React.JSX.Element {
   }
 
   const filteredProxies = useMemo(() => filterProxies(proxies, filters), [proxies, filters])
-  const visibleProxies = useMemo(
-    () => sortProxiesByFavorite(filteredProxies),
-    [filteredProxies]
-  )
+  const visibleProxies = useMemo(() => {
+    const sorted = sortProxies(filteredProxies, sortField, sortDirection)
+    return sortProxiesByFavorite(sorted)
+  }, [filteredProxies, sortField, sortDirection])
   const checkableProxyIds = useMemo(
     () => filterEnabledProxies(visibleProxies).map((proxy) => proxy.id),
     [visibleProxies]
@@ -220,7 +226,7 @@ function ProxyList(): React.JSX.Element {
         </Stack>
       </Stack>
 
-      {isLoading ? (
+      {isLoading && proxies.length === 0 ? (
         <Paper
           sx={{
             py: 10,
@@ -284,10 +290,27 @@ function ProxyList(): React.JSX.Element {
             onChange={setFilters}
           />
 
-          <ProxyListSearch
-            value={filters.searchQuery}
-            onChange={(searchQuery) => setFilters({ ...filters, searchQuery })}
-          />
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            spacing={2}
+            sx={{ alignItems: 'stretch' }}
+          >
+            <Box sx={{ flex: 1, minWidth: 0, display: 'flex' }}>
+              <ProxyListSearch
+                value={filters.searchQuery}
+                onChange={(searchQuery) => updateFilters({ searchQuery })}
+              />
+            </Box>
+
+            <Box sx={{ flex: 1, minWidth: 0, display: 'flex' }}>
+              <ProxyListSort
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSortFieldChange={setSortField}
+                onSortDirectionChange={setSortDirection}
+              />
+            </Box>
+          </Stack>
 
           {visibleProxies.length === 0 ? (
             <Paper
@@ -307,7 +330,7 @@ function ProxyList(): React.JSX.Element {
                 {t('proxyList.filters.noResultsHint')}
               </Typography>
               {filtersActive && (
-                <Button variant="outlined" onClick={() => setFilters(DEFAULT_PROXY_LIST_FILTERS)}>
+                <Button variant="outlined" onClick={resetFilters}>
                   {t('proxyList.filters.clear')}
                 </Button>
               )}

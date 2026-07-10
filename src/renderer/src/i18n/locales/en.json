@@ -57,6 +57,27 @@
       "clear": "Clear search",
       "pending": "Searching…"
     },
+    "sort": {
+      "title": "Sort",
+      "hint": "Choose how proxies are ordered in the list.",
+      "fieldLabel": "Sort by",
+      "directionLabel": "Sort direction",
+      "asc": "Ascending",
+      "desc": "Descending",
+      "fields": {
+        "createdAt": "Date added",
+        "checkedAt": "Last checked",
+        "latency": "Latency",
+        "status": "Status",
+        "country": "Country",
+        "city": "City",
+        "label": "Name",
+        "protocol": "Protocol",
+        "host": "Host",
+        "port": "Port",
+        "anonymityLevel": "Anonymity"
+      }
+    },
     "deleteConfirm": {
       "title": "Delete proxy?",
       "message": "Are you sure you want to delete {{name}}? This action cannot be undone."

@@ -51,6 +51,27 @@
       "clear": "Suche löschen",
       "pending": "Suche…"
     },
+    "sort": {
+      "title": "Sortierung",
+      "hint": "Legen Sie fest, wie Proxys in der Liste angeordnet werden.",
+      "fieldLabel": "Sortieren nach",
+      "directionLabel": "Sortierrichtung",
+      "asc": "Aufsteigend",
+      "desc": "Absteigend",
+      "fields": {
+        "createdAt": "Hinzufügedatum",
+        "checkedAt": "Letzte Prüfung",
+        "latency": "Latenz",
+        "status": "Status",
+        "country": "Land",
+        "city": "Stadt",
+        "label": "Name",
+        "protocol": "Protokoll",
+        "host": "Host",
+        "port": "Port",
+        "anonymityLevel": "Anonymität"
+      }
+    },
     "deleteConfirm": {
       "title": "Proxy löschen?",
       "message": "Möchten Sie {{name}} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."

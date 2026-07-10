@@ -1,3 +1,6 @@
+import type { ProxyListViewState } from './proxy-list-view'
+import { DEFAULT_PROXY_LIST_VIEW, normalizeProxyListView } from './proxy-list-view'
+
 export type ThemeMode = 'light' | 'dark' | 'system'
 
 export type AppLanguage = 'en' | 'zh' | 'hi' | 'es' | 'fr' | 'ar' | 'pt' | 'ru' | 'uk' | 'ja' | 'de'
@@ -17,6 +20,7 @@ export interface AppSettings {
   checkAllMode: CheckAllMode
   checkAllConcurrency: number
   trayEnabled: boolean
+  proxyListView: ProxyListViewState
 }
 
 export const CHECK_TIMEOUT_MIN_MS = 1_000
@@ -34,7 +38,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   checkTimeoutMs: CHECK_TIMEOUT_DEFAULT_MS,
   checkAllMode: 'sequential',
   checkAllConcurrency: CHECK_ALL_CONCURRENCY_DEFAULT,
-  trayEnabled: false
+  trayEnabled: false,
+  proxyListView: DEFAULT_PROXY_LIST_VIEW
 }
 
 export interface ProxyCheckOptions {
@@ -112,7 +117,8 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     checkDomains: normalizeCheckDomains(merged.checkDomains),
     checkAllMode: merged.checkAllMode === 'parallel' ? 'parallel' : 'sequential',
     checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency),
-    trayEnabled: merged.trayEnabled === true
+    trayEnabled: merged.trayEnabled === true,
+    proxyListView: normalizeProxyListView(merged.proxyListView)
   }
 }
 

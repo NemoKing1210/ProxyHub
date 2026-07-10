@@ -51,6 +51,27 @@
       "clear": "Limpar pesquisa",
       "pending": "Pesquisando…"
     },
+    "sort": {
+      "title": "Ordenação",
+      "hint": "Escolha como os proxies são ordenados na lista.",
+      "fieldLabel": "Ordenar por",
+      "directionLabel": "Direção da ordenação",
+      "asc": "Crescente",
+      "desc": "Decrescente",
+      "fields": {
+        "createdAt": "Data de adição",
+        "checkedAt": "Última verificação",
+        "latency": "Latência",
+        "status": "Status",
+        "country": "País",
+        "city": "Cidade",
+        "label": "Nome",
+        "protocol": "Protocolo",
+        "host": "Host",
+        "port": "Porta",
+        "anonymityLevel": "Anonimato"
+      }
+    },
     "deleteConfirm": {
       "title": "Excluir proxy?",
       "message": "Tem certeza de que deseja excluir {{name}}? Esta ação não pode ser desfeita."

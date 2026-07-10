@@ -51,6 +51,27 @@
       "clear": "検索をクリア",
       "pending": "検索中…"
     },
+    "sort": {
+      "title": "並べ替え",
+      "hint": "リスト内のプロキシの表示順を選びます。",
+      "fieldLabel": "並べ替え",
+      "directionLabel": "並べ替え方向",
+      "asc": "昇順",
+      "desc": "降順",
+      "fields": {
+        "createdAt": "追加日",
+        "checkedAt": "最終確認",
+        "latency": "遅延",
+        "status": "ステータス",
+        "country": "国",
+        "city": "都市",
+        "label": "名前",
+        "protocol": "プロトコル",
+        "host": "ホスト",
+        "port": "ポート",
+        "anonymityLevel": "匿名性"
+      }
+    },
     "deleteConfirm": {
       "title": "プロキシを削除しますか？",
       "message": "{{name}} を削除してもよろしいですか？この操作は元に戻せません。"

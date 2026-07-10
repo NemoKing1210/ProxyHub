@@ -252,13 +252,18 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
       return
     }
 
-    set({ isLoading: true })
+    const shouldShowLoader = get().proxies.length === 0
+    if (shouldShowLoader) {
+      set({ isLoading: true })
+    }
 
     try {
       const proxies = await window.api.getProxies()
       set({ proxies })
     } finally {
-      set({ isLoading: false })
+      if (shouldShowLoader) {
+        set({ isLoading: false })
+      }
     }
   },
 

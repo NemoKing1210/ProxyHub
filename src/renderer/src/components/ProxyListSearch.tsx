@@ -18,6 +18,7 @@ function ProxyListSearch({ value, onChange }: ProxyListSearchProps): React.JSX.E
   const { t } = useTranslation()
   const theme = useTheme()
   const onChangeRef = useRef(onChange)
+  const lastEmittedValueRef = useRef(value)
   const [inputValue, setInputValue] = useState(value)
   const debouncedValue = useDebouncedValue(inputValue, SEARCH_DEBOUNCE_MS)
   const hasValue = Boolean(inputValue.trim())
@@ -27,20 +28,29 @@ function ProxyListSearch({ value, onChange }: ProxyListSearchProps): React.JSX.E
 
   useEffect(() => {
     setInputValue(value)
+    lastEmittedValueRef.current = value
   }, [value])
 
   useEffect(() => {
+    if (debouncedValue === lastEmittedValueRef.current) {
+      return
+    }
+
+    lastEmittedValueRef.current = debouncedValue
     onChangeRef.current(debouncedValue)
   }, [debouncedValue])
 
   const handleClear = (): void => {
     setInputValue('')
+    lastEmittedValueRef.current = ''
     onChangeRef.current('')
   }
 
   return (
     <Box
       sx={{
+        flex: 1,
+        width: '100%',
         px: 1.75,
         py: 1.5,
         borderRadius: 2.5,

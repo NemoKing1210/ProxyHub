@@ -1,5 +1,5 @@
 export function getPlatform(): string {
-  return window.electron.process.platform
+  return window.electron?.process?.platform ?? 'unknown'
 }
 
 export function isWindows(): boolean {

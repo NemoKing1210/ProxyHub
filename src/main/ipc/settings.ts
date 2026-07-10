@@ -2,7 +2,7 @@ import { ipcMain } from 'electron'
 import type { AppSettings } from '../../shared/types/settings'
 import { getSettings, saveSettings } from '../services/app-store'
 import { refreshTrayContextMenu } from '../services/tray'
-import { notifyTrayDataChanged, syncTrayEnabled } from './tray'
+import { syncTrayEnabled } from './tray'
 
 export function registerSettingsIpc(): void {
   ipcMain.handle('settings:get', async () => getSettings())
@@ -13,10 +13,11 @@ export function registerSettingsIpc(): void {
 
     if (previous.trayEnabled !== settings.trayEnabled) {
       await syncTrayEnabled(settings.trayEnabled)
-    } else if (settings.trayEnabled) {
-      await refreshTrayContextMenu()
+      return
     }
 
-    notifyTrayDataChanged()
+    if (settings.trayEnabled && previous.language !== settings.language) {
+      await refreshTrayContextMenu()
+    }
   })
 }

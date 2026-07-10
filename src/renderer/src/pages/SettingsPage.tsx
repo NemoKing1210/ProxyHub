@@ -232,6 +232,8 @@ function SettingsPage(): React.JSX.Element {
           icon={<PaletteOutlinedIcon fontSize="small" />}
           title={t('settings.sections.appearance')}
           description={t('settings.sections.appearanceDescription')}
+          collapsible
+          defaultExpanded
         >
           <Stack spacing={3}>
             <Box>
@@ -303,6 +305,8 @@ function SettingsPage(): React.JSX.Element {
           icon={<WidgetsOutlinedIcon fontSize="small" />}
           title={t('settings.sections.system')}
           description={t('settings.sections.systemDescription')}
+          collapsible
+          defaultExpanded={false}
         >
           <FormControlLabel
             control={
@@ -327,6 +331,8 @@ function SettingsPage(): React.JSX.Element {
           icon={<NetworkCheckOutlinedIcon fontSize="small" />}
           title={t('settings.sections.checking')}
           description={t('settings.sections.checkingDescription')}
+          collapsible
+          defaultExpanded={false}
         >
           <Stack spacing={3}>
             <Box>
@@ -568,6 +574,8 @@ function SettingsPage(): React.JSX.Element {
           icon={<InfoOutlinedIcon fontSize="small" />}
           title={t('settings.sections.about')}
           description={t('settings.sections.aboutDescription')}
+          collapsible
+          defaultExpanded={false}
         >
           {isAppInfoLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.0] - 2026-07-10
+
+### Added
+
+- Proxy list sorting with field selector and ascending/descending toggle below search
+- Persistence of proxy list filters, search query, and sort preferences between sessions
+
+### Changed
+
+- Search and sort controls are shown side by side on large screens
+- Settings page sections are now collapsible; only Appearance is expanded by default
+
+### Fixed
+
+- Fixed infinite proxy list reload loop caused by search persistence triggering tray sync and full-page loading state
+
 ## [1.16.0] - 2026-07-10
 
 ### Added
