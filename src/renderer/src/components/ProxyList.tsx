@@ -13,12 +13,19 @@ import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
 import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
 import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
 import { useProxyStore } from '../store/proxyStore'
+import {
+  DEFAULT_PROXY_LIST_FILTERS,
+  filterProxies,
+  hasActiveFilters,
+  type ProxyListFilters as ProxyListFiltersState
+} from '../utils/filter-proxies'
 import { sortProxiesByFavorite } from '../utils/sort-proxies'
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyFormDialog from './ProxyFormDialog'
+import ProxyListFilters from './ProxyListFilters'
 
 function toProxyInput(values: ProxyFormValues): ProxyInput {
   return {
@@ -61,6 +68,7 @@ function ProxyList(): React.JSX.Element {
   const [dialogMode, setDialogMode] = useState<'add' | 'edit'>('add')
   const [editingProxy, setEditingProxy] = useState<Proxy | undefined>()
   const [deletingProxy, setDeletingProxy] = useState<Proxy | undefined>()
+  const [filters, setFilters] = useState<ProxyListFiltersState>(DEFAULT_PROXY_LIST_FILTERS)
 
   useEffect(() => {
     void loadProxies()
@@ -103,7 +111,13 @@ function ProxyList(): React.JSX.Element {
     await patchProxy(proxy.id, { icon: iconId })
   }
 
-  const sortedProxies = useMemo(() => sortProxiesByFavorite(proxies), [proxies])
+  const filteredProxies = useMemo(() => filterProxies(proxies, filters), [proxies, filters])
+  const visibleProxies = useMemo(
+    () => sortProxiesByFavorite(filteredProxies),
+    [filteredProxies]
+  )
+  const visibleProxyIds = useMemo(() => visibleProxies.map((proxy) => proxy.id), [visibleProxies])
+  const filtersActive = hasActiveFilters(filters)
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
   const deadCount = proxies.filter((proxy) => proxy.status === 'dead').length
@@ -182,8 +196,8 @@ function ProxyList(): React.JSX.Element {
           <Button
             variant="outlined"
             startIcon={isCheckingAll ? <CircularProgress size={18} /> : <PlaylistPlayIcon />}
-            onClick={() => void checkAll()}
-            disabled={proxies.length === 0 || isCheckingAll}
+            onClick={() => void checkAll(visibleProxyIds)}
+            disabled={visibleProxies.length === 0 || isCheckingAll}
           >
             {t('proxyList.checkAll')}
           </Button>
@@ -250,19 +264,51 @@ function ProxyList(): React.JSX.Element {
         </Paper>
       ) : (
         <Stack spacing={2}>
-          {sortedProxies.map((proxy) => (
-            <ProxyCard
-              key={proxy.id}
-              proxy={proxy}
-              isChecking={checkingIds.has(proxy.id)}
-              isCheckingAll={isCheckingAll}
-              onCheck={() => void checkProxy(proxy.id)}
-              onEdit={() => openEditDialog(proxy)}
-              onDelete={() => openDeleteDialog(proxy)}
-              onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
-              onToggleFavorite={() => void toggleFavorite(proxy.id)}
-            />
-          ))}
+          <ProxyListFilters
+            proxies={proxies}
+            filters={filters}
+            shownCount={visibleProxies.length}
+            onChange={setFilters}
+          />
+
+          {visibleProxies.length === 0 ? (
+            <Paper
+              sx={{
+                py: 6,
+                px: 3,
+                textAlign: 'center',
+                borderRadius: 3,
+                boxShadow: elevationShadow(theme, 1),
+                bgcolor: surfaceContainer(theme, 'low')
+              }}
+            >
+              <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                {t('proxyList.filters.noResults')}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                {t('proxyList.filters.noResultsHint')}
+              </Typography>
+              {filtersActive && (
+                <Button variant="outlined" onClick={() => setFilters(DEFAULT_PROXY_LIST_FILTERS)}>
+                  {t('proxyList.filters.clear')}
+                </Button>
+              )}
+            </Paper>
+          ) : (
+            visibleProxies.map((proxy) => (
+              <ProxyCard
+                key={proxy.id}
+                proxy={proxy}
+                isChecking={checkingIds.has(proxy.id)}
+                isCheckingAll={isCheckingAll}
+                onCheck={() => void checkProxy(proxy.id)}
+                onEdit={() => openEditDialog(proxy)}
+                onDelete={() => openDeleteDialog(proxy)}
+                onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
+                onToggleFavorite={() => void toggleFavorite(proxy.id)}
+              />
+            ))
+          )}
         </Stack>
       )}
 

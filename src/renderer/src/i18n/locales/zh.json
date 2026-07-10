@@ -20,6 +20,25 @@
     "checkAll": "全部检测",
     "addProxy": "添加代理",
     "empty": "暂无代理。点击「添加代理」开始。",
+    "filters": {
+      "title": "筛选",
+      "description": "按位置、匿名性、收藏或延迟缩小列表。",
+      "country": "国家",
+      "city": "城市",
+      "anonymity": "匿名性",
+      "favorite": "收藏",
+      "favoriteAll": "全部",
+      "favoriteOnly": "已收藏",
+      "favoriteNone": "未收藏",
+      "maxLatency": "最大延迟",
+      "maxLatencyEnabled": "按延迟限制",
+      "maxLatencyValue": "{{value}} ms",
+      "all": "全部",
+      "clear": "清除筛选",
+      "shown": "显示 {{shown}} / {{total}}",
+      "noResults": "没有符合筛选条件的代理",
+      "noResultsHint": "请尝试更改或清除筛选条件。"
+    },
     "deleteConfirm": {
       "title": "删除代理？",
       "message": "确定要删除 {{name}} 吗？此操作无法撤销。"

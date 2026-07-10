@@ -20,6 +20,25 @@
     "checkAll": "فحص الكل",
     "addProxy": "إضافة بروكسي",
     "empty": "لا توجد بروكسيات بعد. انقر \"إضافة بروكسي\" للبدء.",
+    "filters": {
+      "title": "الفلاتر",
+      "description": "تضييق القائمة حسب الموقع أو الخصوصية أو المفضلة أو زمن الاستجابة.",
+      "country": "البلد",
+      "city": "المدينة",
+      "anonymity": "الخصوصية",
+      "favorite": "المفضلة",
+      "favoriteAll": "الكل",
+      "favoriteOnly": "المفضلة",
+      "favoriteNone": "غير المفضلة",
+      "maxLatency": "أقصى زمن استجابة",
+      "maxLatencyEnabled": "الحد حسب زمن الاستجابة",
+      "maxLatencyValue": "{{value}} ms",
+      "all": "الكل",
+      "clear": "مسح الفلاتر",
+      "shown": "عرض {{shown}} من {{total}}",
+      "noResults": "لا توجد بروكسيات تطابق الفلاتر",
+      "noResultsHint": "جرّب تغيير الفلاتر أو مسحها."
+    },
     "deleteConfirm": {
       "title": "حذف البروكسي؟",
       "message": "هل أنت متأكد أنك تريد حذف {{name}}؟ لا يمكن التراجع عن هذا الإجراء."

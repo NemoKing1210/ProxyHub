@@ -20,6 +20,25 @@
     "checkAll": "Verificar todos",
     "addProxy": "Adicionar proxy",
     "empty": "Nenhum proxy ainda. Clique em \"Adicionar proxy\" para começar.",
+    "filters": {
+      "title": "Filtros",
+      "description": "Reduza a lista por localização, anonimato, favoritos ou latência.",
+      "country": "País",
+      "city": "Cidade",
+      "anonymity": "Anonimato",
+      "favorite": "Favoritos",
+      "favoriteAll": "Todos",
+      "favoriteOnly": "Favoritos",
+      "favoriteNone": "Não favoritos",
+      "maxLatency": "Latência máx.",
+      "maxLatencyEnabled": "Limitar por latência",
+      "maxLatencyValue": "{{value}} ms",
+      "all": "Todos",
+      "clear": "Limpar filtros",
+      "shown": "{{shown}} de {{total}} exibidos",
+      "noResults": "Nenhum proxy corresponde aos filtros",
+      "noResultsHint": "Tente alterar ou limpar os filtros."
+    },
     "deleteConfirm": {
       "title": "Excluir proxy?",
       "message": "Tem certeza de que deseja excluir {{name}}? Esta ação não pode ser desfeita."

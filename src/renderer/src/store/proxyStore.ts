@@ -33,7 +33,7 @@ interface ProxyState {
   toggleFavorite: (id: string) => Promise<void>
   removeProxy: (id: string) => Promise<void>
   checkProxy: (id: string) => Promise<void>
-  checkAll: () => Promise<void>
+  checkAll: (proxyIds?: string[]) => Promise<void>
 }
 
 function createProxy(input: ProxyInput): Proxy {
@@ -358,23 +358,26 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     }
   },
 
-  checkAll: async () => {
+  checkAll: async (proxyIds) => {
     const { proxies } = get()
-    if (proxies.length === 0 || get().isCheckingAll) return
+    const targetIds = proxyIds ?? proxies.map((proxy) => proxy.id)
+    const targets = proxies.filter((proxy) => targetIds.includes(proxy.id))
+
+    if (targets.length === 0 || get().isCheckingAll) return
 
     const { checkAllMode } = useSettingsStore.getState().settings
     const checkOptions = getCheckOptions()
-    const proxyIds = proxies.map((proxy) => proxy.id)
+    const ids = targets.map((proxy) => proxy.id)
 
     if (checkAllMode === 'parallel') {
-      await checkAllParallel(proxies, checkOptions, get, set)
+      await checkAllParallel(targets, checkOptions, get, set)
       return
     }
 
     set({ isCheckingAll: true })
 
     try {
-      await checkAllSequential(proxyIds, get)
+      await checkAllSequential(ids, get)
     } finally {
       set({ isCheckingAll: false })
     }

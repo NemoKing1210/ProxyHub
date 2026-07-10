@@ -25,6 +25,25 @@
     "checkAll": "Check all",
     "addProxy": "Add proxy",
     "empty": "No proxies yet. Click \"Add proxy\" to get started.",
+    "filters": {
+      "title": "Filters",
+      "description": "Narrow the list by location, anonymity, favorites, or latency.",
+      "country": "Country",
+      "city": "City",
+      "anonymity": "Anonymity",
+      "favorite": "Favorites",
+      "favoriteAll": "All",
+      "favoriteOnly": "Favorites",
+      "favoriteNone": "Not favorites",
+      "maxLatency": "Max latency",
+      "maxLatencyEnabled": "Limit by latency",
+      "maxLatencyValue": "{{value}} ms",
+      "all": "All",
+      "clear": "Clear filters",
+      "shown": "{{shown}} of {{total}} shown",
+      "noResults": "No proxies match the filters",
+      "noResultsHint": "Try changing or clearing the filters."
+    },
     "deleteConfirm": {
       "title": "Delete proxy?",
       "message": "Are you sure you want to delete {{name}}? This action cannot be undone."

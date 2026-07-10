@@ -20,6 +20,25 @@
     "checkAll": "すべて確認",
     "addProxy": "プロキシを追加",
     "empty": "プロキシがありません。「プロキシを追加」をクリックして開始してください。",
+    "filters": {
+      "title": "フィルター",
+      "description": "場所、匿名性、お気に入り、遅延でリストを絞り込みます。",
+      "country": "国",
+      "city": "都市",
+      "anonymity": "匿名性",
+      "favorite": "お気に入り",
+      "favoriteAll": "すべて",
+      "favoriteOnly": "お気に入り",
+      "favoriteNone": "お気に入り以外",
+      "maxLatency": "最大遅延",
+      "maxLatencyEnabled": "遅延で制限",
+      "maxLatencyValue": "{{value}} ms",
+      "all": "すべて",
+      "clear": "フィルターをクリア",
+      "shown": "{{shown}} / {{total}} 件表示",
+      "noResults": "フィルターに一致するプロキシがありません",
+      "noResultsHint": "フィルターを変更またはクリアしてください。"
+    },
     "deleteConfirm": {
       "title": "プロキシを削除しますか？",
       "message": "{{name}} を削除してもよろしいですか？この操作は元に戻せません。"

@@ -20,6 +20,25 @@
     "checkAll": "Alle prüfen",
     "addProxy": "Proxy hinzufügen",
     "empty": "Noch keine Proxies. Klicken Sie auf „Proxy hinzufügen“, um zu starten.",
+    "filters": {
+      "title": "Filter",
+      "description": "Liste nach Standort, Anonymität, Favoriten oder Latenz eingrenzen.",
+      "country": "Land",
+      "city": "Stadt",
+      "anonymity": "Anonymität",
+      "favorite": "Favoriten",
+      "favoriteAll": "Alle",
+      "favoriteOnly": "Favoriten",
+      "favoriteNone": "Keine Favoriten",
+      "maxLatency": "Max. Latenz",
+      "maxLatencyEnabled": "Nach Latenz begrenzen",
+      "maxLatencyValue": "{{value}} ms",
+      "all": "Alle",
+      "clear": "Filter zurücksetzen",
+      "shown": "{{shown}} von {{total}} angezeigt",
+      "noResults": "Keine Proxies entsprechen den Filtern",
+      "noResultsHint": "Ändern oder löschen Sie die Filter."
+    },
     "deleteConfirm": {
       "title": "Proxy löschen?",
       "message": "Möchten Sie {{name}} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
