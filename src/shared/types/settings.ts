@@ -16,6 +16,7 @@ export interface AppSettings {
   checkTimeoutMs: number
   checkAllMode: CheckAllMode
   checkAllConcurrency: number
+  trayEnabled: boolean
 }
 
 export const CHECK_TIMEOUT_MIN_MS = 1_000
@@ -32,7 +33,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   checkDomains: [],
   checkTimeoutMs: CHECK_TIMEOUT_DEFAULT_MS,
   checkAllMode: 'sequential',
-  checkAllConcurrency: CHECK_ALL_CONCURRENCY_DEFAULT
+  checkAllConcurrency: CHECK_ALL_CONCURRENCY_DEFAULT,
+  trayEnabled: false
 }
 
 export interface ProxyCheckOptions {
@@ -109,7 +111,8 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     ...merged,
     checkDomains: normalizeCheckDomains(merged.checkDomains),
     checkAllMode: merged.checkAllMode === 'parallel' ? 'parallel' : 'sequential',
-    checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency)
+    checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency),
+    trayEnabled: merged.trayEnabled === true
   }
 }
 

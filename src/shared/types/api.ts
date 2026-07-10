@@ -1,3 +1,4 @@
+import type { ThemeMode } from '../types/settings'
 import type { AppInfo } from './app'
 import type { Proxy, ProxyCheckProgress, ProxyCheckResult } from './proxy'
 import type { AppSettings, ProxyCheckOptions } from './settings'
@@ -12,4 +13,9 @@ export interface AppAPI {
   saveSettings: (settings: AppSettings) => Promise<void>
   getAppInfo: () => Promise<AppInfo>
   openExternal: (url: string) => Promise<void>
+  setTitleBarTheme: (mode: ThemeMode) => Promise<void>
+  showMainWindow: () => Promise<void>
+  onTrayProxiesUpdated: (callback: () => void) => () => void
+  onOpenProxyFromTray: (callback: (proxyId: string) => void) => () => void
+  onCheckAllState: (callback: (active: boolean) => void) => () => void
 }

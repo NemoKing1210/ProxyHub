@@ -25,6 +25,7 @@ import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAl
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
+import ProxyDetailsDialog from './ProxyDetailsDialog'
 import ProxyFormDialog from './ProxyFormDialog'
 import ProxyListFilters from './ProxyListFilters'
 import ProxyListSearch from './ProxyListSearch'
@@ -64,7 +65,9 @@ function ProxyList(): React.JSX.Element {
     toggleEnabled,
     removeProxy,
     checkProxy,
-    checkAll
+    checkAll,
+    detailsProxyId,
+    setDetailsProxyId
   } = useProxyStore()
 
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -124,6 +127,10 @@ function ProxyList(): React.JSX.Element {
     [visibleProxies]
   )
   const filtersActive = hasActiveFilters(filters)
+  const detailsProxy = useMemo(
+    () => proxies.find((proxy) => proxy.id === detailsProxyId),
+    [proxies, detailsProxyId]
+  )
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
   const deadCount = proxies.filter((proxy) => proxy.status === 'dead').length
@@ -338,6 +345,18 @@ function ProxyList(): React.JSX.Element {
         proxy={deletingProxy}
         onClose={() => setDeletingProxy(undefined)}
         onConfirm={handleDeleteConfirm}
+      />
+
+      <ProxyDetailsDialog
+        open={Boolean(detailsProxy)}
+        proxy={detailsProxy}
+        isChecking={detailsProxy ? checkingIds.has(detailsProxy.id) : false}
+        onClose={() => setDetailsProxyId(null)}
+        onCheck={() => {
+          if (detailsProxy) {
+            void checkProxy(detailsProxy.id)
+          }
+        }}
       />
     </Box>
   )

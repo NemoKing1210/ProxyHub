@@ -1,10 +1,12 @@
 import { readFile } from 'fs/promises'
 import { join } from 'path'
-import { app, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import type { AppInfo } from '../../shared/types/app'
+import type { ThemeMode } from '../../shared/types/settings'
 import { parseChangelog } from '../../shared/utils/changelog'
 import { parsePackageAuthor } from '../../shared/utils/package-author'
 import { resolveGitHubUsername } from '../../shared/utils/github'
+import { syncTitleBarTheme } from '../services/title-bar'
 
 interface PackageJson {
   version: string
@@ -50,5 +52,14 @@ export function registerAppIpc(): void {
   ipcMain.handle('app:get-info', async () => readAppInfo())
   ipcMain.handle('app:open-external', async (_event, url: string) => {
     await shell.openExternal(url)
+  })
+  ipcMain.handle('app:set-title-bar-theme', async (_event, mode: ThemeMode) => {
+    const window = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0]
+
+    if (!window) {
+      return
+    }
+
+    syncTitleBarTheme(window, mode)
   })
 }

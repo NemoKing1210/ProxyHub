@@ -1,5 +1,6 @@
 import { alpha, createTheme, type Theme } from '@mui/material/styles'
 import type { ThemeMode } from '../../shared/types/settings'
+import { resolveColorScheme } from '../../shared/theme/resolve-color-scheme'
 import { getPalette, withThemeAlpha } from './theme/palette'
 import { MD3_DURATION, MD3_EASING } from './theme/motion'
 
@@ -18,11 +19,7 @@ function withAlpha(theme: { vars?: Theme['vars']; palette: Theme['palette'] }, c
 }
 
 export function resolveThemeMode(mode: ThemeMode): 'light' | 'dark' {
-  if (mode === 'system') {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  }
-
-  return mode
+  return resolveColorScheme(mode, window.matchMedia('(prefers-color-scheme: dark)').matches)
 }
 
 const sharedTypography = {

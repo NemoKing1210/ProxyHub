@@ -3,6 +3,7 @@ import type { Proxy, ProxyCheckProgress } from '../../shared/types/proxy'
 import type { ProxyCheckOptions } from '../../shared/types/settings'
 import { getProxies, saveProxies } from '../services/app-store'
 import { checkAllProxies, checkProxy } from '../services/proxy-checker'
+import { notifyTrayDataChanged } from './tray'
 
 function sendProgress(webContents: WebContents, progress: ProxyCheckProgress): void {
   webContents.send('proxy:check-progress', progress)
@@ -13,6 +14,7 @@ export function registerProxyIpc(): void {
 
   ipcMain.handle('proxy:save-all', async (_event, proxies: Proxy[]) => {
     await saveProxies(proxies)
+    notifyTrayDataChanged()
   })
 
   ipcMain.handle('proxy:check', async (event, proxy: Proxy, options: ProxyCheckOptions) => {

@@ -2,10 +2,10 @@ import { create } from 'zustand'
 import type {
   Proxy,
   ProxyCheckProgress,
-  ProxyCheckResult,
   ProxyInput
 } from '../../../shared/types/proxy'
 import type { ProxyCheckOptions } from '../../../shared/types/settings'
+import { applyCheckResult } from '../../../shared/utils/proxy-check-apply'
 import {
   createCheckingConnectivity,
   createPendingDomainChecks,
@@ -38,6 +38,8 @@ interface ProxyState {
   removeProxy: (id: string) => Promise<void>
   checkProxy: (id: string) => Promise<void>
   checkAll: (proxyIds?: string[]) => Promise<void>
+  detailsProxyId: string | null
+  setDetailsProxyId: (proxyId: string | null) => void
 }
 
 function createProxy(input: ProxyInput): Proxy {
@@ -75,20 +77,6 @@ function clearCheckState<T extends Proxy>(proxy: T): T {
   }
 }
 
-function applyCheckResult(proxy: Proxy, result: ProxyCheckResult): Proxy {
-  return {
-    ...proxy,
-    status: result.status,
-    latencyMs: result.latencyMs,
-    externalIp: result.externalIp,
-    checkTarget: result.checkTarget,
-    error: result.error,
-    errorDetails: result.errorDetails,
-    domainChecks: result.domainChecks,
-    connectivity: result.connectivity,
-    checkedAt: result.checkedAt
-  }
-}
 
 function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Proxy[] {
   if (progress.phase === 'init') {
@@ -253,6 +241,11 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   isLoading: true,
   isCheckingAll: false,
   checkingIds: new Set(),
+  detailsProxyId: null,
+
+  setDetailsProxyId: (proxyId) => {
+    set({ detailsProxyId: proxyId })
+  },
 
   loadProxies: async () => {
     if (isCheckInProgress(get())) {

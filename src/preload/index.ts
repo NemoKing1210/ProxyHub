@@ -21,7 +21,39 @@ const api: AppAPI = {
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),
   getAppInfo: () => ipcRenderer.invoke('app:get-info'),
-  openExternal: (url) => ipcRenderer.invoke('app:open-external', url)
+  openExternal: (url) => ipcRenderer.invoke('app:open-external', url),
+  setTitleBarTheme: (mode) => ipcRenderer.invoke('app:set-title-bar-theme', mode),
+  showMainWindow: () => ipcRenderer.invoke('tray:show-main'),
+  onTrayProxiesUpdated: (callback) => {
+    const handler = (): void => {
+      callback()
+    }
+
+    ipcRenderer.on('tray:proxies-updated', handler)
+    return () => {
+      ipcRenderer.removeListener('tray:proxies-updated', handler)
+    }
+  },
+  onOpenProxyFromTray: (callback) => {
+    const handler = (_event: Electron.IpcRendererEvent, proxyId: string): void => {
+      callback(proxyId)
+    }
+
+    ipcRenderer.on('tray:open-proxy', handler)
+    return () => {
+      ipcRenderer.removeListener('tray:open-proxy', handler)
+    }
+  },
+  onCheckAllState: (callback) => {
+    const handler = (_event: Electron.IpcRendererEvent, active: boolean): void => {
+      callback(active)
+    }
+
+    ipcRenderer.on('proxy:check-all-state', handler)
+    return () => {
+      ipcRenderer.removeListener('proxy:check-all-state', handler)
+    }
+  }
 }
 
 if (process.contextIsolated) {

@@ -9,6 +9,7 @@ import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
 import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightnessOutlined'
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
+import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined'
 import {
   Alert,
   Box,
@@ -212,6 +213,11 @@ function SettingsPage(): React.JSX.Element {
     notifySaved()
   }
 
+  const handleTrayEnabledChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ trayEnabled: enabled })
+    notifySaved()
+  }
+
   return (
     <Box sx={{ maxWidth: 760, mx: 'auto' }}>
       <Typography variant="h5" gutterBottom>
@@ -291,6 +297,30 @@ function SettingsPage(): React.JSX.Element {
               ))}
             </TextField>
           </Stack>
+        </ContentSection>
+
+        <ContentSection
+          icon={<WidgetsOutlinedIcon fontSize="small" />}
+          title={t('settings.sections.system')}
+          description={t('settings.sections.systemDescription')}
+        >
+          <FormControlLabel
+            control={
+              <Switch
+                checked={settings.trayEnabled}
+                onChange={(event) => void handleTrayEnabledChange(event.target.checked)}
+              />
+            }
+            label={
+              <Box>
+                <Typography variant="subtitle2">{t('settings.trayEnabled')}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {t('settings.trayEnabledHint')}
+                </Typography>
+              </Box>
+            }
+            sx={{ alignItems: 'flex-start', m: 0 }}
+          />
         </ContentSection>
 
         <ContentSection

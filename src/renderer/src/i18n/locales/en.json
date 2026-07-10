@@ -8,6 +8,7 @@
   },
   "common": {
     "cancel": "Cancel",
+    "close": "Close",
     "save": "Save",
     "add": "Add",
     "delete": "Delete",
@@ -217,6 +218,8 @@
     "sections": {
       "appearance": "Appearance",
       "appearanceDescription": "Theme and interface language.",
+      "system": "System",
+      "systemDescription": "Background behavior and quick access from the notification area.",
       "checking": "Proxy checking",
       "checkingDescription": "Connection timeout and optional target domains for additional availability tests.",
       "about": "About",
@@ -227,6 +230,8 @@
     "themeDark": "Dark",
     "themeSystem": "System",
     "language": "Language",
+    "trayEnabled": "Show in system tray",
+    "trayEnabledHint": "Keep ProxyChecker in the tray when the window is closed. Right-click the tray icon for favorite proxies and app actions.",
     "checkTimeout": "Connection timeout",
     "checkTimeoutHint": "Maximum wait time for each proxy check. Increase for slow proxies.",
     "checkTimeoutValue": "{{value}} s",
@@ -263,6 +268,16 @@
       "fixed": "Fixed",
       "security": "Security"
     }
+  },
+  "tray": {
+    "title": "Favorite proxies",
+    "subtitle": "{{alive}} of {{total}} alive",
+    "emptyTitle": "No favorites yet",
+    "emptyHint": "Star proxies in the app to pin them to the tray menu.",
+    "checkProxy": "Check proxy",
+    "checkAll": "Check all",
+    "openApp": "Open app",
+    "disabled": "Disabled"
   },
   "validation": {
     "hostRequired": "Host is required",

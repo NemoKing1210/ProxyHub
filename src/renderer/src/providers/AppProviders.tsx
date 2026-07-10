@@ -6,6 +6,8 @@ import { I18nextProvider } from 'react-i18next'
 import { HashRouter } from 'react-router-dom'
 import i18n from '../i18n'
 import App from '../App'
+import NativeTitleBarSync from '../components/NativeTitleBarSync'
+import ProxyDataSync from '../components/ProxyDataSync'
 import { useSettingsStore } from '../store/settingsStore'
 import { createAppTheme } from '../theme'
 import { RTL_LANGUAGES } from '../../../shared/types/settings'
@@ -45,6 +47,8 @@ function AppProviders(): React.JSX.Element {
         <ThemeProvider theme={theme} defaultMode={settings.theme} disableTransitionOnChange>
           <CssBaseline />
           <ThemeModeSync />
+          <NativeTitleBarSync />
+          <ProxyDataSync />
           <HashRouter>
             <App />
           </HashRouter>

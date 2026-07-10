@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.0] - 2026-07-10
+
+### Added
+
+- System tray support with a setting to enable minimize-to-tray behavior
+- Native tray context menu with favorite proxies, server latency, external IP, and location details
+- View-only proxy details dialog opened from the tray favorites menu
+- «Check all» and «Check all favorites» actions in the tray menu
+- Loading indicator on the Proxies nav item while a bulk check is running
+
+### Changed
+
+- Native Windows title bar now matches the selected app theme (light, dark, or system)
+- Tray menu latency shows server connectivity time instead of domain check time
+
 ## [1.15.0] - 2026-07-10
 
 ### Added
