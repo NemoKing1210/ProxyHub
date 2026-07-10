@@ -57,7 +57,10 @@ const api: AppAPI = {
     return () => {
       ipcRenderer.removeListener('proxy:check-all-state', handler)
     }
-  }
+  },
+  exportBackup: (kind) => ipcRenderer.invoke('backup:export', kind),
+  previewBackup: () => ipcRenderer.invoke('backup:preview'),
+  importBackup: (request) => ipcRenderer.invoke('backup:import', request)
 }
 
 if (process.contextIsolated) {

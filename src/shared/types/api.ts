@@ -1,3 +1,10 @@
+import type {
+  BackupExportKind,
+  BackupExportResponse,
+  BackupImportRequest,
+  BackupImportResponse,
+  BackupPreviewResponse
+} from './backup'
 import type { ThemeMode } from '../types/settings'
 import type { AppInfo } from './app'
 import type { ProxyGroup } from './proxy-group'
@@ -28,4 +35,7 @@ export interface AppAPI {
   onTrayProxiesUpdated: (callback: () => void) => () => void
   onOpenProxyFromTray: (callback: (proxyId: string) => void) => () => void
   onCheckAllState: (callback: (active: boolean) => void) => () => void
+  exportBackup: (kind: BackupExportKind) => Promise<BackupExportResponse>
+  previewBackup: () => Promise<BackupPreviewResponse>
+  importBackup: (request: BackupImportRequest) => Promise<BackupImportResponse>
 }

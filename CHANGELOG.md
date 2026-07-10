@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.25.0] - 2026-07-10
+
+### Added
+
+- Settings import and export: back up or restore proxies, groups, and app settings in a versioned ProxyChecker JSON format (`.pcbackup.json`), with export scope (full, proxies only, settings only), import preview before confirmation, and import modes (merge or replace)
+
 ## [1.24.0] - 2026-07-10
 
 ### Added

@@ -49,6 +49,7 @@ import ContentSection from '../components/ContentSection'
 import ChangelogView from '../components/ChangelogView'
 import LanguageFlag from '../components/LanguageFlag'
 import SettingsAutoCheckSection from '../components/SettingsAutoCheckSection'
+import SettingsBackupSection from '../components/SettingsBackupSection'
 import SettingsSystemSection from '../components/SettingsSystemSection'
 import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
@@ -91,12 +92,16 @@ function SettingsPage(): React.JSX.Element {
     useSettingsStore()
   const groups = useGroupStore((state) => state.groups)
   const loadGroups = useGroupStore((state) => state.loadGroups)
+  const loadSettings = useSettingsStore((state) => state.loadSettings)
   const favoriteCount = useProxyStore(
     (state) => state.proxies.filter((proxy) => proxy.isFavorite).length
   )
   const [domainInput, setDomainInput] = useState('')
   const [domainError, setDomainError] = useState<string | null>(null)
   const [savedOpen, setSavedOpen] = useState(false)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [feedbackSeverity, setFeedbackSeverity] = useState<'success' | 'error'>('success')
   const [timeoutDraft, setTimeoutDraft] = useState(settings.checkTimeoutMs / 1000)
   const [isDraggingTimeout, setIsDraggingTimeout] = useState(false)
   const [concurrencyDraft, setConcurrencyDraft] = useState(settings.checkAllConcurrency)
@@ -145,6 +150,23 @@ function SettingsPage(): React.JSX.Element {
 
   const notifySaved = (): void => {
     setSavedOpen(true)
+  }
+
+  const notifyFeedback = (message: string, severity: 'success' | 'error' = 'success'): void => {
+    setFeedbackMessage(message)
+    setFeedbackSeverity(severity)
+    setFeedbackOpen(true)
+  }
+
+  const handleReloadBackupData = async (): Promise<void> => {
+    const [proxies, groups] = await Promise.all([
+      window.api.getProxies(),
+      window.api.getGroups()
+    ])
+
+    useProxyStore.setState({ proxies })
+    useGroupStore.setState({ groups })
+    await loadSettings()
   }
 
   const handleThemeChange = async (
@@ -664,6 +686,21 @@ function SettingsPage(): React.JSX.Element {
           </Stack>
         </ContentSection>
 
+        <SettingsBackupSection
+          onExportSuccess={() => notifyFeedback(t('settings.backup.exportSuccess'))}
+          onImportSuccess={({ proxiesAdded, groupsAdded, settingsImported }) =>
+            notifyFeedback(
+              t('settings.backup.importSuccess', {
+                proxies: proxiesAdded,
+                groups: groupsAdded,
+                settings: settingsImported ? t('settings.backup.importSuccessSettings') : ''
+              })
+            )
+          }
+          onError={(message) => notifyFeedback(message, 'error')}
+          onReloadData={handleReloadBackupData}
+        />
+
         <ContentSection
           icon={<InfoOutlinedIcon fontSize="small" />}
           title={t('settings.sections.about')}
@@ -703,6 +740,21 @@ function SettingsPage(): React.JSX.Element {
       >
         <Alert severity="success" variant="filled" onClose={() => setSavedOpen(false)}>
           {t('settings.saved')}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={feedbackOpen}
+        autoHideDuration={4000}
+        onClose={() => setFeedbackOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity={feedbackSeverity}
+          variant="filled"
+          onClose={() => setFeedbackOpen(false)}
+        >
+          {feedbackMessage}
         </Alert>
       </Snackbar>
     </Box>
