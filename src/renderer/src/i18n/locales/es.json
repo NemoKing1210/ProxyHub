@@ -25,6 +25,7 @@
     "statsEnabled": "{{count}} activos",
     "statsFavorites": "{{count}} favoritos",
     "checkAll": "Comprobar todos",
+    "stopCheckAll": "Detener",
     "addProxy": "Añadir proxy",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -279,7 +280,7 @@
       "autoCheck": "Auto-comprobación",
       "autoCheckDescription": "Vuelve a comprobar los proxies periódicamente en segundo plano con la configuración actual.",
       "backup": "Importar y exportar",
-      "backupDescription": "Respaldar o restaurar proxies, grupos y ajustes en el formato ProxyChecker.",
+      "backupDescription": "Respaldar o restaurar proxies, grupos y ajustes en el formato ProxyChecker, o importar y exportar listas de proxies en CSV.",
       "dangerZone": "Zona de peligro",
       "dangerZoneDescription": "Borrar datos de proxies o restaurar la configuración predeterminada.",
       "about": "Acerca de",
@@ -333,6 +334,9 @@
     "domainDuplicate": "Este dominio ya está en la lista",
     "saved": "Ajustes guardados",
     "backup": {
+      "format": "Formato de archivo",
+      "formatBackup": "Copia ProxyChecker",
+      "formatCsv": "Lista CSV",
       "exportKind": "Qué exportar",
       "exportKindFull": "Proxies y ajustes",
       "exportKindProxies": "Solo proxies",
@@ -413,6 +417,38 @@
         "password_required": "Se requiere la contraseña de la copia",
         "wrong_password": "Contraseña de copia incorrecta",
         "unknown": "Error desconocido"
+      },
+      "csv": {
+        "formatHint": "Los archivos CSV solo contienen datos de conexión y metadatos. Las credenciales no se incluyen.",
+        "formatDescription": "Formato CSV: host,port,protocol,anonymity,https,country,city — un proxy por línea, encabezado opcional.",
+        "export": "Exportar CSV",
+        "importHint": "Elige un archivo CSV para revisar los proxies antes de importar.",
+        "selectFile": "Elegir archivo CSV",
+        "exportNoProxies": "Añade proxies antes de exportar una lista CSV.",
+        "exportError": "No se pudo exportar el archivo CSV",
+        "exportSuccess": "CSV exportado correctamente",
+        "importSuccess": "Importados {{proxies}} proxies{{skipped}}",
+        "importSuccessSkipped": ", {{skipped}} duplicados omitidos",
+        "importError": "No se pudo importar el archivo CSV: {{message}}",
+        "previewTitle": "Importar CSV",
+        "previewDescription": "Revisa los proxies del archivo CSV y asigna opcionalmente un grupo antes de importar.",
+        "previewValid": "Proxies válidos",
+        "previewInvalid": "Líneas inválidas",
+        "previewDuplicates": "Ya en la app",
+        "importGroup": "Grupo destino",
+        "importGroupNone": "Sin grupo",
+        "importGroupHint": "Opcional. Todos los proxies importados se colocarán en el grupo seleccionado.",
+        "importSelectProxies": "Proxies en el archivo",
+        "pageSelection": "{{selected}} de {{total}} en esta página",
+        "pageInfo": "Página {{page}} de {{total}}",
+        "duplicate": "Duplicado",
+        "previewConfirm": "Importar seleccionados",
+        "errors": {
+          "empty_file": "El archivo CSV está vacío",
+          "no_valid_entries": "No se encontraron proxies válidos en el archivo CSV",
+          "read_error": "No se pudo leer el archivo CSV",
+          "unknown": "Error desconocido"
+        }
       }
     },
     "dangerZone": {
@@ -477,6 +513,15 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "Eliminar proxies muertos",
+    "deleteDeadCount_one": "{{count}} muerto",
+    "deleteDeadCount_other": "{{count}} muertos",
+    "deleteDeadEmpty": "No hay proxies muertos en este grupo",
+    "deleteDeadConfirm": {
+      "title": "¿Eliminar proxies muertos?",
+      "message_one": "¿Eliminar {{count}} proxy muerto de \"{{name}}\"? Esta acción no se puede deshacer.",
+      "message_other": "¿Eliminar {{count}} proxies muertos de \"{{name}}\"? Esta acción no se puede deshacer."
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -492,6 +537,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "Añadir proxy",
+    "check": "Comprobar"
   }
 }

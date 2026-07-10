@@ -20,7 +20,6 @@ import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/prox
 import { useSettingsStore } from './settingsStore'
 import { useAutoCheckStore } from './autoCheckStore'
 import { getEnabledCheckDomains } from '../../../shared/types/settings'
-
 interface ProxyState {
   proxies: Proxy[]
   isLoading: boolean
@@ -50,8 +49,10 @@ interface ProxyState {
   toggleFavorite: (id: string) => Promise<void>
   toggleEnabled: (id: string) => Promise<void>
   removeProxy: (id: string) => Promise<void>
+  removeProxies: (ids: string[]) => Promise<void>
   checkProxy: (id: string) => Promise<void>
   checkAll: (proxyIds?: string[], options?: { source?: 'manual' | 'auto' }) => Promise<void>
+  cancelCheckAll: () => void
   detailsProxyId: string | null
   setDetailsProxyId: (proxyId: string | null) => void
 }
@@ -170,10 +171,23 @@ function getActiveCheckDomains(): string[] {
   return getEnabledCheckDomains(useSettingsStore.getState().settings.checkDomains)
 }
 
+let checkAllCancelRequested = false
+
 async function checkAllSequential(proxyIds: string[], get: () => ProxyState): Promise<void> {
   for (const id of proxyIds) {
-    if (!get().proxies.some((proxy) => proxy.id === id)) continue
+    if (checkAllCancelRequested) {
+      break
+    }
+
+    if (!get().proxies.some((proxy) => proxy.id === id)) {
+      continue
+    }
+
     await get().checkProxy(id)
+
+    if (checkAllCancelRequested) {
+      break
+    }
   }
 }
 
@@ -350,9 +364,22 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   },
 
   removeProxy: async (id) => {
-    const proxies = get().proxies.filter((proxy) => proxy.id !== id)
+    await get().removeProxies([id])
+  },
 
-    set({ proxies })
+  removeProxies: async (ids) => {
+    if (ids.length === 0) {
+      return
+    }
+
+    const idSet = new Set(ids)
+    const proxies = get().proxies.filter((proxy) => !idSet.has(proxy.id))
+    const detailsProxyId = get().detailsProxyId
+
+    set({
+      proxies,
+      detailsProxyId: detailsProxyId && idSet.has(detailsProxyId) ? null : detailsProxyId
+    })
     await persist(proxies)
   },
 
@@ -422,6 +449,8 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
 
     if (targets.length === 0 || get().isCheckingAll) return
 
+    checkAllCancelRequested = false
+
     const isAutoChecking = options?.source === 'auto'
 
     if (!isAutoChecking && useSettingsStore.getState().settings.autoCheckEnabled) {
@@ -439,6 +468,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
         await checkAllParallel(targets, checkOptions, get, set)
       } finally {
         set({ isAutoChecking: false })
+        checkAllCancelRequested = false
       }
       return
     }
@@ -449,6 +479,16 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
       await checkAllSequential(ids, get)
     } finally {
       set({ isCheckingAll: false, isAutoChecking: false })
+      checkAllCancelRequested = false
     }
+  },
+
+  cancelCheckAll: () => {
+    if (!get().isCheckingAll) {
+      return
+    }
+
+    checkAllCancelRequested = true
+    void window.api.cancelCheckAll()
   }
 }))

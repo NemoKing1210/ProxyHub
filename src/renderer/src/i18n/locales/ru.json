@@ -26,6 +26,7 @@
     "statsEnabled": "Активных: {{count}}",
     "statsFavorites": "Избранных: {{count}}",
     "checkAll": "Проверить все",
+    "stopCheckAll": "Остановить",
     "add": "Добавить",
     "addProxy": "Добавить прокси",
     "addGroup": "Добавить группу",
@@ -239,6 +240,7 @@
     "changeIcon": "Сменить иконку",
     "changeColor": "Сменить цвет",
     "addProxy": "Добавить прокси",
+    "check": "Проверить",
     "previewFallback": "Название группы",
     "previewHint": "Превью заголовка группы",
     "proxyCount_one": "{{count}} прокси",
@@ -249,6 +251,19 @@
       "title": "Удалить группу?",
       "message": "Удалить группу «{{name}}»? Это действие нельзя отменить.",
       "messageWithProxies": "Удалить группу «{{name}}»? {{count}} прокси останутся в списке без группы."
+    },
+    "deleteDead": "Удалить нерабочие прокси",
+    "deleteDeadCount_one": "{{count}} нерабочий",
+    "deleteDeadCount_few": "{{count}} нерабочих",
+    "deleteDeadCount_many": "{{count}} нерабочих",
+    "deleteDeadCount_other": "{{count}} нерабочих",
+    "deleteDeadEmpty": "В группе нет нерабочих прокси",
+    "deleteDeadConfirm": {
+      "title": "Удалить нерабочие прокси?",
+      "message_one": "Удалить {{count}} нерабочий прокси из «{{name}}»? Это действие нельзя отменить.",
+      "message_few": "Удалить {{count}} нерабочих прокси из «{{name}}»? Это действие нельзя отменить.",
+      "message_many": "Удалить {{count}} нерабочих прокси из «{{name}}»? Это действие нельзя отменить.",
+      "message_other": "Удалить {{count}} нерабочих прокси из «{{name}}»? Это действие нельзя отменить."
     },
     "validation": {
       "nameRequired": "Укажите название группы",
@@ -324,7 +339,7 @@
       "autoCheck": "Автопроверка",
       "autoCheckDescription": "Периодически перепроверяет прокси в фоне с использованием текущих параметров проверки.",
       "backup": "Импорт и экспорт",
-      "backupDescription": "Резервное копирование и восстановление прокси, групп и настроек в формате ProxyChecker.",
+      "backupDescription": "Резервное копирование и восстановление прокси, групп и настроек в формате ProxyChecker, а также импорт и экспорт списков прокси в CSV.",
       "dangerZone": "Опасная зона",
       "dangerZoneDescription": "Очистка данных прокси или сброс настроек приложения.",
       "about": "О программе",
@@ -384,6 +399,9 @@
     "domainDuplicate": "Этот домен уже есть в списке",
     "saved": "Настройки сохранены",
     "backup": {
+      "format": "Формат файла",
+      "formatBackup": "Резервная копия ProxyChecker",
+      "formatCsv": "CSV-список",
       "exportKind": "Что экспортировать",
       "exportKindFull": "Прокси и настройки",
       "exportKindProxies": "Только прокси",
@@ -464,6 +482,38 @@
         "password_required": "Требуется пароль резервной копии",
         "wrong_password": "Неверный пароль резервной копии",
         "unknown": "Неизвестная ошибка"
+      },
+      "csv": {
+        "formatHint": "CSV-файлы содержат только данные подключения и метаданные прокси. Учётные данные не включаются.",
+        "formatDescription": "Формат CSV: host,port,protocol,anonymity,https,country,city — одна строка на прокси, заголовок необязателен.",
+        "export": "Экспортировать CSV",
+        "importHint": "Выберите CSV-файл — сначала покажем список прокси, затем можно подтвердить импорт.",
+        "selectFile": "Выбрать CSV-файл",
+        "exportNoProxies": "Добавьте прокси перед экспортом CSV-списка.",
+        "exportError": "Не удалось экспортировать CSV-файл",
+        "exportSuccess": "CSV-файл успешно экспортирован",
+        "importSuccess": "Импортировано прокси: {{proxies}}{{skipped}}",
+        "importSuccessSkipped": ", пропущено дубликатов: {{skipped}}",
+        "importError": "Не удалось импортировать CSV-файл: {{message}}",
+        "previewTitle": "Импорт CSV",
+        "previewDescription": "Просмотрите прокси из CSV-файла и при необходимости назначьте им группу перед импортом.",
+        "previewValid": "Валидных прокси",
+        "previewInvalid": "Некорректных строк",
+        "previewDuplicates": "Уже в приложении",
+        "importGroup": "Целевая группа",
+        "importGroupNone": "Без группы",
+        "importGroupHint": "Необязательно. Все импортируемые прокси будут помещены в выбранную группу.",
+        "importSelectProxies": "Прокси в файле",
+        "pageSelection": "{{selected}} из {{total}} на странице",
+        "pageInfo": "Страница {{page}} из {{total}}",
+        "duplicate": "Дубликат",
+        "previewConfirm": "Импортировать выбранные",
+        "errors": {
+          "empty_file": "CSV-файл пуст",
+          "no_valid_entries": "В CSV-файле не найдено валидных прокси",
+          "read_error": "Не удалось прочитать CSV-файл",
+          "unknown": "Неизвестная ошибка"
+        }
       }
     },
     "dangerZone": {
@@ -503,6 +553,7 @@
     "emptyHint": "Отметьте прокси звёздочкой в приложении, чтобы закрепить их в меню трея.",
     "checkProxy": "Проверить прокси",
     "checkAll": "Проверить все",
+    "stopCheckAll": "Остановить",
     "openApp": "Открыть приложение",
     "disabled": "Отключён"
   },

@@ -5,6 +5,10 @@ import { applyCheckResult } from '../../shared/utils/proxy-check-apply'
 import { filterEnabledProxies } from '../../shared/utils/proxy-enabled'
 import { finalizeIncompleteProxy } from '../../shared/utils/proxy-check-results'
 import { getProxies, getSettings, saveProxies } from './app-store'
+import {
+  beginCancellableCheck,
+  clearCancellableCheck
+} from './check-cancellation'
 import { checkAllProxies, checkProxy } from './proxy-checker'
 import { refreshTrayContextMenu, refreshTrayTooltip } from './tray'
 
@@ -67,6 +71,8 @@ async function runTrayCheckAll(proxies: Proxy[]): Promise<void> {
 
   broadcastCheckAllState(true)
 
+  const signal = beginCancellableCheck()
+
   try {
     await checkAllProxies(
       targets,
@@ -79,9 +85,11 @@ async function runTrayCheckAll(proxies: Proxy[]): Promise<void> {
         }
       },
       settings.checkTimeoutMs,
-      concurrency
+      concurrency,
+      signal
     )
   } finally {
+    clearCancellableCheck(signal)
     broadcastCheckAllState(false)
     notifyTrayDataChanged()
   }
@@ -105,8 +113,16 @@ export async function checkTrayProxyById(proxyId: string): Promise<void> {
   checkingProxyIds.add(proxyId)
   void refreshTrayContextMenu()
 
+  const signal = beginCancellableCheck()
+
   try {
-    const result = await checkProxy(proxy, checkDomains, settings.checkTimeoutMs, broadcastProgress)
+    const result = await checkProxy(
+      proxy,
+      checkDomains,
+      settings.checkTimeoutMs,
+      broadcastProgress,
+      signal
+    )
     await persistProxyCheckResult(proxyId, result)
   } catch {
     const failed = finalizeIncompleteProxy(proxy)
@@ -114,6 +130,7 @@ export async function checkTrayProxyById(proxyId: string): Promise<void> {
     await saveProxies(updated)
     notifyTrayDataChanged()
   } finally {
+    clearCancellableCheck(signal)
     checkingProxyIds.delete(proxyId)
     notifyTrayDataChanged()
   }

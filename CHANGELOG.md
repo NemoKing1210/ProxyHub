@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.29.0] - 2026-07-11
+
+### Added
+
+- CSV import and export in Settings: switch between ProxyChecker backup and CSV list format; import preview with pagination, optional target group, and duplicate detection; export with proxy selection
+- Group header **Check** button: run **Check all** for enabled proxies in that group only
+- **Stop check** while **Check all** is running: cancel in-progress batch checks in sequential and parallel modes
+- Group actions: delete all dead proxies in a group, with count in the menu and a confirmation dialog
+
 ## [1.28.0] - 2026-07-10
 
 ### Added

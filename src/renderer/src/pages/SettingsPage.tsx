@@ -724,12 +724,24 @@ function SettingsPage(): React.JSX.Element {
           proxies={proxies}
           groups={groups}
           onExportSuccess={() => notifyFeedback(t('settings.backup.exportSuccess'))}
+          onCsvExportSuccess={() => notifyFeedback(t('settings.backup.csv.exportSuccess'))}
           onImportSuccess={({ proxiesAdded, groupsAdded, settingsImported }) =>
             notifyFeedback(
               t('settings.backup.importSuccess', {
                 proxies: proxiesAdded,
                 groups: groupsAdded,
                 settings: settingsImported ? t('settings.backup.importSuccessSettings') : ''
+              })
+            )
+          }
+          onCsvImportSuccess={({ proxiesAdded, skippedDuplicates }) =>
+            notifyFeedback(
+              t('settings.backup.csv.importSuccess', {
+                proxies: proxiesAdded,
+                skipped:
+                  skippedDuplicates > 0
+                    ? t('settings.backup.csv.importSuccessSkipped', { skipped: skippedDuplicates })
+                    : ''
               })
             )
           }

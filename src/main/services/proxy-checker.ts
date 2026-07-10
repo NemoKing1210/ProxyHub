@@ -16,6 +16,11 @@ import {
   createCheckingConnectivity,
   createPendingDomainChecks
 } from '../../shared/utils/proxy-check-results'
+import {
+  CheckCancelledError,
+  isCheckCancelledError,
+  throwIfCancelled
+} from './check-cancellation'
 
 const DEFAULT_CONCURRENCY = 1
 const EXTERNAL_IP_URL = 'https://api.ipify.org?format=json'
@@ -101,16 +106,27 @@ function createConnectivityBase(proxy: Proxy): Pick<
 function testTcpConnection(
   host: string,
   port: number,
-  timeoutMs: number
+  timeoutMs: number,
+  signal?: AbortSignal
 ): Promise<{ latencyMs: number }> {
   return new Promise((resolve, reject) => {
+    throwIfCancelled(signal)
+
     const start = Date.now()
     const socket = net.createConnection({ host, port })
 
     const cleanup = (): void => {
+      signal?.removeEventListener('abort', onAbort)
       socket.removeAllListeners()
       socket.destroy()
     }
+
+    const onAbort = (): void => {
+      cleanup()
+      reject(new CheckCancelledError())
+    }
+
+    signal?.addEventListener('abort', onAbort)
 
     const timer = setTimeout(() => {
       cleanup()
@@ -135,9 +151,12 @@ function testTcpConnection(
 function requestThroughProxy(
   agent: http.Agent,
   checkUrl: string,
-  timeoutMs: number
+  timeoutMs: number,
+  signal?: AbortSignal
 ): Promise<{ latencyMs: number }> {
   return new Promise((resolve, reject) => {
+    throwIfCancelled(signal)
+
     const start = Date.now()
 
     const request = https.request(
@@ -155,21 +174,40 @@ function requestThroughProxy(
       }
     )
 
+    const onAbort = (): void => {
+      request.destroy()
+      reject(new CheckCancelledError())
+    }
+
+    signal?.addEventListener('abort', onAbort, { once: true })
+
     request.on('timeout', () => {
+      signal?.removeEventListener('abort', onAbort)
       request.destroy()
       reject(new Error('Connection timeout'))
     })
 
     request.on('error', (error) => {
+      signal?.removeEventListener('abort', onAbort)
       reject(error)
+    })
+
+    request.on('close', () => {
+      signal?.removeEventListener('abort', onAbort)
     })
 
     request.end()
   })
 }
 
-function fetchExternalIp(agent: http.Agent, timeoutMs: number): Promise<string> {
+function fetchExternalIp(
+  agent: http.Agent,
+  timeoutMs: number,
+  signal?: AbortSignal
+): Promise<string> {
   return new Promise((resolve, reject) => {
+    throwIfCancelled(signal)
+
     const request = https.get(
       EXTERNAL_IP_URL,
       createHttpsRequestOptions(agent, timeoutMs),
@@ -202,13 +240,26 @@ function fetchExternalIp(agent: http.Agent, timeoutMs: number): Promise<string> 
       }
     )
 
+    const onAbort = (): void => {
+      request.destroy()
+      reject(new CheckCancelledError())
+    }
+
+    signal?.addEventListener('abort', onAbort, { once: true })
+
     request.on('timeout', () => {
+      signal?.removeEventListener('abort', onAbort)
       request.destroy()
       reject(new Error('Connection timeout'))
     })
 
     request.on('error', (error) => {
+      signal?.removeEventListener('abort', onAbort)
       reject(error)
+    })
+
+    request.on('close', () => {
+      signal?.removeEventListener('abort', onAbort)
     })
   })
 }
@@ -265,9 +316,12 @@ function emitConnectivityProgress(
 async function checkProxyConnectivity(
   proxy: Proxy,
   timeoutMs: number,
-  onProgress?: (progress: ProxyCheckProgress) => void
+  onProgress?: (progress: ProxyCheckProgress) => void,
+  signal?: AbortSignal
 ): Promise<ProxyConnectivityResult> {
   const base = createConnectivityBase(proxy)
+
+  throwIfCancelled(signal)
 
   emitConnectivityProgress(onProgress, proxy.id, {
     ...base,
@@ -275,7 +329,7 @@ async function checkProxyConnectivity(
   })
 
   try {
-    const result = await testTcpConnection(proxy.host, proxy.port, timeoutMs)
+    const result = await testTcpConnection(proxy.host, proxy.port, timeoutMs, signal)
     const connectivity: ProxyConnectivityResult = {
       ...base,
       status: 'alive',
@@ -285,6 +339,10 @@ async function checkProxyConnectivity(
     emitConnectivityProgress(onProgress, proxy.id, connectivity)
     return connectivity
   } catch (error) {
+    if (isCheckCancelledError(error)) {
+      throw error
+    }
+
     const connectivity: ProxyConnectivityResult = {
       ...base,
       status: 'dead',
@@ -301,16 +359,21 @@ async function resolveExternalIp(
   agent: http.Agent,
   timeoutMs: number,
   connectivity: ProxyConnectivityResult,
-  hasAliveDomain: boolean
+  hasAliveDomain: boolean,
+  signal?: AbortSignal
 ): Promise<ProxyConnectivityResult> {
   if (connectivity.status !== 'alive' && !hasAliveDomain) {
     return connectivity
   }
 
   try {
-    const externalIp = await fetchExternalIp(agent, timeoutMs)
+    const externalIp = await fetchExternalIp(agent, timeoutMs, signal)
     return { ...connectivity, externalIp }
-  } catch {
+  } catch (error) {
+    if (isCheckCancelledError(error)) {
+      throw error
+    }
+
     return connectivity
   }
 }
@@ -319,8 +382,11 @@ export async function checkProxy(
   proxy: Proxy,
   domains: string[],
   timeoutMs: number,
-  onProgress?: (progress: ProxyCheckProgress) => void
+  onProgress?: (progress: ProxyCheckProgress) => void,
+  signal?: AbortSignal
 ): Promise<ProxyCheckResult> {
+  throwIfCancelled(signal)
+
   const targets = skipsDomainChecks(proxy.protocol) ? [] : domains
   const checkedAt = new Date().toISOString()
   const pendingChecks = createPendingDomainChecks(targets)
@@ -333,7 +399,7 @@ export async function checkProxy(
     connectivity: initialConnectivity
   })
 
-  let connectivity = await checkProxyConnectivity(proxy, timeoutMs, onProgress)
+  let connectivity = await checkProxyConnectivity(proxy, timeoutMs, onProgress, signal)
 
   if (skipsDomainChecks(proxy.protocol)) {
     const connectivityAlive = connectivity.status === 'alive'
@@ -356,6 +422,8 @@ export async function checkProxy(
     const domainChecks: ProxyDomainCheckResult[] = []
 
     for (const domain of targets) {
+      throwIfCancelled(signal)
+
       const checkUrl = normalizeDomain(domain)
 
       emitDomainProgress(onProgress, proxy.id, {
@@ -365,7 +433,7 @@ export async function checkProxy(
       })
 
       try {
-        const result = await requestThroughProxy(agent, checkUrl, timeoutMs)
+        const result = await requestThroughProxy(agent, checkUrl, timeoutMs, signal)
         const completed: ProxyDomainCheckResult = {
           domain,
           url: checkUrl,
@@ -376,6 +444,10 @@ export async function checkProxy(
         domainChecks.push(completed)
         emitDomainProgress(onProgress, proxy.id, completed)
       } catch (error) {
+        if (isCheckCancelledError(error)) {
+          throw error
+        }
+
         const detail = createErrorDetail(error, domain, checkUrl)
         const completed: ProxyDomainCheckResult = {
           domain,
@@ -400,7 +472,8 @@ export async function checkProxy(
       agent,
       timeoutMs,
       connectivity,
-      hasAliveDomain || (!hasDomains && connectivityAlive)
+      hasAliveDomain || (!hasDomains && connectivityAlive),
+      signal
     )
 
     if (connectivity.externalIp) {
@@ -453,6 +526,10 @@ export async function checkProxy(
     onProgress?.({ phase: 'complete', result: finalResult })
     return finalResult
   } catch (error) {
+    if (isCheckCancelledError(error)) {
+      throw error
+    }
+
     const message = getErrorMessage(error)
     const code = getErrorCode(error)
     const failedChecks = buildAgentFailureChecks(targets, message, code)
@@ -482,17 +559,29 @@ export async function checkAllProxies(
   domains: string[],
   onProgress: (progress: ProxyCheckProgress) => void,
   timeoutMs: number,
-  concurrency = DEFAULT_CONCURRENCY
+  concurrency = DEFAULT_CONCURRENCY,
+  signal?: AbortSignal
 ): Promise<void> {
   let index = 0
 
   async function worker(): Promise<void> {
     while (index < proxies.length) {
+      throwIfCancelled(signal)
+
       const currentIndex = index
       index += 1
 
       const proxy = proxies[currentIndex]
-      await checkProxy(proxy, domains, timeoutMs, onProgress)
+
+      try {
+        await checkProxy(proxy, domains, timeoutMs, onProgress, signal)
+      } catch (error) {
+        if (isCheckCancelledError(error)) {
+          return
+        }
+
+        throw error
+      }
     }
   }
 

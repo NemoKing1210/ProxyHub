@@ -1,14 +1,18 @@
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import {
   Button,
   Chip,
+  CircularProgress,
   Collapse,
+  Divider,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -32,23 +36,33 @@ import ProxyIconPickerPopover from './ProxyIconPickerPopover'
 interface ProxyGroupSectionProps {
   group: ProxyGroup
   proxyCount: number
+  deadProxyCount: number
+  canCheck: boolean
+  isCheckingAll: boolean
   children: ReactNode
   onEdit: () => void
   onDelete: () => void
+  onDeleteDead: () => void
   onIconChange: (iconId: ProxyIconId | undefined) => void
   onColorChange: (colorId: ProxyColorId | undefined) => void
   onAddProxy: () => void
+  onCheck: () => void
 }
 
 function ProxyGroupSection({
   group,
   proxyCount,
+  deadProxyCount,
+  canCheck,
+  isCheckingAll,
   children,
   onEdit,
   onDelete,
+  onDeleteDead,
   onIconChange,
   onColorChange,
-  onAddProxy
+  onAddProxy,
+  onCheck
 }: ProxyGroupSectionProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
@@ -119,6 +133,47 @@ function ProxyGroupSection({
           size="small"
           sx={{ fontWeight: 600, display: { xs: 'none', sm: 'flex' } }}
         />
+
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={
+            isCheckingAll ? <CircularProgress size={16} color="inherit" /> : <PlaylistPlayIcon />
+          }
+          onClick={(event) => {
+            event.stopPropagation()
+            onCheck()
+          }}
+          disabled={!canCheck || isCheckingAll}
+          sx={{
+            flexShrink: 0,
+            display: { xs: 'none', md: 'inline-flex' },
+            borderColor: colorStyles.ring,
+            color: colorStyles.main,
+            '&:hover': {
+              borderColor: colorStyles.main,
+              bgcolor: colorStyles.accent
+            }
+          }}
+        >
+          {t('proxyGroup.check')}
+        </Button>
+
+        <IconButton
+          size="small"
+          aria-label={t('proxyGroup.check')}
+          onClick={(event) => {
+            event.stopPropagation()
+            onCheck()
+          }}
+          disabled={!canCheck || isCheckingAll}
+          sx={{
+            display: { xs: 'inline-flex', md: 'none' },
+            color: colorStyles.main
+          }}
+        >
+          {isCheckingAll ? <CircularProgress size={18} /> : <PlaylistPlayIcon fontSize="small" />}
+        </IconButton>
 
         <Button
           size="small"
@@ -215,6 +270,26 @@ function ProxyGroupSection({
             <PaletteOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{t('proxyGroup.changeColor')}</ListItemText>
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={() => {
+            closeMenu()
+            onDeleteDead()
+          }}
+          disabled={deadProxyCount === 0}
+        >
+          <ListItemIcon>
+            <DeleteSweepOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('proxyGroup.deleteDead')}
+            secondary={
+              deadProxyCount > 0
+                ? t('proxyGroup.deleteDeadCount', { count: deadProxyCount })
+                : t('proxyGroup.deleteDeadEmpty')
+            }
+          />
         </MenuItem>
         <MenuItem
           onClick={() => {

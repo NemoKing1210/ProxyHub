@@ -25,6 +25,7 @@
     "statsEnabled": "Активних: {{count}}",
     "statsFavorites": "Обраних: {{count}}",
     "checkAll": "Перевірити всі",
+    "stopCheckAll": "Зупинити",
     "addProxy": "Додати проксі",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -281,7 +282,7 @@
       "autoCheck": "Автоперевірка",
       "autoCheckDescription": "Періодично перепроверяє проксі у фоновому режимі з використанням поточних параметрів перевірки.",
       "backup": "Імпорт і експорт",
-      "backupDescription": "Резервне копіювання та відновлення проксі, груп і налаштувань у форматі ProxyChecker.",
+      "backupDescription": "Резервне копіювання та відновлення проксі, груп і налаштувань у форматі ProxyChecker, а також імпорт і експорт списків проксі в CSV.",
       "dangerZone": "Небезпечна зона",
       "dangerZoneDescription": "Очищення даних проксі або скидання налаштувань застосунку.",
       "about": "Про програму",
@@ -335,6 +336,9 @@
     "domainDuplicate": "Цей домен уже є в списку",
     "saved": "Налаштування збережено",
     "backup": {
+      "format": "Формат файлу",
+      "formatBackup": "Резервна копія ProxyChecker",
+      "formatCsv": "CSV-список",
       "exportKind": "Що експортувати",
       "exportKindFull": "Проксі та налаштування",
       "exportKindProxies": "Лише проксі",
@@ -415,6 +419,38 @@
         "password_required": "Потрібен пароль резервної копії",
         "wrong_password": "Невірний пароль резервної копії",
         "unknown": "Невідома помилка"
+      },
+      "csv": {
+        "formatHint": "CSV-файли містять лише дані підключення та метадані проксі. Облікові дані не включаються.",
+        "formatDescription": "Формат CSV: host,port,protocol,anonymity,https,country,city — один рядок на проксі, заголовок необов'язковий.",
+        "export": "Експортувати CSV",
+        "importHint": "Оберіть CSV-файл — спочатку покажемо список проксі, потім можна підтвердити імпорт.",
+        "selectFile": "Обрати CSV-файл",
+        "exportNoProxies": "Додайте проксі перед експортом CSV-списку.",
+        "exportError": "Не вдалося експортувати CSV-файл",
+        "exportSuccess": "CSV-файл успішно експортовано",
+        "importSuccess": "Імпортовано проксі: {{proxies}}{{skipped}}",
+        "importSuccessSkipped": ", пропущено дублікатів: {{skipped}}",
+        "importError": "Не вдалося імпортувати CSV-файл: {{message}}",
+        "previewTitle": "Імпорт CSV",
+        "previewDescription": "Перегляньте проксі з CSV-файлу та за потреби призначте їм групу перед імпортом.",
+        "previewValid": "Валідних проксі",
+        "previewInvalid": "Некоректних рядків",
+        "previewDuplicates": "Уже в застосунку",
+        "importGroup": "Цільова група",
+        "importGroupNone": "Без групи",
+        "importGroupHint": "Необов'язково. Усі імпортовані проксі будуть поміщені в обрану групу.",
+        "importSelectProxies": "Проксі у файлі",
+        "pageSelection": "{{selected}} з {{total}} на сторінці",
+        "pageInfo": "Сторінка {{page}} з {{total}}",
+        "duplicate": "Дублікат",
+        "previewConfirm": "Імпортувати вибрані",
+        "errors": {
+          "empty_file": "CSV-файл порожній",
+          "no_valid_entries": "У CSV-файлі не знайдено валідних проксі",
+          "read_error": "Не вдалося прочитати CSV-файл",
+          "unknown": "Невідома помилка"
+        }
       }
     },
     "dangerZone": {
@@ -479,6 +515,19 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "Видалити неробочі проксі",
+    "deleteDeadCount_one": "{{count}} неробочий",
+    "deleteDeadCount_few": "{{count}} неробочих",
+    "deleteDeadCount_many": "{{count}} неробочих",
+    "deleteDeadCount_other": "{{count}} неробочих",
+    "deleteDeadEmpty": "У групі немає неробочих проксі",
+    "deleteDeadConfirm": {
+      "title": "Видалити неробочі проксі?",
+      "message_one": "Видалити {{count}} неробочий проксі з «{{name}}»? Цю дію не можна скасувати.",
+      "message_few": "Видалити {{count}} неробочих проксі з «{{name}}»? Цю дію не можна скасувати.",
+      "message_many": "Видалити {{count}} неробочих проксі з «{{name}}»? Цю дію не можна скасувати.",
+      "message_other": "Видалити {{count}} неробочих проксі з «{{name}}»? Цю дію не можна скасувати."
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -494,6 +543,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "Додати проксі",
+    "check": "Перевірити"
   }
 }

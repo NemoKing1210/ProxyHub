@@ -5,6 +5,7 @@ import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutl
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
+import StopIcon from '@mui/icons-material/Stop'
 import StarIcon from '@mui/icons-material/Star'
 import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
 import { Box, Button, Chip, CircularProgress, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Stack, Typography } from '@mui/material'
@@ -42,6 +43,7 @@ import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyDetailsDialog from './ProxyDetailsDialog'
 import ProxyFormDialog from './ProxyFormDialog'
 import ProxyGroupDeleteConfirmDialog from './ProxyGroupDeleteConfirmDialog'
+import ProxyGroupDeleteDeadConfirmDialog from './ProxyGroupDeleteDeadConfirmDialog'
 import ProxyGroupFormDialog from './ProxyGroupFormDialog'
 import ProxyGroupSection from './ProxyGroupSection'
 import ProxyListFilters from './ProxyListFilters'
@@ -93,8 +95,10 @@ function ProxyList(): React.JSX.Element {
     toggleFavorite,
     toggleEnabled,
     removeProxy,
+    removeProxies,
     checkProxy,
     checkAll,
+    cancelCheckAll,
     detailsProxyId,
     setDetailsProxyId
   } = useProxyStore()
@@ -119,6 +123,7 @@ function ProxyList(): React.JSX.Element {
   const [groupDialogMode, setGroupDialogMode] = useState<'add' | 'edit'>('add')
   const [editingGroup, setEditingGroup] = useState<ProxyGroup | undefined>()
   const [deletingGroup, setDeletingGroup] = useState<ProxyGroup | undefined>()
+  const [deletingDeadGroup, setDeletingDeadGroup] = useState<ProxyGroup | undefined>()
   const [deletingProxy, setDeletingProxy] = useState<Proxy | undefined>()
   const {
     filters,
@@ -214,6 +219,17 @@ function ProxyList(): React.JSX.Element {
     await removeProxy(proxyId)
   }
 
+  const handleDeleteDeadConfirm = async (groupId: string): Promise<void> => {
+    const deadProxyIds = proxies
+      .filter((proxy) => proxy.groupId === groupId && proxy.status === 'dead')
+      .map((proxy) => proxy.id)
+
+    await removeProxies(deadProxyIds)
+  }
+
+  const getGroupDeadProxyCount = (groupId: string): number =>
+    proxies.filter((proxy) => proxy.groupId === groupId && proxy.status === 'dead').length
+
   const handleSubmit = async (values: ProxyFormValues): Promise<void> => {
     const input = toProxyInput(values)
 
@@ -298,6 +314,9 @@ function ProxyList(): React.JSX.Element {
   )
   const deletingGroupProxyCount = deletingGroup
     ? proxies.filter((proxy) => proxy.groupId === deletingGroup.id).length
+    : 0
+  const deletingDeadGroupProxyCount = deletingDeadGroup
+    ? getGroupDeadProxyCount(deletingDeadGroup.id)
     : 0
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
@@ -463,17 +482,18 @@ function ProxyList(): React.JSX.Element {
 
         <Stack direction="row" spacing={1}>
           <Button
-            variant="outlined"
-            startIcon={isCheckingAll ? <CircularProgress size={18} /> : <PlaylistPlayIcon />}
+            variant={isCheckingAll ? 'contained' : 'outlined'}
+            color={isCheckingAll ? 'error' : 'primary'}
+            startIcon={isCheckingAll ? <StopIcon /> : <PlaylistPlayIcon />}
             endIcon={
-              autoCheckEnabled ? (
+              !isCheckingAll && autoCheckEnabled ? (
                 <AutoCheckCountdownBadge enabled={autoCheckEnabled} embedded />
               ) : undefined
             }
-            onClick={() => void checkAll(checkableProxyIds)}
-            disabled={checkableProxyIds.length === 0 || isCheckingAll}
+            onClick={() => (isCheckingAll ? cancelCheckAll() : void checkAll(checkableProxyIds))}
+            disabled={!isCheckingAll && checkableProxyIds.length === 0}
           >
-            {t('proxyList.checkAll')}
+            {isCheckingAll ? t('proxyList.stopCheckAll') : t('proxyList.checkAll')}
           </Button>
           <Button
             variant="contained"
@@ -630,11 +650,20 @@ function ProxyList(): React.JSX.Element {
                   <ProxyGroupSection
                     group={section.group}
                     proxyCount={section.proxies.length}
+                    deadProxyCount={getGroupDeadProxyCount(section.group.id)}
+                    canCheck={filterEnabledProxies(section.proxies).length > 0}
+                    isCheckingAll={isCheckingAll}
                     onEdit={() => openEditGroupDialog(section.group)}
                     onDelete={() => setDeletingGroup(section.group)}
+                    onDeleteDead={() => setDeletingDeadGroup(section.group)}
                     onIconChange={(iconId) => void handleGroupIconChange(section.group, iconId)}
                     onColorChange={(colorId) => void handleGroupColorChange(section.group, colorId)}
                     onAddProxy={() => openAddDialogForGroup(section.group)}
+                    onCheck={() =>
+                      void checkAll(
+                        filterEnabledProxies(section.proxies).map((proxy) => proxy.id)
+                      )
+                    }
                   >
                     {section.proxies.map((proxy) => renderProxyCard(proxy))}
                   </ProxyGroupSection>
@@ -674,6 +703,14 @@ function ProxyList(): React.JSX.Element {
         proxyCount={deletingGroupProxyCount}
         onClose={() => setDeletingGroup(undefined)}
         onConfirm={handleGroupDeleteConfirm}
+      />
+
+      <ProxyGroupDeleteDeadConfirmDialog
+        open={Boolean(deletingDeadGroup)}
+        group={deletingDeadGroup}
+        deadProxyCount={deletingDeadGroupProxyCount}
+        onClose={() => setDeletingDeadGroup(undefined)}
+        onConfirm={handleDeleteDeadConfirm}
       />
 
       <ProxyDeleteConfirmDialog

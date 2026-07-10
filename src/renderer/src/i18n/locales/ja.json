@@ -25,6 +25,7 @@
     "statsEnabled": "有効 {{count}}",
     "statsFavorites": "お気に入り {{count}}",
     "checkAll": "すべて確認",
+    "stopCheckAll": "停止",
     "addProxy": "プロキシを追加",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -279,7 +280,7 @@
       "autoCheck": "自動確認",
       "autoCheckDescription": "現在の確認設定を使って、バックグラウンドでプロキシを定期的に再確認します。",
       "backup": "インポートとエクスポート",
-      "backupDescription": "ProxyChecker 形式でプロキシ、グループ、設定をバックアップまたは復元します。",
+      "backupDescription": "ProxyChecker 形式でプロキシ、グループ、設定をバックアップまたは復元するか、CSV 形式でプロキシリストをインポート・エクスポートします。",
       "dangerZone": "危険な操作",
       "dangerZoneDescription": "プロキシデータの削除、または既定の設定への復元。",
       "about": "アプリについて",
@@ -333,6 +334,9 @@
     "domainDuplicate": "このドメインは既にリストにあります",
     "saved": "設定を保存しました",
     "backup": {
+      "format": "ファイル形式",
+      "formatBackup": "ProxyChecker バックアップ",
+      "formatCsv": "CSV リスト",
       "exportKind": "エクスポート内容",
       "exportKindFull": "プロキシと設定",
       "exportKindProxies": "プロキシのみ",
@@ -413,6 +417,38 @@
         "password_required": "バックアップパスワードが必要です",
         "wrong_password": "バックアップパスワードが正しくありません",
         "unknown": "不明なエラー"
+      },
+      "csv": {
+        "formatHint": "CSV ファイルには接続情報とメタデータのみが含まれます。認証情報は含まれません。",
+        "formatDescription": "CSV 形式: host,port,protocol,anonymity,https,country,city — 1 行 1 プロキシ、ヘッダー行は任意。",
+        "export": "CSV をエクスポート",
+        "importHint": "インポート前に内容を確認する CSV ファイルを選択してください。",
+        "selectFile": "CSV ファイルを選択",
+        "exportNoProxies": "CSV リストをエクスポートする前にプロキシを追加してください。",
+        "exportError": "CSV ファイルをエクスポートできませんでした",
+        "exportSuccess": "CSV を正常にエクスポートしました",
+        "importSuccess": "{{proxies}} 件のプロキシをインポートしました{{skipped}}",
+        "importSuccessSkipped": "、{{skipped}} 件の重複をスキップ",
+        "importError": "CSV ファイルをインポートできませんでした: {{message}}",
+        "previewTitle": "CSV をインポート",
+        "previewDescription": "CSV ファイルのプロキシを確認し、必要に応じてグループを割り当ててからインポートします。",
+        "previewValid": "有効なプロキシ",
+        "previewInvalid": "無効な行",
+        "previewDuplicates": "アプリに既存",
+        "importGroup": "対象グループ",
+        "importGroupNone": "グループなし",
+        "importGroupHint": "任意。インポートしたすべてのプロキシが選択したグループに配置されます。",
+        "importSelectProxies": "ファイル内のプロキシ",
+        "pageSelection": "このページで {{selected}}/{{total}}",
+        "pageInfo": "{{total}} ページ中 {{page}} ページ",
+        "duplicate": "重複",
+        "previewConfirm": "選択をインポート",
+        "errors": {
+          "empty_file": "CSV ファイルが空です",
+          "no_valid_entries": "CSV ファイルに有効なプロキシが見つかりません",
+          "read_error": "CSV ファイルを読み取れませんでした",
+          "unknown": "不明なエラー"
+        }
       }
     },
     "dangerZone": {
@@ -477,6 +513,15 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "死んだプロキシを削除",
+    "deleteDeadCount_one": "死 {{count}} 件",
+    "deleteDeadCount_other": "死 {{count}} 件",
+    "deleteDeadEmpty": "このグループに死んだプロキシはありません",
+    "deleteDeadConfirm": {
+      "title": "死んだプロキシを削除しますか？",
+      "message_one": "「{{name}}」から死んだプロキシ {{count}} 件を削除しますか？元に戻せません。",
+      "message_other": "「{{name}}」から死んだプロキシ {{count}} 件を削除しますか？元に戻せません。"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -492,6 +537,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "プロキシを追加",
+    "check": "チェック"
   }
 }

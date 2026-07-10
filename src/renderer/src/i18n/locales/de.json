@@ -25,6 +25,7 @@
     "statsEnabled": "{{count}} aktiv",
     "statsFavorites": "{{count}} Favoriten",
     "checkAll": "Alle prüfen",
+    "stopCheckAll": "Stoppen",
     "addProxy": "Proxy hinzufügen",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -279,7 +280,7 @@
       "autoCheck": "Auto-Prüfung",
       "autoCheckDescription": "Prüft Proxys regelmäßig im Hintergrund mit den aktuellen Prüfeinstellungen erneut.",
       "backup": "Import & Export",
-      "backupDescription": "Proxys, Gruppen und Einstellungen im ProxyChecker-Format sichern oder wiederherstellen.",
+      "backupDescription": "Proxys, Gruppen und Einstellungen im ProxyChecker-Format sichern oder wiederherstellen, oder Proxy-Listen als CSV importieren und exportieren.",
       "dangerZone": "Gefahrenbereich",
       "dangerZoneDescription": "Proxy-Daten löschen oder Standardeinstellungen wiederherstellen.",
       "about": "Über",
@@ -333,6 +334,9 @@
     "domainDuplicate": "Diese Domain ist bereits in der Liste",
     "saved": "Einstellungen gespeichert",
     "backup": {
+      "format": "Dateiformat",
+      "formatBackup": "ProxyChecker-Backup",
+      "formatCsv": "CSV-Liste",
       "exportKind": "Was exportieren",
       "exportKindFull": "Proxys & Einstellungen",
       "exportKindProxies": "Nur Proxys",
@@ -413,6 +417,38 @@
         "password_required": "Backup-Passwort erforderlich",
         "wrong_password": "Falsches Backup-Passwort",
         "unknown": "Unbekannter Fehler"
+      },
+      "csv": {
+        "formatHint": "CSV-Dateien enthalten nur Verbindungsdaten und Metadaten. Anmeldedaten sind nicht enthalten.",
+        "formatDescription": "CSV-Format: host,port,protocol,anonymity,https,country,city — ein Proxy pro Zeile, Kopfzeile optional.",
+        "export": "CSV exportieren",
+        "importHint": "CSV-Datei wählen — Proxys werden vor dem Import angezeigt.",
+        "selectFile": "CSV-Datei wählen",
+        "exportNoProxies": "Proxys hinzufügen, bevor eine CSV-Liste exportiert wird.",
+        "exportError": "CSV-Datei konnte nicht exportiert werden",
+        "exportSuccess": "CSV-Datei erfolgreich exportiert",
+        "importSuccess": "{{proxies}} Proxys importiert{{skipped}}",
+        "importSuccessSkipped": ", {{skipped}} Duplikate übersprungen",
+        "importError": "CSV-Datei konnte nicht importiert werden: {{message}}",
+        "previewTitle": "CSV importieren",
+        "previewDescription": "Proxys aus der CSV-Datei prüfen und optional einer Gruppe zuweisen.",
+        "previewValid": "Gültige Proxys",
+        "previewInvalid": "Ungültige Zeilen",
+        "previewDuplicates": "Bereits in der App",
+        "importGroup": "Zielgruppe",
+        "importGroupNone": "Ohne Gruppe",
+        "importGroupHint": "Optional. Alle importierten Proxys werden der gewählten Gruppe zugeordnet.",
+        "importSelectProxies": "Proxys in der Datei",
+        "pageSelection": "{{selected}} von {{total}} auf dieser Seite",
+        "pageInfo": "Seite {{page}} von {{total}}",
+        "duplicate": "Duplikat",
+        "previewConfirm": "Auswahl importieren",
+        "errors": {
+          "empty_file": "CSV-Datei ist leer",
+          "no_valid_entries": "Keine gültigen Proxy-Einträge in der CSV-Datei gefunden",
+          "read_error": "CSV-Datei konnte nicht gelesen werden",
+          "unknown": "Unbekannter Fehler"
+        }
       }
     },
     "dangerZone": {
@@ -477,6 +513,15 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "Tote Proxys löschen",
+    "deleteDeadCount_one": "{{count}} tot",
+    "deleteDeadCount_other": "{{count}} tot",
+    "deleteDeadEmpty": "Keine toten Proxys in dieser Gruppe",
+    "deleteDeadConfirm": {
+      "title": "Tote Proxys löschen?",
+      "message_one": "{{count}} toten Proxy aus \"{{name}}\" löschen? Dies kann nicht rückgängig gemacht werden.",
+      "message_other": "{{count}} tote Proxys aus \"{{name}}\" löschen? Dies kann nicht rückgängig gemacht werden."
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -492,6 +537,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "Proxy hinzufügen",
+    "check": "Prüfen"
   }
 }

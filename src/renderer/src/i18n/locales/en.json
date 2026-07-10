@@ -26,6 +26,7 @@
     "statsEnabled": "{{count}} enabled",
     "statsFavorites": "{{count}} favorites",
     "checkAll": "Check all",
+    "stopCheckAll": "Stop check",
     "add": "Add",
     "addProxy": "Add proxy",
     "addGroup": "Add group",
@@ -239,6 +240,7 @@
     "changeIcon": "Change icon",
     "changeColor": "Change color",
     "addProxy": "Add proxy",
+    "check": "Check",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
     "proxyCount_one": "{{count}} proxy",
@@ -247,6 +249,15 @@
       "title": "Delete group?",
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "deleteDead": "Delete dead proxies",
+    "deleteDeadCount_one": "{{count}} dead proxy",
+    "deleteDeadCount_other": "{{count}} dead proxies",
+    "deleteDeadEmpty": "No dead proxies in this group",
+    "deleteDeadConfirm": {
+      "title": "Delete dead proxies?",
+      "message_one": "Delete {{count}} dead proxy from \"{{name}}\"? This cannot be undone.",
+      "message_other": "Delete {{count}} dead proxies from \"{{name}}\"? This cannot be undone."
     },
     "validation": {
       "nameRequired": "Group name is required",
@@ -322,7 +333,7 @@
       "autoCheck": "Auto-check",
       "autoCheckDescription": "Periodically re-check proxies in the background using your check settings.",
       "backup": "Import & export",
-      "backupDescription": "Back up or restore proxies, groups, and app settings in the ProxyChecker format.",
+      "backupDescription": "Back up or restore proxies, groups, and app settings in ProxyChecker format, or import and export proxy lists as CSV.",
       "dangerZone": "Danger zone",
       "dangerZoneDescription": "Clear proxy data or restore default application settings.",
       "about": "About",
@@ -382,6 +393,9 @@
     "domainDuplicate": "This domain is already in the list",
     "saved": "Settings saved",
     "backup": {
+      "format": "File format",
+      "formatBackup": "ProxyChecker backup",
+      "formatCsv": "CSV list",
       "exportKind": "What to export",
       "exportKindFull": "Proxies & settings",
       "exportKindProxies": "Proxies only",
@@ -462,6 +476,38 @@
         "password_required": "Backup password is required",
         "wrong_password": "Wrong backup password",
         "unknown": "Unknown error"
+      },
+      "csv": {
+        "formatHint": "CSV files contain proxy connection details and metadata only. Credentials are not included.",
+        "formatDescription": "CSV format: host,port,protocol,anonymity,https,country,city — one proxy per line with an optional header row.",
+        "export": "Export CSV",
+        "importHint": "Choose a CSV file to review proxies before importing.",
+        "selectFile": "Choose CSV file",
+        "exportNoProxies": "Add proxies before exporting a CSV list.",
+        "exportError": "Could not export CSV file",
+        "exportSuccess": "CSV exported successfully",
+        "importSuccess": "Imported {{proxies}} proxies{{skipped}}",
+        "importSuccessSkipped": ", {{skipped}} duplicates skipped",
+        "importError": "Could not import CSV file: {{message}}",
+        "previewTitle": "Import CSV",
+        "previewDescription": "Review proxies from the CSV file and optionally assign them to a group before importing.",
+        "previewValid": "Valid proxies",
+        "previewInvalid": "Invalid lines",
+        "previewDuplicates": "Already in app",
+        "importGroup": "Target group",
+        "importGroupNone": "Without group",
+        "importGroupHint": "Optional. All imported proxies will be placed in the selected group.",
+        "importSelectProxies": "Proxies in file",
+        "pageSelection": "{{selected}} of {{total}} on this page",
+        "pageInfo": "Page {{page}} of {{total}}",
+        "duplicate": "Duplicate",
+        "previewConfirm": "Import selected",
+        "errors": {
+          "empty_file": "CSV file is empty",
+          "no_valid_entries": "No valid proxy entries found in CSV file",
+          "read_error": "Could not read CSV file",
+          "unknown": "Unknown error"
+        }
       }
     },
     "dangerZone": {
@@ -501,6 +547,7 @@
     "emptyHint": "Star proxies in the app to pin them to the tray menu.",
     "checkProxy": "Check proxy",
     "checkAll": "Check all",
+    "stopCheckAll": "Stop check",
     "openApp": "Open app",
     "disabled": "Disabled"
   },

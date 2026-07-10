@@ -6,6 +6,13 @@ import type {
   BackupPreviewResponse,
   BackupUnlockPreviewRequest
 } from './backup'
+import type {
+  CsvExportRequest,
+  CsvExportResponse,
+  CsvImportPreviewResponse,
+  CsvImportRequest,
+  CsvImportResponse
+} from './proxy-import'
 import type { ThemeMode } from '../types/settings'
 import type { AppInfo } from './app'
 import type { ProxyGroup } from './proxy-group'
@@ -24,6 +31,7 @@ export interface AppAPI {
   saveGroups: (groups: ProxyGroup[]) => Promise<void>
   checkProxy: (proxy: Proxy, options: ProxyCheckOptions) => Promise<ProxyCheckResult>
   checkAll: (proxies: Proxy[], options: ProxyCheckOptions) => Promise<void>
+  cancelCheckAll: () => Promise<void>
   onCheckProgress: (callback: (progress: ProxyCheckProgress) => void) => () => void
   getSettings: () => Promise<AppSettings>
   saveSettings: (settings: AppSettings) => Promise<void>
@@ -40,4 +48,7 @@ export interface AppAPI {
   previewBackup: () => Promise<BackupPreviewResponse>
   unlockBackupPreview: (request: BackupUnlockPreviewRequest) => Promise<BackupPreviewResponse>
   importBackup: (request: BackupImportRequest) => Promise<BackupImportResponse>
+  previewCsvImport: () => Promise<CsvImportPreviewResponse>
+  importCsv: (request: CsvImportRequest) => Promise<CsvImportResponse>
+  exportCsv: (request: CsvExportRequest) => Promise<CsvExportResponse>
 }

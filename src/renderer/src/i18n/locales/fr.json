@@ -25,6 +25,7 @@
     "statsEnabled": "{{count}} actifs",
     "statsFavorites": "{{count}} favoris",
     "checkAll": "Tout vérifier",
+    "stopCheckAll": "Arrêter",
     "addProxy": "Ajouter un proxy",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -279,7 +280,7 @@
       "autoCheck": "Vérification auto",
       "autoCheckDescription": "Revérifie périodiquement les proxys en arrière-plan avec les paramètres de vérification actuels.",
       "backup": "Import et export",
-      "backupDescription": "Sauvegarder ou restaurer les proxys, groupes et paramètres au format ProxyChecker.",
+      "backupDescription": "Sauvegarder ou restaurer les proxys, groupes et paramètres au format ProxyChecker, ou importer et exporter des listes de proxys en CSV.",
       "dangerZone": "Zone de danger",
       "dangerZoneDescription": "Effacer les données de proxys ou restaurer les paramètres par défaut.",
       "about": "À propos",
@@ -333,6 +334,9 @@
     "domainDuplicate": "Ce domaine est déjà dans la liste",
     "saved": "Paramètres enregistrés",
     "backup": {
+      "format": "Format de fichier",
+      "formatBackup": "Sauvegarde ProxyChecker",
+      "formatCsv": "Liste CSV",
       "exportKind": "Que exporter",
       "exportKindFull": "Proxys et paramètres",
       "exportKindProxies": "Proxys uniquement",
@@ -413,6 +417,38 @@
         "password_required": "Mot de passe de sauvegarde requis",
         "wrong_password": "Mot de passe de sauvegarde incorrect",
         "unknown": "Erreur inconnue"
+      },
+      "csv": {
+        "formatHint": "Les fichiers CSV contiennent uniquement les détails de connexion et les métadonnées. Les identifiants ne sont pas inclus.",
+        "formatDescription": "Format CSV : host,port,protocol,anonymity,https,country,city — un proxy par ligne, en-tête optionnel.",
+        "export": "Exporter CSV",
+        "importHint": "Choisissez un fichier CSV pour examiner les proxys avant l'import.",
+        "selectFile": "Choisir un fichier CSV",
+        "exportNoProxies": "Ajoutez des proxys avant d'exporter une liste CSV.",
+        "exportError": "Impossible d'exporter le fichier CSV",
+        "exportSuccess": "CSV exporté avec succès",
+        "importSuccess": "{{proxies}} proxys importés{{skipped}}",
+        "importSuccessSkipped": ", {{skipped}} doublons ignorés",
+        "importError": "Impossible d'importer le fichier CSV : {{message}}",
+        "previewTitle": "Importer CSV",
+        "previewDescription": "Examinez les proxys du fichier CSV et assignez éventuellement un groupe avant l'import.",
+        "previewValid": "Proxys valides",
+        "previewInvalid": "Lignes invalides",
+        "previewDuplicates": "Déjà dans l'app",
+        "importGroup": "Groupe cible",
+        "importGroupNone": "Sans groupe",
+        "importGroupHint": "Optionnel. Tous les proxys importés seront placés dans le groupe sélectionné.",
+        "importSelectProxies": "Proxys dans le fichier",
+        "pageSelection": "{{selected}} sur {{total}} sur cette page",
+        "pageInfo": "Page {{page}} sur {{total}}",
+        "duplicate": "Doublon",
+        "previewConfirm": "Importer la sélection",
+        "errors": {
+          "empty_file": "Le fichier CSV est vide",
+          "no_valid_entries": "Aucun proxy valide trouvé dans le fichier CSV",
+          "read_error": "Impossible de lire le fichier CSV",
+          "unknown": "Erreur inconnue"
+        }
       }
     },
     "dangerZone": {
@@ -477,6 +513,15 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "Supprimer les proxys morts",
+    "deleteDeadCount_one": "{{count}} mort",
+    "deleteDeadCount_other": "{{count}} morts",
+    "deleteDeadEmpty": "Aucun proxy mort dans ce groupe",
+    "deleteDeadConfirm": {
+      "title": "Supprimer les proxys morts ?",
+      "message_one": "Supprimer {{count}} proxy mort de « {{name}} » ? Cette action est irréversible.",
+      "message_other": "Supprimer {{count}} proxys morts de « {{name}} » ? Cette action est irréversible."
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -492,6 +537,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "Ajouter un proxy",
+    "check": "Vérifier"
   }
 }

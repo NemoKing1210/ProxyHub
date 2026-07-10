@@ -25,6 +25,7 @@
     "statsEnabled": "सक्रिय {{count}}",
     "statsFavorites": "पसंदीदा {{count}}",
     "checkAll": "सभी जांचें",
+    "stopCheckAll": "रोकें",
     "addProxy": "प्रॉक्सी जोड़ें",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -280,7 +281,7 @@
       "autoCheck": "ऑटो-जाँच",
       "autoCheckDescription": "वर्तमान जाँच सेटिंग्स का उपयोग करके पृष्ठभूमि में प्रॉक्सी की समय-समय पर पुनः जाँच करता है।",
       "backup": "आयात और निर्यात",
-      "backupDescription": "ProxyChecker प्रारूप में प्रॉक्सी, समूह और ऐप सेटिंग्स का बैकअप या पुनर्स्थापना करें।",
+      "backupDescription": "ProxyChecker प्रारूप में प्रॉक्सी, समूह और ऐप सेटिंग्स का बैकअप या पुनर्स्थापना करें, या CSV में प्रॉक्सी सूचियाँ आयात/निर्यात करें।",
       "dangerZone": "खतरनाक क्षेत्र",
       "dangerZoneDescription": "प्रॉक्सी डेटा साफ़ करें या डिफ़ॉल्ट सेटिंग्स पुनर्स्थापित करें।",
       "about": "ऐप के बारे में",
@@ -334,6 +335,9 @@
     "domainDuplicate": "यह डोमेन पहले से सूची में है",
     "saved": "सेटिंग्स सहेजी गईं",
     "backup": {
+      "format": "फ़ाइल प्रारूप",
+      "formatBackup": "ProxyChecker बैकअप",
+      "formatCsv": "CSV सूची",
       "exportKind": "क्या निर्यात करें",
       "exportKindFull": "प्रॉक्सी और सेटिंग्स",
       "exportKindProxies": "केवल प्रॉक्सी",
@@ -414,6 +418,38 @@
         "password_required": "Backup password is required",
         "wrong_password": "Wrong backup password",
         "unknown": "अज्ञात त्रुटि"
+      },
+      "csv": {
+        "formatHint": "CSV फ़ाइलों में केवल कनेक्शन विवरण और मेटाडेटा होता है। क्रेडेंशियल शामिल नहीं होते।",
+        "formatDescription": "CSV प्रारूप: host,port,protocol,anonymity,https,country,city — प्रति पंक्ति एक प्रॉक्सी, हेडर वैकल्पिक।",
+        "export": "CSV निर्यात करें",
+        "importHint": "आयात से पहले प्रॉक्सी देखने के लिए CSV फ़ाइल चुनें।",
+        "selectFile": "CSV फ़ाइल चुनें",
+        "exportNoProxies": "CSV सूची निर्यात करने से पहले प्रॉक्सी जोड़ें।",
+        "exportError": "CSV फ़ाइल निर्यात नहीं हो सकी",
+        "exportSuccess": "CSV सफलतापूर्वक निर्यात हुआ",
+        "importSuccess": "{{proxies}} प्रॉक्सी आयात किए गए{{skipped}}",
+        "importSuccessSkipped": ", {{skipped}} डुप्लिकेट छोड़े गए",
+        "importError": "CSV फ़ाइल आयात नहीं हो सकी: {{message}}",
+        "previewTitle": "CSV आयात",
+        "previewDescription": "CSV फ़ाइल की प्रॉक्सी देखें और आयात से पहले वैकल्पिक रूप से समूह चुनें।",
+        "previewValid": "मान्य प्रॉक्सी",
+        "previewInvalid": "अमान्य पंक्तियाँ",
+        "previewDuplicates": "ऐप में पहले से",
+        "importGroup": "लक्ष्य समूह",
+        "importGroupNone": "बिना समूह",
+        "importGroupHint": "वैकल्पिक। सभी आयातित प्रॉक्सी चयनित समूह में रखे जाएँगे।",
+        "importSelectProxies": "फ़ाइल में प्रॉक्सी",
+        "pageSelection": "इस पृष्ठ पर {{selected}}/{{total}}",
+        "pageInfo": "पृष्ठ {{page}}/{{total}}",
+        "duplicate": "डुप्लिकेट",
+        "previewConfirm": "चयनित आयात करें",
+        "errors": {
+          "empty_file": "CSV फ़ाइल खाली है",
+          "no_valid_entries": "CSV फ़ाइल में कोई मान्य प्रॉक्सी नहीं मिली",
+          "read_error": "CSV फ़ाइल पढ़ी नहीं जा सकी",
+          "unknown": "अज्ञात त्रुटि"
+        }
       }
     },
     "dangerZone": {
@@ -478,6 +514,15 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "मृत प्रॉक्सी हटाएँ",
+    "deleteDeadCount_one": "{{count}} मृत",
+    "deleteDeadCount_other": "{{count}} मृत",
+    "deleteDeadEmpty": "इस समूह में कोई मृत प्रॉक्सी नहीं",
+    "deleteDeadConfirm": {
+      "title": "मृत प्रॉक्सी हटाएँ?",
+      "message_one": "\"{{name}}\" से {{count}} मृत प्रॉक्सी हटाएँ? यह पूर्ववत नहीं हो सकता।",
+      "message_other": "\"{{name}}\" से {{count}} मृत प्रॉक्सी हटाएँ? यह पूर्ववत नहीं हो सकता।"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -493,6 +538,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "प्रॉक्सी जोड़ें",
+    "check": "जांचें"
   }
 }

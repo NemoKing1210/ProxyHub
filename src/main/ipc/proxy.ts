@@ -1,13 +1,26 @@
-import { ipcMain, type WebContents } from 'electron'
+import { BrowserWindow, ipcMain, type WebContents } from 'electron'
 import type { Proxy, ProxyCheckProgress } from '../../shared/types/proxy'
 import type { ProxyCheckOptions } from '../../shared/types/settings'
 import type { ProxyGroup } from '../../shared/types/proxy-group'
 import { getGroups, getProxies, saveGroups, saveProxies } from '../services/app-store'
+import {
+  beginCancellableCheck,
+  cancelActiveCheck,
+  clearCancellableCheck
+} from '../services/check-cancellation'
 import { checkAllProxies, checkProxy } from '../services/proxy-checker'
 import { notifyTrayDataChanged } from './tray'
 
 function sendProgress(webContents: WebContents, progress: ProxyCheckProgress): void {
   webContents.send('proxy:check-progress', progress)
+}
+
+function broadcastCheckAllState(active: boolean): void {
+  for (const window of BrowserWindow.getAllWindows()) {
+    if (!window.isDestroyed()) {
+      window.webContents.send('proxy:check-all-state', active)
+    }
+  }
 }
 
 export function registerProxyIpc(): void {
@@ -25,21 +38,44 @@ export function registerProxyIpc(): void {
   })
 
   ipcMain.handle('proxy:check', async (event, proxy: Proxy, options: ProxyCheckOptions) => {
-    return checkProxy(proxy, options.checkDomains, options.checkTimeoutMs, (progress) =>
-      sendProgress(event.sender, progress)
-    )
+    const signal = beginCancellableCheck()
+
+    try {
+      return await checkProxy(
+        proxy,
+        options.checkDomains,
+        options.checkTimeoutMs,
+        (progress) => sendProgress(event.sender, progress),
+        signal
+      )
+    } finally {
+      clearCancellableCheck(signal)
+    }
   })
 
   ipcMain.handle(
     'proxy:check-all',
     async (event, proxies: Proxy[], options: ProxyCheckOptions) => {
-      await checkAllProxies(
-        proxies,
-        options.checkDomains,
-        (progress) => sendProgress(event.sender, progress),
-        options.checkTimeoutMs,
-        options.checkAllConcurrency
-      )
+      const signal = beginCancellableCheck()
+      broadcastCheckAllState(true)
+
+      try {
+        await checkAllProxies(
+          proxies,
+          options.checkDomains,
+          (progress) => sendProgress(event.sender, progress),
+          options.checkTimeoutMs,
+          options.checkAllConcurrency,
+          signal
+        )
+      } finally {
+        clearCancellableCheck(signal)
+        broadcastCheckAllState(false)
+      }
     }
   )
+
+  ipcMain.handle('proxy:cancel-check-all', async () => {
+    cancelActiveCheck()
+  })
 }

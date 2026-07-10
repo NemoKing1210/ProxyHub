@@ -25,6 +25,7 @@
     "statsEnabled": "已启用 {{count}}",
     "statsFavorites": "收藏 {{count}}",
     "checkAll": "全部检测",
+    "stopCheckAll": "停止检测",
     "addProxy": "添加代理",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -280,7 +281,7 @@
       "autoCheck": "自动检测",
       "autoCheckDescription": "使用当前检测设置在后台定期重新检测代理。",
       "backup": "导入与导出",
-      "backupDescription": "以 ProxyChecker 格式备份或恢复代理、分组和应用设置。",
+      "backupDescription": "以 ProxyChecker 格式备份或恢复代理、分组和应用设置，或以 CSV 格式导入和导出代理列表。",
       "dangerZone": "危险操作",
       "dangerZoneDescription": "清除代理数据或恢复默认应用设置。",
       "about": "关于",
@@ -334,6 +335,9 @@
     "domainDuplicate": "该域名已在列表中",
     "saved": "设置已保存",
     "backup": {
+      "format": "文件格式",
+      "formatBackup": "ProxyChecker 备份",
+      "formatCsv": "CSV 列表",
       "exportKind": "导出内容",
       "exportKindFull": "代理和设置",
       "exportKindProxies": "仅代理",
@@ -414,6 +418,38 @@
         "password_required": "需要备份密码",
         "wrong_password": "备份密码错误",
         "unknown": "未知错误"
+      },
+      "csv": {
+        "formatHint": "CSV 文件仅包含连接详情和元数据，不包含凭据。",
+        "formatDescription": "CSV 格式：host,port,protocol,anonymity,https,country,city — 每行一个代理，表头可选。",
+        "export": "导出 CSV",
+        "importHint": "选择 CSV 文件，导入前可先预览代理列表。",
+        "selectFile": "选择 CSV 文件",
+        "exportNoProxies": "导出 CSV 列表前请先添加代理。",
+        "exportError": "无法导出 CSV 文件",
+        "exportSuccess": "CSV 导出成功",
+        "importSuccess": "已导入 {{proxies}} 个代理{{skipped}}",
+        "importSuccessSkipped": "，跳过 {{skipped}} 个重复项",
+        "importError": "无法导入 CSV 文件：{{message}}",
+        "previewTitle": "导入 CSV",
+        "previewDescription": "查看 CSV 文件中的代理，可在导入前选择分组。",
+        "previewValid": "有效代理",
+        "previewInvalid": "无效行",
+        "previewDuplicates": "已在应用中",
+        "importGroup": "目标分组",
+        "importGroupNone": "无分组",
+        "importGroupHint": "可选。所有导入的代理将放入所选分组。",
+        "importSelectProxies": "文件中的代理",
+        "pageSelection": "本页已选 {{selected}}/{{total}}",
+        "pageInfo": "第 {{page}} 页，共 {{total}} 页",
+        "duplicate": "重复",
+        "previewConfirm": "导入选中项",
+        "errors": {
+          "empty_file": "CSV 文件为空",
+          "no_valid_entries": "CSV 文件中未找到有效代理",
+          "read_error": "无法读取 CSV 文件",
+          "unknown": "未知错误"
+        }
       }
     },
     "dangerZone": {
@@ -478,6 +514,15 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "删除失效代理",
+    "deleteDeadCount_one": "{{count}} 个失效",
+    "deleteDeadCount_other": "{{count}} 个失效",
+    "deleteDeadEmpty": "该分组没有失效代理",
+    "deleteDeadConfirm": {
+      "title": "删除失效代理？",
+      "message_one": "从「{{name}}」中删除 {{count}} 个失效代理？此操作无法撤销。",
+      "message_other": "从「{{name}}」中删除 {{count}} 个失效代理？此操作无法撤销。"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -493,6 +538,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "添加代理",
+    "check": "检查"
   }
 }

@@ -10,6 +10,7 @@ const api: AppAPI = {
   saveGroups: (groups) => ipcRenderer.invoke('groups:save-all', groups),
   checkProxy: (proxy, options) => ipcRenderer.invoke('proxy:check', proxy, options),
   checkAll: (proxies, options) => ipcRenderer.invoke('proxy:check-all', proxies, options),
+  cancelCheckAll: () => ipcRenderer.invoke('proxy:cancel-check-all'),
   onCheckProgress: (callback) => {
     const handler = (_event: Electron.IpcRendererEvent, progress: ProxyCheckProgress): void => {
       callback(progress)
@@ -61,7 +62,10 @@ const api: AppAPI = {
   exportBackup: (request) => ipcRenderer.invoke('backup:export', request),
   previewBackup: () => ipcRenderer.invoke('backup:preview'),
   unlockBackupPreview: (request) => ipcRenderer.invoke('backup:unlock-preview', request),
-  importBackup: (request) => ipcRenderer.invoke('backup:import', request)
+  importBackup: (request) => ipcRenderer.invoke('backup:import', request),
+  previewCsvImport: () => ipcRenderer.invoke('csv:preview'),
+  importCsv: (request) => ipcRenderer.invoke('csv:import', request),
+  exportCsv: (request) => ipcRenderer.invoke('csv:export', request)
 }
 
 if (process.contextIsolated) {

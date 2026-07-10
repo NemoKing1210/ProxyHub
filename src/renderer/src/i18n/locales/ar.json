@@ -25,6 +25,7 @@
     "statsEnabled": "{{count}} مفعّل",
     "statsFavorites": "{{count}} مفضّل",
     "checkAll": "فحص الكل",
+    "stopCheckAll": "إيقاف",
     "addProxy": "إضافة بروكسي",
     "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
@@ -280,7 +281,7 @@
       "autoCheck": "الفحص التلقائي",
       "autoCheckDescription": "إعادة فحص البروكسيات دورياً في الخلفية باستخدام إعدادات الفحص الحالية.",
       "backup": "استيراد وتصدير",
-      "backupDescription": "نسخ أو استعادة البروكسيات والمجموعات وإعدادات التطبيق بصيغة ProxyChecker.",
+      "backupDescription": "نسخ أو استعادة البروكسيات والمجموعات وإعدادات التطبيق بصيغة ProxyChecker، أو استيراد وتصدير قوائم البروكسي بصيغة CSV.",
       "dangerZone": "منطقة الخطر",
       "dangerZoneDescription": "مسح بيانات البروكسي أو استعادة الإعدادات الافتراضية.",
       "about": "حول التطبيق",
@@ -334,6 +335,9 @@
     "domainDuplicate": "هذا النطاق موجود بالفعل",
     "saved": "تم حفظ الإعدادات",
     "backup": {
+      "format": "صيغة الملف",
+      "formatBackup": "نسخة ProxyChecker الاحتياطية",
+      "formatCsv": "قائمة CSV",
       "exportKind": "ما الذي تريد تصديره",
       "exportKindFull": "البروكسيات والإعدادات",
       "exportKindProxies": "البروكسيات فقط",
@@ -414,6 +418,38 @@
         "password_required": "كلمة مرور النسخة الاحتياطية مطلوبة",
         "wrong_password": "كلمة مرور النسخة الاحتياطية غير صحيحة",
         "unknown": "خطأ غير معروف"
+      },
+      "csv": {
+        "formatHint": "ملفات CSV تحتوي على تفاصيل الاتصال والبيانات الوصفية فقط. بيانات الاعتماد غير مضمنة.",
+        "formatDescription": "صيغة CSV: host,port,protocol,anonymity,https,country,city — بروكسي واحد لكل سطر، والعنوان اختياري.",
+        "export": "تصدير CSV",
+        "importHint": "اختر ملف CSV لمراجعة البروكسيات قبل الاستيراد.",
+        "selectFile": "اختيار ملف CSV",
+        "exportNoProxies": "أضف بروكسيات قبل تصدير قائمة CSV.",
+        "exportError": "تعذر تصدير ملف CSV",
+        "exportSuccess": "تم تصدير CSV بنجاح",
+        "importSuccess": "تم استيراد {{proxies}} بروكسي{{skipped}}",
+        "importSuccessSkipped": "، تم تخطي {{skipped}} مكرر",
+        "importError": "تعذر استيراد ملف CSV: {{message}}",
+        "previewTitle": "استيراد CSV",
+        "previewDescription": "راجع البروكسيات من ملف CSV وعيّن مجموعة اختيارية قبل الاستيراد.",
+        "previewValid": "بروكسيات صالحة",
+        "previewInvalid": "أسطر غير صالحة",
+        "previewDuplicates": "موجودة بالفعل",
+        "importGroup": "المجموعة المستهدفة",
+        "importGroupNone": "بدون مجموعة",
+        "importGroupHint": "اختياري. سيتم وضع جميع البروكسيات المستوردة في المجموعة المحددة.",
+        "importSelectProxies": "البروكسيات في الملف",
+        "pageSelection": "{{selected}} من {{total}} في هذه الصفحة",
+        "pageInfo": "الصفحة {{page}} من {{total}}",
+        "duplicate": "مكرر",
+        "previewConfirm": "استيراد المحدد",
+        "errors": {
+          "empty_file": "ملف CSV فارغ",
+          "no_valid_entries": "لم يتم العثور على بروكسيات صالحة في ملف CSV",
+          "read_error": "تعذر قراءة ملف CSV",
+          "unknown": "خطأ غير معروف"
+        }
       }
     },
     "dangerZone": {
@@ -478,6 +514,15 @@
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
       "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
     },
+    "deleteDead": "حذف البروكسيات المعطلة",
+    "deleteDeadCount_one": "{{count}} معطل",
+    "deleteDeadCount_other": "{{count}} معطلة",
+    "deleteDeadEmpty": "لا توجد بروكسيات معطلة في هذه المجموعة",
+    "deleteDeadConfirm": {
+      "title": "حذف البروكسيات المعطلة؟",
+      "message_one": "حذف {{count}} بروكسي معطل من \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+      "message_other": "حذف {{count}} بروكسيات معطلة من \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
@@ -493,6 +538,7 @@
     "changeColor": "Change color",
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
-    "addProxy": "Add proxy"
+    "addProxy": "إضافة بروكسي",
+    "check": "فحص"
   }
 }

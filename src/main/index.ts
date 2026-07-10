@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { TITLE_BAR_HEIGHT } from '../shared/theme/title-bar'
 import { registerAppIpc } from './ipc/app'
 import { registerBackupIpc } from './ipc/backup'
+import { registerProxyImportIpc } from './ipc/proxy-import'
 import { registerProxyIpc } from './ipc/proxy'
 import { registerSettingsIpc } from './ipc/settings'
 import { registerTrayIpc, syncTrayEnabled } from './ipc/tray'
@@ -86,6 +87,7 @@ app.whenReady().then(async () => {
   registerProxyIpc()
   registerSettingsIpc()
   registerBackupIpc()
+  registerProxyImportIpc()
   registerAppIpc()
   registerTrayIpc()
   initializeNativeThemeListener(() => getMainWindow() ?? undefined)
