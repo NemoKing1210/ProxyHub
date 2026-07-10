@@ -38,7 +38,13 @@
       "connection": "连接",
       "connectionDescription": "主机、端口和认证信息。",
       "results": "检测结果",
-      "resultsDescription": "最近一次可用性测试的数据。"
+      "resultsDescription": "代理地址可达性、外部 IP 及最近一次测试中各域名的状态。"
+    },
+    "connectivity": {
+      "title": "代理服务器",
+      "reachable": "代理在 {{address}} 可达",
+      "unreachable": "代理在 {{address}} 不可达",
+      "connectLatency": "连接延迟"
     },
     "latencyMs": "{{value}} 毫秒",
     "authEnabled": "认证",
@@ -67,7 +73,7 @@
       "appearance": "外观",
       "appearanceDescription": "主题和界面语言。",
       "checking": "代理检测",
-      "checkingDescription": "超时和检测域名。"
+      "checkingDescription": "连接超时和可选的额外可用性检测域名。"
     },
     "theme": "主题",
     "themeLight": "浅色",
@@ -77,8 +83,9 @@
     "checkTimeout": "连接超时",
     "checkTimeoutHint": "每次检测的最大等待时间。",
     "checkTimeoutValue": "{{value}} 秒",
-    "checkDomains": "检测域名",
-    "checkDomainsHint": "代理将针对这些域名进行检测。只要有一个域名响应，即视为可用。",
+    "checkDomains": "检测域名（可选）",
+    "checkDomainsHint": "可选。代理还会针对这些域名进行检测。配置后，只要有一个域名响应即视为可用。",
+    "checkDomainsEmpty": "未配置域名。仅通过地址可达性检测代理。",
     "domainPlaceholder": "example.com",
     "addDomain": "添加域名",
     "domainRequired": "至少需要一个检测域名",

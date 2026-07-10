@@ -43,7 +43,13 @@
       "connection": "Conexión",
       "connectionDescription": "Host, puerto y credenciales.",
       "results": "Resultados",
-      "resultsDescription": "Datos de la última prueba de disponibilidad."
+      "resultsDescription": "Accesibilidad de la dirección del proxy, IP externa y estado por dominio de la última prueba."
+    },
+    "connectivity": {
+      "title": "Servidor proxy",
+      "reachable": "Proxy accesible en {{address}}",
+      "unreachable": "Proxy no accesible en {{address}}",
+      "connectLatency": "Latencia de conexión"
     },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
@@ -76,7 +82,7 @@
       "appearance": "Apariencia",
       "appearanceDescription": "Tema e idioma.",
       "checking": "Comprobación",
-      "checkingDescription": "Tiempo de espera y dominios."
+      "checkingDescription": "Tiempo de espera de conexión y dominios opcionales para pruebas adicionales de disponibilidad."
     },
     "theme": "Tema",
     "themeLight": "Claro",
@@ -86,8 +92,9 @@
     "checkTimeout": "Tiempo de espera",
     "checkTimeoutHint": "Tiempo máximo de espera por comprobación.",
     "checkTimeoutValue": "{{value}} s",
-    "checkDomains": "Dominios de comprobación",
-    "checkDomainsHint": "Los proxies se prueban contra estos dominios. Se considera activo si al menos uno responde.",
+    "checkDomains": "Dominios de comprobación (opcional)",
+    "checkDomainsHint": "Opcional. Los proxies también se prueban contra estos dominios. Si se configuran, un proxy se considera activo si al menos uno responde.",
+    "checkDomainsEmpty": "No hay dominios configurados. Los proxies se comprueban solo por la accesibilidad de la dirección.",
     "domainPlaceholder": "example.com",
     "addDomain": "Añadir dominio",
     "domainRequired": "Se requiere al menos un dominio",

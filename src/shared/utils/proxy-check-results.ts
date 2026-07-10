@@ -1,4 +1,10 @@
-import type { Proxy, ProxyDomainCheckResult, ProxyStatus } from '../types/proxy'
+import type {
+  Proxy,
+  ProxyConnectivityResult,
+  ProxyDomainCheckResult,
+  ProxyStatus
+} from '../types/proxy'
+import { buildProxyUrl, formatProxyAddress } from './proxy-format'
 
 export function normalizeCheckDomain(domain: string): string {
   const trimmed = domain
@@ -9,13 +15,20 @@ export function normalizeCheckDomain(domain: string): string {
 }
 
 export function createPendingDomainChecks(domains: string[]): ProxyDomainCheckResult[] {
-  const targets = domains.length > 0 ? domains : ['google.com']
-
-  return targets.map((domain) => ({
+  return domains.map((domain) => ({
     domain,
     url: normalizeCheckDomain(domain),
     status: 'pending'
   }))
+}
+
+export function createCheckingConnectivity(proxy: Proxy): ProxyConnectivityResult {
+  return {
+    address: formatProxyAddress(proxy),
+    protocol: proxy.protocol,
+    proxyUrl: buildProxyUrl(proxy),
+    status: 'checking'
+  }
 }
 
 export function upsertDomainCheck(
@@ -51,13 +64,50 @@ export function resolveProxyStatusFromDomainChecks(
   return domainChecks.some((check) => check.status === 'alive') ? 'alive' : 'dead'
 }
 
+export function resolveProxyStatus(
+  domainChecks: ProxyDomainCheckResult[] | undefined,
+  connectivity: ProxyConnectivityResult | undefined
+): ProxyStatus {
+  if (domainChecks && domainChecks.length > 0) {
+    return resolveProxyStatusFromDomainChecks(domainChecks)
+  }
+
+  if (!connectivity) {
+    return 'checking'
+  }
+
+  if (connectivity.status === 'pending' || connectivity.status === 'checking') {
+    return 'checking'
+  }
+
+  return connectivity.status === 'alive' ? 'alive' : 'dead'
+}
+
 export function finalizeIncompleteProxy(proxy: Proxy): Proxy {
   if (proxy.status !== 'checking') {
     return proxy
   }
 
+  const connectivity =
+    proxy.connectivity?.status === 'pending' || proxy.connectivity?.status === 'checking'
+      ? {
+          ...proxy.connectivity,
+          status: 'dead' as const,
+          error: proxy.connectivity.error ?? 'Check did not complete'
+        }
+      : proxy.connectivity
+
   if (!proxy.domainChecks || proxy.domainChecks.length === 0) {
-    return { ...proxy, status: 'unknown' }
+    const status = resolveProxyStatus([], connectivity)
+
+    return {
+      ...proxy,
+      connectivity,
+      status: status === 'checking' ? 'unknown' : status,
+      error: status === 'dead' ? (connectivity?.error ?? proxy.error) : proxy.error,
+      latencyMs: status === 'alive' ? connectivity?.latencyMs : proxy.latencyMs,
+      checkedAt: proxy.checkedAt ?? new Date().toISOString()
+    }
   }
 
   const domainChecks = proxy.domainChecks.map((check) =>
@@ -76,6 +126,7 @@ export function finalizeIncompleteProxy(proxy: Proxy): Proxy {
   return {
     ...proxy,
     domainChecks,
+    connectivity,
     status: hasAlive ? 'alive' : 'dead',
     error: hasAlive
       ? proxy.error
@@ -87,7 +138,7 @@ export function finalizeIncompleteProxy(proxy: Proxy): Proxy {
 }
 
 export function getProxyDomainChecks(proxy: Proxy): ProxyDomainCheckResult[] {
-  if (proxy.domainChecks && proxy.domainChecks.length > 0) {
+  if (proxy.domainChecks !== undefined) {
     return proxy.domainChecks
   }
 

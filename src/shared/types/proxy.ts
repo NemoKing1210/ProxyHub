@@ -18,6 +18,19 @@ export interface ProxyDomainCheckResult {
   code?: string
 }
 
+export type ProxyConnectivityStatus = 'pending' | 'checking' | 'alive' | 'dead'
+
+export interface ProxyConnectivityResult {
+  address: string
+  protocol: ProxyProtocol
+  proxyUrl: string
+  status: ProxyConnectivityStatus
+  latencyMs?: number
+  error?: string
+  code?: string
+  externalIp?: string
+}
+
 export interface Proxy {
   id: string
   protocol: ProxyProtocol
@@ -34,6 +47,7 @@ export interface Proxy {
   error?: string
   errorDetails?: ProxyCheckErrorDetail[]
   domainChecks?: ProxyDomainCheckResult[]
+  connectivity?: ProxyConnectivityResult
   checkedAt?: string
 }
 
@@ -55,11 +69,18 @@ export interface ProxyCheckResult {
   error?: string
   errorDetails?: ProxyCheckErrorDetail[]
   domainChecks: ProxyDomainCheckResult[]
+  connectivity?: ProxyConnectivityResult
   checkedAt: string
 }
 
 export type ProxyCheckProgress =
-  | { phase: 'init'; proxyId: string; domainChecks: ProxyDomainCheckResult[] }
+  | {
+      phase: 'init'
+      proxyId: string
+      domainChecks: ProxyDomainCheckResult[]
+      connectivity: ProxyConnectivityResult
+    }
+  | { phase: 'proxy-connect'; proxyId: string; connectivity: ProxyConnectivityResult }
   | { phase: 'domain'; proxyId: string; domainCheck: ProxyDomainCheckResult }
   | { phase: 'complete'; result: ProxyCheckResult }
 

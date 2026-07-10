@@ -17,6 +17,7 @@ import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-f
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
+import ProxyConnectivityResultCard from './ProxyConnectivityResult'
 import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
 import ProxyStatusChip from './ProxyStatusChip'
@@ -94,25 +95,23 @@ function ProxyCard({
   const resultFields = useMemo(() => {
     const fields: ImportantField[] = []
 
-    if (proxy.externalIp) {
+    if (proxy.checkTarget && proxy.status === 'alive') {
       fields.push({
-        label: t('proxyList.columns.externalIp'),
-        value: proxy.externalIp,
+        label: t('proxyList.columns.checkTarget'),
+        value: proxy.checkTarget,
         monospace: true
       })
     }
 
-    if (proxy.checkedAt) {
-      fields.push({
-        label: t('proxyList.columns.checkedAt'),
-        value: formatDateTime(proxy.checkedAt, i18n.language)
-      })
-    }
-
     return fields
-  }, [proxy, t, i18n.language])
+  }, [proxy, t])
 
-  const hasResults = domainChecks.length > 0 || resultFields.length > 0
+  const resultsTitle = proxy.checkedAt
+    ? `${t('proxyList.sections.results')} · ${formatDateTime(proxy.checkedAt, i18n.language)}`
+    : t('proxyList.sections.results')
+
+  const hasResults =
+    Boolean(proxy.connectivity) || domainChecks.length > 0 || resultFields.length > 0
   const showResults = isChecking || hasResults
 
   const handleCopyLink = async (): Promise<void> => {
@@ -228,11 +227,14 @@ function ProxyCard({
               expanded={effectiveResultsExpanded}
               onExpandedChange={setResultsExpanded}
               icon={<SpeedOutlinedIcon fontSize="small" />}
-              title={t('proxyList.sections.results')}
+              title={resultsTitle}
               description={t('proxyList.sections.resultsDescription')}
             >
               <Stack spacing={2}>
                 {resultFields.length > 0 && renderFields(resultFields)}
+                {proxy.connectivity && (
+                  <ProxyConnectivityResultCard connectivity={proxy.connectivity} />
+                )}
                 {domainChecks.length > 0 && <ProxyDomainResults domainChecks={domainChecks} />}
               </Stack>
             </ContentSection>

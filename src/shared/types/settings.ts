@@ -16,8 +16,24 @@ export const CHECK_TIMEOUT_DEFAULT_MS = 10_000
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: 'dark',
   language: 'en',
-  checkDomains: ['google.com'],
+  checkDomains: [],
   checkTimeoutMs: CHECK_TIMEOUT_DEFAULT_MS
+}
+
+export interface ProxyCheckOptions {
+  checkDomains: string[]
+  checkTimeoutMs: number
+}
+
+export function normalizeSettings(settings: Partial<AppSettings> | undefined): AppSettings {
+  const merged = { ...DEFAULT_SETTINGS, ...(settings ?? {}) }
+
+  return {
+    ...merged,
+    checkDomains: Array.isArray(merged.checkDomains)
+      ? merged.checkDomains.map((domain) => domain.trim()).filter(Boolean)
+      : []
+  }
 }
 
 export const SUPPORTED_LANGUAGES: { code: AppLanguage; label: string; countryCode: string }[] = [

@@ -5,9 +5,12 @@ import type {
   ProxyCheckResult,
   ProxyInput
 } from '../../../shared/types/proxy'
+import type { ProxyCheckOptions } from '../../../shared/types/settings'
 import {
+  createCheckingConnectivity,
   createPendingDomainChecks,
   finalizeIncompleteProxy,
+  resolveProxyStatus,
   resolveProxyStatusFromDomainChecks,
   upsertDomainCheck
 } from '../../../shared/utils/proxy-check-results'
@@ -45,6 +48,7 @@ function applyCheckResult(proxy: Proxy, result: ProxyCheckResult): Proxy {
     error: result.error,
     errorDetails: result.errorDetails,
     domainChecks: result.domainChecks,
+    connectivity: result.connectivity,
     checkedAt: result.checkedAt
   }
 }
@@ -57,8 +61,24 @@ function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Prox
             ...proxy,
             status: 'checking',
             domainChecks: progress.domainChecks,
+            connectivity: progress.connectivity,
             error: undefined,
-            errorDetails: undefined
+            errorDetails: undefined,
+            externalIp: undefined,
+            checkTarget: undefined
+          }
+        : proxy
+    )
+  }
+
+  if (progress.phase === 'proxy-connect') {
+    return proxies.map((proxy) =>
+      proxy.id === progress.proxyId
+        ? {
+            ...proxy,
+            connectivity: progress.connectivity,
+            externalIp: progress.connectivity.externalIp,
+            status: resolveProxyStatus(proxy.domainChecks, progress.connectivity)
           }
         : proxy
     )
@@ -93,6 +113,12 @@ async function persist(proxies: Proxy[]): Promise<void> {
   await window.api.saveProxies(proxies)
 }
 
+function getCheckOptions(): ProxyCheckOptions {
+  const { checkDomains, checkTimeoutMs } = useSettingsStore.getState().settings
+
+  return { checkDomains, checkTimeoutMs }
+}
+
 function beginProxyCheck(proxy: Proxy, domains: string[]): Proxy {
   return {
     ...proxy,
@@ -100,7 +126,9 @@ function beginProxyCheck(proxy: Proxy, domains: string[]): Proxy {
     error: undefined,
     errorDetails: undefined,
     domainChecks: createPendingDomainChecks(domains),
+    connectivity: createCheckingConnectivity(proxy),
     latencyMs: undefined,
+    externalIp: undefined,
     checkTarget: undefined,
     checkedAt: undefined
   }
@@ -154,6 +182,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
             error: undefined,
             errorDetails: undefined,
             domainChecks: undefined,
+            connectivity: undefined,
             checkedAt: undefined
           }
         : proxy
@@ -175,6 +204,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     if (!proxy || get().checkingIds.has(id)) return
 
     const domains = useSettingsStore.getState().settings.checkDomains
+    const checkOptions = getCheckOptions()
     const checkingIds = new Set(get().checkingIds)
     checkingIds.add(id)
 
@@ -198,7 +228,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     })
 
     try {
-      const result = await window.api.checkProxy(proxy)
+      const result = await window.api.checkProxy(proxy, checkOptions)
       const updated = get().proxies.map((item) =>
         item.id === id ? applyCheckResult(item, result) : item
       )
@@ -231,6 +261,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     if (proxies.length === 0 || get().isCheckingAll) return
 
     const domains = useSettingsStore.getState().settings.checkDomains
+    const checkOptions = getCheckOptions()
     const checkingIds = new Set(proxies.map((proxy) => proxy.id))
 
     set({
@@ -250,7 +281,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     })
 
     try {
-      await window.api.checkAll(proxies)
+      await window.api.checkAll(proxies, checkOptions)
     } finally {
       unsubscribe()
 

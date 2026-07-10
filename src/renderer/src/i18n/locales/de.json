@@ -43,7 +43,13 @@
       "connection": "Verbindung",
       "connectionDescription": "Host, Port und Anmeldedaten.",
       "results": "Prüfergebnisse",
-      "resultsDescription": "Daten des letzten Verfügbarkeitstests."
+      "resultsDescription": "Erreichbarkeit der Proxy-Adresse, externe IP und Domain-Status des letzten Tests."
+    },
+    "connectivity": {
+      "title": "Proxy-Server",
+      "reachable": "Proxy unter {{address}} erreichbar",
+      "unreachable": "Proxy unter {{address}} nicht erreichbar",
+      "connectLatency": "Verbindungslatenz"
     },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
@@ -76,7 +82,7 @@
       "appearance": "Erscheinungsbild",
       "appearanceDescription": "Design und Sprache.",
       "checking": "Proxy-Prüfung",
-      "checkingDescription": "Timeout und Zieldomains."
+      "checkingDescription": "Verbindungs-Timeout und optionale Zieldomains für zusätzliche Verfügbarkeitstests."
     },
     "theme": "Design",
     "themeLight": "Hell",
@@ -86,8 +92,9 @@
     "checkTimeout": "Verbindungs-Timeout",
     "checkTimeoutHint": "Maximale Wartezeit pro Prüfung.",
     "checkTimeoutValue": "{{value}} s",
-    "checkDomains": "Prüfdomains",
-    "checkDomainsHint": "Proxies werden gegen diese Domains geprüft. Ein Proxy gilt als aktiv, wenn mindestens eine Domain antwortet.",
+    "checkDomains": "Prüfdomains (optional)",
+    "checkDomainsHint": "Optional. Proxies werden zusätzlich gegen diese Domains geprüft. Wenn konfiguriert, gilt ein Proxy als aktiv, wenn mindestens eine Domain antwortet.",
+    "checkDomainsEmpty": "Keine Domains konfiguriert. Proxies werden nur über die Erreichbarkeit der Adresse geprüft.",
     "domainPlaceholder": "example.com",
     "addDomain": "Domain hinzufügen",
     "domainRequired": "Mindestens eine Prüfdomain erforderlich",

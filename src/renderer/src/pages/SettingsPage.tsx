@@ -111,11 +111,6 @@ function SettingsPage(): React.JSX.Element {
   }
 
   const handleRemoveDomain = async (domain: string): Promise<void> => {
-    if (settings.checkDomains.length <= 1) {
-      setDomainError(t('settings.domainRequired'))
-      return
-    }
-
     await setCheckDomains(settings.checkDomains.filter((item) => item !== domain))
     setDomainError(null)
     notifySaved()
@@ -292,46 +287,51 @@ function SettingsPage(): React.JSX.Element {
               </Stack>
 
               <Stack spacing={0.75}>
-                {settings.checkDomains.map((domain) => (
-                  <Box
-                    key={domain}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      px: 1.5,
-                      py: 1.1,
-                      borderRadius: 2,
-                      bgcolor: surfaceContainer(theme, 'low'),
-                      transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
-                      '&:hover': {
-                        bgcolor: surfaceContainer(theme, 'default'),
-                        transform: 'translateX(2px)'
-                      }
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
+                {settings.checkDomains.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                    {t('settings.checkDomainsEmpty')}
+                  </Typography>
+                ) : (
+                  settings.checkDomains.map((domain) => (
+                    <Box
+                      key={domain}
                       sx={{
-                        flex: 1,
-                        fontFamily: 'monospace',
-                        fontWeight: 500,
-                        wordBreak: 'break-all'
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        px: 1.5,
+                        py: 1.1,
+                        borderRadius: 2,
+                        bgcolor: surfaceContainer(theme, 'low'),
+                        transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
+                        '&:hover': {
+                          bgcolor: surfaceContainer(theme, 'default'),
+                          transform: 'translateX(2px)'
+                        }
                       }}
                     >
-                      {domain}
-                    </Typography>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => void handleRemoveDomain(domain)}
-                      disabled={settings.checkDomains.length <= 1}
-                      aria-label={t('common.delete')}
-                    >
-                      <DeleteOutlinedIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                ))}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          flex: 1,
+                          fontFamily: 'monospace',
+                          fontWeight: 500,
+                          wordBreak: 'break-all'
+                        }}
+                      >
+                        {domain}
+                      </Typography>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => void handleRemoveDomain(domain)}
+                        aria-label={t('common.delete')}
+                      >
+                        <DeleteOutlinedIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  ))
+                )}
               </Stack>
             </Box>
           </Stack>

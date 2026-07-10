@@ -43,7 +43,13 @@
       "connection": "Connexion",
       "connectionDescription": "Hôte, port et identifiants.",
       "results": "Résultats",
-      "resultsDescription": "Données du dernier test de disponibilité."
+      "resultsDescription": "Accessibilité de l'adresse du proxy, IP externe et statut par domaine du dernier test."
+    },
+    "connectivity": {
+      "title": "Serveur proxy",
+      "reachable": "Proxy accessible à {{address}}",
+      "unreachable": "Proxy inaccessible à {{address}}",
+      "connectLatency": "Latence de connexion"
     },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
@@ -76,7 +82,7 @@
       "appearance": "Apparence",
       "appearanceDescription": "Thème et langue.",
       "checking": "Vérification",
-      "checkingDescription": "Délai et domaines de test."
+      "checkingDescription": "Délai de connexion et domaines optionnels pour des tests de disponibilité supplémentaires."
     },
     "theme": "Thème",
     "themeLight": "Clair",
@@ -86,8 +92,9 @@
     "checkTimeout": "Délai de connexion",
     "checkTimeoutHint": "Temps d'attente maximum par vérification.",
     "checkTimeoutValue": "{{value}} s",
-    "checkDomains": "Domaines de vérification",
-    "checkDomainsHint": "Les proxies sont testés sur ces domaines. Un proxy est actif si au moins un domaine répond.",
+    "checkDomains": "Domaines de vérification (optionnel)",
+    "checkDomainsHint": "Optionnel. Les proxies sont aussi testés sur ces domaines. Lorsqu'ils sont configurés, un proxy est actif si au moins un domaine répond.",
+    "checkDomainsEmpty": "Aucun domaine configuré. Les proxies sont vérifiés uniquement par l'accessibilité de l'adresse.",
     "domainPlaceholder": "example.com",
     "addDomain": "Ajouter un domaine",
     "domainRequired": "Au moins un domaine est requis",

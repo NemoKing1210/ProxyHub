@@ -43,7 +43,13 @@
       "connection": "الاتصال",
       "connectionDescription": "المضيف والمنفذ وبيانات الاعتماد.",
       "results": "نتائج الفحص",
-      "resultsDescription": "بيانات آخر اختبار توفر."
+      "resultsDescription": "إمكانية الوصول إلى عنوان البروكسي وIP الخارجي وحالة كل نطاق من آخر اختبار."
+    },
+    "connectivity": {
+      "title": "خادم البروكسي",
+      "reachable": "البروكسي متاح على {{address}}",
+      "unreachable": "البروكسي غير متاح على {{address}}",
+      "connectLatency": "زمن الاتصال"
     },
     "latencyMs": "{{value}} مللي ث",
     "authEnabled": "مصادقة",
@@ -77,7 +83,7 @@
       "appearance": "المظهر",
       "appearanceDescription": "السمة واللغة.",
       "checking": "فحص البروكسي",
-      "checkingDescription": "المهلة ونطاقات الاختبار."
+      "checkingDescription": "مهلة الاتصال ونطاقات اختيارية لاختبارات توفر إضافية."
     },
     "theme": "السمة",
     "themeLight": "فاتح",
@@ -87,8 +93,9 @@
     "checkTimeout": "مهلة الاتصال",
     "checkTimeoutHint": "أقصى وقت انتظار لكل فحص.",
     "checkTimeoutValue": "{{value}} ث",
-    "checkDomains": "نطاقات الفحص",
-    "checkDomainsHint": "يتم اختبار البروكسيات على هذه النطاقات. يُعتبر البروكسي نشطاً إذا استجاب نطاق واحد على الأقل.",
+    "checkDomains": "نطاقات الفحص (اختياري)",
+    "checkDomainsHint": "اختياري. يتم أيضاً اختبار البروكسيات على هذه النطاقات. عند التكوين، يُعتبر البروكسي نشطاً إذا استجاب نطاق واحد على الأقل.",
+    "checkDomainsEmpty": "لا توجد نطاقات مُكوّنة. يتم فحص البروكسيات عبر إمكانية الوصول إلى العنوان فقط.",
     "domainPlaceholder": "example.com",
     "addDomain": "إضافة نطاق",
     "domainRequired": "مطلوب نطاق فحص واحد على الأقل",

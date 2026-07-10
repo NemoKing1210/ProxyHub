@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-07-10
+
+### Changed
+
+- Domain checks are now optional; proxies can be validated by address reachability only
+- Removed default check domain (`google.com`); new installs start with an empty domain list
+- Proxy checks now use current UI settings directly instead of re-reading stale values from disk
+- Fixed stale `google.com` appearing in results when domain list is empty
+- Check date moved to the results section header; date and latency summary fields removed from results body
+
+### Added
+
+- Proxy address connectivity check (TCP) with live progress before domain tests
+- External IP detection through working proxies via api.ipify.org
+- Proxy server result card showing address, protocol, URL, connection latency, and reachability status
+
 ## [1.6.1] - 2026-07-10
 
 ### Changed
@@ -131,6 +147,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
 
+[1.7.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.7.0
 [1.6.1]: https://github.com/your-username/proxy-checker/releases/tag/v1.6.1
 [1.6.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.6.0
 [1.5.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.5.0

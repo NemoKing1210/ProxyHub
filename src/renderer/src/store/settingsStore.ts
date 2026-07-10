@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import {
   DEFAULT_SETTINGS,
+  normalizeSettings,
   RTL_LANGUAGES,
   type AppLanguage,
   type AppSettings,
@@ -39,7 +40,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     set({ isLoading: true })
 
     try {
-      const settings = await window.api.getSettings()
+      const settings = normalizeSettings(await window.api.getSettings())
       applyLanguage(settings.language)
       set({ settings, isReady: true })
     } finally {
@@ -64,7 +65,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   },
 
   updateSettings: async (partial) => {
-    const settings = { ...get().settings, ...partial }
+    const settings = normalizeSettings({ ...get().settings, ...partial })
 
     set({ settings })
     await persist(settings)

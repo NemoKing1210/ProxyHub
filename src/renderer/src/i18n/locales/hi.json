@@ -43,7 +43,13 @@
       "connection": "कनेक्शन",
       "connectionDescription": "होस्ट, पोर्ट और प्रमाणीकरण।",
       "results": "जांच परिणाम",
-      "resultsDescription": "नवीनतम उपलब्धता परीक्षण का डेटा।"
+      "resultsDescription": "प्रॉक्सी पते की उपलब्धता, बाहरी IP और नवीनतम परीक्षण में प्रति-डोमेन स्थिति।"
+    },
+    "connectivity": {
+      "title": "प्रॉक्सी सर्वर",
+      "reachable": "प्रॉक्सी {{address}} पर उपलब्ध है",
+      "unreachable": "प्रॉक्सी {{address}} पर उपलब्ध नहीं है",
+      "connectLatency": "कनेक्शन विलंब"
     },
     "latencyMs": "{{value}} मि.से.",
     "authEnabled": "प्रमाणीकरण",
@@ -77,7 +83,7 @@
       "appearance": "दिखावट",
       "appearanceDescription": "थीम और भाषा।",
       "checking": "प्रॉक्सी जांच",
-      "checkingDescription": "टाइमआउट और जांच डोमेन।"
+      "checkingDescription": "कनेक्शन टाइमआउट और अतिरिक्त उपलब्धता परीक्षण के लिए वैकल्पिक डोमेन।"
     },
     "theme": "थीम",
     "themeLight": "हल्की",
@@ -87,8 +93,9 @@
     "checkTimeout": "कनेक्शन टाइमआउट",
     "checkTimeoutHint": "प्रत्येक जांच के लिए अधिकतम प्रतीक्षा समय।",
     "checkTimeoutValue": "{{value}} से.",
-    "checkDomains": "जांच डोमेन",
-    "checkDomainsHint": "प्रॉक्सी इन डोमेन के विरुद्ध जांचे जाते हैं। कम से कम एक डोमेन प्रतिक्रिया दे तो प्रॉक्सी सक्रिय माना जाता है।",
+    "checkDomains": "जांच डोमेन (वैकल्पिक)",
+    "checkDomainsHint": "वैकल्पिक। प्रॉक्सी इन डोमेन के विरुद्ध भी जांचे जाते हैं। कॉन्फ़िगर होने पर, कम से कम एक डोमेन प्रतिक्रिया दे तो प्रॉक्सी सक्रिय माना जाता है।",
+    "checkDomainsEmpty": "कोई डोमेन कॉन्फ़िगर नहीं है। प्रॉक्सी केवल पते की उपलब्धता से जांचे जाते हैं।",
     "domainPlaceholder": "example.com",
     "addDomain": "डोमेन जोड़ें",
     "domainRequired": "कम से कम एक जांच डोमेन आवश्यक है",

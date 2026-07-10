@@ -48,7 +48,13 @@
       "connection": "Connection",
       "connectionDescription": "Host, port, and authentication credentials.",
       "results": "Check results",
-      "resultsDescription": "Summary and per-domain status from the latest availability test."
+      "resultsDescription": "Proxy address reachability, external IP, and per-domain status from the latest test."
+    },
+    "connectivity": {
+      "title": "Proxy server",
+      "reachable": "Proxy is reachable at {{address}}",
+      "unreachable": "Proxy is not reachable at {{address}}",
+      "connectLatency": "Connection latency"
     },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
@@ -83,7 +89,7 @@
       "appearance": "Appearance",
       "appearanceDescription": "Theme and interface language.",
       "checking": "Proxy checking",
-      "checkingDescription": "Timeout and target domains for availability tests."
+      "checkingDescription": "Connection timeout and optional target domains for additional availability tests."
     },
     "theme": "Theme",
     "themeLight": "Light",
@@ -93,8 +99,9 @@
     "checkTimeout": "Connection timeout",
     "checkTimeoutHint": "Maximum wait time for each proxy check. Increase for slow proxies.",
     "checkTimeoutValue": "{{value}} s",
-    "checkDomains": "Check domains",
-    "checkDomainsHint": "Proxies are tested against these domains. A proxy is considered alive if at least one domain responds.",
+    "checkDomains": "Check domains (optional)",
+    "checkDomainsHint": "Optional. Proxies are also tested against these domains. When configured, a proxy is considered alive if at least one domain responds.",
+    "checkDomainsEmpty": "No domains configured. Proxies are checked by address reachability only.",
     "domainPlaceholder": "example.com",
     "addDomain": "Add domain",
     "domainRequired": "At least one check domain is required",

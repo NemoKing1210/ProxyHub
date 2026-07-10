@@ -6,8 +6,8 @@ import type { ProxyCheckProgress } from '../shared/types/proxy'
 const api: AppAPI = {
   getProxies: () => ipcRenderer.invoke('proxy:get-all'),
   saveProxies: (proxies) => ipcRenderer.invoke('proxy:save-all', proxies),
-  checkProxy: (proxy) => ipcRenderer.invoke('proxy:check', proxy),
-  checkAll: (proxies) => ipcRenderer.invoke('proxy:check-all', proxies),
+  checkProxy: (proxy, options) => ipcRenderer.invoke('proxy:check', proxy, options),
+  checkAll: (proxies, options) => ipcRenderer.invoke('proxy:check-all', proxies, options),
   onCheckProgress: (callback) => {
     const handler = (_event: Electron.IpcRendererEvent, progress: ProxyCheckProgress): void => {
       callback(progress)

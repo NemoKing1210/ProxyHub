@@ -1,5 +1,5 @@
 import type { Proxy } from '../../shared/types/proxy'
-import { DEFAULT_SETTINGS, type AppSettings } from '../../shared/types/settings'
+import { DEFAULT_SETTINGS, normalizeSettings, type AppSettings } from '../../shared/types/settings'
 
 interface StoreSchema {
   proxies: Proxy[]
@@ -41,9 +41,9 @@ export async function saveProxies(proxies: Proxy[]): Promise<void> {
 
 export async function getSettings(): Promise<AppSettings> {
   const settings = (await getStore()).get('settings')
-  return { ...DEFAULT_SETTINGS, ...(settings ?? {}) }
+  return normalizeSettings(settings)
 }
 
 export async function saveSettings(settings: AppSettings): Promise<void> {
-  ;(await getStore()).set('settings', settings)
+  ;(await getStore()).set('settings', normalizeSettings(settings))
 }
