@@ -12,7 +12,7 @@ export interface ProxyCheckErrorDetail {
 export interface ProxyDomainCheckResult {
   domain: string
   url: string
-  status: 'alive' | 'dead'
+  status: 'pending' | 'checking' | 'alive' | 'dead'
   latencyMs?: number
   error?: string
   code?: string
@@ -57,6 +57,11 @@ export interface ProxyCheckResult {
   domainChecks: ProxyDomainCheckResult[]
   checkedAt: string
 }
+
+export type ProxyCheckProgress =
+  | { phase: 'init'; proxyId: string; domainChecks: ProxyDomainCheckResult[] }
+  | { phase: 'domain'; proxyId: string; domainCheck: ProxyDomainCheckResult }
+  | { phase: 'complete'; result: ProxyCheckResult }
 
 export const PROXY_PROTOCOLS: ProxyProtocol[] = ['http', 'https', 'socks4', 'socks5']
 

@@ -1,10 +1,10 @@
 import { ipcMain, type WebContents } from 'electron'
-import type { Proxy, ProxyCheckResult } from '../../shared/types/proxy'
+import type { Proxy, ProxyCheckProgress } from '../../shared/types/proxy'
 import { getProxies, getSettings, saveProxies } from '../services/app-store'
 import { checkAllProxies, checkProxy } from '../services/proxy-checker'
 
-function sendProgress(webContents: WebContents, result: ProxyCheckResult): void {
-  webContents.send('proxy:check-progress', result)
+function sendProgress(webContents: WebContents, progress: ProxyCheckProgress): void {
+  webContents.send('proxy:check-progress', progress)
 }
 
 export function registerProxyIpc(): void {
@@ -14,9 +14,14 @@ export function registerProxyIpc(): void {
     await saveProxies(proxies)
   })
 
-  ipcMain.handle('proxy:check', async (_event, proxy: Proxy) => {
+  ipcMain.handle('proxy:check', async (event, proxy: Proxy) => {
     const settings = await getSettings()
-    return checkProxy(proxy, settings.checkDomains, settings.checkTimeoutMs)
+    return checkProxy(
+      proxy,
+      settings.checkDomains,
+      settings.checkTimeoutMs,
+      (progress) => sendProgress(event.sender, progress)
+    )
   })
 
   ipcMain.handle('proxy:check-all', async (event, proxies: Proxy[]) => {
@@ -24,7 +29,7 @@ export function registerProxyIpc(): void {
     await checkAllProxies(
       proxies,
       settings.checkDomains,
-      (result) => sendProgress(event.sender, result),
+      (progress) => sendProgress(event.sender, progress),
       settings.checkTimeoutMs
     )
   })

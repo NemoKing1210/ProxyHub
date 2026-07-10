@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import type { AppAPI } from '../shared/types/api'
-import type { ProxyCheckResult } from '../shared/types/proxy'
+import type { ProxyCheckProgress } from '../shared/types/proxy'
 
 const api: AppAPI = {
   getProxies: () => ipcRenderer.invoke('proxy:get-all'),
@@ -9,8 +9,8 @@ const api: AppAPI = {
   checkProxy: (proxy) => ipcRenderer.invoke('proxy:check', proxy),
   checkAll: (proxies) => ipcRenderer.invoke('proxy:check-all', proxies),
   onCheckProgress: (callback) => {
-    const handler = (_event: Electron.IpcRendererEvent, result: ProxyCheckResult): void => {
-      callback(result)
+    const handler = (_event: Electron.IpcRendererEvent, progress: ProxyCheckProgress): void => {
+      callback(progress)
     }
 
     ipcRenderer.on('proxy:check-progress', handler)

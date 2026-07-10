@@ -70,6 +70,7 @@
     "password": "Пароль (необязательно)"
   },
   "proxyStatus": {
+    "pending": "Ожидание",
     "unknown": "Не проверен",
     "checking": "Проверка",
     "alive": "Работает",

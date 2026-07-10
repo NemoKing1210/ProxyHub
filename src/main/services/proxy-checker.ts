@@ -6,10 +6,12 @@ import { SocksProxyAgent } from 'socks-proxy-agent'
 import type {
   Proxy,
   ProxyCheckErrorDetail,
+  ProxyCheckProgress,
   ProxyCheckResult,
   ProxyDomainCheckResult
 } from '../../shared/types/proxy'
 import { buildProxyUrl } from '../../shared/utils/proxy-format'
+import { createPendingDomainChecks } from '../../shared/utils/proxy-check-results'
 
 const DEFAULT_CONCURRENCY = 20
 
@@ -93,7 +95,6 @@ function requestThroughProxy(
   })
 }
 
-
 function buildSummaryError(failures: ProxyCheckErrorDetail[]): string {
   if (failures.length === 1) {
     return failures[0].message
@@ -127,13 +128,25 @@ function buildAgentFailureChecks(
   }))
 }
 
+function emitDomainProgress(
+  onProgress: ((progress: ProxyCheckProgress) => void) | undefined,
+  proxyId: string,
+  domainCheck: ProxyDomainCheckResult
+): void {
+  onProgress?.({ phase: 'domain', proxyId, domainCheck })
+}
+
 export async function checkProxy(
   proxy: Proxy,
   domains: string[],
-  timeoutMs: number
+  timeoutMs: number,
+  onProgress?: (progress: ProxyCheckProgress) => void
 ): Promise<ProxyCheckResult> {
   const targets = domains.length > 0 ? domains : ['google.com']
   const checkedAt = new Date().toISOString()
+  const pendingChecks = createPendingDomainChecks(targets)
+
+  onProgress?.({ phase: 'init', proxyId: proxy.id, domainChecks: pendingChecks })
 
   try {
     const agent = createAgent(proxy)
@@ -142,79 +155,100 @@ export async function checkProxy(
     for (const domain of targets) {
       const checkUrl = normalizeDomain(domain)
 
+      emitDomainProgress(onProgress, proxy.id, {
+        domain,
+        url: checkUrl,
+        status: 'checking'
+      })
+
       try {
         const result = await requestThroughProxy(agent, checkUrl, timeoutMs)
-
-        domainChecks.push({
+        const completed: ProxyDomainCheckResult = {
           domain,
           url: checkUrl,
           status: 'alive',
           latencyMs: result.latencyMs
-        })
+        }
+
+        domainChecks.push(completed)
+        emitDomainProgress(onProgress, proxy.id, completed)
       } catch (error) {
         const detail = createErrorDetail(error, domain, checkUrl)
-
-        domainChecks.push({
+        const completed: ProxyDomainCheckResult = {
           domain,
           url: checkUrl,
           status: 'dead',
           error: detail.message,
           code: detail.code
-        })
+        }
+
+        domainChecks.push(completed)
+        emitDomainProgress(onProgress, proxy.id, completed)
       }
     }
 
     const aliveChecks = domainChecks.filter((check) => check.status === 'alive')
     const failures = toErrorDetails(domainChecks)
 
-    if (aliveChecks.length > 0) {
-      const bestCheck = aliveChecks.reduce((best, current) =>
-        (current.latencyMs ?? Number.POSITIVE_INFINITY) <
-        (best.latencyMs ?? Number.POSITIVE_INFINITY)
-          ? current
-          : best
-      )
+    const finalResult: ProxyCheckResult =
+      aliveChecks.length > 0
+        ? (() => {
+            const bestCheck = aliveChecks.reduce((best, current) =>
+              (current.latencyMs ?? Number.POSITIVE_INFINITY) <
+              (best.latencyMs ?? Number.POSITIVE_INFINITY)
+                ? current
+                : best
+            )
 
-      return {
-        id: proxy.id,
-        status: 'alive',
-        latencyMs: bestCheck.latencyMs,
-        checkTarget: bestCheck.domain,
-        domainChecks,
-        errorDetails: failures.length > 0 ? failures : undefined,
-        checkedAt
-      }
-    }
+            return {
+              id: proxy.id,
+              status: 'alive',
+              latencyMs: bestCheck.latencyMs,
+              checkTarget: bestCheck.domain,
+              domainChecks,
+              errorDetails: failures.length > 0 ? failures : undefined,
+              checkedAt
+            }
+          })()
+        : {
+            id: proxy.id,
+            status: 'dead',
+            error: buildSummaryError(failures),
+            errorDetails: failures,
+            domainChecks,
+            checkedAt
+          }
 
-    return {
-      id: proxy.id,
-      status: 'dead',
-      error: buildSummaryError(failures),
-      errorDetails: failures,
-      domainChecks,
-      checkedAt
-    }
+    onProgress?.({ phase: 'complete', result: finalResult })
+    return finalResult
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
     const code = getErrorCode(error)
-    const domainChecks = buildAgentFailureChecks(targets, message, code)
-    const failures = toErrorDetails(domainChecks)
+    const failedChecks = buildAgentFailureChecks(targets, message, code)
 
-    return {
+    for (const domainCheck of failedChecks) {
+      emitDomainProgress(onProgress, proxy.id, domainCheck)
+    }
+
+    const failures = toErrorDetails(failedChecks)
+    const finalResult: ProxyCheckResult = {
       id: proxy.id,
       status: 'dead',
       error: message,
       errorDetails: failures,
-      domainChecks,
+      domainChecks: failedChecks,
       checkedAt
     }
+
+    onProgress?.({ phase: 'complete', result: finalResult })
+    return finalResult
   }
 }
 
 export async function checkAllProxies(
   proxies: Proxy[],
   domains: string[],
-  onProgress: (result: ProxyCheckResult) => void,
+  onProgress: (progress: ProxyCheckProgress) => void,
   timeoutMs: number,
   concurrency = DEFAULT_CONCURRENCY
 ): Promise<void> {
@@ -226,8 +260,7 @@ export async function checkAllProxies(
       index += 1
 
       const proxy = proxies[currentIndex]
-      const result = await checkProxy(proxy, domains, timeoutMs)
-      onProgress(result)
+      await checkProxy(proxy, domains, timeoutMs, onProgress)
     }
   }
 

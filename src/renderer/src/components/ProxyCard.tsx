@@ -15,7 +15,7 @@ import {
   Typography
 } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
 import { formatDateTime } from '../../../shared/utils/datetime'
@@ -55,6 +55,7 @@ function ProxyCard({
   const { t, i18n } = useTranslation()
   const theme = useTheme()
   const [linkCopied, setLinkCopied] = useState(false)
+  const [resultsExpanded, setResultsExpanded] = useState(false)
 
   const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)
@@ -116,6 +117,13 @@ function ProxyCard({
   }, [proxy, t, i18n.language])
 
   const hasResults = domainChecks.length > 0 || resultFields.length > 0
+  const showResults = isChecking || hasResults
+
+  useEffect(() => {
+    if (isChecking) {
+      setResultsExpanded(true)
+    }
+  }, [isChecking])
 
   const handleCopyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(proxyUrl)
@@ -217,11 +225,12 @@ function ProxyCard({
             {renderFields(connectionFields)}
           </ContentSection>
 
-          {hasResults && (
+          {showResults && (
             <ContentSection
               nested
               collapsible
-              defaultExpanded={false}
+              expanded={resultsExpanded}
+              onExpandedChange={setResultsExpanded}
               icon={<SpeedOutlinedIcon fontSize="small" />}
               title={t('proxyList.sections.results')}
               description={t('proxyList.sections.resultsDescription')}

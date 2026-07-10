@@ -1,5 +1,12 @@
 import { create } from 'zustand'
-import type { Proxy, ProxyCheckResult, ProxyInput } from '../../../shared/types/proxy'
+import type { Proxy, ProxyCheckProgress, ProxyCheckResult, ProxyInput } from '../../../shared/types/proxy'
+import {
+  createPendingDomainChecks,
+  finalizeIncompleteProxy,
+  resolveProxyStatusFromDomainChecks,
+  upsertDomainCheck
+} from '../../../shared/utils/proxy-check-results'
+import { useSettingsStore } from './settingsStore'
 
 interface ProxyState {
   proxies: Proxy[]
@@ -37,8 +44,67 @@ function applyCheckResult(proxy: Proxy, result: ProxyCheckResult): Proxy {
   }
 }
 
+function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Proxy[] {
+  if (progress.phase === 'init') {
+    return proxies.map((proxy) =>
+      proxy.id === progress.proxyId
+        ? {
+            ...proxy,
+            status: 'checking',
+            domainChecks: progress.domainChecks,
+            error: undefined,
+            errorDetails: undefined
+          }
+        : proxy
+    )
+  }
+
+  if (progress.phase === 'domain') {
+    return proxies.map((proxy) => {
+      if (proxy.id !== progress.proxyId) {
+        return proxy
+      }
+
+      const domainChecks = upsertDomainCheck(proxy.domainChecks ?? [], progress.domainCheck)
+
+      return {
+        ...proxy,
+        domainChecks,
+        status: resolveProxyStatusFromDomainChecks(domainChecks)
+      }
+    })
+  }
+
+  return proxies.map((proxy) =>
+    proxy.id === progress.result.id ? applyCheckResult(proxy, progress.result) : proxy
+  )
+}
+
+function isCheckInProgress(state: Pick<ProxyState, 'checkingIds' | 'isCheckingAll'>): boolean {
+  return state.isCheckingAll || state.checkingIds.size > 0
+}
+
 async function persist(proxies: Proxy[]): Promise<void> {
   await window.api.saveProxies(proxies)
+}
+
+function beginProxyCheck(proxy: Proxy, domains: string[]): Proxy {
+  return {
+    ...proxy,
+    status: 'checking',
+    error: undefined,
+    errorDetails: undefined,
+    domainChecks: createPendingDomainChecks(domains),
+    latencyMs: undefined,
+    checkTarget: undefined,
+    checkedAt: undefined
+  }
+}
+
+function clearCheckingId(checkingIds: Set<string>, id: string): Set<string> {
+  const nextCheckingIds = new Set(checkingIds)
+  nextCheckingIds.delete(id)
+  return nextCheckingIds
 }
 
 export const useProxyStore = create<ProxyState>((set, get) => ({
@@ -48,6 +114,10 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   checkingIds: new Set(),
 
   loadProxies: async () => {
+    if (isCheckInProgress(get())) {
+      return
+    }
+
     set({ isLoading: true })
 
     try {
@@ -97,16 +167,30 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
 
   checkProxy: async (id) => {
     const proxy = get().proxies.find((item) => item.id === id)
-    if (!proxy) return
+    if (!proxy || get().checkingIds.has(id)) return
 
+    const domains = useSettingsStore.getState().settings.checkDomains
     const checkingIds = new Set(get().checkingIds)
     checkingIds.add(id)
 
-    const proxies = get().proxies.map((item) =>
-      item.id === id ? { ...item, status: 'checking' as const, error: undefined, errorDetails: undefined, domainChecks: undefined } : item
-    )
+    set({
+      checkingIds,
+      proxies: get().proxies.map((item) => (item.id === id ? beginProxyCheck(item, domains) : item))
+    })
 
-    set({ proxies, checkingIds })
+    const unsubscribe = window.api.onCheckProgress((progress) => {
+      if (progress.phase === 'complete') {
+        if (progress.result.id !== id) return
+      } else if (progress.proxyId !== id) {
+        return
+      }
+
+      if (progress.phase === 'complete') {
+        return
+      }
+
+      set({ proxies: applyLiveProgress(get().proxies, progress) })
+    })
 
     try {
       const result = await window.api.checkProxy(proxy)
@@ -116,44 +200,64 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
 
       set({ proxies: updated })
       await persist(updated)
+    } catch {
+      const updated = get().proxies.map((item) =>
+        item.id === id ? finalizeIncompleteProxy(item) : item
+      )
+
+      set({ proxies: updated })
+      await persist(updated)
     } finally {
-      const nextCheckingIds = new Set(get().checkingIds)
-      nextCheckingIds.delete(id)
-      set({ checkingIds: nextCheckingIds })
+      unsubscribe()
+
+      const finalized = get().proxies.map((item) =>
+        item.id === id ? finalizeIncompleteProxy(item) : item
+      )
+
+      set({
+        proxies: finalized,
+        checkingIds: clearCheckingId(get().checkingIds, id)
+      })
     }
   },
 
   checkAll: async () => {
     const { proxies } = get()
-    if (proxies.length === 0) return
+    if (proxies.length === 0 || get().isCheckingAll) return
+
+    const domains = useSettingsStore.getState().settings.checkDomains
+    const checkingIds = new Set(proxies.map((proxy) => proxy.id))
 
     set({
       isCheckingAll: true,
-      checkingIds: new Set(proxies.map((proxy) => proxy.id)),
-      proxies: proxies.map((proxy) => ({
-        ...proxy,
-        status: 'checking',
-        error: undefined,
-        errorDetails: undefined,
-        domainChecks: undefined
-      }))
+      checkingIds,
+      proxies: proxies.map((proxy) => beginProxyCheck(proxy, domains))
     })
 
-    const unsubscribe = window.api.onCheckProgress((result) => {
-      const updated = get().proxies.map((proxy) =>
-        proxy.id === result.id ? applyCheckResult(proxy, result) : proxy
-      )
+    const unsubscribe = window.api.onCheckProgress((progress) => {
+      const updated = applyLiveProgress(get().proxies, progress)
 
       set({ proxies: updated })
-      void persist(updated)
+
+      if (progress.phase === 'complete') {
+        void persist(updated)
+      }
     })
 
     try {
       await window.api.checkAll(proxies)
-      await persist(get().proxies)
     } finally {
       unsubscribe()
-      set({ isCheckingAll: false, checkingIds: new Set() })
+
+      const finalized = get().proxies.map(finalizeIncompleteProxy)
+
+      set({
+        isCheckingAll: false,
+        checkingIds: new Set(),
+        proxies: finalized
+      })
+
+      await persist(finalized)
     }
   }
 }))

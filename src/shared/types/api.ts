@@ -1,4 +1,4 @@
-import type { Proxy, ProxyCheckResult } from './proxy'
+import type { Proxy, ProxyCheckProgress, ProxyCheckResult } from './proxy'
 import type { AppSettings } from './settings'
 
 export interface AppAPI {
@@ -6,7 +6,7 @@ export interface AppAPI {
   saveProxies: (proxies: Proxy[]) => Promise<void>
   checkProxy: (proxy: Proxy) => Promise<ProxyCheckResult>
   checkAll: (proxies: Proxy[]) => Promise<void>
-  onCheckProgress: (callback: (result: ProxyCheckResult) => void) => () => void
+  onCheckProgress: (callback: (progress: ProxyCheckProgress) => void) => () => void
   getSettings: () => Promise<AppSettings>
   saveSettings: (settings: AppSettings) => Promise<void>
 }

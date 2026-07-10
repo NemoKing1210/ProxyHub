@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-07-10
+
+### Added
+
+- Real-time per-domain check progress with pending, checking, alive, and dead states
+- Domain result animations and auto-expand of results while a proxy is being checked
+
+### Fixed
+
+- Proxy and domain list could stay in "checking" after the check button stopped loading
+- `loadProxies` no longer overwrites in-progress check state from disk
+
+### Changed
+
+- Single-check completion now applies the invoke result as the source of truth
+- Check results section is collapsible (collapsed by default)
+
 ## [1.4.0] - 2026-07-10
 
 ### Added
@@ -87,6 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
 
+[1.5.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.5.0
 [1.4.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.4.0
 [1.3.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.3.0
 [1.2.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.2.0

@@ -70,6 +70,7 @@
     "password": "Password (optional)"
   },
   "proxyStatus": {
+    "pending": "Waiting",
     "unknown": "Not checked",
     "checking": "Checking",
     "alive": "Alive",
