@@ -1,7 +1,7 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "प्रॉक्सी", "settings": "सेटिंग्स" },
-  "common": { "cancel": "रद्द करें", "save": "सहेजें", "add": "जोड़ें", "delete": "हटाएं", "none": "—", "copy": "कॉपी करें", "copied": "कॉपी हो गया" },
+  "common": { "cancel": "रद्द करें", "save": "सहेजें", "add": "जोड़ें", "delete": "हटाएं", "none": "—", "copy": "कॉपी करें", "copied": "कॉपी हो गया", "showPassword": "पासवर्ड दिखाएं", "hidePassword": "पासवर्ड छिपाएं" },
   "proxyList": {
     "title": "प्रॉक्सी सूची",
     "stats": "कुल {{total}} · सक्रिय {{alive}} · निष्क्रिय {{dead}}",

@@ -13,7 +13,9 @@
     "delete": "Delete",
     "none": "—",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "proxyList": {
     "title": "Proxy list",

@@ -1,7 +1,7 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "プロキシ", "settings": "設定" },
-  "common": { "cancel": "キャンセル", "save": "保存", "add": "追加", "delete": "削除", "none": "—", "copy": "コピー", "copied": "コピーしました" },
+  "common": { "cancel": "キャンセル", "save": "保存", "add": "追加", "delete": "削除", "none": "—", "copy": "コピー", "copied": "コピーしました", "showPassword": "パスワードを表示", "hidePassword": "パスワードを非表示" },
   "proxyList": {
     "title": "プロキシ一覧",
     "stats": "合計 {{total}} · 稼働 {{alive}} · 停止 {{dead}}",

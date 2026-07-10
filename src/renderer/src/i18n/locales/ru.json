@@ -13,7 +13,9 @@
     "delete": "Удалить",
     "none": "—",
     "copy": "Копировать",
-    "copied": "Скопировано"
+    "copied": "Скопировано",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль"
   },
   "proxyList": {
     "title": "Список прокси",

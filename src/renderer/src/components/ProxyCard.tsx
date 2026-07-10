@@ -18,7 +18,7 @@ import {
 import { alpha, useTheme } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Proxy, ProxyStatus } from '../../../shared/types/proxy'
+import type { Proxy } from '../../../shared/types/proxy'
 import { buildProxyUrl } from '../../../shared/utils/proxy-format'
 import CopyableField from './CopyableField'
 import ProxyErrorPopover from './ProxyErrorPopover'
@@ -38,13 +38,7 @@ interface ImportantField {
   value: string
   displayValue?: string
   monospace?: boolean
-}
-
-const statusAccent: Record<ProxyStatus, string> = {
-  unknown: 'grey.600',
-  checking: 'info.main',
-  alive: 'success.main',
-  dead: 'error.main'
+  secret?: boolean
 }
 
 function ProxyCard({
@@ -57,7 +51,6 @@ function ProxyCard({
 }: ProxyCardProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const accent = statusAccent[proxy.status]
   const [linkCopied, setLinkCopied] = useState(false)
 
   const proxyUrl = buildProxyUrl(proxy)
@@ -88,8 +81,8 @@ function ProxyCard({
       fields.push({
         label: t('proxyList.columns.password'),
         value: proxy.password,
-        displayValue: '••••••••',
-        monospace: true
+        monospace: true,
+        secret: true
       })
     }
 
@@ -133,8 +126,6 @@ function ProxyCard({
         flexDirection: 'column',
         border: 1,
         borderColor: 'divider',
-        borderLeft: 4,
-        borderLeftColor: accent,
         transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
         '&:hover': {
           boxShadow:
@@ -152,12 +143,8 @@ function ProxyCard({
           '&:last-child': { pb: proxy.error ? 1.5 : 2 }
         }}
       >
-        <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          spacing={{ xs: 1.5, md: 2 }}
-          sx={{ alignItems: { md: 'center' } }}
-        >
-          <Box sx={{ minWidth: { md: 200 }, flexShrink: 0 }}>
+        <Stack spacing={1.5}>
+          <Box>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 0.75 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }} noWrap>
                 {proxy.label || proxy.host}
@@ -176,15 +163,7 @@ function ProxyCard({
             />
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 1,
-              flex: 1,
-              minWidth: 0
-            }}
-          >
+          <Stack spacing={1}>
             {importantFields.map((field) => (
               <CopyableField
                 key={field.label}
@@ -192,10 +171,10 @@ function ProxyCard({
                 value={field.value}
                 displayValue={field.displayValue}
                 monospace={field.monospace}
-                compact
+                secret={field.secret}
               />
             ))}
-          </Box>
+          </Stack>
         </Stack>
 
         {proxy.error && (

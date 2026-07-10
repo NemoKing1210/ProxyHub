@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-07-10
+
+### Added
+
+- Full-width proxy cards with copyable fields (click anywhere on a field to copy)
+- One-click copy of proxy URL from card footer
+- Show/hide password toggle in proxy cards
+- Text action buttons in card footer (copy link, check, edit, delete)
+- Shared `proxy-format` utility for building proxy URLs
+- i18n strings for copy actions and field labels
+
+### Changed
+
+- Proxy list displays only important non-empty fields per card
+- Host and port shown as separate fields instead of combined address
+- Username/password labels in cards no longer show “optional” hint (kept in form dialog)
+- Refined field styling: no borders, hover highlight, vertical field layout
+- Removed colored status border from proxy cards
+
 ## [1.0.0] - 2026-07-10
 
 ### Added
@@ -23,4 +42,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
 
+[1.1.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.1.0
 [1.0.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.0.0

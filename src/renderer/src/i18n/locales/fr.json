@@ -1,7 +1,7 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "Proxies", "settings": "Paramètres" },
-  "common": { "cancel": "Annuler", "save": "Enregistrer", "add": "Ajouter", "delete": "Supprimer", "none": "—", "copy": "Copier", "copied": "Copié" },
+  "common": { "cancel": "Annuler", "save": "Enregistrer", "add": "Ajouter", "delete": "Supprimer", "none": "—", "copy": "Copier", "copied": "Copié", "showPassword": "Afficher le mot de passe", "hidePassword": "Masquer le mot de passe" },
   "proxyList": {
     "title": "Liste des proxies",
     "stats": "{{total}} au total · {{alive}} actifs · {{dead}} inactifs",

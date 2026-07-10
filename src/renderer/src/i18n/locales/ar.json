@@ -1,7 +1,7 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "البروكسيات", "settings": "الإعدادات" },
-  "common": { "cancel": "إلغاء", "save": "حفظ", "add": "إضافة", "delete": "حذف", "none": "—", "copy": "نسخ", "copied": "تم النسخ" },
+  "common": { "cancel": "إلغاء", "save": "حفظ", "add": "إضافة", "delete": "حذف", "none": "—", "copy": "نسخ", "copied": "تم النسخ", "showPassword": "إظهار كلمة المرور", "hidePassword": "إخفاء كلمة المرور" },
   "proxyList": {
     "title": "قائمة البروكسيات",
     "stats": "{{total}} إجمالي · {{alive}} نشط · {{dead}} غير نشط",
