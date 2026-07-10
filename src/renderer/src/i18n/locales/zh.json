@@ -20,6 +20,10 @@
     "checkAll": "全部检测",
     "addProxy": "添加代理",
     "empty": "暂无代理。点击「添加代理」开始。",
+    "deleteConfirm": {
+      "title": "删除代理？",
+      "message": "确定要删除 {{name}} 吗？此操作无法撤销。"
+    },
     "columns": {
       "label": "标签",
       "protocol": "协议",
@@ -38,12 +42,12 @@
       "anonymityLevel": "匿名级别",
       "actions": "操作"
     },
-    "actions": { "check": "检测代理", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接" },
+    "actions": { "check": "检测代理", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除" },
     "sections": {
       "connection": "连接",
       "connectionDescription": "主机、端口和认证信息。",
       "results": "检测结果",
-      "resultsDescription": "代理地址可达性、外部 IP 及最近一次测试中各域名的状态。"
+      "resultsDescription": "连通性、外部 IP 和域名。"
     },
     "connectivity": {
       "title": "代理服务器",
@@ -64,7 +68,7 @@
     "editTitle": "编辑代理",
     "label": "标签（可选）",
     "icon": "图标",
-    "iconHint": "显示在代理卡片标题区域。",
+    "iconHint": "自动：显示国旗或默认图标。",
     "color": "颜色",
     "colorHint": "代理卡片上的强调色。",
     "previewFallback": "代理名称",
@@ -94,6 +98,7 @@
     "anonymityHint": "elite、anonymous 或 transparent — 与导入文件格式一致。"
   },
   "proxyIcons": {
+    "auto": "自动",
     "router": "路由器",
     "dns": "网络",
     "cloud": "云",

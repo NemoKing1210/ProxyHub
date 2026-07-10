@@ -20,6 +20,10 @@
     "checkAll": "すべて確認",
     "addProxy": "プロキシを追加",
     "empty": "プロキシがありません。「プロキシを追加」をクリックして開始してください。",
+    "deleteConfirm": {
+      "title": "プロキシを削除しますか？",
+      "message": "{{name}} を削除してもよろしいですか？この操作は元に戻せません。"
+    },
     "columns": {
       "label": "ラベル",
       "protocol": "プロトコル",
@@ -42,13 +46,16 @@
       "check": "プロキシを確認",
       "edit": "編集",
       "delete": "削除",
-      "copyLink": "リンクとしてコピー"
+      "copyLink": "リンクとしてコピー",
+      "changeIcon": "アイコンを変更",
+      "addToFavorites": "お気に入りに追加",
+      "removeFromFavorites": "お気に入りから削除"
     },
     "sections": {
       "connection": "接続",
       "connectionDescription": "ホスト、ポート、認証情報。",
       "results": "確認結果",
-      "resultsDescription": "プロキシアドレスの到達性、外部IP、および最新テストのドメイン別ステータス。"
+      "resultsDescription": "接続性、外部IP、ドメイン。"
     },
     "connectivity": {
       "title": "プロキシサーバー",
@@ -68,7 +75,7 @@
     "editTitle": "プロキシを編集",
     "label": "ラベル（任意）",
     "icon": "アイコン",
-    "iconHint": "プロキシカードのヘッダーに表示されます。",
+    "iconHint": "自動：国の旗またはデフォルトアイコン。",
     "color": "色",
     "colorHint": "プロキシカードのアクセントカラー。",
     "previewFallback": "プロキシ名",
@@ -98,6 +105,7 @@
     "anonymityHint": "elite、anonymous、transparent — インポートファイルと同じ形式。"
   },
   "proxyIcons": {
+    "auto": "自動",
     "router": "ルーター",
     "dns": "ネットワーク",
     "cloud": "クラウド",

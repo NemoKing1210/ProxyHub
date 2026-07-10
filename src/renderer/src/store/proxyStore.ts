@@ -24,6 +24,13 @@ interface ProxyState {
   loadProxies: () => Promise<void>
   addProxy: (input: ProxyInput) => Promise<void>
   updateProxy: (id: string, input: ProxyInput) => Promise<void>
+  patchProxy: (
+    id: string,
+    patch: Partial<
+      Pick<Proxy, 'label' | 'icon' | 'color' | 'countryCode' | 'city' | 'anonymityLevel' | 'isFavorite'>
+    >
+  ) => Promise<void>
+  toggleFavorite: (id: string) => Promise<void>
   removeProxy: (id: string) => Promise<void>
   checkProxy: (id: string) => Promise<void>
   checkAll: () => Promise<void>
@@ -35,6 +42,31 @@ function createProxy(input: ProxyInput): Proxy {
     ...input,
     createdAt: new Date().toISOString(),
     status: 'unknown'
+  }
+}
+
+function hasConnectionChanges(proxy: Proxy, input: ProxyInput): boolean {
+  return (
+    proxy.protocol !== input.protocol ||
+    proxy.host !== input.host.trim() ||
+    proxy.port !== input.port ||
+    (proxy.username ?? '') !== (input.username?.trim() ?? '') ||
+    (proxy.password ?? '') !== (input.password ?? '')
+  )
+}
+
+function clearCheckState<T extends Proxy>(proxy: T): T {
+  return {
+    ...proxy,
+    status: 'unknown',
+    latencyMs: undefined,
+    externalIp: undefined,
+    checkTarget: undefined,
+    error: undefined,
+    errorDetails: undefined,
+    domainChecks: undefined,
+    connectivity: undefined,
+    checkedAt: undefined
   }
 }
 
@@ -224,22 +256,38 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   },
 
   updateProxy: async (id, input) => {
+    const proxies = get().proxies.map((proxy) => {
+      if (proxy.id !== id) {
+        return proxy
+      }
+
+      const updated: Proxy = {
+        ...proxy,
+        ...input,
+        host: input.host.trim()
+      }
+
+      if (!hasConnectionChanges(proxy, input)) {
+        return updated
+      }
+
+      return clearCheckState(updated)
+    })
+
+    set({ proxies })
+    await persist(proxies)
+  },
+
+  patchProxy: async (id, patch) => {
+    const proxies = get().proxies.map((proxy) => (proxy.id === id ? { ...proxy, ...patch } : proxy))
+
+    set({ proxies })
+    await persist(proxies)
+  },
+
+  toggleFavorite: async (id) => {
     const proxies = get().proxies.map((proxy) =>
-      proxy.id === id
-        ? {
-            ...proxy,
-            ...input,
-            status: 'unknown' as const,
-            latencyMs: undefined,
-            externalIp: undefined,
-            checkTarget: undefined,
-            error: undefined,
-            errorDetails: undefined,
-            domainChecks: undefined,
-            connectivity: undefined,
-            checkedAt: undefined
-          }
-        : proxy
+      proxy.id === id ? { ...proxy, isFavorite: !proxy.isFavorite } : proxy
     )
 
     set({ proxies })

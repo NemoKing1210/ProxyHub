@@ -6,20 +6,23 @@ import LinkIcon from '@mui/icons-material/Link'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
+import StarIcon from '@mui/icons-material/Star'
+import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
-import { Box, Button, Chip, CircularProgress, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Chip, CircularProgress, IconButton, Snackbar, Stack, Typography } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
-import type { Proxy, ProxyAnonymityLevel } from '../../../shared/types/proxy'
+import type { Proxy, ProxyAnonymityLevel, ProxyIconId } from '../../../shared/types/proxy'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
 import { elevationShadow, surfaceContainer } from '../theme'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
+import ProxyCardAvatar from './ProxyCardAvatar'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
 import CountryFlag from './CountryFlag'
@@ -27,7 +30,7 @@ import LatencyText from './LatencyText'
 import ProxyConnectivityResultCard from './ProxyConnectivityResult'
 import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
-import ProxyIcon from './ProxyIcon'
+import ProxyIconPickerPopover from './ProxyIconPickerPopover'
 import ProxyStatusChip from './ProxyStatusChip'
 
 interface ProxyCardProps {
@@ -37,6 +40,8 @@ interface ProxyCardProps {
   onCheck: () => void
   onEdit: () => void
   onDelete: () => void
+  onIconChange: (iconId: ProxyIconId | undefined) => void
+  onToggleFavorite: () => void
 }
 
 interface ImportantField {
@@ -49,6 +54,7 @@ interface ImportantField {
 
 const metadataChipSx = {
   border: 'none',
+  cursor: 'pointer',
   '& .MuiChip-label': {
     px: 1,
     py: 0.375
@@ -75,20 +81,16 @@ function ProxyCard({
   isCheckingAll,
   onCheck,
   onEdit,
-  onDelete
+  onDelete,
+  onIconChange,
+  onToggleFavorite
 }: ProxyCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
   const [linkCopied, setLinkCopied] = useState(false)
+  const [copyToastOpen, setCopyToastOpen] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
-
-  useEffect(() => {
-    if (isChecking) {
-      setResultsExpanded(true)
-    }
-  }, [isChecking])
-
-  const effectiveResultsExpanded = resultsExpanded || isChecking
+  const [iconPickerAnchor, setIconPickerAnchor] = useState<HTMLElement | null>(null)
 
   const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)
@@ -179,6 +181,11 @@ function ProxyCard({
     window.setTimeout(() => setLinkCopied(false), 1500)
   }
 
+  const handleCopy = async (text: string): Promise<void> => {
+    await navigator.clipboard.writeText(text)
+    setCopyToastOpen(true)
+  }
+
   const renderFields = (fields: ImportantField[]): React.JSX.Element => (
     <Stack spacing={1}>
       {fields.map((field) => (
@@ -205,7 +212,9 @@ function ProxyCard({
     >
       <Box sx={{ p: { xs: 2.5, sm: 3 } }}>
         <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start', mb: 2.5 }}>
-          <Box
+          <IconButton
+            onClick={(event) => setIconPickerAnchor(event.currentTarget)}
+            aria-label={t('proxyList.actions.changeIcon')}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -216,6 +225,11 @@ function ProxyCard({
               flexShrink: 0,
               bgcolor: colorStyles.background,
               color: colorStyles.main,
+              transition: 'background-color 160ms ease, transform 160ms ease',
+              '&:hover': {
+                bgcolor: alpha(colorStyles.main, theme.palette.mode === 'dark' ? 0.32 : 0.22),
+                color: colorStyles.main
+              },
               ...(isChecking
                 ? {
                     animation: 'iconPulse 1.6s ease-in-out infinite',
@@ -229,8 +243,20 @@ function ProxyCard({
                 : {})
             }}
           >
-            <ProxyIcon iconId={proxy.icon} fontSize="small" />
-          </Box>
+            <ProxyCardAvatar icon={proxy.icon} countryCode={proxy.countryCode} flagSize={22} fontSize="small" />
+          </IconButton>
+
+          <ProxyIconPickerPopover
+            anchorEl={iconPickerAnchor}
+            open={Boolean(iconPickerAnchor)}
+            value={proxy.icon}
+            countryCode={proxy.countryCode}
+            onClose={() => setIconPickerAnchor(null)}
+            onSelect={(iconId) => {
+              onIconChange(iconId)
+              setIconPickerAnchor(null)
+            }}
+          />
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Stack
@@ -238,13 +264,44 @@ function ProxyCard({
               spacing={1}
               sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}
             >
-              <Typography
-                variant="h6"
-                sx={{ fontSize: '1.05rem', fontWeight: 600, lineHeight: 1.3 }}
-                noWrap
-              >
-                {proxy.label || proxy.host}
-              </Typography>
+              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', minWidth: 0, flex: 1 }}>
+                <IconButton
+                  size="small"
+                  onClick={onToggleFavorite}
+                  aria-label={
+                    proxy.isFavorite
+                      ? t('proxyList.actions.removeFromFavorites')
+                      : t('proxyList.actions.addToFavorites')
+                  }
+                  sx={{
+                    flexShrink: 0,
+                    color: proxy.isFavorite ? 'warning.main' : 'text.disabled',
+                    '&:hover': {
+                      color: proxy.isFavorite ? 'warning.dark' : 'warning.main'
+                    }
+                  }}
+                >
+                  {proxy.isFavorite ? (
+                    <StarIcon fontSize="small" />
+                  ) : (
+                    <StarBorderOutlinedIcon fontSize="small" />
+                  )}
+                </IconButton>
+                <Typography
+                  variant="h6"
+                  onClick={() => void handleCopy(proxy.label?.trim() || proxy.host)}
+                  sx={{
+                    fontSize: '1.05rem',
+                    fontWeight: 600,
+                    lineHeight: 1.3,
+                    cursor: 'pointer',
+                    minWidth: 0
+                  }}
+                  noWrap
+                >
+                  {proxy.label || proxy.host}
+                </Typography>
+              </Stack>
               <ProxyStatusChip status={proxy.status} />
             </Stack>
 
@@ -252,15 +309,22 @@ function ProxyCard({
               <Chip
                 label={proxy.protocol.toUpperCase()}
                 size="small"
+                onClick={() => void handleCopy(proxy.protocol)}
                 sx={{
                   fontWeight: 700,
                   letterSpacing: 0.5,
                   bgcolor: surfaceContainer(theme, 'high'),
                   color: 'primary.main',
-                  border: 'none'
+                  border: 'none',
+                  cursor: 'pointer'
                 }}
               />
-              <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                onClick={() => void handleCopy(address)}
+                sx={{ fontFamily: 'monospace', cursor: 'pointer' }}
+              >
                 {address}
               </Typography>
             </Stack>
@@ -270,6 +334,11 @@ function ProxyCard({
                 {proxy.countryCode && (
                   <Chip
                     size="small"
+                    onClick={() =>
+                      void handleCopy(
+                        findProxyCountry(proxy.countryCode!)?.name ?? proxy.countryCode!
+                      )
+                    }
                     label={
                       <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                         <CountryFlag countryCode={proxy.countryCode} size={16} />
@@ -284,6 +353,7 @@ function ProxyCard({
                 {proxy.city && (
                   <Chip
                     size="small"
+                    onClick={() => void handleCopy(proxy.city!)}
                     label={
                       <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                         <LocationOnOutlinedIcon sx={{ fontSize: 16 }} />
@@ -296,6 +366,7 @@ function ProxyCard({
                 {proxy.anonymityLevel && (
                   <Chip
                     size="small"
+                    onClick={() => void handleCopy(proxy.anonymityLevel!)}
                     label={
                       <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                         <AnonymityLevelIcon level={proxy.anonymityLevel} />
@@ -317,35 +388,43 @@ function ProxyCard({
           </Box>
         </Stack>
 
-        <Stack spacing={2}>
-          <ContentSection
-            nested
-            collapsible
-            defaultExpanded={false}
-            icon={<DnsOutlinedIcon fontSize="small" />}
-            title={t('proxyList.sections.connection')}
-            description={t('proxyList.sections.connectionDescription')}
-          >
-            {renderFields(connectionFields)}
-          </ContentSection>
-
-          {showResults && (
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={2}
+          sx={{ alignItems: 'stretch' }}
+        >
+          <Box sx={{ flex: 1, minWidth: 0 }}>
             <ContentSection
               nested
               collapsible
-              expanded={effectiveResultsExpanded}
-              onExpandedChange={setResultsExpanded}
-              icon={<SpeedOutlinedIcon fontSize="small" />}
-              title={resultsTitle}
-              description={t('proxyList.sections.resultsDescription')}
+              defaultExpanded={false}
+              icon={<DnsOutlinedIcon fontSize="small" />}
+              title={t('proxyList.sections.connection')}
+              description={t('proxyList.sections.connectionDescription')}
             >
-              <Stack spacing={2}>
-                {proxy.connectivity && (
-                  <ProxyConnectivityResultCard connectivity={proxy.connectivity} />
-                )}
-                {domainChecks.length > 0 && <ProxyDomainResults domainChecks={domainChecks} />}
-              </Stack>
+              {renderFields(connectionFields)}
             </ContentSection>
+          </Box>
+
+          {showResults && (
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <ContentSection
+                nested
+                collapsible
+                expanded={resultsExpanded}
+                onExpandedChange={setResultsExpanded}
+                icon={<SpeedOutlinedIcon fontSize="small" />}
+                title={resultsTitle}
+                description={t('proxyList.sections.resultsDescription')}
+              >
+                <Stack spacing={2}>
+                  {proxy.connectivity && (
+                    <ProxyConnectivityResultCard connectivity={proxy.connectivity} />
+                  )}
+                  {domainChecks.length > 0 && <ProxyDomainResults domainChecks={domainChecks} />}
+                </Stack>
+              </ContentSection>
+            </Box>
           )}
         </Stack>
 
@@ -408,6 +487,17 @@ function ProxyCard({
           {t('proxyList.actions.delete')}
         </Button>
       </Box>
+
+      <Snackbar
+        open={copyToastOpen}
+        autoHideDuration={2000}
+        onClose={() => setCopyToastOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" variant="filled" onClose={() => setCopyToastOpen(false)}>
+          {t('common.copied')}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

@@ -20,6 +20,10 @@
     "checkAll": "فحص الكل",
     "addProxy": "إضافة بروكسي",
     "empty": "لا توجد بروكسيات بعد. انقر \"إضافة بروكسي\" للبدء.",
+    "deleteConfirm": {
+      "title": "حذف البروكسي؟",
+      "message": "هل أنت متأكد أنك تريد حذف {{name}}؟ لا يمكن التراجع عن هذا الإجراء."
+    },
     "columns": {
       "label": "التسمية",
       "protocol": "البروتوكول",
@@ -42,13 +46,16 @@
       "check": "فحص البروكسي",
       "edit": "تعديل",
       "delete": "حذف",
-      "copyLink": "نسخ كرابط"
+      "copyLink": "نسخ كرابط",
+      "changeIcon": "تغيير الأيقونة",
+      "addToFavorites": "إضافة إلى المفضلة",
+      "removeFromFavorites": "إزالة من المفضلة"
     },
     "sections": {
       "connection": "الاتصال",
       "connectionDescription": "المضيف والمنفذ وبيانات الاعتماد.",
       "results": "نتائج الفحص",
-      "resultsDescription": "إمكانية الوصول إلى عنوان البروكسي وIP الخارجي وحالة كل نطاق من آخر اختبار."
+      "resultsDescription": "الاتصال وIP الخارجي والنطاقات."
     },
     "connectivity": {
       "title": "خادم البروكسي",
@@ -69,7 +76,7 @@
     "editTitle": "تعديل البروكسي",
     "label": "التسمية (اختياري)",
     "icon": "أيقونة",
-    "iconHint": "تظهر في رأس بطاقة البروكسي.",
+    "iconHint": "تلقائي: علم الدولة أو الأيقونة الافتراضية.",
     "color": "اللون",
     "colorHint": "لون التمييز على بطاقة البروكسي.",
     "previewFallback": "اسم البروكسي",
@@ -99,6 +106,7 @@
     "anonymityHint": "elite أو anonymous أو transparent — كما في ملفات الاستيراد."
   },
   "proxyIcons": {
+    "auto": "تلقائي",
     "router": "موجه",
     "dns": "شبكة",
     "cloud": "سحابة",

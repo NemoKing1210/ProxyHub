@@ -24,16 +24,16 @@ import type { Proxy, ProxyProtocol } from '../../../shared/types/proxy'
 import {
   DEFAULT_PORTS,
   DEFAULT_PROXY_COLOR_ID,
-  DEFAULT_PROXY_ICON_ID,
   PROXY_ANONYMITY_LEVELS,
   PROXY_COLOR_IDS,
+  PROXY_ICON_AUTO_VALUE,
   PROXY_ICON_IDS
 } from '../../../shared/types/proxy'
 import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
-import { resolveProxyIconId } from '../../../shared/utils/proxy-icons'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import { createProxyFormSchema, type ProxyFormValues } from '../validation/proxySchema'
 import CountryFlag from './CountryFlag'
+import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyColorSwatch from './ProxyColorSwatch'
 import ProxyFormSection from './ProxyFormSection'
 import ProxyIcon from './ProxyIcon'
@@ -59,7 +59,7 @@ function ProxyFormDialog({
 
   const defaultValues: ProxyFormValues = {
     label: '',
-    icon: DEFAULT_PROXY_ICON_ID,
+    icon: PROXY_ICON_AUTO_VALUE,
     color: DEFAULT_PROXY_COLOR_ID,
     protocol: 'http',
     host: '',
@@ -89,11 +89,13 @@ function ProxyFormDialog({
   const previewColor = watch('color')
   const previewLabel = watch('label')
   const previewHost = watch('host')
+  const previewCountryCode = watch('countryCode')
   const previewColorStyles = useMemo(
     () => getProxyColorStyles(theme, previewColor),
     [theme, previewColor]
   )
-  const previewIconId = resolveProxyIconId(previewIcon)
+  const previewIconValue =
+    previewIcon === PROXY_ICON_AUTO_VALUE ? undefined : previewIcon
   const [appearanceExpanded, setAppearanceExpanded] = useState(false)
   const [connectionExpanded, setConnectionExpanded] = useState(true)
   const [authExpanded, setAuthExpanded] = useState(false)
@@ -144,7 +146,7 @@ function ProxyFormDialog({
     if (initialProxy) {
       reset({
         label: initialProxy.label ?? '',
-        icon: initialProxy.icon ?? DEFAULT_PROXY_ICON_ID,
+        icon: initialProxy.icon ?? PROXY_ICON_AUTO_VALUE,
         color: initialProxy.color ?? DEFAULT_PROXY_COLOR_ID,
         protocol: initialProxy.protocol,
         host: initialProxy.host,
@@ -440,18 +442,41 @@ function ProxyFormDialog({
                     slotProps={{
                       select: {
                         renderValue: (selected) => {
-                          const iconId = resolveProxyIconId(String(selected))
+                          const iconValue = String(selected)
+
+                          if (iconValue === PROXY_ICON_AUTO_VALUE) {
+                            return (
+                              <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                                <ProxyCardAvatar
+                                  countryCode={previewCountryCode || undefined}
+                                  flagSize={20}
+                                  fontSize="small"
+                                />
+                                <span>{t('proxyIcons.auto')}</span>
+                              </Stack>
+                            )
+                          }
 
                           return (
                             <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
-                              <ProxyIcon iconId={iconId} fontSize="small" />
-                              <span>{t(`proxyIcons.${iconId}`)}</span>
+                              <ProxyIcon iconId={iconValue as (typeof PROXY_ICON_IDS)[number]} fontSize="small" />
+                              <span>{t(`proxyIcons.${iconValue}`)}</span>
                             </Stack>
                           )
                         }
                       }
                     }}
                   >
+                    <MenuItem value={PROXY_ICON_AUTO_VALUE}>
+                      <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                        <ProxyCardAvatar
+                          countryCode={previewCountryCode || undefined}
+                          flagSize={20}
+                          fontSize="small"
+                        />
+                        <span>{t('proxyIcons.auto')}</span>
+                      </Stack>
+                    </MenuItem>
                     {PROXY_ICON_IDS.map((iconId) => (
                       <MenuItem key={iconId} value={iconId}>
                         <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
@@ -526,7 +551,12 @@ function ProxyFormDialog({
                   color: previewColorStyles.main
                 }}
               >
-                <ProxyIcon iconId={previewIconId} fontSize="small" />
+                <ProxyCardAvatar
+                  icon={previewIconValue}
+                  countryCode={previewCountryCode || undefined}
+                  flagSize={22}
+                  fontSize="small"
+                />
               </Box>
               <Box sx={{ minWidth: 0 }}>
                 <Typography variant="subtitle2" noWrap>

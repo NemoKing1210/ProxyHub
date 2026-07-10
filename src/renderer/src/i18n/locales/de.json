@@ -20,6 +20,10 @@
     "checkAll": "Alle prüfen",
     "addProxy": "Proxy hinzufügen",
     "empty": "Noch keine Proxies. Klicken Sie auf „Proxy hinzufügen“, um zu starten.",
+    "deleteConfirm": {
+      "title": "Proxy löschen?",
+      "message": "Möchten Sie {{name}} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    },
     "columns": {
       "label": "Bezeichnung",
       "protocol": "Protokoll",
@@ -42,13 +46,16 @@
       "check": "Proxy prüfen",
       "edit": "Bearbeiten",
       "delete": "Löschen",
-      "copyLink": "Als Link kopieren"
+      "copyLink": "Als Link kopieren",
+      "changeIcon": "Symbol ändern",
+      "addToFavorites": "Zu Favoriten hinzufügen",
+      "removeFromFavorites": "Aus Favoriten entfernen"
     },
     "sections": {
       "connection": "Verbindung",
       "connectionDescription": "Host, Port und Anmeldedaten.",
       "results": "Prüfergebnisse",
-      "resultsDescription": "Erreichbarkeit der Proxy-Adresse, externe IP und Domain-Status des letzten Tests."
+      "resultsDescription": "Erreichbarkeit, externe IP und Domains."
     },
     "connectivity": {
       "title": "Proxy-Server",
@@ -68,7 +75,7 @@
     "editTitle": "Proxy bearbeiten",
     "label": "Bezeichnung (optional)",
     "icon": "Symbol",
-    "iconHint": "Wird in der Kopfzeile der Proxy-Karte angezeigt.",
+    "iconHint": "Automatisch: Landesflagge oder Standard-Symbol.",
     "color": "Farbe",
     "colorHint": "Akzentfarbe auf der Proxy-Karte.",
     "previewFallback": "Proxy-Name",
@@ -98,6 +105,7 @@
     "anonymityHint": "elite, anonymous oder transparent — wie in Importdateien."
   },
   "proxyIcons": {
+    "auto": "Automatisch",
     "router": "Router",
     "dns": "Netzwerk",
     "cloud": "Cloud",

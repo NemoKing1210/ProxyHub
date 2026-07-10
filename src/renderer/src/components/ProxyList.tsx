@@ -5,18 +5,19 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import { Box, Button, Chip, CircularProgress, Paper, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Proxy, ProxyInput } from '../../../shared/types/proxy'
-import { DEFAULT_PROXY_COLOR_ID, DEFAULT_PROXY_ICON_ID } from '../../../shared/types/proxy'
+import type { Proxy, ProxyIconId, ProxyInput } from '../../../shared/types/proxy'
+import { DEFAULT_PROXY_COLOR_ID, PROXY_ICON_AUTO_VALUE } from '../../../shared/types/proxy'
 import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
 import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
 import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
-import { normalizeProxyIconId } from '../../../shared/utils/proxy-icons'
 import { useProxyStore } from '../store/proxyStore'
+import { sortProxiesByFavorite } from '../utils/sort-proxies'
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
+import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyFormDialog from './ProxyFormDialog'
 
 function toProxyInput(values: ProxyFormValues): ProxyInput {
@@ -25,10 +26,7 @@ function toProxyInput(values: ProxyFormValues): ProxyInput {
     host: values.host.trim(),
     port: values.port,
     label: values.label?.trim() || undefined,
-    icon: (() => {
-      const icon = normalizeProxyIconId(values.icon)
-      return icon && icon !== DEFAULT_PROXY_ICON_ID ? icon : undefined
-    })(),
+    icon: values.icon === PROXY_ICON_AUTO_VALUE ? undefined : values.icon,
     color: (() => {
       const color = normalizeProxyColorId(values.color)
       return color && color !== DEFAULT_PROXY_COLOR_ID ? color : undefined
@@ -52,6 +50,8 @@ function ProxyList(): React.JSX.Element {
     loadProxies,
     addProxy,
     updateProxy,
+    patchProxy,
+    toggleFavorite,
     removeProxy,
     checkProxy,
     checkAll
@@ -60,6 +60,7 @@ function ProxyList(): React.JSX.Element {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<'add' | 'edit'>('add')
   const [editingProxy, setEditingProxy] = useState<Proxy | undefined>()
+  const [deletingProxy, setDeletingProxy] = useState<Proxy | undefined>()
 
   useEffect(() => {
     void loadProxies()
@@ -77,6 +78,14 @@ function ProxyList(): React.JSX.Element {
     setDialogOpen(true)
   }
 
+  const openDeleteDialog = (proxy: Proxy): void => {
+    setDeletingProxy(proxy)
+  }
+
+  const handleDeleteConfirm = async (proxyId: string): Promise<void> => {
+    await removeProxy(proxyId)
+  }
+
   const handleSubmit = async (values: ProxyFormValues): Promise<void> => {
     const input = toProxyInput(values)
 
@@ -89,6 +98,12 @@ function ProxyList(): React.JSX.Element {
       await updateProxy(editingProxy.id, input)
     }
   }
+
+  const handleIconChange = async (proxy: Proxy, iconId: ProxyIconId | undefined): Promise<void> => {
+    await patchProxy(proxy.id, { icon: iconId })
+  }
+
+  const sortedProxies = useMemo(() => sortProxiesByFavorite(proxies), [proxies])
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
   const deadCount = proxies.filter((proxy) => proxy.status === 'dead').length
@@ -235,7 +250,7 @@ function ProxyList(): React.JSX.Element {
         </Paper>
       ) : (
         <Stack spacing={2}>
-          {proxies.map((proxy) => (
+          {sortedProxies.map((proxy) => (
             <ProxyCard
               key={proxy.id}
               proxy={proxy}
@@ -243,7 +258,9 @@ function ProxyList(): React.JSX.Element {
               isCheckingAll={isCheckingAll}
               onCheck={() => void checkProxy(proxy.id)}
               onEdit={() => openEditDialog(proxy)}
-              onDelete={() => void removeProxy(proxy.id)}
+              onDelete={() => openDeleteDialog(proxy)}
+              onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
+              onToggleFavorite={() => void toggleFavorite(proxy.id)}
             />
           ))}
         </Stack>
@@ -255,6 +272,13 @@ function ProxyList(): React.JSX.Element {
         initialProxy={editingProxy}
         onClose={() => setDialogOpen(false)}
         onSubmit={handleSubmit}
+      />
+
+      <ProxyDeleteConfirmDialog
+        open={Boolean(deletingProxy)}
+        proxy={deletingProxy}
+        onClose={() => setDeletingProxy(undefined)}
+        onConfirm={handleDeleteConfirm}
       />
     </Box>
   )

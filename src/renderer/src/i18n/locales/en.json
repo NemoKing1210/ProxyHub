@@ -25,6 +25,10 @@
     "checkAll": "Check all",
     "addProxy": "Add proxy",
     "empty": "No proxies yet. Click \"Add proxy\" to get started.",
+    "deleteConfirm": {
+      "title": "Delete proxy?",
+      "message": "Are you sure you want to delete {{name}}? This action cannot be undone."
+    },
     "columns": {
       "label": "Label",
       "protocol": "Protocol",
@@ -47,13 +51,16 @@
       "check": "Check proxy",
       "edit": "Edit proxy",
       "delete": "Delete proxy",
-      "copyLink": "Copy as link"
+      "copyLink": "Copy as link",
+      "changeIcon": "Change icon",
+      "addToFavorites": "Add to favorites",
+      "removeFromFavorites": "Remove from favorites"
     },
     "sections": {
       "connection": "Connection",
       "connectionDescription": "Host, port, and authentication credentials.",
       "results": "Check results",
-      "resultsDescription": "Proxy address reachability, external IP, and per-domain status from the latest test."
+      "resultsDescription": "Connectivity, external IP, and domains."
     },
     "connectivity": {
       "title": "Proxy server",
@@ -74,7 +81,7 @@
     "editTitle": "Edit proxy",
     "label": "Label (optional)",
     "icon": "Icon",
-    "iconHint": "Displayed on the proxy card header.",
+    "iconHint": "Auto shows the country flag or the default icon.",
     "color": "Color",
     "colorHint": "Accent color on the proxy card.",
     "previewFallback": "Proxy name",
@@ -104,6 +111,7 @@
     "anonymityHint": "elite, anonymous, or transparent — as in import files."
   },
   "proxyIcons": {
+    "auto": "Auto",
     "router": "Router",
     "dns": "Network",
     "cloud": "Cloud",

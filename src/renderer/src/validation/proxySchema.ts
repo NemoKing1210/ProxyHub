@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { TFunction } from 'i18next'
-import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_IDS } from '../../../shared/types/proxy'
+import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_FORM_VALUES } from '../../../shared/types/proxy'
 
 const countryCodePattern = /^[A-Za-z]{2}$/
 
@@ -8,7 +8,7 @@ export function createProxyFormSchema(t: TFunction) {
   return z
     .object({
       label: z.string().trim().max(64, t('validation.labelMax')).optional(),
-      icon: z.enum(PROXY_ICON_IDS),
+      icon: z.enum(PROXY_ICON_FORM_VALUES),
       color: z.enum(PROXY_COLOR_IDS),
       protocol: z.enum(['http', 'https', 'socks4', 'socks5']),
       host: z

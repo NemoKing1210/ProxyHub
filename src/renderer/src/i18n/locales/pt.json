@@ -20,6 +20,10 @@
     "checkAll": "Verificar todos",
     "addProxy": "Adicionar proxy",
     "empty": "Nenhum proxy ainda. Clique em \"Adicionar proxy\" para começar.",
+    "deleteConfirm": {
+      "title": "Excluir proxy?",
+      "message": "Tem certeza de que deseja excluir {{name}}? Esta ação não pode ser desfeita."
+    },
     "columns": {
       "label": "Rótulo",
       "protocol": "Protocolo",
@@ -42,13 +46,16 @@
       "check": "Verificar proxy",
       "edit": "Editar",
       "delete": "Excluir",
-      "copyLink": "Copiar como link"
+      "copyLink": "Copiar como link",
+      "changeIcon": "Alterar ícone",
+      "addToFavorites": "Adicionar aos favoritos",
+      "removeFromFavorites": "Remover dos favoritos"
     },
     "sections": {
       "connection": "Conexão",
       "connectionDescription": "Host, porta e credenciais.",
       "results": "Resultados",
-      "resultsDescription": "Acessibilidade do endereço do proxy, IP externo e status por domínio do último teste."
+      "resultsDescription": "Conectividade, IP externo e domínios."
     },
     "connectivity": {
       "title": "Servidor proxy",
@@ -68,7 +75,7 @@
     "editTitle": "Editar proxy",
     "label": "Rótulo (opcional)",
     "icon": "Ícone",
-    "iconHint": "Exibido no cabeçalho do cartão do proxy.",
+    "iconHint": "Auto: bandeira do país ou ícone padrão.",
     "color": "Cor",
     "colorHint": "Cor de destaque no cartão do proxy.",
     "previewFallback": "Nome do proxy",
@@ -98,6 +105,7 @@
     "anonymityHint": "elite, anonymous ou transparent — como em arquivos de importação."
   },
   "proxyIcons": {
+    "auto": "Auto",
     "router": "Roteador",
     "dns": "Rede",
     "cloud": "Nuvem",

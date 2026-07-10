@@ -21,6 +21,12 @@ export type ProxyIconId = (typeof PROXY_ICON_IDS)[number]
 
 export const DEFAULT_PROXY_ICON_ID: ProxyIconId = 'router'
 
+export const PROXY_ICON_AUTO_VALUE = 'auto' as const
+
+export const PROXY_ICON_FORM_VALUES = [PROXY_ICON_AUTO_VALUE, ...PROXY_ICON_IDS] as const
+
+export type ProxyIconFormValue = (typeof PROXY_ICON_FORM_VALUES)[number]
+
 export const PROXY_COLOR_IDS = [
   'blue',
   'green',
@@ -83,6 +89,7 @@ export interface Proxy {
   countryCode?: string
   city?: string
   anonymityLevel?: ProxyAnonymityLevel
+  isFavorite?: boolean
   createdAt: string
   status: ProxyStatus
   latencyMs?: number
