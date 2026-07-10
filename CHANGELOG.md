@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-07-10
+
+### Added
+
+- Centered pill navigation header with icons and proxy count badge
+- Page transition animations between routes
+- Per-domain check results in proxy cards (status, latency, URL, errors)
+- `checkedAt` timestamp saved on check and shown in cards
+- `ProxyDomainResults` component for domain-level check output
+- Theme-aware scrollbar styling for light and dark modes
+- Sticky navigation header with backdrop blur
+
+### Changed
+
+- Proxy checker tests all configured domains instead of stopping at the first success
+- Check results section is collapsible (collapsed by default), like connection
+- Removed classic app bar with logo and title
+
 ## [1.3.0] - 2026-07-10
 
 ### Added
@@ -69,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
 
+[1.4.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.4.0
 [1.3.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.3.0
 [1.2.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.2.0
 [1.1.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.1.0

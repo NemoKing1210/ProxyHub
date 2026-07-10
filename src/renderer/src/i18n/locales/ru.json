@@ -48,7 +48,7 @@
       "connection": "Подключение",
       "connectionDescription": "Хост, порт и данные авторизации.",
       "results": "Результаты проверки",
-      "resultsDescription": "Данные последней проверки доступности."
+      "resultsDescription": "Сводка и статус по каждому домену из последней проверки."
     },
     "latencyMs": "{{value}} мс",
     "authEnabled": "Авторизация",

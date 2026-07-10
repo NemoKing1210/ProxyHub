@@ -32,6 +32,7 @@ function applyCheckResult(proxy: Proxy, result: ProxyCheckResult): Proxy {
     checkTarget: result.checkTarget,
     error: result.error,
     errorDetails: result.errorDetails,
+    domainChecks: result.domainChecks,
     checkedAt: result.checkedAt
   }
 }
@@ -77,6 +78,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
             checkTarget: undefined,
             error: undefined,
             errorDetails: undefined,
+            domainChecks: undefined,
             checkedAt: undefined
           }
         : proxy
@@ -101,7 +103,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     checkingIds.add(id)
 
     const proxies = get().proxies.map((item) =>
-      item.id === id ? { ...item, status: 'checking' as const, error: undefined, errorDetails: undefined } : item
+      item.id === id ? { ...item, status: 'checking' as const, error: undefined, errorDetails: undefined, domainChecks: undefined } : item
     )
 
     set({ proxies, checkingIds })
@@ -132,7 +134,8 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
         ...proxy,
         status: 'checking',
         error: undefined,
-        errorDetails: undefined
+        errorDetails: undefined,
+        domainChecks: undefined
       }))
     })
 
@@ -142,6 +145,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
       )
 
       set({ proxies: updated })
+      void persist(updated)
     })
 
     try {

@@ -18,9 +18,12 @@ import { alpha, useTheme } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
+import { formatDateTime } from '../../../shared/utils/datetime'
+import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
+import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
 import ProxyStatusChip from './ProxyStatusChip'
 
@@ -49,12 +52,13 @@ function ProxyCard({
   onEdit,
   onDelete
 }: ProxyCardProps): React.JSX.Element {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const theme = useTheme()
   const [linkCopied, setLinkCopied] = useState(false)
 
   const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)
+  const domainChecks = useMemo(() => getProxyDomainChecks(proxy), [proxy])
 
   const connectionFields = useMemo(() => {
     const fields: ImportantField[] = [
@@ -93,13 +97,6 @@ function ProxyCard({
   const resultFields = useMemo(() => {
     const fields: ImportantField[] = []
 
-    if (proxy.latencyMs !== undefined) {
-      fields.push({
-        label: t('proxyList.columns.latency'),
-        value: t('proxyList.latencyMs', { value: proxy.latencyMs })
-      })
-    }
-
     if (proxy.externalIp) {
       fields.push({
         label: t('proxyList.columns.externalIp'),
@@ -108,16 +105,17 @@ function ProxyCard({
       })
     }
 
-    if (proxy.checkTarget) {
+    if (proxy.checkedAt) {
       fields.push({
-        label: t('proxyList.columns.checkTarget'),
-        value: proxy.checkTarget,
-        monospace: true
+        label: t('proxyList.columns.checkedAt'),
+        value: formatDateTime(proxy.checkedAt, i18n.language)
       })
     }
 
     return fields
-  }, [proxy, t])
+  }, [proxy, t, i18n.language])
+
+  const hasResults = domainChecks.length > 0 || resultFields.length > 0
 
   const handleCopyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(proxyUrl)
@@ -219,19 +217,24 @@ function ProxyCard({
             {renderFields(connectionFields)}
           </ContentSection>
 
-          {resultFields.length > 0 && (
+          {hasResults && (
             <ContentSection
               nested
+              collapsible
+              defaultExpanded={false}
               icon={<SpeedOutlinedIcon fontSize="small" />}
               title={t('proxyList.sections.results')}
               description={t('proxyList.sections.resultsDescription')}
             >
-              {renderFields(resultFields)}
+              <Stack spacing={2}>
+                {resultFields.length > 0 && renderFields(resultFields)}
+                {domainChecks.length > 0 && <ProxyDomainResults domainChecks={domainChecks} />}
+              </Stack>
             </ContentSection>
           )}
         </Stack>
 
-        {proxy.error && (
+        {proxy.error && domainChecks.length === 0 && (
           <Box sx={{ mt: 2 }}>
             <ProxyErrorPopover error={proxy.error} errorDetails={proxy.errorDetails} />
           </Box>

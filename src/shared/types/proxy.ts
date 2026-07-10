@@ -9,6 +9,15 @@ export interface ProxyCheckErrorDetail {
   code?: string
 }
 
+export interface ProxyDomainCheckResult {
+  domain: string
+  url: string
+  status: 'alive' | 'dead'
+  latencyMs?: number
+  error?: string
+  code?: string
+}
+
 export interface Proxy {
   id: string
   protocol: ProxyProtocol
@@ -24,6 +33,7 @@ export interface Proxy {
   checkTarget?: string
   error?: string
   errorDetails?: ProxyCheckErrorDetail[]
+  domainChecks?: ProxyDomainCheckResult[]
   checkedAt?: string
 }
 
@@ -44,6 +54,7 @@ export interface ProxyCheckResult {
   checkTarget?: string
   error?: string
   errorDetails?: ProxyCheckErrorDetail[]
+  domainChecks: ProxyDomainCheckResult[]
   checkedAt: string
 }
 

@@ -3,7 +3,12 @@ import https from 'https'
 import { HttpProxyAgent } from 'http-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import type { Proxy, ProxyCheckErrorDetail, ProxyCheckResult } from '../../shared/types/proxy'
+import type {
+  Proxy,
+  ProxyCheckErrorDetail,
+  ProxyCheckResult,
+  ProxyDomainCheckResult
+} from '../../shared/types/proxy'
 import { buildProxyUrl } from '../../shared/utils/proxy-format'
 
 const DEFAULT_CONCURRENCY = 20
@@ -88,9 +93,6 @@ function requestThroughProxy(
   })
 }
 
-function getDomainFromUrl(checkUrl: string): string {
-  return new URL(checkUrl).hostname
-}
 
 function buildSummaryError(failures: ProxyCheckErrorDetail[]): string {
   if (failures.length === 1) {
@@ -100,17 +102,42 @@ function buildSummaryError(failures: ProxyCheckErrorDetail[]): string {
   return `All ${failures.length} check domains failed`
 }
 
+function toErrorDetails(checks: ProxyDomainCheckResult[]): ProxyCheckErrorDetail[] {
+  return checks
+    .filter((check) => check.status === 'dead')
+    .map((check) => ({
+      domain: check.domain,
+      url: check.url,
+      message: check.error ?? 'Unknown error',
+      code: check.code
+    }))
+}
+
+function buildAgentFailureChecks(
+  targets: string[],
+  message: string,
+  code?: string
+): ProxyDomainCheckResult[] {
+  return targets.map((domain) => ({
+    domain,
+    url: normalizeDomain(domain),
+    status: 'dead',
+    error: message,
+    code
+  }))
+}
+
 export async function checkProxy(
   proxy: Proxy,
   domains: string[],
   timeoutMs: number
 ): Promise<ProxyCheckResult> {
-  const checkedAt = new Date().toISOString()
   const targets = domains.length > 0 ? domains : ['google.com']
+  const checkedAt = new Date().toISOString()
 
   try {
     const agent = createAgent(proxy)
-    const failures: ProxyCheckErrorDetail[] = []
+    const domainChecks: ProxyDomainCheckResult[] = []
 
     for (const domain of targets) {
       const checkUrl = normalizeDomain(domain)
@@ -118,15 +145,44 @@ export async function checkProxy(
       try {
         const result = await requestThroughProxy(agent, checkUrl, timeoutMs)
 
-        return {
-          id: proxy.id,
+        domainChecks.push({
+          domain,
+          url: checkUrl,
           status: 'alive',
-          latencyMs: result.latencyMs,
-          checkTarget: getDomainFromUrl(checkUrl),
-          checkedAt
-        }
+          latencyMs: result.latencyMs
+        })
       } catch (error) {
-        failures.push(createErrorDetail(error, domain, checkUrl))
+        const detail = createErrorDetail(error, domain, checkUrl)
+
+        domainChecks.push({
+          domain,
+          url: checkUrl,
+          status: 'dead',
+          error: detail.message,
+          code: detail.code
+        })
+      }
+    }
+
+    const aliveChecks = domainChecks.filter((check) => check.status === 'alive')
+    const failures = toErrorDetails(domainChecks)
+
+    if (aliveChecks.length > 0) {
+      const bestCheck = aliveChecks.reduce((best, current) =>
+        (current.latencyMs ?? Number.POSITIVE_INFINITY) <
+        (best.latencyMs ?? Number.POSITIVE_INFINITY)
+          ? current
+          : best
+      )
+
+      return {
+        id: proxy.id,
+        status: 'alive',
+        latencyMs: bestCheck.latencyMs,
+        checkTarget: bestCheck.domain,
+        domainChecks,
+        errorDetails: failures.length > 0 ? failures : undefined,
+        checkedAt
       }
     }
 
@@ -135,23 +191,21 @@ export async function checkProxy(
       status: 'dead',
       error: buildSummaryError(failures),
       errorDetails: failures,
+      domainChecks,
       checkedAt
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
+    const code = getErrorCode(error)
+    const domainChecks = buildAgentFailureChecks(targets, message, code)
+    const failures = toErrorDetails(domainChecks)
 
     return {
       id: proxy.id,
       status: 'dead',
       error: message,
-      errorDetails: [
-        {
-          domain: targets[0] ?? 'unknown',
-          url: normalizeDomain(targets[0] ?? 'google.com'),
-          message,
-          code: getErrorCode(error)
-        }
-      ],
+      errorDetails: failures,
+      domainChecks,
       checkedAt
     }
   }
