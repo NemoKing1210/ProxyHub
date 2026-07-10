@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.18.0] - 2026-07-10
+
+### Added
+
+- Proxy card view setting in Appearance: standard layout or compact expandable cards on the proxy list
+- Compact card header shows connection latency after a proxy check
+- Context menu on proxy cards with check, edit, share, delete, favorites, enable/disable, icon change, and copy actions
+
 ## [1.17.0] - 2026-07-10
 
 ### Added

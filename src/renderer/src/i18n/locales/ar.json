@@ -117,6 +117,7 @@
       "check": "فحص",
       "edit": "تعديل",
       "delete": "حذف",
+      "copyAddress": "نسخ العنوان",
       "copyLink": "نسخ كرابط",
       "share": "مشاركة",
       "changeIcon": "تغيير الأيقونة",
@@ -131,6 +132,10 @@
       "connectionDescription": "المضيف والمنفذ وبيانات الاعتماد.",
       "results": "نتائج الفحص",
       "resultsDescription": "الاتصال وIP الخارجي والنطاقات."
+    },
+    "card": {
+      "expand": "توسيع بطاقة البروكسي",
+      "collapse": "طي بطاقة البروكسي"
     },
     "connectivity": {
       "title": "خادم البروكسي",
@@ -231,7 +236,7 @@
     "description": "اضبط المظهر وإعدادات فحص البروكسي.",
     "sections": {
       "appearance": "المظهر",
-      "appearanceDescription": "السمة واللغة.",
+      "appearanceDescription": "السمة واللغة وتخطيط بطاقات البروكسي.",
       "checking": "فحص البروكسي",
       "checkingDescription": "مهلة الاتصال ونطاقات اختيارية لاختبارات توفر إضافية.",
       "about": "حول التطبيق",
@@ -242,6 +247,9 @@
     "themeDark": "داكن",
     "themeSystem": "النظام",
     "language": "اللغة",
+    "proxyCardView": "عرض البطاقات",
+    "proxyCardViewStandard": "قياسي",
+    "proxyCardViewCompact": "مصغر",
     "checkTimeout": "مهلة الاتصال",
     "checkTimeoutHint": "أقصى وقت انتظار لكل فحص.",
     "checkTimeoutValue": "{{value}} ث",

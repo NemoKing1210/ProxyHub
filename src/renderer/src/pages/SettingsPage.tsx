@@ -9,6 +9,8 @@ import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
 import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightnessOutlined'
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
+import ViewAgendaOutlinedIcon from '@mui/icons-material/ViewAgendaOutlined'
+import ViewCompactOutlinedIcon from '@mui/icons-material/ViewCompactOutlined'
 import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined'
 import {
   Alert,
@@ -39,6 +41,7 @@ import {
   SUPPORTED_LANGUAGES,
   type AppLanguage,
   type CheckAllMode,
+  type ProxyCardViewMode,
   type ThemeMode,
   getEnabledCheckDomains
 } from '../../../shared/types/settings'
@@ -137,6 +140,16 @@ function SettingsPage(): React.JSX.Element {
   ): Promise<void> => {
     if (!theme) return
     await setTheme(theme)
+    notifySaved()
+  }
+
+  const handleProxyCardViewChange = async (
+    _event: React.MouseEvent<HTMLElement>,
+    view: ProxyCardViewMode | null
+  ): Promise<void> => {
+    if (!view || view === settings.proxyCardView) return
+
+    await updateSettings({ proxyCardView: view })
     notifySaved()
   }
 
@@ -263,6 +276,33 @@ function SettingsPage(): React.JSX.Element {
                 <ToggleButton value="system">
                   <SettingsBrightnessOutlinedIcon fontSize="small" />
                   {t('settings.themeSystem')}
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
+                {t('settings.proxyCardView')}
+              </Typography>
+              <ToggleButtonGroup
+                value={settings.proxyCardView}
+                exclusive
+                onChange={(event, value) => void handleProxyCardViewChange(event, value)}
+                fullWidth
+                sx={{
+                  '& .MuiToggleButton-root': {
+                    py: 1.35,
+                    gap: 0.75
+                  }
+                }}
+              >
+                <ToggleButton value="standard">
+                  <ViewAgendaOutlinedIcon fontSize="small" />
+                  {t('settings.proxyCardViewStandard')}
+                </ToggleButton>
+                <ToggleButton value="compact">
+                  <ViewCompactOutlinedIcon fontSize="small" />
+                  {t('settings.proxyCardViewCompact')}
                 </ToggleButton>
               </ToggleButtonGroup>
             </Box>

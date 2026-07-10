@@ -117,6 +117,7 @@
       "check": "Vérifier",
       "edit": "Modifier",
       "delete": "Supprimer",
+      "copyAddress": "Copier l'adresse",
       "copyLink": "Copier comme lien",
       "share": "Partager",
       "changeIcon": "Changer l'icône",
@@ -131,6 +132,10 @@
       "connectionDescription": "Hôte, port et identifiants.",
       "results": "Résultats",
       "resultsDescription": "Connectivité, IP externe et domaines."
+    },
+    "card": {
+      "expand": "Développer la carte proxy",
+      "collapse": "Réduire la carte proxy"
     },
     "connectivity": {
       "title": "Serveur proxy",
@@ -230,7 +235,7 @@
     "description": "Configurez l'apparence et la vérification des proxies.",
     "sections": {
       "appearance": "Apparence",
-      "appearanceDescription": "Thème et langue.",
+      "appearanceDescription": "Thème, langue et affichage des cartes proxy.",
       "checking": "Vérification",
       "checkingDescription": "Délai de connexion et domaines optionnels pour des tests de disponibilité supplémentaires.",
       "about": "À propos",
@@ -241,6 +246,9 @@
     "themeDark": "Sombre",
     "themeSystem": "Système",
     "language": "Langue",
+    "proxyCardView": "Affichage des cartes",
+    "proxyCardViewStandard": "Standard",
+    "proxyCardViewCompact": "Miniature",
     "checkTimeout": "Délai de connexion",
     "checkTimeoutHint": "Temps d'attente maximum par vérification.",
     "checkTimeoutValue": "{{value}} s",

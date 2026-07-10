@@ -113,13 +113,17 @@
       "anonymityLevel": "匿名级别",
       "actions": "操作"
     },
-    "actions": { "check": "检查", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接", "share": "分享", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除", "enableProxy": "启用代理", "disableProxy": "禁用代理" },
+    "actions": { "check": "检查", "edit": "编辑", "delete": "删除", "copyAddress": "复制地址", "copyLink": "复制为链接", "share": "分享", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除", "enableProxy": "启用代理", "disableProxy": "禁用代理" },
     "disabled": "已禁用",
     "sections": {
       "connection": "连接",
       "connectionDescription": "主机、端口和认证信息。",
       "results": "检测结果",
       "resultsDescription": "连通性、外部 IP 和域名。"
+    },
+    "card": {
+      "expand": "展开代理卡片",
+      "collapse": "折叠代理卡片"
     },
     "connectivity": {
       "title": "代理服务器",
@@ -215,7 +219,7 @@
     "description": "配置外观和代理检测参数。",
     "sections": {
       "appearance": "外观",
-      "appearanceDescription": "主题和界面语言。",
+      "appearanceDescription": "主题、界面语言和代理卡片布局。",
       "checking": "代理检测",
       "checkingDescription": "连接超时和可选的额外可用性检测域名。",
       "about": "关于",
@@ -226,6 +230,9 @@
     "themeDark": "深色",
     "themeSystem": "跟随系统",
     "language": "语言",
+    "proxyCardView": "卡片视图",
+    "proxyCardViewStandard": "标准",
+    "proxyCardViewCompact": "迷你",
     "checkTimeout": "连接超时",
     "checkTimeoutHint": "每次检测的最大等待时间。",
     "checkTimeoutValue": "{{value}} 秒",

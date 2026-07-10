@@ -117,6 +117,7 @@
       "check": "जांचें",
       "edit": "संपादित करें",
       "delete": "हटाएं",
+      "copyAddress": "पता कॉपी करें",
       "copyLink": "लिंक के रूप में कॉपी करें",
       "share": "साझा करें",
       "changeIcon": "आइकन बदलें",
@@ -131,6 +132,10 @@
       "connectionDescription": "होस्ट, पोर्ट और प्रमाणीकरण।",
       "results": "जांच परिणाम",
       "resultsDescription": "कनेक्टिविटी, बाहरी IP और डोमेन।"
+    },
+    "card": {
+      "expand": "प्रॉक्सी कार्ड विस्तृत करें",
+      "collapse": "प्रॉक्सी कार्ड संक्षिप्त करें"
     },
     "connectivity": {
       "title": "प्रॉक्सी सर्वर",
@@ -231,7 +236,7 @@
     "description": "दिखावट और प्रॉक्सी जांच सेट करें।",
     "sections": {
       "appearance": "दिखावट",
-      "appearanceDescription": "थीम और भाषा।",
+      "appearanceDescription": "थीम, भाषा और प्रॉक्सी कार्ड का लेआउट।",
       "checking": "प्रॉक्सी जांच",
       "checkingDescription": "कनेक्शन टाइमआउट और अतिरिक्त उपलब्धता परीक्षण के लिए वैकल्पिक डोमेन।",
       "about": "ऐप के बारे में",
@@ -242,6 +247,9 @@
     "themeDark": "गहरी",
     "themeSystem": "सिस्टम",
     "language": "भाषा",
+    "proxyCardView": "कार्ड दृश्य",
+    "proxyCardViewStandard": "मानक",
+    "proxyCardViewCompact": "लघु",
     "checkTimeout": "कनेक्शन टाइमआउट",
     "checkTimeoutHint": "प्रत्येक जांच के लिए अधिकतम प्रतीक्षा समय।",
     "checkTimeoutValue": "{{value}} से.",

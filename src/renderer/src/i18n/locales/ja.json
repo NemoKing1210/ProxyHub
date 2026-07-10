@@ -117,6 +117,7 @@
       "check": "確認",
       "edit": "編集",
       "delete": "削除",
+      "copyAddress": "アドレスをコピー",
       "copyLink": "リンクとしてコピー",
       "share": "共有",
       "changeIcon": "アイコンを変更",
@@ -131,6 +132,10 @@
       "connectionDescription": "ホスト、ポート、認証情報。",
       "results": "確認結果",
       "resultsDescription": "接続性、外部IP、ドメイン。"
+    },
+    "card": {
+      "expand": "プロキシカードを展開",
+      "collapse": "プロキシカードを折りたたむ"
     },
     "connectivity": {
       "title": "プロキシサーバー",
@@ -225,7 +230,7 @@
     "description": "外観とプロキシ確認の設定を行います。",
     "sections": {
       "appearance": "外観",
-      "appearanceDescription": "テーマと言語。",
+      "appearanceDescription": "テーマ、言語、プロキシカードの表示形式。",
       "checking": "プロキシ確認",
       "checkingDescription": "接続タイムアウトと、追加の可用性テスト用の任意ドメイン。",
       "about": "アプリについて",
@@ -236,6 +241,9 @@
     "themeDark": "ダーク",
     "themeSystem": "システム",
     "language": "言語",
+    "proxyCardView": "カード表示",
+    "proxyCardViewStandard": "標準",
+    "proxyCardViewCompact": "ミニ",
     "checkTimeout": "接続タイムアウト",
     "checkTimeoutHint": "各確認の最大待機時間。",
     "checkTimeoutValue": "{{value}} 秒",

@@ -1,6 +1,10 @@
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
+import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined'
@@ -8,19 +12,43 @@ import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
+import ToggleOffOutlinedIcon from '@mui/icons-material/ToggleOffOutlined'
+import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
+import UnfoldLessOutlinedIcon from '@mui/icons-material/UnfoldLessOutlined'
+import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined'
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
-import { Alert, Box, Button, Chip, CircularProgress, FormControlLabel, IconButton, Snackbar, Stack, Switch, Typography } from '@mui/material'
+import {
+  Alert,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Collapse,
+  Divider,
+  FormControlLabel,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Snackbar,
+  Stack,
+  Switch,
+  Typography
+} from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
 import type { Proxy, ProxyAnonymityLevel, ProxyIconId } from '../../../shared/types/proxy'
+import type { ProxyCardViewMode } from '../../../shared/types/settings'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
-import { formatProxyAddress } from '../../../shared/utils/proxy-format'
+import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
 import { elevationShadow } from '../theme'
+import { getProxyDisplayLatency } from '../utils/filter-proxies'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import { getProxyProtocolStyles } from '../utils/proxy-protocol-styles'
 import ProxyCardAvatar from './ProxyCardAvatar'
@@ -37,6 +65,7 @@ import ProxyStatusChip from './ProxyStatusChip'
 
 interface ProxyCardProps {
   proxy: Proxy
+  variant?: ProxyCardViewMode
   isChecking: boolean
   isCheckingAll: boolean
   onCheck: () => void
@@ -64,6 +93,11 @@ const metadataChipSx = {
   }
 } as const
 
+interface ContextMenuPosition {
+  top: number
+  left: number
+}
+
 function AnonymityLevelIcon({ level }: { level: ProxyAnonymityLevel }): React.JSX.Element {
   const iconSx = { fontSize: 16 }
 
@@ -80,6 +114,7 @@ function AnonymityLevelIcon({ level }: { level: ProxyAnonymityLevel }): React.JS
 
 function ProxyCard({
   proxy,
+  variant = 'standard',
   isChecking,
   isCheckingAll,
   onCheck,
@@ -93,11 +128,15 @@ function ProxyCard({
   const theme = useTheme()
   const [copyToastOpen, setCopyToastOpen] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
+  const [cardExpanded, setCardExpanded] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [iconPickerAnchor, setIconPickerAnchor] = useState<HTMLElement | null>(null)
+  const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
+  const iconButtonRef = useRef<HTMLButtonElement>(null)
   const enabled = isProxyEnabled(proxy)
 
   const address = formatProxyAddress(proxy)
+  const proxyUrl = useMemo(() => buildProxyUrl(proxy), [proxy])
   const domainChecks = useMemo(() => getProxyDomainChecks(proxy), [proxy])
   const colorStyles = useMemo(() => getProxyColorStyles(theme, proxy.color), [theme, proxy.color])
   const protocolStyles = useMemo(
@@ -182,10 +221,57 @@ function ProxyCard({
   }, [proxy.checkedAt, proxy.connectivity?.latencyMs, t, i18n.language])
 
   const showResults = isChecking || Boolean(proxy.checkedAt)
+  const isCompact = variant === 'compact'
+  const showDetails = !isCompact || cardExpanded
+  const displayLatency = useMemo(() => getProxyDisplayLatency(proxy), [proxy])
+
+  const stopPropagation = (event: React.SyntheticEvent): void => {
+    event.stopPropagation()
+  }
+
+  const toggleCardExpanded = (): void => {
+    if (!isCompact) return
+    setCardExpanded((value) => !value)
+  }
+
+  const handleHeaderKeyDown = (event: React.KeyboardEvent): void => {
+    if (!isCompact) return
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      toggleCardExpanded()
+    }
+  }
 
   const handleCopy = async (text: string): Promise<void> => {
     await navigator.clipboard.writeText(text)
     setCopyToastOpen(true)
+  }
+
+  const closeContextMenu = (): void => {
+    setContextMenu(null)
+  }
+
+  const handleContextMenu = (event: React.MouseEvent): void => {
+    event.preventDefault()
+    event.stopPropagation()
+    setContextMenu({ top: event.clientY, left: event.clientX })
+  }
+
+  const runContextAction = (action: () => void): void => {
+    closeContextMenu()
+    action()
+  }
+
+  const runContextCopy = (text: string): void => {
+    closeContextMenu()
+    void handleCopy(text)
+  }
+
+  const openIconPickerFromMenu = (): void => {
+    closeContextMenu()
+    if (iconButtonRef.current) {
+      setIconPickerAnchor(iconButtonRef.current)
+    }
   }
 
   const renderFields = (fields: ImportantField[]): React.JSX.Element => (
@@ -203,8 +289,111 @@ function ProxyCard({
     </Stack>
   )
 
+  const detailsContent = (
+    <>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={2}
+        sx={{ alignItems: 'stretch', mt: isCompact ? 2 : 0 }}
+      >
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <ContentSection
+            nested
+            collapsible
+            defaultExpanded={false}
+            icon={<DnsOutlinedIcon fontSize="small" />}
+            title={t('proxyList.sections.connection')}
+            description={t('proxyList.sections.connectionDescription')}
+          >
+            {renderFields(connectionFields)}
+          </ContentSection>
+        </Box>
+
+        {showResults && (
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <ContentSection
+              nested
+              collapsible
+              expanded={resultsExpanded}
+              onExpandedChange={setResultsExpanded}
+              icon={<SpeedOutlinedIcon fontSize="small" />}
+              title={resultsTitle}
+              description={t('proxyList.sections.resultsDescription')}
+            >
+              <Stack spacing={2}>
+                {proxy.connectivity && (
+                  <ProxyConnectivityResultCard connectivity={proxy.connectivity} />
+                )}
+                {domainChecks.length > 0 && <ProxyDomainResults domainChecks={domainChecks} />}
+              </Stack>
+            </ContentSection>
+          </Box>
+        )}
+      </Stack>
+
+      {proxy.error && domainChecks.length === 0 && (
+        <Box sx={{ mt: 2 }}>
+          <ProxyErrorPopover error={proxy.error} errorDetails={proxy.errorDetails} />
+        </Box>
+      )}
+    </>
+  )
+
+  const actionsContent = (
+    <Box
+      sx={{
+        px: { xs: 2.5, sm: 3 },
+        pb: { xs: isCompact ? 2 : 2.5, sm: isCompact ? 2 : 3 },
+        pt: isCompact ? 2 : 0,
+        display: 'flex',
+        gap: 1,
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end'
+      }}
+    >
+      <Button
+        size="small"
+        variant="outlined"
+        startIcon={<ShareOutlinedIcon />}
+        onClick={() => setShareOpen(true)}
+      >
+        {t('proxyList.actions.share')}
+      </Button>
+      <Button
+        size="small"
+        variant="contained"
+        color="primary"
+        startIcon={isChecking ? <CircularProgress size={16} color="inherit" /> : <PlayArrowIcon />}
+        onClick={onCheck}
+        disabled={isChecking || isCheckingAll}
+      >
+        {t('proxyList.actions.check')}
+      </Button>
+      <Button
+        size="small"
+        variant="outlined"
+        startIcon={<EditOutlinedIcon />}
+        onClick={onEdit}
+        disabled={isCheckingAll}
+      >
+        {t('proxyList.actions.edit')}
+      </Button>
+      <Button
+        size="small"
+        variant="outlined"
+        color="error"
+        startIcon={<DeleteOutlinedIcon />}
+        onClick={onDelete}
+        disabled={isCheckingAll}
+      >
+        {t('proxyList.actions.delete')}
+      </Button>
+    </Box>
+  )
+
   return (
     <Box
+      onContextMenu={handleContextMenu}
       sx={{
         borderRadius: 3,
         bgcolor: 'background.paper',
@@ -214,17 +403,54 @@ function ProxyCard({
         transition: 'opacity 160ms ease'
       }}
     >
-      <Box sx={{ p: { xs: 2.5, sm: 3 } }}>
-        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start', mb: 2.5 }}>
+      <Box
+        sx={{
+          p: isCompact ? { xs: 1.5, sm: 2 } : { xs: 2.5, sm: 3 },
+          pb: isCompact && !cardExpanded ? { xs: 1.5, sm: 2 } : undefined
+        }}
+      >
+        <Stack
+          direction="row"
+          spacing={1.5}
+          onClick={isCompact ? toggleCardExpanded : undefined}
+          onKeyDown={isCompact ? handleHeaderKeyDown : undefined}
+          role={isCompact ? 'button' : undefined}
+          tabIndex={isCompact ? 0 : undefined}
+          aria-expanded={isCompact ? cardExpanded : undefined}
+          aria-label={
+            isCompact
+              ? cardExpanded
+                ? t('proxyList.card.collapse')
+                : t('proxyList.card.expand')
+              : undefined
+          }
+          sx={{
+            alignItems: 'flex-start',
+            mb: showDetails && !isCompact ? 2.5 : 0,
+            cursor: isCompact ? 'pointer' : 'default',
+            userSelect: isCompact ? 'none' : 'auto',
+            outline: 'none',
+            '&:focus-visible': isCompact
+              ? {
+                  borderRadius: 2,
+                  boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.4)}`
+                }
+              : undefined
+          }}
+        >
           <IconButton
-            onClick={(event) => setIconPickerAnchor(event.currentTarget)}
+            ref={iconButtonRef}
+            onClick={(event) => {
+              stopPropagation(event)
+              setIconPickerAnchor(event.currentTarget)
+            }}
             aria-label={t('proxyList.actions.changeIcon')}
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 44,
-              height: 44,
+              width: isCompact ? 40 : 44,
+              height: isCompact ? 40 : 44,
               borderRadius: 2.5,
               flexShrink: 0,
               bgcolor: colorStyles.background,
@@ -247,7 +473,12 @@ function ProxyCard({
                 : {})
             }}
           >
-            <ProxyCardAvatar icon={proxy.icon} countryCode={proxy.countryCode} flagSize={22} fontSize="small" />
+            <ProxyCardAvatar
+              icon={proxy.icon}
+              countryCode={proxy.countryCode}
+              flagSize={isCompact ? 20 : 22}
+              fontSize="small"
+            />
           </IconButton>
 
           <ProxyIconPickerPopover
@@ -269,26 +500,31 @@ function ProxyCard({
               sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}
             >
               <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', minWidth: 0, flex: 1 }}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={enabled}
-                      onChange={onToggleEnabled}
-                      size="small"
-                      disabled={isCheckingAll}
-                    />
-                  }
-                  label=""
-                  aria-label={
-                    enabled
-                      ? t('proxyList.actions.disableProxy')
-                      : t('proxyList.actions.enableProxy')
-                  }
-                  sx={{ m: 0, flexShrink: 0 }}
-                />
+                <Box onClick={stopPropagation} onKeyDown={stopPropagation}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={enabled}
+                        onChange={onToggleEnabled}
+                        size="small"
+                        disabled={isCheckingAll}
+                      />
+                    }
+                    label=""
+                    aria-label={
+                      enabled
+                        ? t('proxyList.actions.disableProxy')
+                        : t('proxyList.actions.enableProxy')
+                    }
+                    sx={{ m: 0, flexShrink: 0 }}
+                  />
+                </Box>
                 <IconButton
                   size="small"
-                  onClick={onToggleFavorite}
+                  onClick={(event) => {
+                    stopPropagation(event)
+                    onToggleFavorite()
+                  }}
                   aria-label={
                     proxy.isFavorite
                       ? t('proxyList.actions.removeFromFavorites')
@@ -310,9 +546,12 @@ function ProxyCard({
                 </IconButton>
                 <Typography
                   variant="h6"
-                  onClick={() => void handleCopy(proxy.label?.trim() || proxy.host)}
+                  onClick={(event) => {
+                    stopPropagation(event)
+                    void handleCopy(proxy.label?.trim() || proxy.host)
+                  }}
                   sx={{
-                    fontSize: '1.05rem',
+                    fontSize: isCompact ? '0.98rem' : '1.05rem',
                     fontWeight: 600,
                     lineHeight: 1.3,
                     cursor: 'pointer',
@@ -332,6 +571,26 @@ function ProxyCard({
                   />
                 )}
                 <ProxyStatusChip status={proxy.status} />
+                {isCompact && displayLatency !== undefined && (
+                  <Typography
+                    variant="caption"
+                    component="span"
+                    onClick={stopPropagation}
+                    sx={{ fontWeight: 600, lineHeight: 1, flexShrink: 0 }}
+                  >
+                    <LatencyText latencyMs={displayLatency} />
+                  </Typography>
+                )}
+                {isCompact && (
+                  <ExpandMoreIcon
+                    fontSize="small"
+                    sx={{
+                      color: 'text.secondary',
+                      transition: 'transform 160ms ease',
+                      transform: cardExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+                    }}
+                  />
+                )}
               </Stack>
             </Stack>
 
@@ -339,7 +598,10 @@ function ProxyCard({
               <Chip
                 label={proxy.protocol.toUpperCase()}
                 size="small"
-                onClick={() => void handleCopy(proxy.protocol)}
+                onClick={(event) => {
+                  stopPropagation(event)
+                  void handleCopy(proxy.protocol)
+                }}
                 sx={{
                   fontWeight: 700,
                   letterSpacing: 0.5,
@@ -359,8 +621,12 @@ function ProxyCard({
               <Typography
                 variant="body2"
                 color="text.secondary"
-                onClick={() => void handleCopy(address)}
+                onClick={(event) => {
+                  stopPropagation(event)
+                  void handleCopy(address)
+                }}
                 sx={{ fontFamily: 'monospace', cursor: 'pointer' }}
+                noWrap={isCompact}
               >
                 {address}
               </Typography>
@@ -371,11 +637,12 @@ function ProxyCard({
                 {proxy.countryCode && (
                   <Chip
                     size="small"
-                    onClick={() =>
+                    onClick={(event) => {
+                      stopPropagation(event)
                       void handleCopy(
                         findProxyCountry(proxy.countryCode!)?.name ?? proxy.countryCode!
                       )
-                    }
+                    }}
                     label={
                       <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                         <CountryFlag countryCode={proxy.countryCode} size={16} />
@@ -390,7 +657,10 @@ function ProxyCard({
                 {proxy.city && (
                   <Chip
                     size="small"
-                    onClick={() => void handleCopy(proxy.city!)}
+                    onClick={(event) => {
+                      stopPropagation(event)
+                      void handleCopy(proxy.city!)
+                    }}
                     label={
                       <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                         <LocationOnOutlinedIcon sx={{ fontSize: 16 }} />
@@ -403,7 +673,10 @@ function ProxyCard({
                 {proxy.anonymityLevel && (
                   <Chip
                     size="small"
-                    onClick={() => void handleCopy(proxy.anonymityLevel!)}
+                    onClick={(event) => {
+                      stopPropagation(event)
+                      void handleCopy(proxy.anonymityLevel!)
+                    }}
                     label={
                       <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                         <AnonymityLevelIcon level={proxy.anonymityLevel} />
@@ -425,104 +698,22 @@ function ProxyCard({
           </Box>
         </Stack>
 
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={2}
-          sx={{ alignItems: 'stretch' }}
-        >
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <ContentSection
-              nested
-              collapsible
-              defaultExpanded={false}
-              icon={<DnsOutlinedIcon fontSize="small" />}
-              title={t('proxyList.sections.connection')}
-              description={t('proxyList.sections.connectionDescription')}
-            >
-              {renderFields(connectionFields)}
-            </ContentSection>
-          </Box>
-
-          {showResults && (
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <ContentSection
-                nested
-                collapsible
-                expanded={resultsExpanded}
-                onExpandedChange={setResultsExpanded}
-                icon={<SpeedOutlinedIcon fontSize="small" />}
-                title={resultsTitle}
-                description={t('proxyList.sections.resultsDescription')}
-              >
-                <Stack spacing={2}>
-                  {proxy.connectivity && (
-                    <ProxyConnectivityResultCard connectivity={proxy.connectivity} />
-                  )}
-                  {domainChecks.length > 0 && <ProxyDomainResults domainChecks={domainChecks} />}
-                </Stack>
-              </ContentSection>
-            </Box>
-          )}
-        </Stack>
-
-        {proxy.error && domainChecks.length === 0 && (
-          <Box sx={{ mt: 2 }}>
-            <ProxyErrorPopover error={proxy.error} errorDetails={proxy.errorDetails} />
-          </Box>
+        {isCompact ? (
+          <Collapse in={cardExpanded} unmountOnExit>
+            {detailsContent}
+          </Collapse>
+        ) : (
+          detailsContent
         )}
       </Box>
 
-      <Box
-        sx={{
-          px: { xs: 2.5, sm: 3 },
-          pb: { xs: 2.5, sm: 3 },
-          pt: 0,
-          display: 'flex',
-          gap: 1,
-          flexWrap: 'wrap',
-          justifyContent: 'flex-end'
-        }}
-      >
-        <Button
-          size="small"
-          variant="outlined"
-          startIcon={<ShareOutlinedIcon />}
-          onClick={() => setShareOpen(true)}
-        >
-          {t('proxyList.actions.share')}
-        </Button>
-        <Button
-          size="small"
-          variant="contained"
-          color="primary"
-          startIcon={
-            isChecking ? <CircularProgress size={16} color="inherit" /> : <PlayArrowIcon />
-          }
-          onClick={onCheck}
-          disabled={isChecking || isCheckingAll}
-        >
-          {t('proxyList.actions.check')}
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          startIcon={<EditOutlinedIcon />}
-          onClick={onEdit}
-          disabled={isCheckingAll}
-        >
-          {t('proxyList.actions.edit')}
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          color="error"
-          startIcon={<DeleteOutlinedIcon />}
-          onClick={onDelete}
-          disabled={isCheckingAll}
-        >
-          {t('proxyList.actions.delete')}
-        </Button>
-      </Box>
+      {isCompact ? (
+        <Collapse in={cardExpanded} unmountOnExit>
+          {actionsContent}
+        </Collapse>
+      ) : (
+        actionsContent
+      )}
 
       <Snackbar
         open={copyToastOpen}
@@ -536,6 +727,136 @@ function ProxyCard({
       </Snackbar>
 
       <ProxyShareDialog open={shareOpen} proxy={proxy} onClose={() => setShareOpen(false)} />
+
+      <Menu
+        open={contextMenu !== null}
+        onClose={closeContextMenu}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          contextMenu !== null ? { top: contextMenu.top, left: contextMenu.left } : undefined
+        }
+        slotProps={{
+          paper: {
+            sx: {
+              minWidth: 220,
+              borderRadius: 2
+            }
+          }
+        }}
+      >
+        <MenuItem
+          onClick={() => runContextAction(onCheck)}
+          disabled={isChecking || isCheckingAll}
+        >
+          <ListItemIcon>
+            {isChecking ? (
+              <CircularProgress size={18} />
+            ) : (
+              <PlayArrowIcon fontSize="small" />
+            )}
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.check')}</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => runContextAction(onEdit)} disabled={isCheckingAll}>
+          <ListItemIcon>
+            <EditOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.edit')}</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => runContextAction(() => setShareOpen(true))}>
+          <ListItemIcon>
+            <ShareOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.share')}</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => runContextAction(onDelete)}
+          disabled={isCheckingAll}
+          sx={{ color: 'error.main' }}
+        >
+          <ListItemIcon sx={{ color: 'inherit' }}>
+            <DeleteOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.delete')}</ListItemText>
+        </MenuItem>
+
+        <Divider />
+
+        <MenuItem onClick={() => runContextAction(onToggleFavorite)}>
+          <ListItemIcon>
+            {proxy.isFavorite ? (
+              <StarIcon fontSize="small" color="warning" />
+            ) : (
+              <StarBorderOutlinedIcon fontSize="small" />
+            )}
+          </ListItemIcon>
+          <ListItemText>
+            {proxy.isFavorite
+              ? t('proxyList.actions.removeFromFavorites')
+              : t('proxyList.actions.addToFavorites')}
+          </ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => runContextAction(onToggleEnabled)}
+          disabled={isCheckingAll}
+        >
+          <ListItemIcon>
+            {enabled ? (
+              <ToggleOffOutlinedIcon fontSize="small" />
+            ) : (
+              <ToggleOnOutlinedIcon fontSize="small" />
+            )}
+          </ListItemIcon>
+          <ListItemText>
+            {enabled
+              ? t('proxyList.actions.disableProxy')
+              : t('proxyList.actions.enableProxy')}
+          </ListItemText>
+        </MenuItem>
+        <MenuItem onClick={openIconPickerFromMenu}>
+          <ListItemIcon>
+            <ImageOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.changeIcon')}</ListItemText>
+        </MenuItem>
+
+        <Divider />
+
+        <MenuItem onClick={() => runContextCopy(address)}>
+          <ListItemIcon>
+            <ContentCopyOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.copyAddress')}</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => runContextCopy(proxyUrl)}>
+          <ListItemIcon>
+            <LinkOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.copyLink')}</ListItemText>
+        </MenuItem>
+
+        {isCompact && (
+          <>
+            <Divider />
+            <MenuItem
+              onClick={() =>
+                runContextAction(() => setCardExpanded((value) => !value))
+              }
+            >
+              <ListItemIcon>
+                {cardExpanded ? (
+                  <UnfoldLessOutlinedIcon fontSize="small" />
+                ) : (
+                  <UnfoldMoreOutlinedIcon fontSize="small" />
+                )}
+              </ListItemIcon>
+              <ListItemText>
+                {cardExpanded ? t('proxyList.card.collapse') : t('proxyList.card.expand')}
+              </ListItemText>
+            </MenuItem>
+          </>
+        )}
+      </Menu>
     </Box>
   )
 }

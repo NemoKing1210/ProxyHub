@@ -7,6 +7,8 @@ export type AppLanguage = 'en' | 'zh' | 'hi' | 'es' | 'fr' | 'ar' | 'pt' | 'ru' 
 
 export type CheckAllMode = 'sequential' | 'parallel'
 
+export type ProxyCardViewMode = 'standard' | 'compact'
+
 export interface CheckDomainEntry {
   domain: string
   enabled: boolean
@@ -20,6 +22,7 @@ export interface AppSettings {
   checkAllMode: CheckAllMode
   checkAllConcurrency: number
   trayEnabled: boolean
+  proxyCardView: ProxyCardViewMode
   proxyListView: ProxyListViewState
 }
 
@@ -39,6 +42,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   checkAllMode: 'sequential',
   checkAllConcurrency: CHECK_ALL_CONCURRENCY_DEFAULT,
   trayEnabled: false,
+  proxyCardView: 'standard',
   proxyListView: DEFAULT_PROXY_LIST_VIEW
 }
 
@@ -118,6 +122,7 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     checkAllMode: merged.checkAllMode === 'parallel' ? 'parallel' : 'sequential',
     checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency),
     trayEnabled: merged.trayEnabled === true,
+    proxyCardView: merged.proxyCardView === 'compact' ? 'compact' : 'standard',
     proxyListView: normalizeProxyListView(merged.proxyListView)
   }
 }

@@ -117,6 +117,7 @@
       "check": "Prüfen",
       "edit": "Bearbeiten",
       "delete": "Löschen",
+      "copyAddress": "Adresse kopieren",
       "copyLink": "Als Link kopieren",
       "share": "Teilen",
       "changeIcon": "Symbol ändern",
@@ -131,6 +132,10 @@
       "connectionDescription": "Host, Port und Anmeldedaten.",
       "results": "Prüfergebnisse",
       "resultsDescription": "Erreichbarkeit, externe IP und Domains."
+    },
+    "card": {
+      "expand": "Proxy-Karte erweitern",
+      "collapse": "Proxy-Karte einklappen"
     },
     "connectivity": {
       "title": "Proxy-Server",
@@ -230,7 +235,7 @@
     "description": "Erscheinungsbild und Proxy-Prüfung konfigurieren.",
     "sections": {
       "appearance": "Erscheinungsbild",
-      "appearanceDescription": "Design und Sprache.",
+      "appearanceDescription": "Design, Sprache und Darstellung der Proxy-Karten.",
       "checking": "Proxy-Prüfung",
       "checkingDescription": "Verbindungs-Timeout und optionale Zieldomains für zusätzliche Verfügbarkeitstests.",
       "about": "Über",
@@ -241,6 +246,9 @@
     "themeDark": "Dunkel",
     "themeSystem": "System",
     "language": "Sprache",
+    "proxyCardView": "Kartenansicht",
+    "proxyCardViewStandard": "Standard",
+    "proxyCardViewCompact": "Kompakt",
     "checkTimeout": "Verbindungs-Timeout",
     "checkTimeoutHint": "Maximale Wartezeit pro Prüfung.",
     "checkTimeoutValue": "{{value}} s",

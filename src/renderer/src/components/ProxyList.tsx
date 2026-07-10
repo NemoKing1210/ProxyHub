@@ -15,6 +15,7 @@ import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
 import { filterEnabledProxies } from '../../../shared/utils/proxy-enabled'
 import { useProxyListViewState } from '../hooks/useProxyListViewState'
 import { useProxyStore } from '../store/proxyStore'
+import { useSettingsStore } from '../store/settingsStore'
 import { filterProxies, hasActiveFilters } from '../utils/filter-proxies'
 import { sortProxies, sortProxiesByFavorite } from '../utils/sort-proxies'
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
@@ -66,6 +67,7 @@ function ProxyList(): React.JSX.Element {
     detailsProxyId,
     setDetailsProxyId
   } = useProxyStore()
+  const proxyCardView = useSettingsStore((state) => state.settings.proxyCardView)
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<'add' | 'edit'>('add')
@@ -340,6 +342,7 @@ function ProxyList(): React.JSX.Element {
               <ProxyCard
                 key={proxy.id}
                 proxy={proxy}
+                variant={proxyCardView}
                 isChecking={checkingIds.has(proxy.id)}
                 isCheckingAll={isCheckingAll}
                 onCheck={() => void checkProxy(proxy.id)}
