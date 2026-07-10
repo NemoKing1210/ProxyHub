@@ -11,5 +11,8 @@ export interface ChangelogEntry {
 
 export interface AppInfo {
   version: string
+  author?: string
+  authorEmail?: string
+  repositoryUrl?: string
   changelog: ChangelogEntry[]
 }

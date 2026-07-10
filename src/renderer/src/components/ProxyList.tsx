@@ -12,6 +12,7 @@ import { DEFAULT_PROXY_COLOR_ID, PROXY_ICON_AUTO_VALUE } from '../../../shared/t
 import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
 import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
 import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
+import { filterEnabledProxies } from '../../../shared/utils/proxy-enabled'
 import { useProxyStore } from '../store/proxyStore'
 import {
   DEFAULT_PROXY_LIST_FILTERS,
@@ -59,6 +60,7 @@ function ProxyList(): React.JSX.Element {
     updateProxy,
     patchProxy,
     toggleFavorite,
+    toggleEnabled,
     removeProxy,
     checkProxy,
     checkAll
@@ -116,7 +118,10 @@ function ProxyList(): React.JSX.Element {
     () => sortProxiesByFavorite(filteredProxies),
     [filteredProxies]
   )
-  const visibleProxyIds = useMemo(() => visibleProxies.map((proxy) => proxy.id), [visibleProxies])
+  const checkableProxyIds = useMemo(
+    () => filterEnabledProxies(visibleProxies).map((proxy) => proxy.id),
+    [visibleProxies]
+  )
   const filtersActive = hasActiveFilters(filters)
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
@@ -196,8 +201,8 @@ function ProxyList(): React.JSX.Element {
           <Button
             variant="outlined"
             startIcon={isCheckingAll ? <CircularProgress size={18} /> : <PlaylistPlayIcon />}
-            onClick={() => void checkAll(visibleProxyIds)}
-            disabled={visibleProxies.length === 0 || isCheckingAll}
+            onClick={() => void checkAll(checkableProxyIds)}
+            disabled={checkableProxyIds.length === 0 || isCheckingAll}
           >
             {t('proxyList.checkAll')}
           </Button>
@@ -306,6 +311,7 @@ function ProxyList(): React.JSX.Element {
                 onDelete={() => openDeleteDialog(proxy)}
                 onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
                 onToggleFavorite={() => void toggleFavorite(proxy.id)}
+                onToggleEnabled={() => void toggleEnabled(proxy.id)}
               />
             ))
           )}

@@ -2,8 +2,7 @@ import { Box, Chip, CircularProgress, Stack, Typography } from '@mui/material'
 import { keyframes, useTheme, type Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ProxyConnectivityResult } from '../../../shared/types/proxy'
-import { getPalette, MD3_DURATION, MD3_EASING, withThemeAlpha } from '../theme'
-import LatencyText from './LatencyText'
+import { getPalette, MD3_EASING, withThemeAlpha } from '../theme'
 
 interface ProxyConnectivityResultProps {
   connectivity: ProxyConnectivityResult
@@ -65,6 +64,11 @@ function ProxyConnectivityResultCard({
     : isChecking
       ? t('proxyStatus.checking')
       : t(`proxyStatus.${connectivity.status}`)
+  const detailText = isAlive
+    ? connectivity.externalIp
+    : isDead
+      ? connectivity.error ?? t('proxyList.connectivity.failed')
+      : null
 
   return (
     <Box
@@ -91,7 +95,7 @@ function ProxyConnectivityResultCard({
       <Stack
         direction="row"
         spacing={1}
-        sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.75 }}
+        sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}
       >
         <Typography
           variant="body2"
@@ -112,83 +116,32 @@ function ProxyConnectivityResultCard({
         />
       </Stack>
 
-      <Stack spacing={0.35}>
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-          {t('proxyList.columns.address')}:{' '}
-          <Box component="span" sx={{ fontFamily: 'monospace', color: 'text.primary', fontWeight: 600 }}>
-            {connectivity.address}
-          </Box>
+      {detailText && (
+        <Typography
+          variant="caption"
+          sx={{
+            display: 'block',
+            mt: 0.75,
+            color: isDead ? 'error.main' : 'text.secondary',
+            fontWeight: isAlive ? 600 : 500,
+            wordBreak: 'break-word'
+          }}
+        >
+          {isAlive ? (
+            <>
+              {t('proxyList.columns.externalIp')}:{' '}
+              <Box
+                component="span"
+                sx={{ fontFamily: 'monospace', color: 'text.primary' }}
+              >
+                {detailText}
+              </Box>
+            </>
+          ) : (
+            detailText
+          )}
         </Typography>
-
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-          {t('proxyList.columns.protocol')}:{' '}
-          <Box component="span" sx={{ fontFamily: 'monospace', color: 'text.primary' }}>
-            {connectivity.protocol.toUpperCase()}
-          </Box>
-        </Typography>
-
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-          {t('proxyList.columns.proxyUrl')}:{' '}
-          <Box
-            component="span"
-            sx={{
-              fontFamily: 'monospace',
-              color: 'text.primary',
-              transition: `filter ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
-              '@media (hover: hover)': {
-                filter: 'blur(5px)',
-                '&:hover': {
-                  filter: 'none'
-                }
-              }
-            }}
-          >
-            {connectivity.proxyUrl}
-          </Box>
-        </Typography>
-
-        {isAlive && (
-          <Typography variant="caption" sx={{ display: 'block', color: 'success.main', fontWeight: 600 }}>
-            {t('proxyList.connectivity.reachable', { address: connectivity.address })}
-          </Typography>
-        )}
-
-        {connectivity.latencyMs !== undefined && (
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-            {t('proxyList.connectivity.connectLatency')}: <LatencyText latencyMs={connectivity.latencyMs} />
-          </Typography>
-        )}
-
-        {connectivity.externalIp && (
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-            {t('proxyList.columns.externalIp')}:{' '}
-            <Box component="span" sx={{ fontFamily: 'monospace', color: 'text.primary', fontWeight: 600 }}>
-              {connectivity.externalIp}
-            </Box>
-          </Typography>
-        )}
-
-        {isDead && (
-          <Typography variant="caption" sx={{ display: 'block', color: 'error.main', fontWeight: 600 }}>
-            {t('proxyList.connectivity.unreachable', { address: connectivity.address })}
-          </Typography>
-        )}
-
-        {connectivity.error && (
-          <Typography variant="caption" sx={{ display: 'block', color: 'error.main' }}>
-            {t('proxyList.errorMessage')}: {connectivity.error}
-          </Typography>
-        )}
-
-        {connectivity.code && (
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-            {t('proxyList.errorCode')}:{' '}
-            <Box component="span" sx={{ fontFamily: 'monospace', color: 'text.primary' }}>
-              {connectivity.code}
-            </Box>
-          </Typography>
-        )}
-      </Stack>
+      )}
     </Box>
   )
 }

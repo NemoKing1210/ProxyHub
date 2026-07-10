@@ -1,4 +1,6 @@
 import FilterListIcon from '@mui/icons-material/FilterList'
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
@@ -30,6 +32,7 @@ import {
   MAX_LATENCY_FILTER_STEP_MS,
   type ProxyFavoriteFilter,
   type ProxyListFilters,
+  type ProxyStatusFilter,
   hasActiveFilters
 } from '../utils/filter-proxies'
 import { surfaceContainer } from '../theme'
@@ -114,6 +117,14 @@ function ProxyListFilters({
   ): void => {
     if (!value) return
     updateFilters({ favorite: value })
+  }
+
+  const handleStatusChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    value: ProxyStatusFilter | null
+  ): void => {
+    if (!value) return
+    updateFilters({ status: value })
   }
 
   const handleLatencyLimitToggle = (enabled: boolean): void => {
@@ -241,6 +252,34 @@ function ProxyListFilters({
               <ToggleButton value="nonFavorites">
                 <StarBorderOutlinedIcon fontSize="small" />
                 {t('proxyList.filters.favoriteNone')}
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
+              {t('proxyList.filters.status')}
+            </Typography>
+            <ToggleButtonGroup
+              value={filters.status}
+              exclusive
+              onChange={handleStatusChange}
+              fullWidth
+              sx={{
+                '& .MuiToggleButton-root': {
+                  py: 1.1,
+                  gap: 0.5
+                }
+              }}
+            >
+              <ToggleButton value="all">{t('proxyList.filters.statusAll')}</ToggleButton>
+              <ToggleButton value="alive">
+                <CheckCircleOutlinedIcon fontSize="small" />
+                {t('proxyList.filters.statusAlive')}
+              </ToggleButton>
+              <ToggleButton value="dead">
+                <ErrorOutlineOutlinedIcon fontSize="small" />
+                {t('proxyList.filters.statusDead')}
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>

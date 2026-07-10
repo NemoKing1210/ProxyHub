@@ -14,7 +14,9 @@ import {
   resolveProxyStatusFromDomainChecks,
   upsertDomainCheck
 } from '../../../shared/utils/proxy-check-results'
+import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { useSettingsStore } from './settingsStore'
+import { getEnabledCheckDomains } from '../../../shared/types/settings'
 
 interface ProxyState {
   proxies: Proxy[]
@@ -27,10 +29,11 @@ interface ProxyState {
   patchProxy: (
     id: string,
     patch: Partial<
-      Pick<Proxy, 'label' | 'icon' | 'color' | 'countryCode' | 'city' | 'anonymityLevel' | 'isFavorite'>
+      Pick<Proxy, 'label' | 'icon' | 'color' | 'countryCode' | 'city' | 'anonymityLevel' | 'isFavorite' | 'isEnabled'>
     >
   ) => Promise<void>
   toggleFavorite: (id: string) => Promise<void>
+  toggleEnabled: (id: string) => Promise<void>
   removeProxy: (id: string) => Promise<void>
   checkProxy: (id: string) => Promise<void>
   checkAll: (proxyIds?: string[]) => Promise<void>
@@ -40,6 +43,7 @@ function createProxy(input: ProxyInput): Proxy {
   return {
     id: crypto.randomUUID(),
     ...input,
+    isEnabled: true,
     createdAt: new Date().toISOString(),
     status: 'unknown'
   }
@@ -88,7 +92,7 @@ function applyCheckResult(proxy: Proxy, result: ProxyCheckResult): Proxy {
 function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Proxy[] {
   if (progress.phase === 'init') {
     return proxies.map((proxy) =>
-      proxy.id === progress.proxyId
+      proxy.id === progress.proxyId && isProxyEnabled(proxy)
         ? {
             ...proxy,
             status: 'checking',
@@ -105,7 +109,7 @@ function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Prox
 
   if (progress.phase === 'proxy-connect') {
     return proxies.map((proxy) =>
-      proxy.id === progress.proxyId
+      proxy.id === progress.proxyId && isProxyEnabled(proxy)
         ? {
             ...proxy,
             connectivity: progress.connectivity,
@@ -118,7 +122,7 @@ function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Prox
 
   if (progress.phase === 'domain') {
     return proxies.map((proxy) => {
-      if (proxy.id !== progress.proxyId) {
+      if (proxy.id !== progress.proxyId || !isProxyEnabled(proxy)) {
         return proxy
       }
 
@@ -133,7 +137,9 @@ function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Prox
   }
 
   return proxies.map((proxy) =>
-    proxy.id === progress.result.id ? applyCheckResult(proxy, progress.result) : proxy
+    proxy.id === progress.result.id && isProxyEnabled(proxy)
+      ? applyCheckResult(proxy, progress.result)
+      : proxy
   )
 }
 
@@ -149,7 +155,15 @@ function getCheckOptions(): ProxyCheckOptions {
   const { checkDomains, checkTimeoutMs, checkAllConcurrency } =
     useSettingsStore.getState().settings
 
-  return { checkDomains, checkTimeoutMs, checkAllConcurrency }
+  return {
+    checkDomains: getEnabledCheckDomains(checkDomains),
+    checkTimeoutMs,
+    checkAllConcurrency
+  }
+}
+
+function getActiveCheckDomains(): string[] {
+  return getEnabledCheckDomains(useSettingsStore.getState().settings.checkDomains)
 }
 
 async function checkAllSequential(proxyIds: string[], get: () => ProxyState): Promise<void> {
@@ -165,13 +179,16 @@ async function checkAllParallel(
   get: () => ProxyState,
   set: (partial: Partial<ProxyState> | ((state: ProxyState) => Partial<ProxyState>)) => void
 ): Promise<void> {
-  const domains = useSettingsStore.getState().settings.checkDomains
-  const checkingIds = new Set(proxies.map((proxy) => proxy.id))
+  const domains = getActiveCheckDomains()
+  const targetIds = new Set(proxies.map((proxy) => proxy.id))
+  const checkingIds = new Set(targetIds)
 
   set({
     isCheckingAll: true,
     checkingIds,
-    proxies: get().proxies.map((proxy) => beginProxyCheck(proxy, domains))
+    proxies: get().proxies.map((proxy) =>
+      targetIds.has(proxy.id) ? beginProxyCheck(proxy, domains) : proxy
+    )
   })
 
   const unsubscribe = window.api.onCheckProgress((progress) => {
@@ -191,9 +208,13 @@ async function checkAllParallel(
   } finally {
     unsubscribe()
 
-    const finalized = get().proxies.map((proxy) =>
-      proxy.checkedAt ? proxy : finalizeIncompleteProxy(proxy)
-    )
+    const finalized = get().proxies.map((proxy) => {
+      if (!targetIds.has(proxy.id)) {
+        return proxy
+      }
+
+      return proxy.checkedAt ? proxy : finalizeIncompleteProxy(proxy)
+    })
 
     set({
       isCheckingAll: false,
@@ -294,6 +315,15 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     await persist(proxies)
   },
 
+  toggleEnabled: async (id) => {
+    const proxies = get().proxies.map((proxy) =>
+      proxy.id === id ? { ...proxy, isEnabled: proxy.isEnabled === false } : proxy
+    )
+
+    set({ proxies })
+    await persist(proxies)
+  },
+
   removeProxy: async (id) => {
     const proxies = get().proxies.filter((proxy) => proxy.id !== id)
 
@@ -305,7 +335,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     const proxy = get().proxies.find((item) => item.id === id)
     if (!proxy || get().checkingIds.has(id)) return
 
-    const domains = useSettingsStore.getState().settings.checkDomains
+    const domains = getActiveCheckDomains()
     const checkOptions = getCheckOptions()
     const checkingIds = new Set(get().checkingIds)
     checkingIds.add(id)
@@ -361,7 +391,9 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   checkAll: async (proxyIds) => {
     const { proxies } = get()
     const targetIds = proxyIds ?? proxies.map((proxy) => proxy.id)
-    const targets = proxies.filter((proxy) => targetIds.includes(proxy.id))
+    const targets = filterEnabledProxies(
+      proxies.filter((proxy) => targetIds.includes(proxy.id))
+    )
 
     if (targets.length === 0 || get().isCheckingAll) return
 

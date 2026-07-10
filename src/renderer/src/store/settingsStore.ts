@@ -5,6 +5,7 @@ import {
   RTL_LANGUAGES,
   type AppLanguage,
   type AppSettings,
+  type CheckDomainEntry,
   type ThemeMode
 } from '../../../shared/types/settings'
 import { setAppLanguage } from '../i18n'
@@ -16,7 +17,7 @@ interface SettingsState {
   loadSettings: () => Promise<void>
   setTheme: (theme: ThemeMode) => Promise<void>
   setLanguage: (language: AppLanguage) => Promise<void>
-  setCheckDomains: (checkDomains: string[]) => Promise<void>
+  setCheckDomains: (checkDomains: CheckDomainEntry[]) => Promise<void>
   setCheckTimeoutMs: (checkTimeoutMs: number) => Promise<void>
   updateSettings: (partial: Partial<AppSettings>) => Promise<void>
 }

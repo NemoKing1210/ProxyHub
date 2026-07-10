@@ -8,6 +8,7 @@ import JP from 'country-flag-icons/react/3x2/JP'
 import PT from 'country-flag-icons/react/3x2/PT'
 import RU from 'country-flag-icons/react/3x2/RU'
 import SA from 'country-flag-icons/react/3x2/SA'
+import UA from 'country-flag-icons/react/3x2/UA'
 import US from 'country-flag-icons/react/3x2/US'
 import type { AppLanguage } from '../../../shared/types/settings'
 
@@ -20,6 +21,7 @@ const FLAG_BY_LANGUAGE = {
   ar: SA,
   pt: PT,
   ru: RU,
+  uk: UA,
   ja: JP,
   de: DE
 } satisfies Record<AppLanguage, typeof US>

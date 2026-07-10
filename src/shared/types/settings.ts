@@ -1,13 +1,18 @@
 export type ThemeMode = 'light' | 'dark' | 'system'
 
-export type AppLanguage = 'en' | 'zh' | 'hi' | 'es' | 'fr' | 'ar' | 'pt' | 'ru' | 'ja' | 'de'
+export type AppLanguage = 'en' | 'zh' | 'hi' | 'es' | 'fr' | 'ar' | 'pt' | 'ru' | 'uk' | 'ja' | 'de'
 
 export type CheckAllMode = 'sequential' | 'parallel'
+
+export interface CheckDomainEntry {
+  domain: string
+  enabled: boolean
+}
 
 export interface AppSettings {
   theme: ThemeMode
   language: AppLanguage
-  checkDomains: string[]
+  checkDomains: CheckDomainEntry[]
   checkTimeoutMs: number
   checkAllMode: CheckAllMode
   checkAllConcurrency: number
@@ -43,14 +48,66 @@ function clampCheckAllConcurrency(value: number): number {
   )
 }
 
+function normalizeCheckDomainEntry(value: unknown): CheckDomainEntry | null {
+  if (typeof value === 'string') {
+    const domain = value.trim().toLowerCase()
+    return domain ? { domain, enabled: true } : null
+  }
+
+  if (value && typeof value === 'object' && 'domain' in value) {
+    const entry = value as Partial<CheckDomainEntry>
+    const domain = String(entry.domain ?? '')
+      .trim()
+      .toLowerCase()
+
+    if (!domain) {
+      return null
+    }
+
+    return {
+      domain,
+      enabled: entry.enabled !== false
+    }
+  }
+
+  return null
+}
+
+export function normalizeCheckDomains(values: unknown): CheckDomainEntry[] {
+  if (!Array.isArray(values)) {
+    return []
+  }
+
+  const seen = new Set<string>()
+  const result: CheckDomainEntry[] = []
+
+  for (const value of values) {
+    const entry = normalizeCheckDomainEntry(value)
+    if (!entry || seen.has(entry.domain)) {
+      continue
+    }
+
+    seen.add(entry.domain)
+    result.push(entry)
+  }
+
+  return result
+}
+
+export function getCheckDomainNames(checkDomains: CheckDomainEntry[]): string[] {
+  return checkDomains.map((entry) => entry.domain)
+}
+
+export function getEnabledCheckDomains(checkDomains: CheckDomainEntry[]): string[] {
+  return checkDomains.filter((entry) => entry.enabled).map((entry) => entry.domain)
+}
+
 export function normalizeSettings(settings: Partial<AppSettings> | undefined): AppSettings {
   const merged = { ...DEFAULT_SETTINGS, ...(settings ?? {}) }
 
   return {
     ...merged,
-    checkDomains: Array.isArray(merged.checkDomains)
-      ? merged.checkDomains.map((domain) => domain.trim()).filter(Boolean)
-      : [],
+    checkDomains: normalizeCheckDomains(merged.checkDomains),
     checkAllMode: merged.checkAllMode === 'parallel' ? 'parallel' : 'sequential',
     checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency)
   }
@@ -65,6 +122,7 @@ export const SUPPORTED_LANGUAGES: { code: AppLanguage; label: string; countryCod
   { code: 'ar', label: 'العربية', countryCode: 'SA' },
   { code: 'pt', label: 'Português', countryCode: 'PT' },
   { code: 'ru', label: 'Русский', countryCode: 'RU' },
+  { code: 'uk', label: 'Українська', countryCode: 'UA' },
   { code: 'ja', label: '日本語', countryCode: 'JP' },
   { code: 'de', label: 'Deutsch', countryCode: 'DE' }
 ]

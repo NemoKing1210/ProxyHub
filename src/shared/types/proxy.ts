@@ -90,6 +90,7 @@ export interface Proxy {
   city?: string
   anonymityLevel?: ProxyAnonymityLevel
   isFavorite?: boolean
+  isEnabled?: boolean
   createdAt: string
   status: ProxyStatus
   latencyMs?: number

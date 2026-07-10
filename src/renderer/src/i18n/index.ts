@@ -10,6 +10,7 @@ import hi from './locales/hi.json'
 import ja from './locales/ja.json'
 import pt from './locales/pt.json'
 import ru from './locales/ru.json'
+import uk from './locales/uk.json'
 import zh from './locales/zh.json'
 
 void i18n.use(initReactI18next).init({
@@ -22,6 +23,7 @@ void i18n.use(initReactI18next).init({
     ar: { translation: ar },
     pt: { translation: pt },
     ru: { translation: ru },
+    uk: { translation: uk },
     ja: { translation: ja },
     de: { translation: de }
   },

@@ -14,11 +14,13 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormControlLabel,
   IconButton,
   MenuItem,
   Slider,
   Snackbar,
   Stack,
+  Switch,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -36,7 +38,8 @@ import {
   SUPPORTED_LANGUAGES,
   type AppLanguage,
   type CheckAllMode,
-  type ThemeMode
+  type ThemeMode,
+  getEnabledCheckDomains
 } from '../../../shared/types/settings'
 import ContentSection from '../components/ContentSection'
 import ChangelogView from '../components/ChangelogView'
@@ -188,15 +191,24 @@ function SettingsPage(): React.JSX.Element {
     }
 
     const domain = normalizeDomainInput(domainInput)
-    await setCheckDomains([...settings.checkDomains, domain])
+    await setCheckDomains([...settings.checkDomains, { domain, enabled: true }])
     setDomainInput('')
     setDomainError(null)
     notifySaved()
   }
 
   const handleRemoveDomain = async (domain: string): Promise<void> => {
-    await setCheckDomains(settings.checkDomains.filter((item) => item !== domain))
+    await setCheckDomains(settings.checkDomains.filter((item) => item.domain !== domain))
     setDomainError(null)
+    notifySaved()
+  }
+
+  const handleToggleDomain = async (domain: string, enabled: boolean): Promise<void> => {
+    await setCheckDomains(
+      settings.checkDomains.map((item) =>
+        item.domain === domain ? { ...item, enabled } : item
+      )
+    )
     notifySaved()
   }
 
@@ -450,9 +462,9 @@ function SettingsPage(): React.JSX.Element {
                     {t('settings.checkDomainsEmpty')}
                   </Typography>
                 ) : (
-                  settings.checkDomains.map((domain) => (
+                  settings.checkDomains.map((entry) => (
                     <Box
-                      key={domain}
+                      key={entry.domain}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -461,28 +473,48 @@ function SettingsPage(): React.JSX.Element {
                         py: 1.1,
                         borderRadius: 2,
                         bgcolor: surfaceContainer(theme, 'low'),
-                        transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
+                        opacity: entry.enabled ? 1 : 0.62,
+                        transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}, opacity ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
                         '&:hover': {
                           bgcolor: surfaceContainer(theme, 'default'),
                           transform: 'translateX(2px)'
                         }
                       }}
                     >
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={entry.enabled}
+                            onChange={(event) =>
+                              void handleToggleDomain(entry.domain, event.target.checked)
+                            }
+                            size="small"
+                          />
+                        }
+                        label=""
+                        aria-label={
+                          entry.enabled
+                            ? t('settings.disableDomain', { domain: entry.domain })
+                            : t('settings.enableDomain', { domain: entry.domain })
+                        }
+                        sx={{ m: 0, flexShrink: 0 }}
+                      />
                       <Typography
                         variant="body2"
                         sx={{
                           flex: 1,
                           fontFamily: 'monospace',
                           fontWeight: 500,
-                          wordBreak: 'break-all'
+                          wordBreak: 'break-all',
+                          color: entry.enabled ? 'text.primary' : 'text.secondary'
                         }}
                       >
-                        {domain}
+                        {entry.domain}
                       </Typography>
                       <IconButton
                         size="small"
                         color="error"
-                        onClick={() => void handleRemoveDomain(domain)}
+                        onClick={() => void handleRemoveDomain(entry.domain)}
                         aria-label={t('common.delete')}
                       >
                         <DeleteOutlinedIcon fontSize="small" />
@@ -491,6 +523,13 @@ function SettingsPage(): React.JSX.Element {
                   ))
                 )}
               </Stack>
+
+              {settings.checkDomains.length > 0 &&
+                getEnabledCheckDomains(settings.checkDomains).length === 0 && (
+                  <Typography variant="body2" color="warning.main" sx={{ mt: 1.5 }}>
+                    {t('settings.checkDomainsAllDisabled')}
+                  </Typography>
+                )}
             </Box>
           </Stack>
         </ContentSection>
@@ -508,8 +547,14 @@ function SettingsPage(): React.JSX.Element {
             <Alert severity="error" variant="outlined">
               {t('settings.changelogLoadError')}
             </Alert>
-          ) : appInfo && appInfo.changelog.length > 0 ? (
-            <ChangelogView version={appInfo.version} entries={appInfo.changelog} />
+          ) : appInfo ? (
+            <ChangelogView
+              version={appInfo.version}
+              entries={appInfo.changelog}
+              author={appInfo.author}
+              authorEmail={appInfo.authorEmail}
+              repositoryUrl={appInfo.repositoryUrl}
+            />
           ) : (
             <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
               {t('settings.changelogEmpty')}

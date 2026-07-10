@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import type { TFunction } from 'i18next'
+import type { CheckDomainEntry } from '../../../shared/types/settings'
+import { getCheckDomainNames } from '../../../shared/types/settings'
 import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_FORM_VALUES } from '../../../shared/types/proxy'
 
 const countryCodePattern = /^[A-Za-z]{2}$/
@@ -77,7 +79,11 @@ export function isValidDomain(value: string): boolean {
   return domain === 'localhost' || domainPattern.test(domain)
 }
 
-export function validateDomain(value: string, existing: string[], t: TFunction): string | null {
+export function validateDomain(
+  value: string,
+  existing: CheckDomainEntry[],
+  t: TFunction
+): string | null {
   const domain = normalizeDomainInput(value)
 
   if (!domain) {
@@ -88,7 +94,7 @@ export function validateDomain(value: string, existing: string[], t: TFunction):
     return t('settings.invalidDomain')
   }
 
-  if (existing.includes(domain)) {
+  if (getCheckDomainNames(existing).includes(domain)) {
     return t('settings.domainDuplicate')
   }
 

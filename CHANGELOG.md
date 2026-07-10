@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-07-10
+
+### Added
+
+- Proxy list filter by status (alive / dead)
+- Ukrainian interface language
+- About section: developer name, email, GitHub avatar, and repository link
+- Check domain enable/disable toggles in settings (domains stay in the list when disabled)
+- Per-proxy enable/disable toggle; disabled proxies are skipped by “Check all”
+- Short connectivity failure message when a proxy check error has no details
+
+### Changed
+
+- Proxy server check results show only status, external IP, and error text (no duplicate address/protocol/URL/latency)
+- “Check all” no longer updates UI or results for disabled proxies
+
 ## [1.12.0] - 2026-07-10
 
 ### Added

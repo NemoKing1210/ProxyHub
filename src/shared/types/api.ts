@@ -11,4 +11,5 @@ export interface AppAPI {
   getSettings: () => Promise<AppSettings>
   saveSettings: (settings: AppSettings) => Promise<void>
   getAppInfo: () => Promise<AppInfo>
+  openExternal: (url: string) => Promise<void>
 }

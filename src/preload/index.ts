@@ -20,7 +20,8 @@ const api: AppAPI = {
   },
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),
-  getAppInfo: () => ipcRenderer.invoke('app:get-info')
+  getAppInfo: () => ipcRenderer.invoke('app:get-info'),
+  openExternal: (url) => ipcRenderer.invoke('app:open-external', url)
 }
 
 if (process.contextIsolated) {

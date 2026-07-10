@@ -1,10 +1,13 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined'
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Avatar,
   Box,
   Chip,
+  Link,
   List,
   ListItem,
   ListItemText,
@@ -14,11 +17,18 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ChangelogEntry } from '../../../shared/types/app'
+import {
+  resolveGitHubAvatarUrl,
+  resolveGitHubProfileUrl
+} from '../../../shared/utils/github'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
 
 interface ChangelogViewProps {
   version: string
   entries: ChangelogEntry[]
+  author?: string
+  authorEmail?: string
+  repositoryUrl?: string
 }
 
 const SECTION_COLOR_MAP: Record<string, 'success' | 'info' | 'warning' | 'error' | 'default'> = {
@@ -51,55 +61,169 @@ function formatReleaseDate(date: string | undefined, locale: string): string | n
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(parsed)
 }
 
-function ChangelogView({ version, entries }: ChangelogViewProps): React.JSX.Element {
+function ChangelogView({
+  version,
+  entries,
+  author,
+  authorEmail,
+  repositoryUrl
+}: ChangelogViewProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
+
+  const repositoryLabel = repositoryUrl?.replace(/^https?:\/\//, '')
+  const authorProfileUrl = resolveGitHubProfileUrl(repositoryUrl, author)
+  const authorAvatarUrl = resolveGitHubAvatarUrl(repositoryUrl, author)
+
+  const handleEmailClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
+    if (!authorEmail) return
+
+    event.preventDefault()
+    void window.api.openExternal(`mailto:${authorEmail}`)
+  }
 
   return (
     <Stack spacing={2.5}>
       <Box
         sx={{
-          display: 'flex',
-          alignItems: { xs: 'flex-start', sm: 'center' },
-          justifyContent: 'space-between',
-          gap: 2,
-          flexDirection: { xs: 'column', sm: 'row' },
           p: 2,
           borderRadius: 2.5,
           bgcolor: surfaceContainer(theme, 'low')
         }}
       >
-        <Box>
-          <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-            {t('settings.currentVersion')}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            ProxyChecker
-          </Typography>
-        </Box>
-        <Chip
-          label={`v${version}`}
-          color="primary"
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={2}
           sx={{
-            fontWeight: 700,
-            fontFamily: 'monospace',
-            fontSize: '0.9rem',
-            px: 0.5,
-            height: 32
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            justifyContent: 'space-between',
+            mb: author || authorEmail || repositoryUrl ? 2 : 0
           }}
-        />
+        >
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+              {t('settings.currentVersion')}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              ProxyChecker
+            </Typography>
+          </Box>
+          <Chip
+            label={`v${version}`}
+            color="primary"
+            sx={{
+              fontWeight: 700,
+              fontFamily: 'monospace',
+              fontSize: '0.9rem',
+              px: 0.5,
+              height: 32
+            }}
+          />
+        </Stack>
+
+        {(author || authorEmail || repositoryUrl) && (
+          <Stack spacing={1.25}>
+            {(author || authorEmail) && (
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.75 }}>
+                  {t('settings.developer')}
+                </Typography>
+                <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start' }}>
+                  {authorAvatarUrl && (
+                    <Link
+                      href={authorProfileUrl ?? authorAvatarUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="none"
+                      aria-label={author}
+                      sx={{ mt: authorEmail ? 0.15 : 0 }}
+                    >
+                      <Avatar
+                        src={authorAvatarUrl}
+                        alt={author}
+                        sx={{
+                          width: 44,
+                          height: 44,
+                          border: '1px solid',
+                          borderColor: 'divider'
+                        }}
+                      />
+                    </Link>
+                  )}
+                  <Stack spacing={0.25} sx={{ minWidth: 0 }}>
+                    {author &&
+                      (authorProfileUrl ? (
+                        <Link
+                          href={authorProfileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          underline="hover"
+                          sx={{ fontWeight: 600 }}
+                        >
+                          {author}
+                        </Link>
+                      ) : (
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          {author}
+                        </Typography>
+                      ))}
+                    {authorEmail && (
+                      <Link
+                        href={`mailto:${authorEmail}`}
+                        onClick={handleEmailClick}
+                        underline="hover"
+                        color="text.secondary"
+                        sx={{
+                          fontSize: '0.875rem',
+                          wordBreak: 'break-all'
+                        }}
+                      >
+                        {authorEmail}
+                      </Link>
+                    )}
+                  </Stack>
+                </Stack>
+              </Box>
+            )}
+
+            {repositoryUrl && (
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
+                  {t('settings.repository')}
+                </Typography>
+                <Link
+                  href={repositoryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="hover"
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    fontWeight: 600,
+                    wordBreak: 'break-all'
+                  }}
+                >
+                  {repositoryLabel ?? repositoryUrl}
+                  <LaunchOutlinedIcon sx={{ fontSize: 16, flexShrink: 0 }} />
+                </Link>
+              </Box>
+            )}
+          </Stack>
+        )}
       </Box>
 
-      <Box
-        sx={{
-          maxHeight: 520,
-          overflowY: 'auto',
-          pr: 0.5,
-          borderRadius: 2.5
-        }}
-      >
-        <Stack spacing={1}>
-          {entries.map((entry, index) => {
+      {entries.length > 0 ? (
+        <Box
+          sx={{
+            maxHeight: 520,
+            overflowY: 'auto',
+            pr: 0.5,
+            borderRadius: 2.5
+          }}
+        >
+          <Stack spacing={1}>
+            {entries.map((entry, index) => {
             const releaseDate = formatReleaseDate(entry.date, i18n.language)
             const isCurrent = entry.version === version
 
@@ -230,6 +354,11 @@ function ChangelogView({ version, entries }: ChangelogViewProps): React.JSX.Elem
           })}
         </Stack>
       </Box>
+      ) : (
+        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+          {t('settings.changelogEmpty')}
+        </Typography>
+      )}
     </Stack>
   )
 }

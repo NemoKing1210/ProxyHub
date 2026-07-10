@@ -11,13 +11,14 @@ import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
-import { Alert, Box, Button, Chip, CircularProgress, IconButton, Snackbar, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Chip, CircularProgress, FormControlLabel, IconButton, Snackbar, Stack, Switch, Typography } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
 import type { Proxy, ProxyAnonymityLevel, ProxyIconId } from '../../../shared/types/proxy'
 import { formatDateTime } from '../../../shared/utils/datetime'
+import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
 import { elevationShadow, surfaceContainer } from '../theme'
@@ -42,6 +43,7 @@ interface ProxyCardProps {
   onDelete: () => void
   onIconChange: (iconId: ProxyIconId | undefined) => void
   onToggleFavorite: () => void
+  onToggleEnabled: () => void
 }
 
 interface ImportantField {
@@ -83,7 +85,8 @@ function ProxyCard({
   onEdit,
   onDelete,
   onIconChange,
-  onToggleFavorite
+  onToggleFavorite,
+  onToggleEnabled
 }: ProxyCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
@@ -91,6 +94,7 @@ function ProxyCard({
   const [copyToastOpen, setCopyToastOpen] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
   const [iconPickerAnchor, setIconPickerAnchor] = useState<HTMLElement | null>(null)
+  const enabled = isProxyEnabled(proxy)
 
   const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)
@@ -207,7 +211,9 @@ function ProxyCard({
         borderRadius: 3,
         bgcolor: 'background.paper',
         boxShadow: elevationShadow(theme, 1),
-        overflow: 'hidden'
+        overflow: 'hidden',
+        opacity: enabled ? 1 : 0.62,
+        transition: 'opacity 160ms ease'
       }}
     >
       <Box sx={{ p: { xs: 2.5, sm: 3 } }}>
@@ -265,6 +271,23 @@ function ProxyCard({
               sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}
             >
               <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', minWidth: 0, flex: 1 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={enabled}
+                      onChange={onToggleEnabled}
+                      size="small"
+                      disabled={isCheckingAll}
+                    />
+                  }
+                  label=""
+                  aria-label={
+                    enabled
+                      ? t('proxyList.actions.disableProxy')
+                      : t('proxyList.actions.enableProxy')
+                  }
+                  sx={{ m: 0, flexShrink: 0 }}
+                />
                 <IconButton
                   size="small"
                   onClick={onToggleFavorite}
@@ -302,7 +325,16 @@ function ProxyCard({
                   {proxy.label || proxy.host}
                 </Typography>
               </Stack>
-              <ProxyStatusChip status={proxy.status} />
+              <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexShrink: 0 }}>
+                {!enabled && (
+                  <Chip
+                    label={t('proxyList.disabled')}
+                    size="small"
+                    sx={{ height: 24, fontWeight: 700, border: 'none' }}
+                  />
+                )}
+                <ProxyStatusChip status={proxy.status} />
+              </Stack>
             </Stack>
 
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>

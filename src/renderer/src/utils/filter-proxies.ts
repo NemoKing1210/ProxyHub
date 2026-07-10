@@ -2,11 +2,14 @@ import type { Proxy, ProxyAnonymityLevel } from '../../../shared/types/proxy'
 
 export type ProxyFavoriteFilter = 'all' | 'favorites' | 'nonFavorites'
 
+export type ProxyStatusFilter = 'all' | 'alive' | 'dead'
+
 export interface ProxyListFilters {
   countryCode: string
   city: string
   anonymityLevel: ProxyAnonymityLevel | ''
   favorite: ProxyFavoriteFilter
+  status: ProxyStatusFilter
   maxLatencyMs: number | null
 }
 
@@ -15,6 +18,7 @@ export const DEFAULT_PROXY_LIST_FILTERS: ProxyListFilters = {
   city: '',
   anonymityLevel: '',
   favorite: 'all',
+  status: 'all',
   maxLatencyMs: null
 }
 
@@ -37,6 +41,7 @@ export function hasActiveFilters(filters: ProxyListFilters): boolean {
     filters.city !== '' ||
     filters.anonymityLevel !== '' ||
     filters.favorite !== 'all' ||
+    filters.status !== 'all' ||
     filters.maxLatencyMs !== null
   )
 }
@@ -60,6 +65,14 @@ export function filterProxies(proxies: Proxy[], filters: ProxyListFilters): Prox
     }
 
     if (filters.favorite === 'nonFavorites' && proxy.isFavorite) {
+      return false
+    }
+
+    if (filters.status === 'alive' && proxy.status !== 'alive') {
+      return false
+    }
+
+    if (filters.status === 'dead' && proxy.status !== 'dead') {
       return false
     }
 
