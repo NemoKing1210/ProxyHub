@@ -278,6 +278,8 @@
       "autoCheckDescription": "使用当前检测设置在后台定期重新检测代理。",
       "backup": "导入与导出",
       "backupDescription": "以 ProxyChecker 格式备份或恢复代理、分组和应用设置。",
+      "dangerZone": "危险操作",
+      "dangerZoneDescription": "清除代理数据或恢复默认应用设置。",
       "about": "关于",
       "aboutDescription": "应用版本和发布历史。"
     },
@@ -396,6 +398,21 @@
         "invalid_payload": "备份文件不完整或已损坏",
         "unknown": "未知错误"
       }
+    },
+    "dangerZone": {
+      "warning": "这些操作无法撤销。如果以后可能需要数据，请先导出备份。",
+      "deleteAllTitle": "删除所有代理和分组",
+      "deleteAllHint": "从应用中移除所有代理和分组。设置不会更改。",
+      "deleteAllButton": "删除所有代理和分组",
+      "deleteAllConfirmTitle": "删除所有代理和分组？",
+      "deleteAllConfirmMessage": "将永久删除 {{proxies}} 个代理和 {{groups}} 个分组。此操作无法撤销。",
+      "deleteAllSuccess": "已删除所有代理和分组",
+      "resetSettingsTitle": "重置设置",
+      "resetSettingsHint": "将所有应用设置恢复为默认值。",
+      "resetSettingsButton": "重置设置",
+      "resetSettingsConfirmTitle": "重置设置？",
+      "resetSettingsConfirmMessage": "所有设置将恢复为出厂默认值。代理和分组不受影响。",
+      "resetSettingsSuccess": "设置已恢复为默认值"
     },
     "currentVersion": "当前版本",
     "developer": "开发者",

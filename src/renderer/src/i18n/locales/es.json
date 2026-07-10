@@ -277,6 +277,8 @@
       "autoCheckDescription": "Vuelve a comprobar los proxies periódicamente en segundo plano con la configuración actual.",
       "backup": "Importar y exportar",
       "backupDescription": "Respaldar o restaurar proxies, grupos y ajustes en el formato ProxyChecker.",
+      "dangerZone": "Zona de peligro",
+      "dangerZoneDescription": "Borrar datos de proxies o restaurar la configuración predeterminada.",
       "about": "Acerca de",
       "aboutDescription": "Versión de la aplicación e historial de versiones."
     },
@@ -395,6 +397,21 @@
         "invalid_payload": "El archivo de copia está incompleto o dañado",
         "unknown": "Error desconocido"
       }
+    },
+    "dangerZone": {
+      "warning": "Estas acciones no se pueden deshacer. Exporte una copia de seguridad primero si podría necesitar sus datos después.",
+      "deleteAllTitle": "Eliminar todos los proxies y grupos",
+      "deleteAllHint": "Elimina todos los proxies y grupos de la aplicación. La configuración no cambiará.",
+      "deleteAllButton": "Eliminar todos los proxies y grupos",
+      "deleteAllConfirmTitle": "¿Eliminar todos los proxies y grupos?",
+      "deleteAllConfirmMessage": "Se eliminarán permanentemente {{proxies}} proxies y {{groups}} grupos. Esta acción no se puede deshacer.",
+      "deleteAllSuccess": "Se eliminaron todos los proxies y grupos",
+      "resetSettingsTitle": "Restablecer configuración",
+      "resetSettingsHint": "Restaura todos los ajustes de la aplicación a sus valores predeterminados.",
+      "resetSettingsButton": "Restablecer configuración",
+      "resetSettingsConfirmTitle": "¿Restablecer configuración?",
+      "resetSettingsConfirmMessage": "Todos los ajustes volverán a los valores de fábrica. Los proxies y grupos no se verán afectados.",
+      "resetSettingsSuccess": "La configuración se restableció a los valores predeterminados"
     },
     "currentVersion": "Versión actual",
     "developer": "Desarrollador",

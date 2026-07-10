@@ -20,6 +20,7 @@ interface SettingsState {
   setCheckDomains: (checkDomains: CheckDomainEntry[]) => Promise<void>
   setCheckTimeoutMs: (checkTimeoutMs: number) => Promise<void>
   updateSettings: (partial: Partial<AppSettings>) => Promise<void>
+  resetSettings: () => Promise<void>
 }
 
 async function persist(settings: AppSettings): Promise<void> {
@@ -74,6 +75,14 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     if (partial.language) {
       applyLanguage(partial.language)
     }
+  },
+
+  resetSettings: async () => {
+    const settings = normalizeSettings(DEFAULT_SETTINGS)
+
+    set({ settings })
+    await persist(settings)
+    applyLanguage(settings.language)
   }
 }))
 

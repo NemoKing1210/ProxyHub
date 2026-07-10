@@ -277,6 +277,8 @@
       "autoCheckDescription": "現在の確認設定を使って、バックグラウンドでプロキシを定期的に再確認します。",
       "backup": "インポートとエクスポート",
       "backupDescription": "ProxyChecker 形式でプロキシ、グループ、設定をバックアップまたは復元します。",
+      "dangerZone": "危険な操作",
+      "dangerZoneDescription": "プロキシデータの削除、または既定の設定への復元。",
       "about": "アプリについて",
       "aboutDescription": "アプリのバージョンとリリース履歴。"
     },
@@ -395,6 +397,21 @@
         "invalid_payload": "バックアップファイルが不完全または破損しています",
         "unknown": "不明なエラー"
       }
+    },
+    "dangerZone": {
+      "warning": "これらの操作は元に戻せません。後で必要になる可能性がある場合は、先にバックアップをエクスポートしてください。",
+      "deleteAllTitle": "すべてのプロキシとグループを削除",
+      "deleteAllHint": "アプリ内のすべてのプロキシとグループを削除します。設定は変更されません。",
+      "deleteAllButton": "すべてのプロキシとグループを削除",
+      "deleteAllConfirmTitle": "すべてのプロキシとグループを削除しますか？",
+      "deleteAllConfirmMessage": "{{proxies}} 件のプロキシと {{groups}} 件のグループが完全に削除されます。この操作は元に戻せません。",
+      "deleteAllSuccess": "すべてのプロキシとグループを削除しました",
+      "resetSettingsTitle": "設定をリセット",
+      "resetSettingsHint": "すべてのアプリ設定を既定値に戻します。",
+      "resetSettingsButton": "設定をリセット",
+      "resetSettingsConfirmTitle": "設定をリセットしますか？",
+      "resetSettingsConfirmMessage": "すべての設定が初期値に戻ります。プロキシとグループには影響しません。",
+      "resetSettingsSuccess": "設定を既定値にリセットしました"
     },
     "currentVersion": "現在のバージョン",
     "developer": "開発者",

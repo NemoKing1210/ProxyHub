@@ -320,6 +320,8 @@
       "autoCheckDescription": "Periodically re-check proxies in the background using your check settings.",
       "backup": "Import & export",
       "backupDescription": "Back up or restore proxies, groups, and app settings in the ProxyChecker format.",
+      "dangerZone": "Danger zone",
+      "dangerZoneDescription": "Clear proxy data or restore default application settings.",
       "about": "About",
       "aboutDescription": "Application version and release history."
     },
@@ -444,6 +446,21 @@
         "invalid_payload": "Backup file is incomplete or corrupted",
         "unknown": "Unknown error"
       }
+    },
+    "dangerZone": {
+      "warning": "These actions cannot be undone. Export a backup first if you might need your data later.",
+      "deleteAllTitle": "Delete all proxies and groups",
+      "deleteAllHint": "Remove every proxy and group from the app. Your settings will stay unchanged.",
+      "deleteAllButton": "Delete all proxies and groups",
+      "deleteAllConfirmTitle": "Delete all proxies and groups?",
+      "deleteAllConfirmMessage": "This will permanently delete {{proxies}} proxies and {{groups}} groups. This action cannot be undone.",
+      "deleteAllSuccess": "All proxies and groups were deleted",
+      "resetSettingsTitle": "Reset settings",
+      "resetSettingsHint": "Restore all application settings to their default values.",
+      "resetSettingsButton": "Reset settings",
+      "resetSettingsConfirmTitle": "Reset settings to defaults?",
+      "resetSettingsConfirmMessage": "All settings will be restored to factory defaults. Proxies and groups will not be affected.",
+      "resetSettingsSuccess": "Settings were reset to defaults"
     },
     "currentVersion": "Current version",
     "developer": "Developer",

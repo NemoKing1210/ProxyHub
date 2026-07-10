@@ -277,6 +277,8 @@
       "autoCheckDescription": "Prüft Proxys regelmäßig im Hintergrund mit den aktuellen Prüfeinstellungen erneut.",
       "backup": "Import & Export",
       "backupDescription": "Proxys, Gruppen und Einstellungen im ProxyChecker-Format sichern oder wiederherstellen.",
+      "dangerZone": "Gefahrenbereich",
+      "dangerZoneDescription": "Proxy-Daten löschen oder Standardeinstellungen wiederherstellen.",
       "about": "Über",
       "aboutDescription": "Anwendungsversion und Versionsverlauf."
     },
@@ -395,6 +397,21 @@
         "invalid_payload": "Backup-Datei ist unvollständig oder beschädigt",
         "unknown": "Unbekannter Fehler"
       }
+    },
+    "dangerZone": {
+      "warning": "Diese Aktionen können nicht rückgängig gemacht werden. Exportieren Sie zuerst ein Backup, falls Sie die Daten später benötigen.",
+      "deleteAllTitle": "Alle Proxys und Gruppen löschen",
+      "deleteAllHint": "Entfernt alle Proxys und Gruppen aus der App. Ihre Einstellungen bleiben unverändert.",
+      "deleteAllButton": "Alle Proxys und Gruppen löschen",
+      "deleteAllConfirmTitle": "Alle Proxys und Gruppen löschen?",
+      "deleteAllConfirmMessage": "Dies löscht dauerhaft {{proxies}} Proxys und {{groups}} Gruppen. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "deleteAllSuccess": "Alle Proxys und Gruppen wurden gelöscht",
+      "resetSettingsTitle": "Einstellungen zurücksetzen",
+      "resetSettingsHint": "Alle Anwendungseinstellungen auf die Standardwerte zurücksetzen.",
+      "resetSettingsButton": "Einstellungen zurücksetzen",
+      "resetSettingsConfirmTitle": "Einstellungen zurücksetzen?",
+      "resetSettingsConfirmMessage": "Alle Einstellungen werden auf die Werkseinstellungen zurückgesetzt. Proxys und Gruppen bleiben unverändert.",
+      "resetSettingsSuccess": "Einstellungen wurden auf Standard zurückgesetzt"
     },
     "currentVersion": "Aktuelle Version",
     "developer": "Entwickler",

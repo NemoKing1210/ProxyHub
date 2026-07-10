@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.27.0] - 2026-07-10
+
+### Added
+
+- Settings danger zone: delete all proxies and groups, or reset all application settings to factory defaults, each with a confirmation dialog and success feedback
+
 ## [1.26.0] - 2026-07-10
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "ProxyChecker",
-  "version": "1.26.0",
+  "version": "1.27.0",
   "description": "Cross-platform desktop app for testing HTTP, HTTPS, SOCKS4, SOCKS5, and MTProto proxy availability and performance",
   "main": "./out/main/index.js",
   "license": "MIT",

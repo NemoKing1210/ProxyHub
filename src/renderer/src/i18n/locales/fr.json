@@ -277,6 +277,8 @@
       "autoCheckDescription": "Revérifie périodiquement les proxys en arrière-plan avec les paramètres de vérification actuels.",
       "backup": "Import et export",
       "backupDescription": "Sauvegarder ou restaurer les proxys, groupes et paramètres au format ProxyChecker.",
+      "dangerZone": "Zone de danger",
+      "dangerZoneDescription": "Effacer les données de proxys ou restaurer les paramètres par défaut.",
       "about": "À propos",
       "aboutDescription": "Version de l'application et historique des versions."
     },
@@ -395,6 +397,21 @@
         "invalid_payload": "Fichier de sauvegarde incomplet ou corrompu",
         "unknown": "Erreur inconnue"
       }
+    },
+    "dangerZone": {
+      "warning": "Ces actions sont irréversibles. Exportez d'abord une sauvegarde si vous pourriez avoir besoin de vos données plus tard.",
+      "deleteAllTitle": "Supprimer tous les proxys et groupes",
+      "deleteAllHint": "Supprime tous les proxys et groupes de l'application. Vos paramètres restent inchangés.",
+      "deleteAllButton": "Supprimer tous les proxys et groupes",
+      "deleteAllConfirmTitle": "Supprimer tous les proxys et groupes ?",
+      "deleteAllConfirmMessage": "Cela supprimera définitivement {{proxies}} proxys et {{groups}} groupes. Cette action est irréversible.",
+      "deleteAllSuccess": "Tous les proxys et groupes ont été supprimés",
+      "resetSettingsTitle": "Réinitialiser les paramètres",
+      "resetSettingsHint": "Restaure tous les paramètres de l'application à leurs valeurs par défaut.",
+      "resetSettingsButton": "Réinitialiser les paramètres",
+      "resetSettingsConfirmTitle": "Réinitialiser les paramètres ?",
+      "resetSettingsConfirmMessage": "Tous les paramètres seront restaurés aux valeurs d'usine. Les proxys et groupes ne seront pas affectés.",
+      "resetSettingsSuccess": "Les paramètres ont été réinitialisés"
     },
     "currentVersion": "Version actuelle",
     "developer": "Développeur",

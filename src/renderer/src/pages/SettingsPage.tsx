@@ -50,6 +50,7 @@ import ChangelogView from '../components/ChangelogView'
 import LanguageFlag from '../components/LanguageFlag'
 import SettingsAutoCheckSection from '../components/SettingsAutoCheckSection'
 import SettingsBackupSection from '../components/SettingsBackupSection'
+import SettingsDangerSection from '../components/SettingsDangerSection'
 import SettingsSystemSection from '../components/SettingsSystemSection'
 import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
@@ -88,10 +89,13 @@ function clampTimeoutSeconds(seconds: number): number {
 function SettingsPage(): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs, updateSettings } =
+  const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs, updateSettings, resetSettings } =
     useSettingsStore()
   const groups = useGroupStore((state) => state.groups)
   const proxies = useProxyStore((state) => state.proxies)
+  const isCheckingAll = useProxyStore((state) => state.isCheckingAll)
+  const isChecking = useProxyStore((state) => state.checkingIds.size > 0)
+  const setDetailsProxyId = useProxyStore((state) => state.setDetailsProxyId)
   const loadGroups = useGroupStore((state) => state.loadGroups)
   const loadSettings = useSettingsStore((state) => state.loadSettings)
   const favoriteCount = useProxyStore(
@@ -307,6 +311,35 @@ function SettingsPage(): React.JSX.Element {
     await updateSettings({ autoCheckGroupIds: groupIds })
     notifySaved()
   }
+
+  const handleDeleteAllProxiesAndGroups = async (): Promise<void> => {
+    await Promise.all([window.api.saveProxies([]), window.api.saveGroups([])])
+
+    useProxyStore.setState({
+      proxies: [],
+      checkingIds: new Set(),
+      isCheckingAll: false,
+      isAutoChecking: false
+    })
+    setDetailsProxyId(null)
+    useGroupStore.setState({ groups: [] })
+
+    notifyFeedback(t('settings.dangerZone.deleteAllSuccess'))
+  }
+
+  const handleResetSettings = async (): Promise<void> => {
+    await resetSettings()
+
+    const nextSettings = useSettingsStore.getState().settings
+    setTimeoutDraft(nextSettings.checkTimeoutMs / 1000)
+    setConcurrencyDraft(nextSettings.checkAllConcurrency)
+    setDomainInput('')
+    setDomainError(null)
+
+    notifyFeedback(t('settings.dangerZone.resetSettingsSuccess'))
+  }
+
+  const isDangerActionsDisabled = isCheckingAll || isChecking
 
   return (
     <Box sx={{ maxWidth: 760, mx: 'auto' }}>
@@ -702,6 +735,14 @@ function SettingsPage(): React.JSX.Element {
           }
           onError={(message) => notifyFeedback(message, 'error')}
           onReloadData={handleReloadBackupData}
+        />
+
+        <SettingsDangerSection
+          proxyCount={proxies.length}
+          groupCount={groups.length}
+          disabled={isDangerActionsDisabled}
+          onDeleteAll={handleDeleteAllProxiesAndGroups}
+          onResetSettings={handleResetSettings}
         />
 
         <ContentSection
