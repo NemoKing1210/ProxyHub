@@ -40,7 +40,14 @@ function PersistentOutlet({
           <Box
             key={pathname}
             ref={isActive ? activeRef : undefined}
-            onAnimationEnd={isActive ? onAnimationEnd : undefined}
+            onAnimationEnd={
+              isActive
+                ? (event) => {
+                    if (event.target !== event.currentTarget) return
+                    onAnimationEnd?.()
+                  }
+                : undefined
+            }
             sx={{
               display: isActive ? 'block' : 'none',
               overflow: 'hidden',

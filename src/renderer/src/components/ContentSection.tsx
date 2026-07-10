@@ -6,7 +6,7 @@ import { elevationShadow, MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTin
 
 interface ContentSectionProps {
   icon: ReactNode
-  title: string
+  title: ReactNode
   description?: string
   children: ReactNode
   nested?: boolean
@@ -107,6 +107,9 @@ function ContentSection({
         {collapsible && (
           <IconButton
             size="small"
+            onMouseDown={(event) => {
+              event.preventDefault()
+            }}
             onClick={(event) => {
               event.stopPropagation()
               toggleExpanded()

@@ -19,8 +19,11 @@ export function usePageScrollRestoration(): {
   }, [location.pathname])
 
   const restoreScroll = useCallback((pathname: string): void => {
+    const savedPosition = scrollPositionsRef.current[pathname]
+    if (savedPosition === undefined) return
+
     window.scrollTo({
-      top: scrollPositionsRef.current[pathname] ?? 0,
+      top: savedPosition,
       left: 0,
       behavior: 'instant'
     })

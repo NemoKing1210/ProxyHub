@@ -2,7 +2,8 @@ import { Box, Chip, CircularProgress, Stack, Typography } from '@mui/material'
 import { keyframes, useTheme, type Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ProxyConnectivityResult } from '../../../shared/types/proxy'
-import { getPalette, MD3_EASING, withThemeAlpha } from '../theme'
+import { getPalette, MD3_DURATION, MD3_EASING, withThemeAlpha } from '../theme'
+import LatencyText from './LatencyText'
 
 interface ProxyConnectivityResultProps {
   connectivity: ProxyConnectivityResult
@@ -128,7 +129,20 @@ function ProxyConnectivityResultCard({
 
         <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
           {t('proxyList.columns.proxyUrl')}:{' '}
-          <Box component="span" sx={{ fontFamily: 'monospace', color: 'text.primary' }}>
+          <Box
+            component="span"
+            sx={{
+              fontFamily: 'monospace',
+              color: 'text.primary',
+              transition: `filter ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
+              '@media (hover: hover)': {
+                filter: 'blur(5px)',
+                '&:hover': {
+                  filter: 'none'
+                }
+              }
+            }}
+          >
             {connectivity.proxyUrl}
           </Box>
         </Typography>
@@ -141,10 +155,7 @@ function ProxyConnectivityResultCard({
 
         {connectivity.latencyMs !== undefined && (
           <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-            {t('proxyList.connectivity.connectLatency')}:{' '}
-            <Box component="span" sx={{ color: 'success.main', fontWeight: 600 }}>
-              {t('proxyList.latencyMs', { value: connectivity.latencyMs })}
-            </Box>
+            {t('proxyList.connectivity.connectLatency')}: <LatencyText latencyMs={connectivity.latencyMs} />
           </Typography>
         )}
 

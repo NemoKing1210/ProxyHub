@@ -17,6 +17,7 @@ import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-f
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
+import LatencyText from './LatencyText'
 import ProxyConnectivityResultCard from './ProxyConnectivityResult'
 import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
@@ -106,13 +107,24 @@ function ProxyCard({
     return fields
   }, [proxy, t])
 
-  const resultsTitle = proxy.checkedAt
-    ? `${t('proxyList.sections.results')} · ${formatDateTime(proxy.checkedAt, i18n.language)}`
-    : t('proxyList.sections.results')
+  const resultsTitle = useMemo(() => {
+    const connectLatencyMs = proxy.connectivity?.latencyMs
 
-  const hasResults =
-    Boolean(proxy.connectivity) || domainChecks.length > 0 || resultFields.length > 0
-  const showResults = isChecking || hasResults
+    return (
+      <>
+        {t('proxyList.sections.results')}
+        {proxy.checkedAt ? ` · ${formatDateTime(proxy.checkedAt, i18n.language)}` : null}
+        {connectLatencyMs !== undefined ? (
+          <>
+            {' · '}
+            <LatencyText latencyMs={connectLatencyMs} />
+          </>
+        ) : null}
+      </>
+    )
+  }, [proxy.checkedAt, proxy.connectivity?.latencyMs, t, i18n.language])
+
+  const showResults = isChecking || Boolean(proxy.checkedAt)
 
   const handleCopyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(proxyUrl)

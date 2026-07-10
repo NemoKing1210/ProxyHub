@@ -3,6 +3,7 @@ import { keyframes, useTheme, type Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ProxyDomainCheckResult } from '../../../shared/types/proxy'
 import { getPalette, MD3_EASING, staggerDelay, withThemeAlpha } from '../theme'
+import LatencyText from './LatencyText'
 
 interface ProxyDomainResultsProps {
   domainChecks: ProxyDomainCheckResult[]
@@ -128,10 +129,7 @@ function ProxyDomainResults({ domainChecks }: ProxyDomainResultsProps): React.JS
 
               {check.latencyMs !== undefined && (
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                  {t('proxyList.columns.latency')}:{' '}
-                  <Box component="span" sx={{ color: 'success.main', fontWeight: 600 }}>
-                    {t('proxyList.latencyMs', { value: check.latencyMs })}
-                  </Box>
+                  {t('proxyList.columns.latency')}: <LatencyText latencyMs={check.latencyMs} />
                 </Typography>
               )}
 

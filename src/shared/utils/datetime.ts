@@ -1,3 +1,11 @@
+function isSameCalendarDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  )
+}
+
 export function formatDateTime(iso: string, locale: string): string {
   const date = new Date(iso)
 
@@ -5,8 +13,10 @@ export function formatDateTime(iso: string, locale: string): string {
     return iso
   }
 
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: 'short',
-    timeStyle: 'short'
-  }).format(date)
+  const isToday = isSameCalendarDay(date, new Date())
+
+  return new Intl.DateTimeFormat(
+    locale,
+    isToday ? { timeStyle: 'short' } : { dateStyle: 'short', timeStyle: 'short' }
+  ).format(date)
 }
