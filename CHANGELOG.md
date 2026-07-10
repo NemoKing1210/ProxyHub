@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.30.1] - 2026-07-11
+
+### Added
+
+- Import limit slider in CSV, JSON, and TXT import preview: choose how many proxies to import from the top of the file (1 to all non-duplicate entries)
+- Dated default filenames for CSV, JSON, and TXT exports (`proxy-list-YYYY-MM-DD.*`)
+
+### Changed
+
+- Import & export settings UI: external list formats shown as a vertical list with standard action buttons and no card borders
+
 ## [1.30.0] - 2026-07-11
 
 ### Added

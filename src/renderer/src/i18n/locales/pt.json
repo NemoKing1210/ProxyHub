@@ -521,7 +521,10 @@
       "nativeDescription": "Exportação completa de proxies, grupos, favoritos e configurações. Suporta criptografia por senha.",
       "listFormatsTitle": "Outros formatos",
       "listFormatsHeading": "Listas externas de proxies",
-      "listFormatsDescription": "Importe ou exporte apenas dados de conexão — sem grupos, favoritos ou configurações."
+      "listFormatsDescription": "Importe ou exporte apenas dados de conexão — sem grupos, favoritos ou configurações.",
+      "importLimitLabel": "Limite de importação",
+      "importLimitValue": "{{count}} de {{total}}",
+      "importLimitHint": "Importa os primeiros proxies do arquivo em ordem. Duplicatas já presentes no app são ignoradas."
     },
     "dangerZone": {
       "warning": "Essas ações não podem ser desfeitas. Exporte um backup primeiro se você puder precisar dos dados depois.",

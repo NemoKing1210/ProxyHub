@@ -521,7 +521,10 @@
       "nativeDescription": "Export complet des proxys, groupes, favoris et paramètres. Chiffrement par mot de passe disponible.",
       "listFormatsTitle": "Autres formats",
       "listFormatsHeading": "Listes de proxys externes",
-      "listFormatsDescription": "Importez ou exportez uniquement les données de connexion, sans groupes, favoris ni paramètres."
+      "listFormatsDescription": "Importez ou exportez uniquement les données de connexion, sans groupes, favoris ni paramètres.",
+      "importLimitLabel": "Limite d'importation",
+      "importLimitValue": "{{count}} sur {{total}}",
+      "importLimitHint": "Importe les premiers proxys du fichier dans l'ordre. Les doublons déjà présents dans l'app sont ignorés."
     },
     "dangerZone": {
       "warning": "Ces actions sont irréversibles. Exportez d'abord une sauvegarde si vous pourriez avoir besoin de vos données plus tard.",

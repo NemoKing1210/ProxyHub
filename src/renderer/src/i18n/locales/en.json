@@ -437,6 +437,9 @@
       "previewConfirm": "Import",
       "importSelectProxies": "Proxies in backup",
       "importSelectProxiesHint": "Choose which proxies from this file to import.",
+      "importLimitLabel": "Import limit",
+      "importLimitValue": "{{count}} of {{total}}",
+      "importLimitHint": "Imports the first proxies from the file in order. Duplicates already in the app are skipped.",
       "kindLabels": {
         "full": "Proxies & settings",
         "proxies": "Proxies only",

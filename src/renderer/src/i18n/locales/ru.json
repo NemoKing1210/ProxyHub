@@ -443,6 +443,9 @@
       "previewConfirm": "Импортировать",
       "importSelectProxies": "Прокси в файле",
       "importSelectProxiesHint": "Выберите, какие прокси из этого файла импортировать.",
+      "importLimitLabel": "Лимит импорта",
+      "importLimitValue": "{{count}} из {{total}}",
+      "importLimitHint": "Импортируются первые прокси из файла по порядку. Дубликаты, уже есть в приложении, пропускаются.",
       "kindLabels": {
         "full": "Прокси и настройки",
         "proxies": "Только прокси",

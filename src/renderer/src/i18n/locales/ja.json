@@ -521,7 +521,10 @@
       "nativeDescription": "プロキシ、グループ、お気に入り、設定の完全エクスポート。パスワード暗号化に対応。",
       "listFormatsTitle": "その他の形式",
       "listFormatsHeading": "外部プロキシリスト",
-      "listFormatsDescription": "接続データのみのインポート/エクスポート（グループ・お気に入り・設定は含みません）。"
+      "listFormatsDescription": "接続データのみのインポート/エクスポート（グループ・お気に入り・設定は含みません）。",
+      "importLimitLabel": "インポート上限",
+      "importLimitValue": "{{total}}件中{{count}}件",
+      "importLimitHint": "ファイル先頭から順にプロキシをインポートします。アプリ内の重複はスキップされます。"
     },
     "dangerZone": {
       "warning": "これらの操作は元に戻せません。後で必要になる可能性がある場合は、先にバックアップをエクスポートしてください。",

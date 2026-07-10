@@ -15,6 +15,7 @@ import {
   MenuItem,
   Pagination,
   Select,
+  Slider,
   Stack,
   Typography
 } from '@mui/material'
@@ -29,6 +30,29 @@ import { getProxyProtocolStyles } from '../utils/proxy-protocol-styles'
 import CountryFlag from './CountryFlag'
 
 const PAGE_SIZE = 50
+
+function selectFirstImportableEntries(
+  entries: ProxyListImportPreviewEntry[],
+  limit: number
+): Set<string> {
+  const selected = new Set<string>()
+  let count = 0
+
+  for (const entry of entries) {
+    if (entry.isDuplicate) {
+      continue
+    }
+
+    if (count >= limit) {
+      break
+    }
+
+    selected.add(entry.id)
+    count += 1
+  }
+
+  return selected
+}
 
 interface CsvImportPreviewDialogProps {
   open: boolean
@@ -78,6 +102,7 @@ function CsvImportPreviewDialog({
   const theme = useTheme()
   const translationPrefix = `settings.backup.${format}`
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
+  const [importLimit, setImportLimit] = useState(1)
   const [groupId, setGroupId] = useState('')
   const [page, setPage] = useState(1)
   const [isImporting, setIsImporting] = useState(false)
@@ -112,7 +137,10 @@ function CsvImportPreviewDialog({
     }
 
     const importable = preview.entries.filter((entry) => !entry.isDuplicate)
-    setSelectedIds(new Set(importable.map((entry) => entry.id)))
+    const initialLimit = importable.length > 0 ? importable.length : 0
+
+    setImportLimit(initialLimit)
+    setSelectedIds(selectFirstImportableEntries(preview.entries, initialLimit))
     setGroupId('')
     setPage(1)
     setIsImporting(false)
@@ -146,6 +174,19 @@ function CsvImportPreviewDialog({
     }
 
     setSelectedIds(next)
+
+    const selectedImportableCount = importableEntries.filter((item) => next.has(item.id)).length
+    setImportLimit(selectedImportableCount > 0 ? selectedImportableCount : 0)
+  }
+
+  const handleImportLimitChange = (_event: Event, value: number | number[]): void => {
+    if (!preview) {
+      return
+    }
+
+    const limit = Array.isArray(value) ? value[0] : value
+    setImportLimit(limit)
+    setSelectedIds(selectFirstImportableEntries(preview.entries, limit))
   }
 
   const handleTogglePage = (checked: boolean): void => {
@@ -161,14 +202,29 @@ function CsvImportPreviewDialog({
     }
 
     setSelectedIds(next)
+
+    const selectedImportableCount = importableEntries.filter((item) => next.has(item.id)).length
+    setImportLimit(selectedImportableCount > 0 ? selectedImportableCount : 0)
   }
 
   const handleSelectAllImportable = (): void => {
-    setSelectedIds(new Set(importableEntries.map((entry) => entry.id)))
+    if (!preview) {
+      return
+    }
+
+    setImportLimit(importableEntries.length)
+    setSelectedIds(selectFirstImportableEntries(preview.entries, importableEntries.length))
   }
 
   const handleClearSelection = (): void => {
-    setSelectedIds(new Set())
+    if (!preview || importableEntries.length === 0) {
+      setImportLimit(0)
+      setSelectedIds(new Set())
+      return
+    }
+
+    setImportLimit(1)
+    setSelectedIds(selectFirstImportableEntries(preview.entries, 1))
   }
 
   const handleConfirm = async (): Promise<void> => {
@@ -261,6 +317,38 @@ function CsvImportPreviewDialog({
                 {t(`${translationPrefix}.importGroupHint`)}
               </Typography>
             </FormControl>
+
+            {importableEntries.length > 0 && (
+              <Box>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.75 }}
+                >
+                  <Typography variant="subtitle2">{t('settings.backup.importLimitLabel')}</Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                    {t('settings.backup.importLimitValue', {
+                      count: importLimit,
+                      total: importableEntries.length
+                    })}
+                  </Typography>
+                </Stack>
+                <Slider
+                  value={importLimit}
+                  min={1}
+                  max={importableEntries.length}
+                  step={1}
+                  disabled={isImporting || importableEntries.length <= 1}
+                  onChange={handleImportLimitChange}
+                  valueLabelDisplay="auto"
+                  aria-label={t('settings.backup.importLimitLabel')}
+                  sx={{ mt: 0.5, mb: 0.25 }}
+                />
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                  {t('settings.backup.importLimitHint')}
+                </Typography>
+              </Box>
+            )}
 
             <Box>
               <Stack

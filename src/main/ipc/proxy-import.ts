@@ -36,7 +36,6 @@ const LIST_FORMAT_CONFIG: Record<
     openFilterName: string
     openExtensions: string[]
     saveTitle: string
-    defaultPath: string
     saveExtensions: string[]
     emptyMessage: string
     noEntriesMessage: string
@@ -53,7 +52,6 @@ const LIST_FORMAT_CONFIG: Record<
     openFilterName: 'CSV proxy list',
     openExtensions: ['csv'],
     saveTitle: 'Export proxy CSV',
-    defaultPath: 'proxy-list.csv',
     saveExtensions: ['csv'],
     emptyMessage: 'CSV file is empty',
     noEntriesMessage: 'No valid proxy entries found in CSV file',
@@ -65,7 +63,6 @@ const LIST_FORMAT_CONFIG: Record<
     openFilterName: 'JSON proxy list',
     openExtensions: ['json'],
     saveTitle: 'Export proxy JSON',
-    defaultPath: 'proxy-list.json',
     saveExtensions: ['json'],
     emptyMessage: 'JSON file is empty',
     noEntriesMessage: 'No valid proxy entries found in JSON file',
@@ -77,13 +74,18 @@ const LIST_FORMAT_CONFIG: Record<
     openFilterName: 'TXT proxy list',
     openExtensions: ['txt'],
     saveTitle: 'Export proxy TXT',
-    defaultPath: 'proxy-list.txt',
     saveExtensions: ['txt'],
     emptyMessage: 'TXT file is empty',
     noEntriesMessage: 'No valid proxy entries found in TXT file',
     parse: parseProxyImportTxt,
     format: formatProxyImportTxt
   }
+}
+
+function formatListExportFileName(format: ProxyListImportFormat): string {
+  const date = new Date().toISOString().slice(0, 10)
+  const extension = LIST_FORMAT_CONFIG[format].saveExtensions[0]
+  return `proxy-list-${date}.${extension}`
 }
 
 function serializeListImportError(error: unknown, format: ProxyListImportFormat): ProxyListImportError {
@@ -218,7 +220,7 @@ async function exportList(
   const window = getActiveWindow()
   const dialogOptions = {
     title: config.saveTitle,
-    defaultPath: config.defaultPath,
+    defaultPath: formatListExportFileName(format),
     filters: [{ name: config.openFilterName, extensions: config.saveExtensions }]
   }
   const dialogResult = window

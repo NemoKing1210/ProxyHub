@@ -521,7 +521,10 @@
       "nativeDescription": "Vollständiger Export von Proxys, Gruppen, Favoriten und App-Einstellungen. Optional mit Passwortverschlüsselung.",
       "listFormatsTitle": "Andere Formate",
       "listFormatsHeading": "Externe Proxy-Listen",
-      "listFormatsDescription": "Nur Verbindungsdaten importieren oder exportieren — ohne Gruppen, Favoriten oder App-Einstellungen."
+      "listFormatsDescription": "Nur Verbindungsdaten importieren oder exportieren — ohne Gruppen, Favoriten oder App-Einstellungen.",
+      "importLimitLabel": "Importlimit",
+      "importLimitValue": "{{count}} von {{total}}",
+      "importLimitHint": "Importiert die ersten Proxys aus der Datei in Reihenfolge. Bereits vorhandene Duplikate werden übersprungen."
     },
     "dangerZone": {
       "warning": "Diese Aktionen können nicht rückgängig gemacht werden. Exportieren Sie zuerst ein Backup, falls Sie die Daten später benötigen.",

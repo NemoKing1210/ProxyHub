@@ -522,7 +522,10 @@
       "nativeDescription": "完整导出代理、分组、收藏和应用设置。支持密码加密。",
       "listFormatsTitle": "其他格式",
       "listFormatsHeading": "外部代理列表",
-      "listFormatsDescription": "仅导入或导出连接数据，不包含分组、收藏和应用设置。"
+      "listFormatsDescription": "仅导入或导出连接数据，不包含分组、收藏和应用设置。",
+      "importLimitLabel": "导入上限",
+      "importLimitValue": "{{count}} / {{total}}",
+      "importLimitHint": "按文件顺序导入前 N 条代理。应用中已有的重复项会被跳过。"
     },
     "dangerZone": {
       "warning": "这些操作无法撤销。如果以后可能需要数据，请先导出备份。",
