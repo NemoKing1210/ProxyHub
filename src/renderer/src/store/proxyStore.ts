@@ -24,6 +24,7 @@ interface ProxyState {
   proxies: Proxy[]
   isLoading: boolean
   isCheckingAll: boolean
+  isAutoChecking: boolean
   checkingIds: Set<string>
   loadProxies: () => Promise<void>
   addProxy: (input: ProxyInput) => Promise<void>
@@ -49,7 +50,7 @@ interface ProxyState {
   toggleEnabled: (id: string) => Promise<void>
   removeProxy: (id: string) => Promise<void>
   checkProxy: (id: string) => Promise<void>
-  checkAll: (proxyIds?: string[]) => Promise<void>
+  checkAll: (proxyIds?: string[], options?: { source?: 'manual' | 'auto' }) => Promise<void>
   detailsProxyId: string | null
   setDetailsProxyId: (proxyId: string | null) => void
 }
@@ -255,6 +256,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   proxies: [],
   isLoading: true,
   isCheckingAll: false,
+  isAutoChecking: false,
   checkingIds: new Set(),
   detailsProxyId: null,
 
@@ -410,7 +412,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     }
   },
 
-  checkAll: async (proxyIds) => {
+  checkAll: async (proxyIds, options) => {
     const { proxies } = get()
     const targetIds = proxyIds ?? proxies.map((proxy) => proxy.id)
     const targets = filterEnabledProxies(
@@ -419,12 +421,19 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
 
     if (targets.length === 0 || get().isCheckingAll) return
 
+    const isAutoChecking = options?.source === 'auto'
     const { checkAllMode } = useSettingsStore.getState().settings
     const checkOptions = getCheckOptions()
     const ids = targets.map((proxy) => proxy.id)
 
+    set({ isAutoChecking })
+
     if (checkAllMode === 'parallel') {
-      await checkAllParallel(targets, checkOptions, get, set)
+      try {
+        await checkAllParallel(targets, checkOptions, get, set)
+      } finally {
+        set({ isAutoChecking: false })
+      }
       return
     }
 
@@ -433,7 +442,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     try {
       await checkAllSequential(ids, get)
     } finally {
-      set({ isCheckingAll: false })
+      set({ isCheckingAll: false, isAutoChecking: false })
     }
   }
 }))

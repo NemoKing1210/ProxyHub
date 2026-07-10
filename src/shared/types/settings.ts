@@ -9,6 +9,8 @@ export type CheckAllMode = 'sequential' | 'parallel'
 
 export type ProxyCardViewMode = 'standard' | 'compact'
 
+export type AutoCheckScope = 'all' | 'favorites' | 'groups'
+
 export interface CheckDomainEntry {
   domain: string
   enabled: boolean
@@ -24,6 +26,11 @@ export interface AppSettings {
   trayEnabled: boolean
   startMinimized: boolean
   backgroundCheckNotifications: boolean
+  autoCheckEnabled: boolean
+  autoCheckIntervalMinutes: number
+  autoCheckNotifications: boolean
+  autoCheckScope: AutoCheckScope
+  autoCheckGroupIds: string[]
   proxyCardView: ProxyCardViewMode
   proxyListView: ProxyListViewState
 }
@@ -36,6 +43,10 @@ export const CHECK_ALL_CONCURRENCY_MIN = 2
 export const CHECK_ALL_CONCURRENCY_MAX = 20
 export const CHECK_ALL_CONCURRENCY_DEFAULT = 5
 
+export const AUTO_CHECK_INTERVAL_MIN = 1
+export const AUTO_CHECK_INTERVAL_MAX = 1_440
+export const AUTO_CHECK_INTERVAL_DEFAULT = 30
+
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: 'dark',
   language: 'en',
@@ -46,6 +57,11 @@ export const DEFAULT_SETTINGS: AppSettings = {
   trayEnabled: false,
   startMinimized: false,
   backgroundCheckNotifications: true,
+  autoCheckEnabled: false,
+  autoCheckIntervalMinutes: AUTO_CHECK_INTERVAL_DEFAULT,
+  autoCheckNotifications: true,
+  autoCheckScope: 'all',
+  autoCheckGroupIds: [],
   proxyCardView: 'standard',
   proxyListView: DEFAULT_PROXY_LIST_VIEW
 }
@@ -61,6 +77,46 @@ function clampCheckAllConcurrency(value: number): number {
     CHECK_ALL_CONCURRENCY_MAX,
     Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value))
   )
+}
+
+function clampAutoCheckIntervalMinutes(value: number): number {
+  return Math.min(
+    AUTO_CHECK_INTERVAL_MAX,
+    Math.max(AUTO_CHECK_INTERVAL_MIN, Math.round(value))
+  )
+}
+
+function normalizeAutoCheckScope(value: unknown): AutoCheckScope {
+  if (value === 'favorites' || value === 'groups') {
+    return value
+  }
+
+  return 'all'
+}
+
+function normalizeAutoCheckGroupIds(values: unknown): string[] {
+  if (!Array.isArray(values)) {
+    return []
+  }
+
+  const seen = new Set<string>()
+  const result: string[] = []
+
+  for (const value of values) {
+    if (typeof value !== 'string') {
+      continue
+    }
+
+    const id = value.trim()
+    if (!id || seen.has(id)) {
+      continue
+    }
+
+    seen.add(id)
+    result.push(id)
+  }
+
+  return result
 }
 
 function normalizeCheckDomainEntry(value: unknown): CheckDomainEntry | null {
@@ -130,6 +186,14 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     trayEnabled,
     startMinimized: trayEnabled && merged.startMinimized === true,
     backgroundCheckNotifications: merged.backgroundCheckNotifications !== false,
+    autoCheckEnabled: merged.autoCheckEnabled === true,
+    autoCheckIntervalMinutes: clampAutoCheckIntervalMinutes(merged.autoCheckIntervalMinutes),
+    autoCheckNotifications: merged.autoCheckNotifications !== false,
+    autoCheckScope: normalizeAutoCheckScope(merged.autoCheckScope),
+    autoCheckGroupIds:
+      normalizeAutoCheckScope(merged.autoCheckScope) === 'groups'
+        ? normalizeAutoCheckGroupIds(merged.autoCheckGroupIds)
+        : [],
     proxyCardView: merged.proxyCardView === 'compact' ? 'compact' : 'standard',
     proxyListView: normalizeProxyListView(merged.proxyListView)
   }

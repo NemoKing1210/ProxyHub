@@ -1,23 +1,33 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useProxyStore } from '../store/proxyStore'
+import { useSettingsStore } from '../store/settingsStore'
 import { buildBatchCheckToast, buildSingleCheckToast } from '../utils/check-toast'
 import { showCheckNotification } from '../utils/show-check-notification'
 
 function CheckNotificationSync(): null {
   const { t } = useTranslation()
   const isCheckingAll = useProxyStore((state) => state.isCheckingAll)
-  const batchRef = useRef<{ alive: number; dead: number } | null>(null)
+  const batchRef = useRef<{ alive: number; dead: number; suppressNotification: boolean } | null>(
+    null
+  )
   const wasCheckingAllRef = useRef(false)
 
   useEffect(() => {
     if (isCheckingAll && !wasCheckingAllRef.current) {
-      batchRef.current = { alive: 0, dead: 0 }
+      const isAutoChecking = useProxyStore.getState().isAutoChecking
+      const autoCheckNotifications = useSettingsStore.getState().settings.autoCheckNotifications
+
+      batchRef.current = {
+        alive: 0,
+        dead: 0,
+        suppressNotification: isAutoChecking && !autoCheckNotifications
+      }
     } else if (!isCheckingAll && wasCheckingAllRef.current && batchRef.current) {
-      const { alive, dead } = batchRef.current
+      const { alive, dead, suppressNotification } = batchRef.current
       const total = alive + dead
 
-      if (total > 0) {
+      if (total > 0 && !suppressNotification) {
         void showCheckNotification(buildBatchCheckToast(alive, dead, t))
       }
 

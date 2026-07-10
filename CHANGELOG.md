@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.24.0] - 2026-07-10
+
+### Added
+
+- Auto-check settings: enable scheduled re-checks, configure interval (from 1 minute), choose scope (all proxies, favorites, or selected groups), and toggle result notifications independently from manual checks
+
 ## [1.23.0] - 2026-07-10
 
 ### Added

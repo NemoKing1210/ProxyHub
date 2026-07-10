@@ -39,6 +39,7 @@ import {
   CHECK_TIMEOUT_MIN_MS,
   SUPPORTED_LANGUAGES,
   type AppLanguage,
+  type AutoCheckScope,
   type CheckAllMode,
   type ProxyCardViewMode,
   type ThemeMode,
@@ -47,7 +48,10 @@ import {
 import ContentSection from '../components/ContentSection'
 import ChangelogView from '../components/ChangelogView'
 import LanguageFlag from '../components/LanguageFlag'
+import SettingsAutoCheckSection from '../components/SettingsAutoCheckSection'
 import SettingsSystemSection from '../components/SettingsSystemSection'
+import { useGroupStore } from '../store/groupStore'
+import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
 import { normalizeDomainInput, validateDomain } from '../validation/proxySchema'
@@ -85,6 +89,11 @@ function SettingsPage(): React.JSX.Element {
   const theme = useTheme()
   const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs, updateSettings } =
     useSettingsStore()
+  const groups = useGroupStore((state) => state.groups)
+  const loadGroups = useGroupStore((state) => state.loadGroups)
+  const favoriteCount = useProxyStore(
+    (state) => state.proxies.filter((proxy) => proxy.isFavorite).length
+  )
   const [domainInput, setDomainInput] = useState('')
   const [domainError, setDomainError] = useState<string | null>(null)
   const [savedOpen, setSavedOpen] = useState(false)
@@ -95,6 +104,10 @@ function SettingsPage(): React.JSX.Element {
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
   const [appInfoError, setAppInfoError] = useState(false)
   const [isAppInfoLoading, setIsAppInfoLoading] = useState(true)
+
+  useEffect(() => {
+    void loadGroups()
+  }, [loadGroups])
 
   useEffect(() => {
     let isMounted = true
@@ -244,6 +257,34 @@ function SettingsPage(): React.JSX.Element {
     notifySaved()
   }
 
+  const handleAutoCheckEnabledChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ autoCheckEnabled: enabled })
+    notifySaved()
+  }
+
+  const handleAutoCheckIntervalChange = async (minutes: number): Promise<void> => {
+    await updateSettings({ autoCheckIntervalMinutes: minutes })
+    notifySaved()
+  }
+
+  const handleAutoCheckNotificationsChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ autoCheckNotifications: enabled })
+    notifySaved()
+  }
+
+  const handleAutoCheckScopeChange = async (scope: AutoCheckScope): Promise<void> => {
+    await updateSettings({
+      autoCheckScope: scope,
+      autoCheckGroupIds: scope === 'groups' ? settings.autoCheckGroupIds : []
+    })
+    notifySaved()
+  }
+
+  const handleAutoCheckGroupIdsChange = async (groupIds: string[]): Promise<void> => {
+    await updateSettings({ autoCheckGroupIds: groupIds })
+    notifySaved()
+  }
+
   return (
     <Box sx={{ maxWidth: 760, mx: 'auto' }}>
       <Typography variant="h5" gutterBottom>
@@ -363,6 +404,21 @@ function SettingsPage(): React.JSX.Element {
           onBackgroundCheckNotificationsChange={(enabled) =>
             void handleBackgroundCheckNotificationsChange(enabled)
           }
+        />
+
+        <SettingsAutoCheckSection
+          enabled={settings.autoCheckEnabled}
+          intervalMinutes={settings.autoCheckIntervalMinutes}
+          notifications={settings.autoCheckNotifications}
+          scope={settings.autoCheckScope}
+          groupIds={settings.autoCheckGroupIds}
+          groups={groups}
+          favoriteCount={favoriteCount}
+          onEnabledChange={(enabled) => void handleAutoCheckEnabledChange(enabled)}
+          onIntervalChange={(minutes) => void handleAutoCheckIntervalChange(minutes)}
+          onNotificationsChange={(enabled) => void handleAutoCheckNotificationsChange(enabled)}
+          onScopeChange={(scope) => void handleAutoCheckScopeChange(scope)}
+          onGroupIdsChange={(groupIds) => void handleAutoCheckGroupIdsChange(groupIds)}
         />
 
         <ContentSection
