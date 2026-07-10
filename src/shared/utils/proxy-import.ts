@@ -1,7 +1,11 @@
 import { normalizeCountryCode } from '../constants/proxy-countries'
-import type { CsvImportPreviewEntry, CsvImportResult } from '../types/proxy-import'
+import type {
+  ProxyListImportPreviewEntry,
+  ProxyListImportResult
+} from '../types/proxy-import'
 import type { Proxy, ProxyAnonymityLevel, ProxyInput, ProxyProtocol } from '../types/proxy'
 import { PROXY_ANONYMITY_LEVELS, PROXY_PROTOCOLS } from '../types/proxy'
+import { buildProxyUrl, formatProxyAddress, parseProxyUrl } from './proxy-format'
 import { findDuplicateProxy } from './proxy-identity'
 
 export const PROXY_IMPORT_CSV_HEADER = 'host,port,protocol,anonymity,https,country,city'
@@ -26,6 +30,27 @@ const HEADER_FIELD_NAMES = new Set([
   'city'
 ])
 
+interface ProxyImportJsonRecord {
+  proxy?: string
+  protocol?: string
+  ip?: string
+  host?: string
+  port?: number | string
+  https?: boolean
+  anonymity?: string
+  score?: number
+  geolocation?: {
+    country?: string
+    city?: string
+  }
+}
+
+export interface ParseProxyImportListResult {
+  entries: Array<ProxyInput & { id: string }>
+  invalidLineCount: number
+  totalLineCount: number
+}
+
 export function normalizeAnonymityLevel(value: string | undefined): ProxyAnonymityLevel | undefined {
   if (!value?.trim()) {
     return undefined
@@ -49,6 +74,10 @@ function normalizeCity(value: string | undefined): string | undefined {
   }
 
   return city
+}
+
+function exportCity(value: string | undefined): string {
+  return value?.trim() || 'Unknown'
 }
 
 export function isProxyImportHeaderLine(line: string): boolean {
@@ -100,6 +129,63 @@ export function parseProxyImportLine(line: string): ProxyInput | null {
   }
 }
 
+export function parseProxyImportTxtLine(line: string): ProxyInput | null {
+  const trimmed = line.trim()
+
+  if (!trimmed || trimmed.startsWith('#')) {
+    return null
+  }
+
+  const parsed = parseProxyUrl(trimmed)
+
+  if (!parsed) {
+    return null
+  }
+
+  return {
+    host: parsed.host,
+    port: parsed.port,
+    protocol: parsed.protocol,
+    username: parsed.username,
+    password: parsed.password
+  }
+}
+
+function parseProxyImportJsonRecord(record: unknown): ProxyInput | null {
+  if (!record || typeof record !== 'object') {
+    return null
+  }
+
+  const entry = record as ProxyImportJsonRecord
+  const fromProxyUrl = entry.proxy ? parseProxyUrl(entry.proxy) : null
+  const host = (entry.ip ?? entry.host ?? fromProxyUrl?.host)?.trim()
+  const portValue = entry.port ?? fromProxyUrl?.port
+  const port = typeof portValue === 'string' ? Number(portValue) : portValue
+  const protocol = parseProtocol(entry.protocol ?? fromProxyUrl?.protocol ?? '')
+
+  if (
+    !host ||
+    !protocol ||
+    port === undefined ||
+    !Number.isInteger(port) ||
+    port < 1 ||
+    port > 65535
+  ) {
+    return null
+  }
+
+  return {
+    host,
+    port,
+    protocol,
+    username: fromProxyUrl?.username,
+    password: fromProxyUrl?.password,
+    anonymityLevel: normalizeAnonymityLevel(entry.anonymity),
+    countryCode: normalizeCountryCode(entry.geolocation?.country),
+    city: normalizeCity(entry.geolocation?.city)
+  }
+}
+
 export function formatProxyImportLine(
   proxy: Pick<Proxy, 'host' | 'port' | 'protocol' | 'anonymityLevel' | 'countryCode' | 'city'>
 ): string {
@@ -119,16 +205,66 @@ export function formatProxyImportCsv(
   return `${lines.join('\n')}\n`
 }
 
-export interface ParseProxyImportCsvResult {
-  entries: Array<ProxyInput & { id: string }>
-  invalidLineCount: number
-  totalLineCount: number
+export function formatProxyImportTxt(
+  proxies: Array<Pick<Proxy, 'host' | 'port'>>
+): string {
+  const lines = proxies.map((proxy) => formatProxyAddress(proxy))
+  return `${lines.join('\n')}\n`
 }
 
-export function parseProxyImportCsv(content: string): ParseProxyImportCsvResult {
-  const lines = content.split(/\r?\n/)
+export function formatProxyImportJson(
+  proxies: Array<
+    Pick<Proxy, 'host' | 'port' | 'protocol' | 'anonymityLevel' | 'countryCode' | 'city'>
+  >
+): string {
+  const records = proxies.map((proxy) => ({
+    proxy: buildProxyUrl(proxy),
+    protocol: proxy.protocol,
+    ip: proxy.host,
+    port: proxy.port,
+    https: proxy.protocol === 'https',
+    anonymity: proxy.anonymityLevel ?? 'transparent',
+    score: 1,
+    geolocation: {
+      country: proxy.countryCode ?? '',
+      city: exportCity(proxy.city)
+    }
+  }))
+
+  return `${JSON.stringify(records, null, 4)}\n`
+}
+
+function collectParsedEntries(
+  items: Array<ProxyInput | null>,
+  idPrefix: string,
+  countInvalid: number,
+  totalCount: number
+): ParseProxyImportListResult {
   const entries: Array<ProxyInput & { id: string }> = []
+
+  for (const parsed of items) {
+    if (!parsed) {
+      continue
+    }
+
+    entries.push({
+      ...parsed,
+      id: `${idPrefix}-${entries.length}`
+    })
+  }
+
+  return {
+    entries,
+    invalidLineCount: countInvalid,
+    totalLineCount: totalCount
+  }
+}
+
+export function parseProxyImportCsv(content: string): ParseProxyImportListResult {
+  const lines = content.split(/\r?\n/)
+  const parsedItems: Array<ProxyInput | null> = []
   let invalidLineCount = 0
+  let totalLineCount = 0
 
   for (const line of lines) {
     const trimmed = line.trim()
@@ -137,6 +273,7 @@ export function parseProxyImportCsv(content: string): ParseProxyImportCsvResult 
       continue
     }
 
+    totalLineCount += 1
     const parsed = parseProxyImportLine(line)
 
     if (!parsed) {
@@ -144,33 +281,69 @@ export function parseProxyImportCsv(content: string): ParseProxyImportCsvResult 
         invalidLineCount += 1
       }
 
+      parsedItems.push(null)
       continue
     }
 
-    entries.push({
-      ...parsed,
-      id: `csv-${entries.length}`
-    })
+    parsedItems.push(parsed)
   }
 
-  return {
-    entries,
-    invalidLineCount,
-    totalLineCount: lines.filter((line) => line.trim()).length
-  }
+  return collectParsedEntries(parsedItems, 'csv', invalidLineCount, totalLineCount)
 }
 
-export function buildCsvImportPreviewEntries(
-  content: string,
+export function parseProxyImportTxt(content: string): ParseProxyImportListResult {
+  const lines = content.split(/\r?\n/)
+  const parsedItems: Array<ProxyInput | null> = []
+  let invalidLineCount = 0
+  let totalLineCount = 0
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+
+    if (!trimmed) {
+      continue
+    }
+
+    totalLineCount += 1
+    const parsed = parseProxyImportTxtLine(line)
+
+    if (!parsed) {
+      invalidLineCount += 1
+      parsedItems.push(null)
+      continue
+    }
+
+    parsedItems.push(parsed)
+  }
+
+  return collectParsedEntries(parsedItems, 'txt', invalidLineCount, totalLineCount)
+}
+
+export function parseProxyImportJson(content: string): ParseProxyImportListResult {
+  let parsedJson: unknown
+
+  try {
+    parsedJson = JSON.parse(content)
+  } catch {
+    throw new Error('invalid_json')
+  }
+
+  const records = Array.isArray(parsedJson) ? parsedJson : [parsedJson]
+  const parsedItems = records.map((record) => parseProxyImportJsonRecord(record))
+  const invalidLineCount = parsedItems.filter((item) => item === null).length
+
+  return collectParsedEntries(parsedItems, 'json', invalidLineCount, records.length)
+}
+
+export function buildProxyListImportPreviewEntries(
+  parsed: ParseProxyImportListResult,
   existingProxies: Proxy[]
 ): {
-  entries: CsvImportPreviewEntry[]
+  entries: ProxyListImportPreviewEntry[]
   invalidLineCount: number
   totalLineCount: number
 } {
-  const parsed = parseProxyImportCsv(content)
-
-  const entries: CsvImportPreviewEntry[] = parsed.entries.map((entry) => ({
+  const entries: ProxyListImportPreviewEntry[] = parsed.entries.map((entry) => ({
     id: entry.id,
     host: entry.host,
     port: entry.port,
@@ -188,6 +361,18 @@ export function buildCsvImportPreviewEntries(
   }
 }
 
+/** @deprecated Use buildProxyListImportPreviewEntries */
+export function buildCsvImportPreviewEntries(
+  content: string,
+  existingProxies: Proxy[]
+): {
+  entries: ProxyListImportPreviewEntry[]
+  invalidLineCount: number
+  totalLineCount: number
+} {
+  return buildProxyListImportPreviewEntries(parseProxyImportCsv(content), existingProxies)
+}
+
 function createImportedProxy(input: ProxyInput): Proxy {
   return {
     id: crypto.randomUUID(),
@@ -198,13 +383,12 @@ function createImportedProxy(input: ProxyInput): Proxy {
   }
 }
 
-export function applyCsvImport(
-  content: string,
+export function applyProxyListImport(
+  parsed: ParseProxyImportListResult,
   existingProxies: Proxy[],
   entryIds: string[],
   groupId?: string
-): { proxies: Proxy[]; result: CsvImportResult } {
-  const parsed = parseProxyImportCsv(content)
+): { proxies: Proxy[]; result: ProxyListImportResult } {
   const selectedIds = new Set(entryIds)
   const proxies = [...existingProxies]
   let added = 0
@@ -219,6 +403,8 @@ export function applyCsvImport(
       host: entry.host,
       port: entry.port,
       protocol: entry.protocol,
+      username: entry.username,
+      password: entry.password,
       anonymityLevel: entry.anonymityLevel,
       countryCode: entry.countryCode,
       city: entry.city,
@@ -241,6 +427,16 @@ export function applyCsvImport(
       skippedDuplicates
     }
   }
+}
+
+/** @deprecated Use applyProxyListImport */
+export function applyCsvImport(
+  content: string,
+  existingProxies: Proxy[],
+  entryIds: string[],
+  groupId?: string
+): { proxies: Proxy[]; result: ProxyListImportResult } {
+  return applyProxyListImport(parseProxyImportCsv(content), existingProxies, entryIds, groupId)
 }
 
 export function isValidAnonymityLevel(value: string): value is ProxyAnonymityLevel {

@@ -11,7 +11,12 @@ import type {
   CsvExportResponse,
   CsvImportPreviewResponse,
   CsvImportRequest,
-  CsvImportResponse
+  CsvImportResponse,
+  ProxyListExportRequest,
+  ProxyListExportResponse,
+  ProxyListImportPreviewResponse,
+  ProxyListImportRequest,
+  ProxyListImportResponse
 } from './proxy-import'
 import type { ThemeMode } from '../types/settings'
 import type { AppInfo } from './app'
@@ -51,4 +56,10 @@ export interface AppAPI {
   previewCsvImport: () => Promise<CsvImportPreviewResponse>
   importCsv: (request: CsvImportRequest) => Promise<CsvImportResponse>
   exportCsv: (request: CsvExportRequest) => Promise<CsvExportResponse>
+  previewJsonImport: () => Promise<ProxyListImportPreviewResponse>
+  importJson: (request: ProxyListImportRequest) => Promise<ProxyListImportResponse>
+  exportJson: (request: ProxyListExportRequest) => Promise<ProxyListExportResponse>
+  previewTxtImport: () => Promise<ProxyListImportPreviewResponse>
+  importTxt: (request: ProxyListImportRequest) => Promise<ProxyListImportResponse>
+  exportTxt: (request: ProxyListExportRequest) => Promise<ProxyListExportResponse>
 }

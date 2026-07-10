@@ -65,7 +65,13 @@ const api: AppAPI = {
   importBackup: (request) => ipcRenderer.invoke('backup:import', request),
   previewCsvImport: () => ipcRenderer.invoke('csv:preview'),
   importCsv: (request) => ipcRenderer.invoke('csv:import', request),
-  exportCsv: (request) => ipcRenderer.invoke('csv:export', request)
+  exportCsv: (request) => ipcRenderer.invoke('csv:export', request),
+  previewJsonImport: () => ipcRenderer.invoke('json:preview'),
+  importJson: (request) => ipcRenderer.invoke('json:import', request),
+  exportJson: (request) => ipcRenderer.invoke('json:export', request),
+  previewTxtImport: () => ipcRenderer.invoke('txt:preview'),
+  importTxt: (request) => ipcRenderer.invoke('txt:import', request),
+  exportTxt: (request) => ipcRenderer.invoke('txt:export', request)
 }
 
 if (process.contextIsolated) {

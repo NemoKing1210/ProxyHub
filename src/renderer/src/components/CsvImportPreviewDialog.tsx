@@ -21,7 +21,7 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { CsvImportPreview, CsvImportPreviewEntry } from '../../../shared/types/proxy-import'
+import type { ProxyListImportFormat, ProxyListImportPreview, ProxyListImportPreviewEntry } from '../../../shared/types/proxy-import'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import { formatProxyAddress } from '../../../shared/utils/proxy-format'
 import { outlineVariant, surfaceContainer } from '../theme'
@@ -32,7 +32,8 @@ const PAGE_SIZE = 50
 
 interface CsvImportPreviewDialogProps {
   open: boolean
-  preview: CsvImportPreview | null
+  format: ProxyListImportFormat
+  preview: ProxyListImportPreview | null
   groups: ProxyGroup[]
   onClose: () => void
   onError: (message: string) => void
@@ -66,6 +67,7 @@ function PreviewRow({ label, value }: PreviewRowProps): React.JSX.Element {
 
 function CsvImportPreviewDialog({
   open,
+  format,
   preview,
   groups,
   onClose,
@@ -74,6 +76,7 @@ function CsvImportPreviewDialog({
 }: CsvImportPreviewDialogProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
+  const translationPrefix = `settings.backup.${format}`
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
   const [groupId, setGroupId] = useState('')
   const [page, setPage] = useState(1)
@@ -129,7 +132,7 @@ function CsvImportPreviewDialog({
     onClose()
   }
 
-  const handleToggleEntry = (entry: CsvImportPreviewEntry, checked: boolean): void => {
+  const handleToggleEntry = (entry: ProxyListImportPreviewEntry, checked: boolean): void => {
     if (entry.isDuplicate) {
       return
     }
@@ -179,7 +182,7 @@ function CsvImportPreviewDialog({
       await onConfirm([...selectedIds], groupId || undefined)
       onClose()
     } catch {
-      onError(t('settings.backup.csv.importError', { message: t('settings.backup.csv.errors.unknown') }))
+      onError(t(`${translationPrefix}.importError`, { message: t(`${translationPrefix}.errors.unknown`) }))
     } finally {
       setIsImporting(false)
     }
@@ -202,13 +205,13 @@ function CsvImportPreviewDialog({
         }
       }}
     >
-      <DialogTitle>{t('settings.backup.csv.previewTitle')}</DialogTitle>
+      <DialogTitle>{t(`${translationPrefix}.previewTitle`)}</DialogTitle>
 
       <DialogContent>
         {preview && (
           <Stack spacing={2}>
             <Typography variant="body2" color="text.secondary">
-              {t('settings.backup.csv.previewDescription')}
+              {t(`${translationPrefix}.previewDescription`)}
             </Typography>
 
             <Box
@@ -223,31 +226,31 @@ function CsvImportPreviewDialog({
               <PreviewRow label={t('settings.backup.previewFile')} value={preview.fileName} />
               <Divider />
               <PreviewRow
-                label={t('settings.backup.csv.previewValid')}
+                label={t(`${translationPrefix}.previewValid`)}
                 value={preview.entries.length}
               />
               <Divider />
               <PreviewRow
-                label={t('settings.backup.csv.previewInvalid')}
+                label={t(`${translationPrefix}.previewInvalid`)}
                 value={preview.invalidLineCount}
               />
               <Divider />
               <PreviewRow
-                label={t('settings.backup.csv.previewDuplicates')}
+                label={t(`${translationPrefix}.previewDuplicates`)}
                 value={duplicateCount}
               />
             </Box>
 
             <FormControl fullWidth size="small">
-              <InputLabel id="csv-import-group-label">{t('settings.backup.csv.importGroup')}</InputLabel>
+              <InputLabel id="csv-import-group-label">{t(`${translationPrefix}.importGroup`)}</InputLabel>
               <Select
                 labelId="csv-import-group-label"
                 value={groupId}
-                label={t('settings.backup.csv.importGroup')}
+                label={t(`${translationPrefix}.importGroup`)}
                 onChange={(event) => setGroupId(event.target.value)}
                 disabled={isImporting}
               >
-                <MenuItem value="">{t('settings.backup.csv.importGroupNone')}</MenuItem>
+                <MenuItem value="">{t(`${translationPrefix}.importGroupNone`)}</MenuItem>
                 {groups.map((group) => (
                   <MenuItem key={group.id} value={group.id}>
                     {group.name}
@@ -255,7 +258,7 @@ function CsvImportPreviewDialog({
                 ))}
               </Select>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
-                {t('settings.backup.csv.importGroupHint')}
+                {t(`${translationPrefix}.importGroupHint`)}
               </Typography>
             </FormControl>
 
@@ -265,7 +268,7 @@ function CsvImportPreviewDialog({
                 spacing={1}
                 sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between', mb: 1.25 }}
               >
-                <Typography variant="subtitle2">{t('settings.backup.csv.importSelectProxies')}</Typography>
+                <Typography variant="subtitle2">{t(`${translationPrefix}.importSelectProxies`)}</Typography>
                 <Chip
                   label={t('settings.backup.exportSelectSelected', {
                     selected: selectedIds.size,
@@ -321,14 +324,14 @@ function CsvImportPreviewDialog({
                     sx={{ p: 0.25 }}
                   />
                   <Typography variant="caption" color="text.secondary" sx={{ flex: 1 }}>
-                    {t('settings.backup.csv.pageSelection', {
+                    {t(`${translationPrefix}.pageSelection`, {
                       selected: selectedOnPage,
                       total: pageImportable.length
                     })}
                   </Typography>
                   {pageCount > 1 && (
                     <Typography variant="caption" color="text.secondary">
-                      {t('settings.backup.csv.pageInfo', { page, total: pageCount })}
+                      {t(`${translationPrefix}.pageInfo`, { page, total: pageCount })}
                     </Typography>
                   )}
                 </Box>
@@ -400,7 +403,7 @@ function CsvImportPreviewDialog({
                         </Box>
                         {entry.isDuplicate ? (
                           <Chip
-                            label={t('settings.backup.csv.duplicate')}
+                            label={t(`${translationPrefix}.duplicate`)}
                             size="small"
                             sx={{ height: 22, fontSize: '0.68rem', flexShrink: 0 }}
                           />
@@ -458,7 +461,7 @@ function CsvImportPreviewDialog({
           disabled={!preview || isImporting || selectedIds.size === 0}
           startIcon={isImporting ? <CircularProgress size={18} color="inherit" /> : undefined}
         >
-          {t('settings.backup.csv.previewConfirm')}
+          {t(`${translationPrefix}.previewConfirm`)}
         </Button>
       </DialogActions>
     </Dialog>

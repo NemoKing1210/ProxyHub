@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.30.0] - 2026-07-11
+
+### Added
+
+- JSON and TXT proxy list import and export in Settings, alongside existing CSV and backup formats
+- Import & export settings UI: ProxyChecker backup shown first as a dedicated card; CSV, JSON, and TXT formats grouped below with type icons
+
 ## [1.29.0] - 2026-07-11
 
 ### Added

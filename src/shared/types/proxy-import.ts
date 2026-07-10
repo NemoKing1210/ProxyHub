@@ -1,8 +1,10 @@
 import type { ProxyAnonymityLevel, ProxyProtocol } from './proxy'
 
-export type ProxyImportFormat = 'backup' | 'csv'
+export type ProxyImportFormat = 'backup' | 'csv' | 'json' | 'txt'
 
-export interface CsvImportPreviewEntry {
+export type ProxyListImportFormat = Exclude<ProxyImportFormat, 'backup'>
+
+export interface ProxyListImportPreviewEntry {
   id: string
   host: string
   port: number
@@ -13,43 +15,78 @@ export interface CsvImportPreviewEntry {
   isDuplicate: boolean
 }
 
-export interface CsvImportPreview {
+export interface ProxyListImportPreview {
   filePath: string
   fileName: string
-  entries: CsvImportPreviewEntry[]
+  entries: ProxyListImportPreviewEntry[]
   invalidLineCount: number
   totalLineCount: number
 }
 
-export type CsvImportErrorCode = 'empty_file' | 'no_valid_entries' | 'read_error' | 'unknown'
+export type ProxyListImportErrorCode =
+  | 'empty_file'
+  | 'no_valid_entries'
+  | 'read_error'
+  | 'invalid_json'
+  | 'unknown'
 
-export interface CsvImportError {
-  code: CsvImportErrorCode
+export interface ProxyListImportError {
+  code: ProxyListImportErrorCode
   message: string
 }
 
-export type CsvImportPreviewResponse =
+export type ProxyListImportPreviewResponse =
   | { canceled: true }
-  | { canceled: false; preview: CsvImportPreview }
-  | { canceled: false; error: CsvImportError }
+  | { canceled: false; preview: ProxyListImportPreview }
+  | { canceled: false; error: ProxyListImportError }
 
-export interface CsvImportRequest {
+export interface ProxyListImportRequest {
   filePath: string
   entryIds: string[]
   groupId?: string
 }
 
-export interface CsvImportResult {
+export interface ProxyListImportResult {
   added: number
   skippedDuplicates: number
 }
 
-export type CsvImportResponse =
-  | { canceled: false; result: CsvImportResult }
-  | { canceled: false; error: CsvImportError }
+export type ProxyListImportResponse =
+  | { canceled: false; result: ProxyListImportResult }
+  | { canceled: false; error: ProxyListImportError }
 
-export interface CsvExportRequest {
+export interface ProxyListExportRequest {
   proxyIds: string[]
 }
 
-export type CsvExportResponse = { canceled: true } | { canceled: false; filePath: string }
+export type ProxyListExportResponse = { canceled: true } | { canceled: false; filePath: string }
+
+/** @deprecated Use ProxyListImportPreviewEntry */
+export type CsvImportPreviewEntry = ProxyListImportPreviewEntry
+
+/** @deprecated Use ProxyListImportPreview */
+export type CsvImportPreview = ProxyListImportPreview
+
+/** @deprecated Use ProxyListImportErrorCode */
+export type CsvImportErrorCode = ProxyListImportErrorCode
+
+/** @deprecated Use ProxyListImportError */
+export type CsvImportError = ProxyListImportError
+
+/** @deprecated Use ProxyListImportPreviewResponse */
+export type CsvImportPreviewResponse = ProxyListImportPreviewResponse
+
+/** @deprecated Use ProxyListImportRequest */
+export type CsvImportRequest = ProxyListImportRequest
+
+/** @deprecated Use ProxyListImportResult */
+export type CsvImportResult = ProxyListImportResult
+
+/** @deprecated Use ProxyListImportResponse */
+export type CsvImportResponse = ProxyListImportResponse
+
+/** @deprecated Use ProxyListExportRequest */
+export type CsvExportRequest = ProxyListExportRequest
+
+/** @deprecated Use ProxyListExportResponse */
+export type CsvExportResponse = ProxyListExportResponse
