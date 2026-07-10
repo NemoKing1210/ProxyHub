@@ -3,20 +3,32 @@ import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
+import StarIcon from '@mui/icons-material/Star'
+import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
 import { Box, Button, Chip, CircularProgress, Paper, Stack, Typography } from '@mui/material'
+import type { SxProps, Theme } from '@mui/material/styles'
 import { useTheme } from '@mui/material/styles'
-import { useEffect, useMemo, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useMemo, useState, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy, ProxyIconId, ProxyInput } from '../../../shared/types/proxy'
 import { DEFAULT_PROXY_COLOR_ID, PROXY_ICON_AUTO_VALUE } from '../../../shared/types/proxy'
 import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
 import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
 import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
-import { filterEnabledProxies } from '../../../shared/utils/proxy-enabled'
+import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { useProxyListViewState } from '../hooks/useProxyListViewState'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
 import { filterProxies, hasActiveFilters } from '../utils/filter-proxies'
+import {
+  badgeTransition,
+  listItemTransition,
+  listLayoutTransition,
+  proxyCardVariants,
+  statBadgeVariants,
+  usePrefersReducedMotion
+} from '../utils/list-motion'
 import { sortProxies, sortProxiesByFavorite } from '../utils/sort-proxies'
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
@@ -47,9 +59,17 @@ function toProxyInput(values: ProxyFormValues): ProxyInput {
   }
 }
 
+interface StatBadgeItem {
+  key: string
+  icon: ReactElement
+  label: string
+  sx: SxProps<Theme>
+}
+
 function ProxyList(): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
+  const reducedMotion = usePrefersReducedMotion()
   const {
     proxies,
     isLoading,
@@ -142,6 +162,8 @@ function ProxyList(): React.JSX.Element {
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
   const deadCount = proxies.filter((proxy) => proxy.status === 'dead').length
+  const enabledCount = proxies.filter(isProxyEnabled).length
+  const favoritesCount = proxies.filter((proxy) => proxy.isFavorite).length
   const palette = getPalette(theme)
 
   const statBadgeSx = {
@@ -156,6 +178,109 @@ function ProxyList(): React.JSX.Element {
     }
   } as const
 
+  const statBadges = useMemo((): StatBadgeItem[] => {
+    const badges: StatBadgeItem[] = []
+
+    if (proxies.length > 0) {
+      badges.push({
+        key: 'total',
+        icon: <DnsOutlinedIcon />,
+        label: t('proxyList.statsTotal', { count: proxies.length }),
+        sx: {
+          ...statBadgeSx,
+          bgcolor: surfaceContainer(theme, 'default'),
+          color: 'text.primary',
+          '& .MuiChip-icon': {
+            ...statBadgeSx['& .MuiChip-icon'],
+            color: 'primary.main'
+          }
+        }
+      })
+    }
+
+    if (aliveCount > 0) {
+      badges.push({
+        key: 'alive',
+        icon: <CheckCircleOutlinedIcon />,
+        label: t('proxyList.statsAlive', { count: aliveCount }),
+        sx: {
+          ...statBadgeSx,
+          bgcolor: withThemeAlpha(theme, palette.success.main, 0.14),
+          color: palette.success.main,
+          '& .MuiChip-icon': {
+            ...statBadgeSx['& .MuiChip-icon'],
+            color: palette.success.main
+          }
+        }
+      })
+    }
+
+    if (deadCount > 0) {
+      badges.push({
+        key: 'dead',
+        icon: <ErrorOutlineOutlinedIcon />,
+        label: t('proxyList.statsDead', { count: deadCount }),
+        sx: {
+          ...statBadgeSx,
+          bgcolor: withThemeAlpha(theme, palette.error.main, 0.14),
+          color: palette.error.main,
+          '& .MuiChip-icon': {
+            ...statBadgeSx['& .MuiChip-icon'],
+            color: palette.error.main
+          }
+        }
+      })
+    }
+
+    if (enabledCount > 0) {
+      badges.push({
+        key: 'enabled',
+        icon: <ToggleOnOutlinedIcon />,
+        label: t('proxyList.statsEnabled', { count: enabledCount }),
+        sx: {
+          ...statBadgeSx,
+          bgcolor: withThemeAlpha(theme, palette.primary.main, 0.14),
+          color: palette.primary.main,
+          '& .MuiChip-icon': {
+            ...statBadgeSx['& .MuiChip-icon'],
+            color: palette.primary.main
+          }
+        }
+      })
+    }
+
+    if (favoritesCount > 0) {
+      badges.push({
+        key: 'favorites',
+        icon: <StarIcon />,
+        label: t('proxyList.statsFavorites', { count: favoritesCount }),
+        sx: {
+          ...statBadgeSx,
+          bgcolor: withThemeAlpha(theme, palette.warning.main, 0.14),
+          color: palette.warning.main,
+          '& .MuiChip-icon': {
+            ...statBadgeSx['& .MuiChip-icon'],
+            color: palette.warning.main
+          }
+        }
+      })
+    }
+
+    return badges
+  }, [
+    aliveCount,
+    deadCount,
+    enabledCount,
+    favoritesCount,
+    palette.error.main,
+    palette.primary.main,
+    palette.success.main,
+    palette.warning.main,
+    proxies.length,
+    t,
+    theme
+  ])
+
   return (
     <Box>
       <Stack
@@ -167,49 +292,32 @@ function ProxyList(): React.JSX.Element {
           <Typography variant="h5" gutterBottom>
             {t('proxyList.title')}
           </Typography>
-          <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap', mt: 0.5, gap: 0.75 }}>
-            <Chip
-              icon={<DnsOutlinedIcon />}
-              label={t('proxyList.statsTotal', { count: proxies.length })}
-              size="small"
-              sx={{
-                ...statBadgeSx,
-                bgcolor: surfaceContainer(theme, 'default'),
-                color: 'text.primary',
-                '& .MuiChip-icon': {
-                  ...statBadgeSx['& .MuiChip-icon'],
-                  color: 'primary.main'
-                }
-              }}
-            />
-            <Chip
-              icon={<CheckCircleOutlinedIcon />}
-              label={t('proxyList.statsAlive', { count: aliveCount })}
-              size="small"
-              sx={{
-                ...statBadgeSx,
-                bgcolor: withThemeAlpha(theme, palette.success.main, 0.14),
-                color: palette.success.main,
-                '& .MuiChip-icon': {
-                  ...statBadgeSx['& .MuiChip-icon'],
-                  color: palette.success.main
-                }
-              }}
-            />
-            <Chip
-              icon={<ErrorOutlineOutlinedIcon />}
-              label={t('proxyList.statsDead', { count: deadCount })}
-              size="small"
-              sx={{
-                ...statBadgeSx,
-                bgcolor: withThemeAlpha(theme, palette.error.main, 0.14),
-                color: palette.error.main,
-                '& .MuiChip-icon': {
-                  ...statBadgeSx['& .MuiChip-icon'],
-                  color: palette.error.main
-                }
-              }}
-            />
+          <Stack
+            direction="row"
+            spacing={0.75}
+            component={motion.div}
+            layout={!reducedMotion}
+            sx={{ flexWrap: 'wrap', mt: 0.5, gap: 0.75 }}
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              {statBadges.map((badge) => (
+                <motion.div
+                  key={badge.key}
+                  layout={!reducedMotion}
+                  variants={reducedMotion ? undefined : statBadgeVariants}
+                  initial={reducedMotion ? false : 'initial'}
+                  animate={reducedMotion ? undefined : 'animate'}
+                  exit={reducedMotion ? undefined : 'exit'}
+                  transition={
+                    reducedMotion
+                      ? { duration: 0 }
+                      : { layout: listLayoutTransition, ...badgeTransition }
+                  }
+                >
+                  <Chip icon={badge.icon} label={badge.label} size="small" sx={badge.sx} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </Stack>
         </Box>
 
@@ -338,21 +446,37 @@ function ProxyList(): React.JSX.Element {
               )}
             </Paper>
           ) : (
-            visibleProxies.map((proxy) => (
-              <ProxyCard
-                key={proxy.id}
-                proxy={proxy}
-                variant={proxyCardView}
-                isChecking={checkingIds.has(proxy.id)}
-                isCheckingAll={isCheckingAll}
-                onCheck={() => void checkProxy(proxy.id)}
-                onEdit={() => openEditDialog(proxy)}
-                onDelete={() => openDeleteDialog(proxy)}
-                onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
-                onToggleFavorite={() => void toggleFavorite(proxy.id)}
-                onToggleEnabled={() => void toggleEnabled(proxy.id)}
-              />
-            ))
+            <AnimatePresence mode="popLayout" initial={false}>
+              {visibleProxies.map((proxy) => (
+                <motion.div
+                  key={proxy.id}
+                  layout={!reducedMotion}
+                  variants={reducedMotion ? undefined : proxyCardVariants}
+                  initial={reducedMotion ? false : 'initial'}
+                  animate={reducedMotion ? undefined : 'animate'}
+                  exit={reducedMotion ? undefined : 'exit'}
+                  transition={
+                    reducedMotion
+                      ? { duration: 0 }
+                      : { layout: listLayoutTransition, ...listItemTransition }
+                  }
+                  style={{ overflow: 'hidden' }}
+                >
+                  <ProxyCard
+                    proxy={proxy}
+                    variant={proxyCardView}
+                    isChecking={checkingIds.has(proxy.id)}
+                    isCheckingAll={isCheckingAll}
+                    onCheck={() => void checkProxy(proxy.id)}
+                    onEdit={() => openEditDialog(proxy)}
+                    onDelete={() => openDeleteDialog(proxy)}
+                    onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
+                    onToggleFavorite={() => void toggleFavorite(proxy.id)}
+                    onToggleEnabled={() => void toggleEnabled(proxy.id)}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           )}
         </Stack>
       )}

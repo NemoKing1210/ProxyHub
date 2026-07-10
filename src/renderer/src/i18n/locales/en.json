@@ -23,6 +23,8 @@
     "statsTotal": "{{count}} total",
     "statsAlive": "{{count}} alive",
     "statsDead": "{{count}} dead",
+    "statsEnabled": "{{count}} enabled",
+    "statsFavorites": "{{count}} favorites",
     "checkAll": "Check all",
     "addProxy": "Add proxy",
     "empty": "No proxies yet. Click \"Add proxy\" to get started.",

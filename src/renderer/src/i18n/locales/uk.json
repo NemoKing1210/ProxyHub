@@ -22,6 +22,8 @@
     "statsTotal": "Усього: {{count}}",
     "statsAlive": "Робочих: {{count}}",
     "statsDead": "Неробочих: {{count}}",
+    "statsEnabled": "Активних: {{count}}",
+    "statsFavorites": "Обраних: {{count}}",
     "checkAll": "Перевірити всі",
     "addProxy": "Додати проксі",
     "empty": "Проксі поки немає. Натисніть «Додати проксі», щоб почати.",

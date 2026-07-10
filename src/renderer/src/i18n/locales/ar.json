@@ -17,6 +17,8 @@
     "statsTotal": "{{count}} إجمالي",
     "statsAlive": "{{count}} نشط",
     "statsDead": "{{count}} غير نشط",
+    "statsEnabled": "{{count}} مفعّل",
+    "statsFavorites": "{{count}} مفضّل",
     "checkAll": "فحص الكل",
     "addProxy": "إضافة بروكسي",
     "empty": "لا توجد بروكسيات بعد. انقر \"إضافة بروكسي\" للبدء.",

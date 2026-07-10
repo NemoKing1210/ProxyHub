@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.19.0] - 2026-07-10
+
+### Added
+
+- Enabled and favorites count badges on the proxy list page
+- Motion animations for proxy list stat badges and cards (layout, enter, and exit)
+
+### Changed
+
+- Proxy list stat badges are hidden when their count is zero
+
 ## [1.18.0] - 2026-07-10
 
 ### Added

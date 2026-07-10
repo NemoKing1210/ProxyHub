@@ -17,6 +17,8 @@
     "statsTotal": "कुल {{count}}",
     "statsAlive": "सक्रिय {{count}}",
     "statsDead": "निष्क्रिय {{count}}",
+    "statsEnabled": "सक्रिय {{count}}",
+    "statsFavorites": "पसंदीदा {{count}}",
     "checkAll": "सभी जांचें",
     "addProxy": "प्रॉक्सी जोड़ें",
     "empty": "अभी कोई प्रॉक्सी नहीं। शुरू करने के लिए \"प्रॉक्सी जोड़ें\" पर क्लिक करें।",

@@ -23,6 +23,8 @@
     "statsTotal": "Всего: {{count}}",
     "statsAlive": "Рабочих: {{count}}",
     "statsDead": "Нерабочих: {{count}}",
+    "statsEnabled": "Активных: {{count}}",
+    "statsFavorites": "Избранных: {{count}}",
     "checkAll": "Проверить все",
     "addProxy": "Добавить прокси",
     "empty": "Прокси пока нет. Нажмите «Добавить прокси», чтобы начать.",

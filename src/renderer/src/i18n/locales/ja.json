@@ -17,6 +17,8 @@
     "statsTotal": "合計 {{count}}",
     "statsAlive": "稼働 {{count}}",
     "statsDead": "停止 {{count}}",
+    "statsEnabled": "有効 {{count}}",
+    "statsFavorites": "お気に入り {{count}}",
     "checkAll": "すべて確認",
     "addProxy": "プロキシを追加",
     "empty": "プロキシがありません。「プロキシを追加」をクリックして開始してください。",

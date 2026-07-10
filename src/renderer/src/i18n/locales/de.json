@@ -17,6 +17,8 @@
     "statsTotal": "{{count}} gesamt",
     "statsAlive": "{{count}} aktiv",
     "statsDead": "{{count}} inaktiv",
+    "statsEnabled": "{{count}} aktiv",
+    "statsFavorites": "{{count}} Favoriten",
     "checkAll": "Alle prüfen",
     "addProxy": "Proxy hinzufügen",
     "empty": "Noch keine Proxies. Klicken Sie auf „Proxy hinzufügen“, um zu starten.",

@@ -17,6 +17,8 @@
     "statsTotal": "共 {{count}} 个",
     "statsAlive": "可用 {{count}}",
     "statsDead": "不可用 {{count}}",
+    "statsEnabled": "已启用 {{count}}",
+    "statsFavorites": "收藏 {{count}}",
     "checkAll": "全部检测",
     "addProxy": "添加代理",
     "empty": "暂无代理。点击「添加代理」开始。",
