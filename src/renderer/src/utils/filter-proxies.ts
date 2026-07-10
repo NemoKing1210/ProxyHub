@@ -1,10 +1,12 @@
 import type { Proxy } from '../../../shared/types/proxy'
 import {
   DEFAULT_PROXY_LIST_FILTERS,
+  type ProxyActivityFilter,
   type ProxyFavoriteFilter,
   type ProxyListFilters,
   type ProxyStatusFilter
 } from '../../../shared/types/proxy-list-view'
+import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import {
   MAX_LATENCY_FILTER_DEFAULT_MS,
   MAX_LATENCY_FILTER_MAX_MS,
@@ -13,7 +15,7 @@ import {
 } from '../../../shared/types/proxy-list-view.constants'
 import { matchesProxySearch } from './proxy-search'
 
-export type { ProxyFavoriteFilter, ProxyListFilters, ProxyStatusFilter }
+export type { ProxyActivityFilter, ProxyFavoriteFilter, ProxyListFilters, ProxyStatusFilter }
 
 export { DEFAULT_PROXY_LIST_FILTERS }
 
@@ -45,6 +47,7 @@ export function countActiveFilters(filters: ProxyListFilters): number {
   if (filters.anonymityLevel !== '') count += 1
   if (filters.favorite !== 'all') count += 1
   if (filters.status !== 'all') count += 1
+  if (filters.activity !== 'all') count += 1
   if (filters.maxLatencyMs !== null) count += 1
 
   return count
@@ -81,6 +84,14 @@ export function filterProxies(proxies: Proxy[], filters: ProxyListFilters): Prox
     }
 
     if (filters.status === 'dead' && proxy.status !== 'dead') {
+      return false
+    }
+
+    if (filters.activity === 'enabled' && !isProxyEnabled(proxy)) {
+      return false
+    }
+
+    if (filters.activity === 'disabled' && isProxyEnabled(proxy)) {
       return false
     }
 

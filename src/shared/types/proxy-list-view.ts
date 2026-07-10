@@ -9,6 +9,8 @@ export type ProxyFavoriteFilter = 'all' | 'favorites' | 'nonFavorites'
 
 export type ProxyStatusFilter = 'all' | 'alive' | 'dead'
 
+export type ProxyActivityFilter = 'all' | 'enabled' | 'disabled'
+
 export interface ProxyListFilters {
   searchQuery: string
   countryCode: string
@@ -17,6 +19,7 @@ export interface ProxyListFilters {
   anonymityLevel: ProxyAnonymityLevel | ''
   favorite: ProxyFavoriteFilter
   status: ProxyStatusFilter
+  activity: ProxyActivityFilter
   maxLatencyMs: number | null
 }
 
@@ -52,6 +55,7 @@ export const DEFAULT_PROXY_LIST_FILTERS: ProxyListFilters = {
   anonymityLevel: '',
   favorite: 'all',
   status: 'all',
+  activity: 'all',
   maxLatencyMs: null
 }
 
@@ -63,6 +67,7 @@ export const DEFAULT_PROXY_LIST_VIEW: ProxyListViewState = {
 
 const FAVORITE_FILTERS: ProxyFavoriteFilter[] = ['all', 'favorites', 'nonFavorites']
 const STATUS_FILTERS: ProxyStatusFilter[] = ['all', 'alive', 'dead']
+const ACTIVITY_FILTERS: ProxyActivityFilter[] = ['all', 'enabled', 'disabled']
 const PROTOCOLS: ProxyProtocol[] = PROXY_PROTOCOLS
 const ANONYMITY_LEVELS: ProxyAnonymityLevel[] = ['elite', 'anonymous', 'transparent']
 
@@ -75,6 +80,12 @@ function normalizeFavoriteFilter(value: unknown): ProxyFavoriteFilter {
 function normalizeStatusFilter(value: unknown): ProxyStatusFilter {
   return STATUS_FILTERS.includes(value as ProxyStatusFilter)
     ? (value as ProxyStatusFilter)
+    : 'all'
+}
+
+function normalizeActivityFilter(value: unknown): ProxyActivityFilter {
+  return ACTIVITY_FILTERS.includes(value as ProxyActivityFilter)
+    ? (value as ProxyActivityFilter)
     : 'all'
 }
 
@@ -115,6 +126,7 @@ export function normalizeProxyListFilters(filters: Partial<ProxyListFilters> | u
     anonymityLevel: normalizeAnonymityLevel(merged.anonymityLevel),
     favorite: normalizeFavoriteFilter(merged.favorite),
     status: normalizeStatusFilter(merged.status),
+    activity: normalizeActivityFilter(merged.activity),
     maxLatencyMs: normalizeMaxLatencyMs(merged.maxLatencyMs)
   }
 }

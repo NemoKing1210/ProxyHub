@@ -3,6 +3,8 @@ import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
+import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
+import ToggleOffOutlinedIcon from '@mui/icons-material/ToggleOffOutlined'
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
 import {
   Box,
@@ -30,6 +32,7 @@ import {
   MAX_LATENCY_FILTER_MAX_MS,
   MAX_LATENCY_FILTER_MIN_MS,
   MAX_LATENCY_FILTER_STEP_MS,
+  type ProxyActivityFilter,
   type ProxyFavoriteFilter,
   type ProxyListFilters,
   type ProxyStatusFilter,
@@ -138,6 +141,14 @@ function ProxyListFilters({
   ): void => {
     if (!value) return
     updateFilters({ status: value })
+  }
+
+  const handleActivityChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    value: ProxyActivityFilter | null
+  ): void => {
+    if (!value) return
+    updateFilters({ activity: value })
   }
 
   const handleLatencyLimitToggle = (enabled: boolean): void => {
@@ -334,6 +345,34 @@ function ProxyListFilters({
               <ToggleButton value="dead">
                 <ErrorOutlineOutlinedIcon fontSize="small" />
                 {t('proxyList.filters.statusDead')}
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
+              {t('proxyList.filters.activity')}
+            </Typography>
+            <ToggleButtonGroup
+              value={filters.activity}
+              exclusive
+              onChange={handleActivityChange}
+              fullWidth
+              sx={{
+                '& .MuiToggleButton-root': {
+                  py: 1.1,
+                  gap: 0.5
+                }
+              }}
+            >
+              <ToggleButton value="all">{t('proxyList.filters.activityAll')}</ToggleButton>
+              <ToggleButton value="enabled">
+                <ToggleOnOutlinedIcon fontSize="small" />
+                {t('proxyList.filters.activityEnabled')}
+              </ToggleButton>
+              <ToggleButton value="disabled">
+                <ToggleOffOutlinedIcon fontSize="small" />
+                {t('proxyList.filters.activityDisabled')}
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>

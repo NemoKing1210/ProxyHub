@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.22.0] - 2026-07-10
+
+### Added
+
+- Activity filter in the proxy list (enabled / disabled), alongside the existing status filter
+
+### Fixed
+
+- MTProto secret is now shown in the proxy card connection section
+
 ## [1.21.0] - 2026-07-10
 
 ### Added
