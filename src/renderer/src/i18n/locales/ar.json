@@ -85,6 +85,12 @@
         "anonymityLevel": "الخصوصية"
       }
     },
+    "drag": {
+      "dropHere": "Drop here",
+      "dropToUngrouped": "Drop to remove from group",
+      "dropToGroup": "Drop proxy here",
+      "dragProxy": "Drag proxy to move between groups"
+    },
     "deleteConfirm": {
       "title": "حذف البروكسي؟",
       "message": "هل أنت متأكد أنك تريد حذف {{name}}؟ لا يمكن التراجع عن هذا الإجراء."

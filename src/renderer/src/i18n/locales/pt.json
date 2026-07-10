@@ -85,6 +85,12 @@
         "anonymityLevel": "Anonimato"
       }
     },
+    "drag": {
+      "dropHere": "Drop here",
+      "dropToUngrouped": "Drop to remove from group",
+      "dropToGroup": "Drop proxy here",
+      "dragProxy": "Drag proxy to move between groups"
+    },
     "deleteConfirm": {
       "title": "Excluir proxy?",
       "message": "Tem certeza de que deseja excluir {{name}}? Esta ação não pode ser desfeita."

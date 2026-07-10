@@ -88,6 +88,12 @@
         "anonymityLevel": "Anonymity"
       }
     },
+    "drag": {
+      "dropHere": "Drop here",
+      "dropToUngrouped": "Drop to remove from group",
+      "dropToGroup": "Drop proxy here",
+      "dragProxy": "Drag proxy to move between groups"
+    },
     "deleteConfirm": {
       "title": "Delete proxy?",
       "message": "Are you sure you want to delete {{name}}? This action cannot be undone."

@@ -85,6 +85,12 @@
         "anonymityLevel": "गुमनामी"
       }
     },
+    "drag": {
+      "dropHere": "Drop here",
+      "dropToUngrouped": "Drop to remove from group",
+      "dropToGroup": "Drop proxy here",
+      "dragProxy": "Drag proxy to move between groups"
+    },
     "deleteConfirm": {
       "title": "प्रॉक्सी हटाएं?",
       "message": "क्या आप वाकई {{name}} हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।"

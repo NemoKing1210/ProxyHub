@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.31.0] - 2026-07-11
+
+### Added
+
+- Drag and drop on the proxy list: move proxy cards into groups, out of groups, and between groups using the handle in the card header
+- Drag preview with mini-card overlay, placeholder state on the source card, and drop-zone highlighting for groups and the ungrouped area
+
 ## [1.30.1] - 2026-07-11
 
 ### Added

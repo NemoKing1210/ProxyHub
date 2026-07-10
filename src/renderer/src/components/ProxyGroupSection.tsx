@@ -7,7 +7,9 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
+import { useDroppable } from '@dnd-kit/core'
 import {
+  Box,
   Button,
   Chip,
   CircularProgress,
@@ -22,6 +24,7 @@ import {
   Stack,
   Typography
 } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
@@ -39,6 +42,10 @@ interface ProxyGroupSectionProps {
   deadProxyCount: number
   canCheck: boolean
   isCheckingAll: boolean
+  dropZoneId: string
+  dropZoneDisabled?: boolean
+  isDragActive?: boolean
+  forceExpanded?: boolean
   children: ReactNode
   onEdit: () => void
   onDelete: () => void
@@ -55,6 +62,10 @@ function ProxyGroupSection({
   deadProxyCount,
   canCheck,
   isCheckingAll,
+  dropZoneId,
+  dropZoneDisabled = false,
+  isDragActive = false,
+  forceExpanded = false,
   children,
   onEdit,
   onDelete,
@@ -68,6 +79,10 @@ function ProxyGroupSection({
   const theme = useTheme()
   const colorStyles = useMemo(() => getGroupColorStyles(theme, group.color), [theme, group.color])
   const [expanded, setExpanded] = useState(true)
+  const { setNodeRef, isOver } = useDroppable({ id: dropZoneId, disabled: dropZoneDisabled })
+  const showDropHighlight = isOver && !dropZoneDisabled
+  const isExpanded = expanded || forceExpanded || showDropHighlight
+  const showEmptyDropPlaceholder = proxyCount === 0 && isDragActive && showDropHighlight
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
   const [iconPickerAnchor, setIconPickerAnchor] = useState<HTMLElement | null>(null)
   const [colorPickerAnchor, setColorPickerAnchor] = useState<HTMLElement | null>(null)
@@ -93,11 +108,15 @@ function ProxyGroupSection({
 
   return (
     <Paper
+      ref={setNodeRef}
       sx={{
         borderRadius: 3,
         overflow: 'hidden',
-        bgcolor: colorStyles.surface,
-        boxShadow: `${elevationShadow(theme, 1)}, inset 0 0 0 1px ${colorStyles.ring}`
+        bgcolor: showDropHighlight ? alpha(theme.palette.primary.main, 0.06) : colorStyles.surface,
+        boxShadow: showDropHighlight
+          ? `${elevationShadow(theme, 2)}, inset 0 0 0 2px ${alpha(theme.palette.primary.main, 0.45)}`
+          : `${elevationShadow(theme, 1)}, inset 0 0 0 1px ${colorStyles.ring}`,
+        transition: 'background-color 150ms ease, box-shadow 150ms ease'
       }}
     >
       <Stack
@@ -227,13 +246,13 @@ function ProxyGroupSection({
 
         <IconButton
           size="small"
-          aria-expanded={expanded}
+          aria-expanded={isExpanded}
           onClick={(event) => {
             event.stopPropagation()
             setExpanded((value) => !value)
           }}
           sx={{
-            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 200ms ease'
           }}
         >
@@ -241,9 +260,26 @@ function ProxyGroupSection({
         </IconButton>
       </Stack>
 
-      <Collapse in={expanded} unmountOnExit>
+      <Collapse in={isExpanded} unmountOnExit={!isDragActive}>
         <Stack spacing={2} sx={{ px: 2, pb: 2, pt: 0.5 }}>
-          {children}
+          {showEmptyDropPlaceholder ? (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 72,
+                borderRadius: 2,
+                bgcolor: alpha(theme.palette.primary.main, 0.08)
+              }}
+            >
+              <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                {t('proxyList.drag.dropToGroup')}
+              </Typography>
+            </Box>
+          ) : (
+            children
+          )}
         </Stack>
       </Collapse>
 

@@ -74,6 +74,7 @@ interface ProxyCardProps {
   variant?: ProxyCardViewMode
   isChecking: boolean
   isCheckingAll: boolean
+  dragHandle?: React.ReactNode
   onCheck: () => void
   onEdit: () => void
   onDelete: () => void
@@ -125,6 +126,7 @@ function ProxyCard({
   variant = 'standard',
   isChecking,
   isCheckingAll,
+  dragHandle,
   onCheck,
   onEdit,
   onDelete,
@@ -433,10 +435,33 @@ function ProxyCard({
     >
       <Box
         sx={{
+          position: 'relative',
           p: isCompact ? { xs: 1.5, sm: 2 } : { xs: 2.5, sm: 3 },
           pb: isCompact && !cardExpanded ? { xs: 1.5, sm: 2 } : undefined
         }}
       >
+        {dragHandle ? (
+          <Box
+            onClick={stopPropagation}
+            onKeyDown={stopPropagation}
+            sx={{
+              position: 'absolute',
+              top: 4,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 2,
+              display: 'flex',
+              alignItems: 'center',
+              pointerEvents: 'none',
+              '& > *': {
+                pointerEvents: 'auto'
+              }
+            }}
+          >
+            {dragHandle}
+          </Box>
+        ) : null}
+
         <Stack
           direction="row"
           spacing={1.5}

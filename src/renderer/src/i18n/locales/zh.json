@@ -85,6 +85,12 @@
         "anonymityLevel": "匿名性"
       }
     },
+    "drag": {
+      "dropHere": "Drop here",
+      "dropToUngrouped": "Drop to remove from group",
+      "dropToGroup": "Drop proxy here",
+      "dragProxy": "Drag proxy to move between groups"
+    },
     "deleteConfirm": {
       "title": "删除代理？",
       "message": "确定要删除 {{name}} 吗？此操作无法撤销。"
