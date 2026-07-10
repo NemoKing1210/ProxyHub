@@ -19,7 +19,9 @@
   },
   "proxyList": {
     "title": "Proxy list",
-    "stats": "{{total}} total · {{alive}} alive · {{dead}} dead",
+    "statsTotal": "{{count}} total",
+    "statsAlive": "{{count}} alive",
+    "statsDead": "{{count}} dead",
     "checkAll": "Check all",
     "addProxy": "Add proxy",
     "empty": "No proxies yet. Click \"Add proxy\" to get started.",
@@ -89,7 +91,9 @@
       "appearance": "Appearance",
       "appearanceDescription": "Theme and interface language.",
       "checking": "Proxy checking",
-      "checkingDescription": "Connection timeout and optional target domains for additional availability tests."
+      "checkingDescription": "Connection timeout and optional target domains for additional availability tests.",
+      "about": "About",
+      "aboutDescription": "Application version and release history."
     },
     "theme": "Theme",
     "themeLight": "Light",
@@ -99,6 +103,13 @@
     "checkTimeout": "Connection timeout",
     "checkTimeoutHint": "Maximum wait time for each proxy check. Increase for slow proxies.",
     "checkTimeoutValue": "{{value}} s",
+    "checkAllMode": "Check all mode",
+    "checkAllModeHint": "How proxies are checked when using \"Check all\".",
+    "checkAllModeSequential": "One by one",
+    "checkAllModeParallel": "Parallel",
+    "checkAllConcurrency": "Parallel limit",
+    "checkAllConcurrencyHint": "Maximum number of proxies checked at the same time in parallel mode.",
+    "checkAllConcurrencyValue": "{{value}} proxies",
     "checkDomains": "Check domains (optional)",
     "checkDomainsHint": "Optional. Proxies are also tested against these domains. When configured, a proxy is considered alive if at least one domain responds.",
     "checkDomainsEmpty": "No domains configured. Proxies are checked by address reachability only.",
@@ -107,7 +118,19 @@
     "domainRequired": "At least one check domain is required",
     "invalidDomain": "Enter a valid domain name",
     "domainDuplicate": "This domain is already in the list",
-    "saved": "Settings saved"
+    "saved": "Settings saved",
+    "currentVersion": "Current version",
+    "latestRelease": "Current",
+    "changelogLoadError": "Could not load release notes.",
+    "changelogEmpty": "No release notes available.",
+    "changelogSections": {
+      "added": "Added",
+      "changed": "Changed",
+      "deprecated": "Deprecated",
+      "removed": "Removed",
+      "fixed": "Fixed",
+      "security": "Security"
+    }
   },
   "validation": {
     "hostRequired": "Host is required",

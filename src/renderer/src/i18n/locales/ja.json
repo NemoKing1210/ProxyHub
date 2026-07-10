@@ -14,7 +14,9 @@
   },
   "proxyList": {
     "title": "プロキシ一覧",
-    "stats": "合計 {{total}} · 稼働 {{alive}} · 停止 {{dead}}",
+    "statsTotal": "合計 {{count}}",
+    "statsAlive": "稼働 {{count}}",
+    "statsDead": "停止 {{count}}",
     "checkAll": "すべて確認",
     "addProxy": "プロキシを追加",
     "empty": "プロキシがありません。「プロキシを追加」をクリックして開始してください。",
@@ -77,7 +79,9 @@
       "appearance": "外観",
       "appearanceDescription": "テーマと言語。",
       "checking": "プロキシ確認",
-      "checkingDescription": "接続タイムアウトと、追加の可用性テスト用の任意ドメイン。"
+      "checkingDescription": "接続タイムアウトと、追加の可用性テスト用の任意ドメイン。",
+      "about": "アプリについて",
+      "aboutDescription": "アプリのバージョンとリリース履歴。"
     },
     "theme": "テーマ",
     "themeLight": "ライト",
@@ -87,6 +91,13 @@
     "checkTimeout": "接続タイムアウト",
     "checkTimeoutHint": "各確認の最大待機時間。",
     "checkTimeoutValue": "{{value}} 秒",
+    "checkAllMode": "「すべて確認」モード",
+    "checkAllModeHint": "「すべて確認」実行時のプロキシ確認方法。",
+    "checkAllModeSequential": "順番に",
+    "checkAllModeParallel": "並列",
+    "checkAllConcurrency": "並列上限",
+    "checkAllConcurrencyHint": "並列モードで同時に確認するプロキシの最大数。",
+    "checkAllConcurrencyValue": "{{value}} 件",
     "checkDomains": "確認ドメイン（任意）",
     "checkDomainsHint": "任意です。プロキシはこれらのドメインに対してもテストされます。設定した場合、1つでも応答があれば稼働とみなします。",
     "checkDomainsEmpty": "ドメインは未設定です。プロキシはアドレスの到達性のみで確認されます。",
@@ -95,7 +106,19 @@
     "domainRequired": "確認ドメインは1つ以上必要です",
     "invalidDomain": "有効なドメイン名を入力してください",
     "domainDuplicate": "このドメインは既にリストにあります",
-    "saved": "設定を保存しました"
+    "saved": "設定を保存しました",
+    "currentVersion": "現在のバージョン",
+    "latestRelease": "現在",
+    "changelogLoadError": "変更履歴を読み込めませんでした。",
+    "changelogEmpty": "変更履歴はありません。",
+    "changelogSections": {
+      "added": "追加",
+      "changed": "変更",
+      "deprecated": "非推奨",
+      "removed": "削除",
+      "fixed": "修正",
+      "security": "セキュリティ"
+    }
   },
   "validation": {
     "hostRequired": "ホストは必須です",

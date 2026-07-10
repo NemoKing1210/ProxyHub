@@ -14,7 +14,9 @@
   },
   "proxyList": {
     "title": "Lista de proxies",
-    "stats": "{{total}} en total · {{alive}} activos · {{dead}} inactivos",
+    "statsTotal": "{{count}} en total",
+    "statsAlive": "{{count}} activos",
+    "statsDead": "{{count}} inactivos",
     "checkAll": "Comprobar todos",
     "addProxy": "Añadir proxy",
     "empty": "Aún no hay proxies. Haz clic en \"Añadir proxy\" para empezar.",
@@ -82,7 +84,9 @@
       "appearance": "Apariencia",
       "appearanceDescription": "Tema e idioma.",
       "checking": "Comprobación",
-      "checkingDescription": "Tiempo de espera de conexión y dominios opcionales para pruebas adicionales de disponibilidad."
+      "checkingDescription": "Tiempo de espera de conexión y dominios opcionales para pruebas adicionales de disponibilidad.",
+      "about": "Acerca de",
+      "aboutDescription": "Versión de la aplicación e historial de versiones."
     },
     "theme": "Tema",
     "themeLight": "Claro",
@@ -92,6 +96,13 @@
     "checkTimeout": "Tiempo de espera",
     "checkTimeoutHint": "Tiempo máximo de espera por comprobación.",
     "checkTimeoutValue": "{{value}} s",
+    "checkAllMode": "Modo «Comprobar todos»",
+    "checkAllModeHint": "Cómo se comprueban los proxies al usar «Comprobar todos».",
+    "checkAllModeSequential": "Uno por uno",
+    "checkAllModeParallel": "En paralelo",
+    "checkAllConcurrency": "Límite en paralelo",
+    "checkAllConcurrencyHint": "Número máximo de proxies comprobados a la vez en modo paralelo.",
+    "checkAllConcurrencyValue": "{{value}} proxies",
     "checkDomains": "Dominios de comprobación (opcional)",
     "checkDomainsHint": "Opcional. Los proxies también se prueban contra estos dominios. Si se configuran, un proxy se considera activo si al menos uno responde.",
     "checkDomainsEmpty": "No hay dominios configurados. Los proxies se comprueban solo por la accesibilidad de la dirección.",
@@ -100,7 +111,19 @@
     "domainRequired": "Se requiere al menos un dominio",
     "invalidDomain": "Introduce un dominio válido",
     "domainDuplicate": "Este dominio ya está en la lista",
-    "saved": "Ajustes guardados"
+    "saved": "Ajustes guardados",
+    "currentVersion": "Versión actual",
+    "latestRelease": "Actual",
+    "changelogLoadError": "No se pudo cargar el historial de cambios.",
+    "changelogEmpty": "No hay historial de cambios disponible.",
+    "changelogSections": {
+      "added": "Añadido",
+      "changed": "Cambiado",
+      "deprecated": "Obsoleto",
+      "removed": "Eliminado",
+      "fixed": "Corregido",
+      "security": "Seguridad"
+    }
   },
   "validation": {
     "hostRequired": "El host es obligatorio",

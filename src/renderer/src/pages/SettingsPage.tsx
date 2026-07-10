@@ -1,15 +1,19 @@
 import AddIcon from '@mui/icons-material/Add'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import NetworkCheckOutlinedIcon from '@mui/icons-material/NetworkCheckOutlined'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
+import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
 import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightnessOutlined'
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
 import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   IconButton,
   MenuItem,
   Slider,
@@ -21,16 +25,21 @@ import {
   Typography
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { AppInfo } from '../../../shared/types/app'
 import {
+  CHECK_ALL_CONCURRENCY_MAX,
+  CHECK_ALL_CONCURRENCY_MIN,
   CHECK_TIMEOUT_MAX_MS,
   CHECK_TIMEOUT_MIN_MS,
   SUPPORTED_LANGUAGES,
   type AppLanguage,
+  type CheckAllMode,
   type ThemeMode
 } from '../../../shared/types/settings'
 import ContentSection from '../components/ContentSection'
+import ChangelogView from '../components/ChangelogView'
 import LanguageFlag from '../components/LanguageFlag'
 import { useSettingsStore } from '../store/settingsStore'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
@@ -44,6 +53,20 @@ const TIMEOUT_MARKS = [
   { value: 120, label: '120' }
 ]
 
+const CONCURRENCY_MARKS = [
+  { value: 2, label: '2' },
+  { value: 5, label: '5' },
+  { value: 10, label: '10' },
+  { value: 20, label: '20' }
+]
+
+function clampConcurrency(value: number): number {
+  return Math.min(
+    CHECK_ALL_CONCURRENCY_MAX,
+    Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value))
+  )
+}
+
 function clampTimeoutSeconds(seconds: number): number {
   const minSec = CHECK_TIMEOUT_MIN_MS / 1000
   const maxSec = CHECK_TIMEOUT_MAX_MS / 1000
@@ -53,15 +76,52 @@ function clampTimeoutSeconds(seconds: number): number {
 function SettingsPage(): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs } = useSettingsStore()
+  const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs, updateSettings } =
+    useSettingsStore()
   const [domainInput, setDomainInput] = useState('')
   const [domainError, setDomainError] = useState<string | null>(null)
   const [savedOpen, setSavedOpen] = useState(false)
   const [timeoutDraft, setTimeoutDraft] = useState(settings.checkTimeoutMs / 1000)
   const [isDraggingTimeout, setIsDraggingTimeout] = useState(false)
+  const [concurrencyDraft, setConcurrencyDraft] = useState(settings.checkAllConcurrency)
+  const [isDraggingConcurrency, setIsDraggingConcurrency] = useState(false)
+  const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
+  const [appInfoError, setAppInfoError] = useState(false)
+  const [isAppInfoLoading, setIsAppInfoLoading] = useState(true)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadAppInfo = async (): Promise<void> => {
+      setIsAppInfoLoading(true)
+      setAppInfoError(false)
+
+      try {
+        const info = await window.api.getAppInfo()
+        if (isMounted) {
+          setAppInfo(info)
+        }
+      } catch {
+        if (isMounted) {
+          setAppInfoError(true)
+        }
+      } finally {
+        if (isMounted) {
+          setIsAppInfoLoading(false)
+        }
+      }
+    }
+
+    void loadAppInfo()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const timeoutSeconds = settings.checkTimeoutMs / 1000
   const displayedTimeout = isDraggingTimeout ? timeoutDraft : timeoutSeconds
+  const displayedConcurrency = isDraggingConcurrency ? concurrencyDraft : settings.checkAllConcurrency
 
   const notifySaved = (): void => {
     setSavedOpen(true)
@@ -93,6 +153,30 @@ function SettingsPage(): React.JSX.Element {
     if (nextTimeoutMs === settings.checkTimeoutMs) return
 
     await setCheckTimeoutMs(nextTimeoutMs)
+    notifySaved()
+  }
+
+  const handleCheckAllModeChange = async (
+    _event: React.MouseEvent<HTMLElement>,
+    mode: CheckAllMode | null
+  ): Promise<void> => {
+    if (!mode || mode === settings.checkAllMode) return
+
+    await updateSettings({ checkAllMode: mode })
+    notifySaved()
+  }
+
+  const handleConcurrencyChange = (_event: Event, value: number | number[]): void => {
+    const nextValue = Array.isArray(value) ? value[0] : value
+    setIsDraggingConcurrency(true)
+    setConcurrencyDraft(clampConcurrency(nextValue))
+  }
+
+  const handleConcurrencyCommit = async (): Promise<void> => {
+    setIsDraggingConcurrency(false)
+    if (concurrencyDraft === settings.checkAllConcurrency) return
+
+    await updateSettings({ checkAllConcurrency: concurrencyDraft })
     notifySaved()
   }
 
@@ -247,6 +331,80 @@ function SettingsPage(): React.JSX.Element {
 
             <Box>
               <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
+                {t('settings.checkAllMode')}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                {t('settings.checkAllModeHint')}
+              </Typography>
+              <ToggleButtonGroup
+                value={settings.checkAllMode}
+                exclusive
+                onChange={(event, value) => void handleCheckAllModeChange(event, value)}
+                fullWidth
+                sx={{
+                  mb: settings.checkAllMode === 'parallel' ? 2.5 : 0,
+                  '& .MuiToggleButton-root': {
+                    py: 1.35,
+                    gap: 0.75
+                  }
+                }}
+              >
+                <ToggleButton value="sequential">
+                  <ReorderOutlinedIcon fontSize="small" />
+                  {t('settings.checkAllModeSequential')}
+                </ToggleButton>
+                <ToggleButton value="parallel">
+                  <PlaylistPlayIcon fontSize="small" />
+                  {t('settings.checkAllModeParallel')}
+                </ToggleButton>
+              </ToggleButtonGroup>
+
+              {settings.checkAllMode === 'parallel' && (
+                <Box>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ mb: 1.25, alignItems: 'center', justifyContent: 'space-between' }}
+                  >
+                    <Typography variant="subtitle2">{t('settings.checkAllConcurrency')}</Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontWeight: 700,
+                        fontFamily: 'monospace',
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: 2,
+                        bgcolor: surfaceContainer(theme, 'high'),
+                        color: 'primary.main'
+                      }}
+                    >
+                      {t('settings.checkAllConcurrencyValue', { value: displayedConcurrency })}
+                    </Typography>
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    {t('settings.checkAllConcurrencyHint')}
+                  </Typography>
+                  <Slider
+                    value={displayedConcurrency}
+                    onChange={handleConcurrencyChange}
+                    onChangeCommitted={() => void handleConcurrencyCommit()}
+                    min={CHECK_ALL_CONCURRENCY_MIN}
+                    max={CHECK_ALL_CONCURRENCY_MAX}
+                    step={1}
+                    marks={CONCURRENCY_MARKS}
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(value) =>
+                      t('settings.checkAllConcurrencyValue', { value })
+                    }
+                    sx={{ px: 0.5 }}
+                  />
+                </Box>
+              )}
+            </Box>
+
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
                 {t('settings.checkDomains')}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -335,6 +493,28 @@ function SettingsPage(): React.JSX.Element {
               </Stack>
             </Box>
           </Stack>
+        </ContentSection>
+
+        <ContentSection
+          icon={<InfoOutlinedIcon fontSize="small" />}
+          title={t('settings.sections.about')}
+          description={t('settings.sections.aboutDescription')}
+        >
+          {isAppInfoLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress size={28} />
+            </Box>
+          ) : appInfoError ? (
+            <Alert severity="error" variant="outlined">
+              {t('settings.changelogLoadError')}
+            </Alert>
+          ) : appInfo && appInfo.changelog.length > 0 ? (
+            <ChangelogView version={appInfo.version} entries={appInfo.changelog} />
+          ) : (
+            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              {t('settings.changelogEmpty')}
+            </Typography>
+          )}
         </ContentSection>
       </Stack>
 

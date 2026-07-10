@@ -114,9 +114,59 @@ async function persist(proxies: Proxy[]): Promise<void> {
 }
 
 function getCheckOptions(): ProxyCheckOptions {
-  const { checkDomains, checkTimeoutMs } = useSettingsStore.getState().settings
+  const { checkDomains, checkTimeoutMs, checkAllConcurrency } =
+    useSettingsStore.getState().settings
 
-  return { checkDomains, checkTimeoutMs }
+  return { checkDomains, checkTimeoutMs, checkAllConcurrency }
+}
+
+async function checkAllSequential(proxyIds: string[], get: () => ProxyState): Promise<void> {
+  for (const id of proxyIds) {
+    if (!get().proxies.some((proxy) => proxy.id === id)) continue
+    await get().checkProxy(id)
+  }
+}
+
+async function checkAllParallel(
+  proxies: Proxy[],
+  checkOptions: ProxyCheckOptions,
+  get: () => ProxyState,
+  set: (partial: Partial<ProxyState> | ((state: ProxyState) => Partial<ProxyState>)) => void
+): Promise<void> {
+  const domains = useSettingsStore.getState().settings.checkDomains
+  const checkingIds = new Set(proxies.map((proxy) => proxy.id))
+
+  set({
+    isCheckingAll: true,
+    checkingIds,
+    proxies: get().proxies.map((proxy) => beginProxyCheck(proxy, domains))
+  })
+
+  const unsubscribe = window.api.onCheckProgress((progress) => {
+    const updated = applyLiveProgress(get().proxies, progress)
+
+    set({ proxies: updated })
+
+    if (progress.phase === 'complete') {
+      void persist(updated)
+    }
+  })
+
+  try {
+    await window.api.checkAll(proxies, checkOptions)
+  } finally {
+    unsubscribe()
+
+    const finalized = get().proxies.map(finalizeIncompleteProxy)
+
+    set({
+      isCheckingAll: false,
+      checkingIds: new Set(),
+      proxies: finalized
+    })
+
+    await persist(finalized)
+  }
 }
 
 function beginProxyCheck(proxy: Proxy, domains: string[]): Proxy {
@@ -260,40 +310,21 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
     const { proxies } = get()
     if (proxies.length === 0 || get().isCheckingAll) return
 
-    const domains = useSettingsStore.getState().settings.checkDomains
+    const { checkAllMode } = useSettingsStore.getState().settings
     const checkOptions = getCheckOptions()
-    const checkingIds = new Set(proxies.map((proxy) => proxy.id))
+    const proxyIds = proxies.map((proxy) => proxy.id)
 
-    set({
-      isCheckingAll: true,
-      checkingIds,
-      proxies: proxies.map((proxy) => beginProxyCheck(proxy, domains))
-    })
+    if (checkAllMode === 'parallel') {
+      await checkAllParallel(proxies, checkOptions, get, set)
+      return
+    }
 
-    const unsubscribe = window.api.onCheckProgress((progress) => {
-      const updated = applyLiveProgress(get().proxies, progress)
-
-      set({ proxies: updated })
-
-      if (progress.phase === 'complete') {
-        void persist(updated)
-      }
-    })
+    set({ isCheckingAll: true })
 
     try {
-      await window.api.checkAll(proxies, checkOptions)
+      await checkAllSequential(proxyIds, get)
     } finally {
-      unsubscribe()
-
-      const finalized = get().proxies.map(finalizeIncompleteProxy)
-
-      set({
-        isCheckingAll: false,
-        checkingIds: new Set(),
-        proxies: finalized
-      })
-
-      await persist(finalized)
+      set({ isCheckingAll: false })
     }
   }
 }))

@@ -28,7 +28,8 @@ export function registerProxyIpc(): void {
         proxies,
         options.checkDomains,
         (progress) => sendProgress(event.sender, progress),
-        options.checkTimeoutMs
+        options.checkTimeoutMs,
+        options.checkAllConcurrency
       )
     }
   )

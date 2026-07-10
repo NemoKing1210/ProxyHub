@@ -14,7 +14,9 @@
   },
   "proxyList": {
     "title": "代理列表",
-    "stats": "共 {{total}} 个 · 可用 {{alive}} · 不可用 {{dead}}",
+    "statsTotal": "共 {{count}} 个",
+    "statsAlive": "可用 {{count}}",
+    "statsDead": "不可用 {{count}}",
     "checkAll": "全部检测",
     "addProxy": "添加代理",
     "empty": "暂无代理。点击「添加代理」开始。",
@@ -73,7 +75,9 @@
       "appearance": "外观",
       "appearanceDescription": "主题和界面语言。",
       "checking": "代理检测",
-      "checkingDescription": "连接超时和可选的额外可用性检测域名。"
+      "checkingDescription": "连接超时和可选的额外可用性检测域名。",
+      "about": "关于",
+      "aboutDescription": "应用版本和发布历史。"
     },
     "theme": "主题",
     "themeLight": "浅色",
@@ -83,6 +87,13 @@
     "checkTimeout": "连接超时",
     "checkTimeoutHint": "每次检测的最大等待时间。",
     "checkTimeoutValue": "{{value}} 秒",
+    "checkAllMode": "「全部检测」模式",
+    "checkAllModeHint": "使用「全部检测」时如何检测代理。",
+    "checkAllModeSequential": "逐个检测",
+    "checkAllModeParallel": "并行检测",
+    "checkAllConcurrency": "并行上限",
+    "checkAllConcurrencyHint": "并行模式下同时检测的代理数量上限。",
+    "checkAllConcurrencyValue": "{{value}} 个代理",
     "checkDomains": "检测域名（可选）",
     "checkDomainsHint": "可选。代理还会针对这些域名进行检测。配置后，只要有一个域名响应即视为可用。",
     "checkDomainsEmpty": "未配置域名。仅通过地址可达性检测代理。",
@@ -91,7 +102,19 @@
     "domainRequired": "至少需要一个检测域名",
     "invalidDomain": "请输入有效的域名",
     "domainDuplicate": "该域名已在列表中",
-    "saved": "设置已保存"
+    "saved": "设置已保存",
+    "currentVersion": "当前版本",
+    "latestRelease": "当前",
+    "changelogLoadError": "无法加载更新日志。",
+    "changelogEmpty": "暂无更新日志。",
+    "changelogSections": {
+      "added": "新增",
+      "changed": "变更",
+      "deprecated": "弃用",
+      "removed": "移除",
+      "fixed": "修复",
+      "security": "安全"
+    }
   },
   "validation": {
     "hostRequired": "请输入主机",

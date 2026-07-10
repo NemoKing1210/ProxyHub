@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-07-10
+
+### Added
+
+- About section on the settings page with app version and parsed `CHANGELOG.md`
+- Separate stat badges on the proxy list (total, alive, dead)
+- Check all mode setting: sequential (default) or parallel with configurable concurrency limit (2–20)
+
+### Changed
+
+- Results section stays expanded after a proxy check completes
+- Removed page transition animations between routes
+
 ## [1.8.0] - 2026-07-10
 
 ### Added
@@ -163,14 +176,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
-
-[1.8.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.8.0
-[1.7.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.7.0
-[1.6.1]: https://github.com/your-username/proxy-checker/releases/tag/v1.6.1
-[1.6.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.6.0
-[1.5.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.5.0
-[1.4.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.4.0
-[1.3.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.3.0
-[1.2.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.2.0
-[1.1.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.1.0
-[1.0.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.0.0

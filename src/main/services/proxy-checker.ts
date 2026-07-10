@@ -18,7 +18,7 @@ import {
   createPendingDomainChecks
 } from '../../shared/utils/proxy-check-results'
 
-const DEFAULT_CONCURRENCY = 20
+const DEFAULT_CONCURRENCY = 1
 const EXTERNAL_IP_URL = 'https://api.ipify.org?format=json'
 
 function createAgent(proxy: Proxy): http.Agent {

@@ -8,7 +8,7 @@ import RouterOutlinedIcon from '@mui/icons-material/RouterOutlined'
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
 import { Box, Button, Chip, CircularProgress, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
 import { formatDateTime } from '../../../shared/utils/datetime'
@@ -53,7 +53,14 @@ function ProxyCard({
   const palette = getPalette(theme)
   const [linkCopied, setLinkCopied] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
-  const effectiveResultsExpanded = isChecking || resultsExpanded
+
+  useEffect(() => {
+    if (isChecking) {
+      setResultsExpanded(true)
+    }
+  }, [isChecking])
+
+  const effectiveResultsExpanded = resultsExpanded || isChecking
 
   const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)

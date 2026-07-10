@@ -14,7 +14,9 @@
   },
   "proxyList": {
     "title": "Liste des proxies",
-    "stats": "{{total}} au total · {{alive}} actifs · {{dead}} inactifs",
+    "statsTotal": "{{count}} au total",
+    "statsAlive": "{{count}} actifs",
+    "statsDead": "{{count}} inactifs",
     "checkAll": "Tout vérifier",
     "addProxy": "Ajouter un proxy",
     "empty": "Aucun proxy pour l'instant. Cliquez sur « Ajouter un proxy » pour commencer.",
@@ -82,7 +84,9 @@
       "appearance": "Apparence",
       "appearanceDescription": "Thème et langue.",
       "checking": "Vérification",
-      "checkingDescription": "Délai de connexion et domaines optionnels pour des tests de disponibilité supplémentaires."
+      "checkingDescription": "Délai de connexion et domaines optionnels pour des tests de disponibilité supplémentaires.",
+      "about": "À propos",
+      "aboutDescription": "Version de l'application et historique des versions."
     },
     "theme": "Thème",
     "themeLight": "Clair",
@@ -92,6 +96,13 @@
     "checkTimeout": "Délai de connexion",
     "checkTimeoutHint": "Temps d'attente maximum par vérification.",
     "checkTimeoutValue": "{{value}} s",
+    "checkAllMode": "Mode «Tout vérifier»",
+    "checkAllModeHint": "Comment les proxys sont vérifiés avec «Tout vérifier».",
+    "checkAllModeSequential": "Un par un",
+    "checkAllModeParallel": "En parallèle",
+    "checkAllConcurrency": "Limite en parallèle",
+    "checkAllConcurrencyHint": "Nombre maximal de proxys vérifiés en même temps en mode parallèle.",
+    "checkAllConcurrencyValue": "{{value}} proxys",
     "checkDomains": "Domaines de vérification (optionnel)",
     "checkDomainsHint": "Optionnel. Les proxies sont aussi testés sur ces domaines. Lorsqu'ils sont configurés, un proxy est actif si au moins un domaine répond.",
     "checkDomainsEmpty": "Aucun domaine configuré. Les proxies sont vérifiés uniquement par l'accessibilité de l'adresse.",
@@ -100,7 +111,19 @@
     "domainRequired": "Au moins un domaine est requis",
     "invalidDomain": "Entrez un nom de domaine valide",
     "domainDuplicate": "Ce domaine est déjà dans la liste",
-    "saved": "Paramètres enregistrés"
+    "saved": "Paramètres enregistrés",
+    "currentVersion": "Version actuelle",
+    "latestRelease": "Actuelle",
+    "changelogLoadError": "Impossible de charger le journal des modifications.",
+    "changelogEmpty": "Aucun journal des modifications disponible.",
+    "changelogSections": {
+      "added": "Ajouté",
+      "changed": "Modifié",
+      "deprecated": "Obsolète",
+      "removed": "Supprimé",
+      "fixed": "Corrigé",
+      "security": "Sécurité"
+    }
   },
   "validation": {
     "hostRequired": "L'hôte est requis",

@@ -14,7 +14,9 @@
   },
   "proxyList": {
     "title": "प्रॉक्सी सूची",
-    "stats": "कुल {{total}} · सक्रिय {{alive}} · निष्क्रिय {{dead}}",
+    "statsTotal": "कुल {{count}}",
+    "statsAlive": "सक्रिय {{count}}",
+    "statsDead": "निष्क्रिय {{count}}",
     "checkAll": "सभी जांचें",
     "addProxy": "प्रॉक्सी जोड़ें",
     "empty": "अभी कोई प्रॉक्सी नहीं। शुरू करने के लिए \"प्रॉक्सी जोड़ें\" पर क्लिक करें।",
@@ -83,7 +85,9 @@
       "appearance": "दिखावट",
       "appearanceDescription": "थीम और भाषा।",
       "checking": "प्रॉक्सी जांच",
-      "checkingDescription": "कनेक्शन टाइमआउट और अतिरिक्त उपलब्धता परीक्षण के लिए वैकल्पिक डोमेन।"
+      "checkingDescription": "कनेक्शन टाइमआउट और अतिरिक्त उपलब्धता परीक्षण के लिए वैकल्पिक डोमेन।",
+      "about": "ऐप के बारे में",
+      "aboutDescription": "एप्लिकेशन संस्करण और रिलीज़ इतिहास।"
     },
     "theme": "थीम",
     "themeLight": "हल्की",
@@ -93,6 +97,13 @@
     "checkTimeout": "कनेक्शन टाइमआउट",
     "checkTimeoutHint": "प्रत्येक जांच के लिए अधिकतम प्रतीक्षा समय।",
     "checkTimeoutValue": "{{value}} से.",
+    "checkAllMode": "«सभी जांचें» मोड",
+    "checkAllModeHint": "«सभी जांचें» का उपयोग करते समय प्रॉक्सी कैसे जांची जाती हैं।",
+    "checkAllModeSequential": "एक-एक करके",
+    "checkAllModeParallel": "समानांतर",
+    "checkAllConcurrency": "समानांतर सीमा",
+    "checkAllConcurrencyHint": "समानांतर मोड में एक साथ जांची जाने वाली प्रॉक्सी की अधिकतम संख्या।",
+    "checkAllConcurrencyValue": "{{value}} प्रॉक्सी",
     "checkDomains": "जांच डोमेन (वैकल्पिक)",
     "checkDomainsHint": "वैकल्पिक। प्रॉक्सी इन डोमेन के विरुद्ध भी जांचे जाते हैं। कॉन्फ़िगर होने पर, कम से कम एक डोमेन प्रतिक्रिया दे तो प्रॉक्सी सक्रिय माना जाता है।",
     "checkDomainsEmpty": "कोई डोमेन कॉन्फ़िगर नहीं है। प्रॉक्सी केवल पते की उपलब्धता से जांचे जाते हैं।",
@@ -101,7 +112,19 @@
     "domainRequired": "कम से कम एक जांच डोमेन आवश्यक है",
     "invalidDomain": "मान्य डोमेन नाम दर्ज करें",
     "domainDuplicate": "यह डोमेन पहले से सूची में है",
-    "saved": "सेटिंग्स सहेजी गईं"
+    "saved": "सेटिंग्स सहेजी गईं",
+    "currentVersion": "वर्तमान संस्करण",
+    "latestRelease": "वर्तमान",
+    "changelogLoadError": "चेंजलॉग लोड नहीं हो सका।",
+    "changelogEmpty": "कोई चेंजलॉग उपलब्ध नहीं है।",
+    "changelogSections": {
+      "added": "जोड़ा गया",
+      "changed": "बदला गया",
+      "deprecated": "अप्रचलित",
+      "removed": "हटाया गया",
+      "fixed": "ठीक किया गया",
+      "security": "सुरक्षा"
+    }
   },
   "validation": {
     "hostRequired": "होस्ट आवश्यक है",

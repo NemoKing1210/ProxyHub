@@ -14,7 +14,9 @@
   },
   "proxyList": {
     "title": "قائمة البروكسيات",
-    "stats": "{{total}} إجمالي · {{alive}} نشط · {{dead}} غير نشط",
+    "statsTotal": "{{count}} إجمالي",
+    "statsAlive": "{{count}} نشط",
+    "statsDead": "{{count}} غير نشط",
     "checkAll": "فحص الكل",
     "addProxy": "إضافة بروكسي",
     "empty": "لا توجد بروكسيات بعد. انقر \"إضافة بروكسي\" للبدء.",
@@ -83,7 +85,9 @@
       "appearance": "المظهر",
       "appearanceDescription": "السمة واللغة.",
       "checking": "فحص البروكسي",
-      "checkingDescription": "مهلة الاتصال ونطاقات اختيارية لاختبارات توفر إضافية."
+      "checkingDescription": "مهلة الاتصال ونطاقات اختيارية لاختبارات توفر إضافية.",
+      "about": "حول التطبيق",
+      "aboutDescription": "إصدار التطبيق وسجل الإصدارات."
     },
     "theme": "السمة",
     "themeLight": "فاتح",
@@ -93,6 +97,13 @@
     "checkTimeout": "مهلة الاتصال",
     "checkTimeoutHint": "أقصى وقت انتظار لكل فحص.",
     "checkTimeoutValue": "{{value}} ث",
+    "checkAllMode": "وضع فحص الكل",
+    "checkAllModeHint": "كيفية فحص البروكسيات عند استخدام «فحص الكل».",
+    "checkAllModeSequential": "واحد تلو الآخر",
+    "checkAllModeParallel": "متوازي",
+    "checkAllConcurrency": "حد الفحص المتوازي",
+    "checkAllConcurrencyHint": "الحد الأقصى لعدد البروكسيات التي تُفحص في نفس الوقت.",
+    "checkAllConcurrencyValue": "{{value}} بروكسي",
     "checkDomains": "نطاقات الفحص (اختياري)",
     "checkDomainsHint": "اختياري. يتم أيضاً اختبار البروكسيات على هذه النطاقات. عند التكوين، يُعتبر البروكسي نشطاً إذا استجاب نطاق واحد على الأقل.",
     "checkDomainsEmpty": "لا توجد نطاقات مُكوّنة. يتم فحص البروكسيات عبر إمكانية الوصول إلى العنوان فقط.",
@@ -101,7 +112,19 @@
     "domainRequired": "مطلوب نطاق فحص واحد على الأقل",
     "invalidDomain": "أدخل اسم نطاق صالح",
     "domainDuplicate": "هذا النطاق موجود بالفعل",
-    "saved": "تم حفظ الإعدادات"
+    "saved": "تم حفظ الإعدادات",
+    "currentVersion": "الإصدار الحالي",
+    "latestRelease": "الحالي",
+    "changelogLoadError": "تعذر تحميل سجل التغييرات.",
+    "changelogEmpty": "لا يوجد سجل تغييرات.",
+    "changelogSections": {
+      "added": "مضاف",
+      "changed": "مُغيَّر",
+      "deprecated": "مهمل",
+      "removed": "محذوف",
+      "fixed": "مُصلَح",
+      "security": "أمان"
+    }
   },
   "validation": {
     "hostRequired": "المضيف مطلوب",

@@ -1,5 +1,7 @@
 import AddIcon from '@mui/icons-material/Add'
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import { Box, Button, Chip, CircularProgress, Paper, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
@@ -7,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
 import { useProxyStore } from '../store/proxyStore'
-import { elevationShadow, surfaceContainer, surfaceTint } from '../theme'
+import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
 import ProxyFormDialog from './ProxyFormDialog'
@@ -81,6 +83,19 @@ function ProxyList(): React.JSX.Element {
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
   const deadCount = proxies.filter((proxy) => proxy.status === 'dead').length
+  const palette = getPalette(theme)
+
+  const statBadgeSx = {
+    fontWeight: 700,
+    border: 'none',
+    '& .MuiChip-icon': {
+      fontSize: 16,
+      ml: 0.75
+    },
+    '& .MuiChip-label': {
+      px: 1
+    }
+  } as const
 
   return (
     <Box>
@@ -93,18 +108,47 @@ function ProxyList(): React.JSX.Element {
           <Typography variant="h5" gutterBottom>
             {t('proxyList.title')}
           </Typography>
-          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', mt: 0.5 }}>
+          <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap', mt: 0.5, gap: 0.75 }}>
             <Chip
-              label={t('proxyList.stats', {
-                total: proxies.length,
-                alive: aliveCount,
-                dead: deadCount
-              })}
+              icon={<DnsOutlinedIcon />}
+              label={t('proxyList.statsTotal', { count: proxies.length })}
               size="small"
               sx={{
+                ...statBadgeSx,
                 bgcolor: surfaceContainer(theme, 'default'),
-                fontWeight: 600,
-                border: 'none'
+                color: 'text.primary',
+                '& .MuiChip-icon': {
+                  ...statBadgeSx['& .MuiChip-icon'],
+                  color: 'primary.main'
+                }
+              }}
+            />
+            <Chip
+              icon={<CheckCircleOutlinedIcon />}
+              label={t('proxyList.statsAlive', { count: aliveCount })}
+              size="small"
+              sx={{
+                ...statBadgeSx,
+                bgcolor: withThemeAlpha(theme, palette.success.main, 0.14),
+                color: palette.success.main,
+                '& .MuiChip-icon': {
+                  ...statBadgeSx['& .MuiChip-icon'],
+                  color: palette.success.main
+                }
+              }}
+            />
+            <Chip
+              icon={<ErrorOutlineOutlinedIcon />}
+              label={t('proxyList.statsDead', { count: deadCount })}
+              size="small"
+              sx={{
+                ...statBadgeSx,
+                bgcolor: withThemeAlpha(theme, palette.error.main, 0.14),
+                color: palette.error.main,
+                '& .MuiChip-icon': {
+                  ...statBadgeSx['& .MuiChip-icon'],
+                  color: palette.error.main
+                }
               }}
             />
           </Stack>

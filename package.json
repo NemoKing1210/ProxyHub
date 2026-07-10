@@ -1,10 +1,19 @@
 {
-  "name": "proxy-checker",
-  "version": "1.8.0",
+  "name": "ProxyChecker",
+  "version": "1.9.0",
   "description": "Cross-platform desktop app for testing HTTP, HTTPS, SOCKS4, and SOCKS5 proxy availability and performance",
   "main": "./out/main/index.js",
   "license": "MIT",
   "private": true,
+  "author": "NemoKing1210",
+  "homepage": "https://github.com/NemoKing1210/ProxyChecker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NemoKing1210/ProxyChecker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NemoKing1210/ProxyChecker/issues"
+  },
   "keywords": [
     "electron",
     "proxy",

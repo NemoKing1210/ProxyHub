@@ -19,7 +19,8 @@ const api: AppAPI = {
     }
   },
   getSettings: () => ipcRenderer.invoke('settings:get'),
-  saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings)
+  saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),
+  getAppInfo: () => ipcRenderer.invoke('app:get-info')
 }
 
 if (process.contextIsolated) {

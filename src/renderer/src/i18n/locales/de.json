@@ -14,7 +14,9 @@
   },
   "proxyList": {
     "title": "Proxy-Liste",
-    "stats": "{{total}} gesamt · {{alive}} aktiv · {{dead}} inaktiv",
+    "statsTotal": "{{count}} gesamt",
+    "statsAlive": "{{count}} aktiv",
+    "statsDead": "{{count}} inaktiv",
     "checkAll": "Alle prüfen",
     "addProxy": "Proxy hinzufügen",
     "empty": "Noch keine Proxies. Klicken Sie auf „Proxy hinzufügen“, um zu starten.",
@@ -82,7 +84,9 @@
       "appearance": "Erscheinungsbild",
       "appearanceDescription": "Design und Sprache.",
       "checking": "Proxy-Prüfung",
-      "checkingDescription": "Verbindungs-Timeout und optionale Zieldomains für zusätzliche Verfügbarkeitstests."
+      "checkingDescription": "Verbindungs-Timeout und optionale Zieldomains für zusätzliche Verfügbarkeitstests.",
+      "about": "Über",
+      "aboutDescription": "Anwendungsversion und Versionsverlauf."
     },
     "theme": "Design",
     "themeLight": "Hell",
@@ -92,6 +96,13 @@
     "checkTimeout": "Verbindungs-Timeout",
     "checkTimeoutHint": "Maximale Wartezeit pro Prüfung.",
     "checkTimeoutValue": "{{value}} s",
+    "checkAllMode": "Modus „Alle prüfen“",
+    "checkAllModeHint": "Wie Proxys bei „Alle prüfen“ geprüft werden.",
+    "checkAllModeSequential": "Nacheinander",
+    "checkAllModeParallel": "Parallel",
+    "checkAllConcurrency": "Parallel-Limit",
+    "checkAllConcurrencyHint": "Maximale Anzahl gleichzeitig geprüfter Proxys im Parallelmodus.",
+    "checkAllConcurrencyValue": "{{value}} Proxys",
     "checkDomains": "Prüfdomains (optional)",
     "checkDomainsHint": "Optional. Proxies werden zusätzlich gegen diese Domains geprüft. Wenn konfiguriert, gilt ein Proxy als aktiv, wenn mindestens eine Domain antwortet.",
     "checkDomainsEmpty": "Keine Domains konfiguriert. Proxies werden nur über die Erreichbarkeit der Adresse geprüft.",
@@ -100,7 +111,19 @@
     "domainRequired": "Mindestens eine Prüfdomain erforderlich",
     "invalidDomain": "Geben Sie einen gültigen Domainnamen ein",
     "domainDuplicate": "Diese Domain ist bereits in der Liste",
-    "saved": "Einstellungen gespeichert"
+    "saved": "Einstellungen gespeichert",
+    "currentVersion": "Aktuelle Version",
+    "latestRelease": "Aktuell",
+    "changelogLoadError": "Änderungsprotokoll konnte nicht geladen werden.",
+    "changelogEmpty": "Kein Änderungsprotokoll verfügbar.",
+    "changelogSections": {
+      "added": "Hinzugefügt",
+      "changed": "Geändert",
+      "deprecated": "Veraltet",
+      "removed": "Entfernt",
+      "fixed": "Behoben",
+      "security": "Sicherheit"
+    }
   },
   "validation": {
     "hostRequired": "Host ist erforderlich",

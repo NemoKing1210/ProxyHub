@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { registerAppIpc } from './ipc/app'
 import { registerProxyIpc } from './ipc/proxy'
 import { registerSettingsIpc } from './ipc/settings'
 
@@ -53,6 +54,7 @@ app.whenReady().then(() => {
 
   registerProxyIpc()
   registerSettingsIpc()
+  registerAppIpc()
 
   createWindow()
 
