@@ -27,6 +27,7 @@ import ProxyCard from './ProxyCard'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyFormDialog from './ProxyFormDialog'
 import ProxyListFilters from './ProxyListFilters'
+import ProxyListSearch from './ProxyListSearch'
 
 function toProxyInput(values: ProxyFormValues): ProxyInput {
   return {
@@ -276,6 +277,11 @@ function ProxyList(): React.JSX.Element {
             onChange={setFilters}
           />
 
+          <ProxyListSearch
+            value={filters.searchQuery}
+            onChange={(searchQuery) => setFilters({ ...filters, searchQuery })}
+          />
+
           {visibleProxies.length === 0 ? (
             <Paper
               sx={{
@@ -322,6 +328,7 @@ function ProxyList(): React.JSX.Element {
         open={dialogOpen}
         mode={dialogMode}
         initialProxy={editingProxy}
+        existingProxies={proxies}
         onClose={() => setDialogOpen(false)}
         onSubmit={handleSubmit}
       />

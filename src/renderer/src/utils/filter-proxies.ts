@@ -1,12 +1,15 @@
-import type { Proxy, ProxyAnonymityLevel } from '../../../shared/types/proxy'
+import type { Proxy, ProxyAnonymityLevel, ProxyProtocol } from '../../../shared/types/proxy'
+import { matchesProxySearch } from './proxy-search'
 
 export type ProxyFavoriteFilter = 'all' | 'favorites' | 'nonFavorites'
 
 export type ProxyStatusFilter = 'all' | 'alive' | 'dead'
 
 export interface ProxyListFilters {
+  searchQuery: string
   countryCode: string
   city: string
+  protocol: ProxyProtocol | ''
   anonymityLevel: ProxyAnonymityLevel | ''
   favorite: ProxyFavoriteFilter
   status: ProxyStatusFilter
@@ -14,8 +17,10 @@ export interface ProxyListFilters {
 }
 
 export const DEFAULT_PROXY_LIST_FILTERS: ProxyListFilters = {
+  searchQuery: '',
   countryCode: '',
   city: '',
+  protocol: '',
   anonymityLevel: '',
   favorite: 'all',
   status: 'all',
@@ -37,8 +42,10 @@ export function getProxyDisplayLatency(proxy: Proxy): number | undefined {
 
 export function hasActiveFilters(filters: ProxyListFilters): boolean {
   return (
+    filters.searchQuery.trim() !== '' ||
     filters.countryCode !== '' ||
     filters.city !== '' ||
+    filters.protocol !== '' ||
     filters.anonymityLevel !== '' ||
     filters.favorite !== 'all' ||
     filters.status !== 'all' ||
@@ -53,6 +60,10 @@ export function filterProxies(proxies: Proxy[], filters: ProxyListFilters): Prox
     }
 
     if (filters.city && proxy.city?.toLowerCase() !== filters.city.toLowerCase()) {
+      return false
+    }
+
+    if (filters.protocol && proxy.protocol !== filters.protocol) {
       return false
     }
 
@@ -81,6 +92,10 @@ export function filterProxies(proxies: Proxy[], filters: ProxyListFilters): Prox
       if (latency === undefined || latency > filters.maxLatencyMs) {
         return false
       }
+    }
+
+    if (!matchesProxySearch(proxy, filters.searchQuery)) {
+      return false
     }
 
     return true

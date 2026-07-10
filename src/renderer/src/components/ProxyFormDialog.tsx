@@ -16,7 +16,7 @@ import {
   Typography
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry, PROXY_COUNTRIES } from '../../../shared/constants/proxy-countries'
@@ -30,18 +30,21 @@ import {
   PROXY_ICON_IDS
 } from '../../../shared/types/proxy'
 import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
+import { parseProxyUrl } from '../../../shared/utils/proxy-format'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import { createProxyFormSchema, type ProxyFormValues } from '../validation/proxySchema'
 import CountryFlag from './CountryFlag'
 import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyColorSwatch from './ProxyColorSwatch'
 import ProxyFormSection from './ProxyFormSection'
+import ProxyQuickFillPanel from './ProxyQuickFillPanel'
 import ProxyIcon from './ProxyIcon'
 
 interface ProxyFormDialogProps {
   open: boolean
   mode: 'add' | 'edit'
   initialProxy?: Proxy
+  existingProxies: Proxy[]
   onClose: () => void
   onSubmit: (values: ProxyFormValues) => Promise<void>
 }
@@ -50,12 +53,26 @@ function ProxyFormDialog({
   open,
   mode,
   initialProxy,
+  existingProxies,
   onClose,
   onSubmit
 }: ProxyFormDialogProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const schema = useMemo(() => createProxyFormSchema(t), [t])
+  const schemaContextRef = useRef({
+    existingProxies,
+    editingProxyId: initialProxy?.id
+  })
+
+  schemaContextRef.current = {
+    existingProxies,
+    editingProxyId: initialProxy?.id
+  }
+
+  const schema = useMemo(
+    () => createProxyFormSchema(t, () => schemaContextRef.current),
+    [t]
+  )
 
   const defaultValues: ProxyFormValues = {
     label: '',
@@ -100,6 +117,9 @@ function ProxyFormDialog({
   const [connectionExpanded, setConnectionExpanded] = useState(true)
   const [authExpanded, setAuthExpanded] = useState(false)
   const [locationExpanded, setLocationExpanded] = useState(false)
+  const [quickFillValue, setQuickFillValue] = useState('')
+  const [quickFillError, setQuickFillError] = useState<string | null>(null)
+  const skipPortDefaultRef = useRef(false)
 
   useEffect(() => {
     if (!open) return
@@ -108,6 +128,9 @@ function ProxyFormDialog({
     setConnectionExpanded(true)
     setAuthExpanded(false)
     setLocationExpanded(false)
+    setQuickFillValue('')
+    setQuickFillError(null)
+    skipPortDefaultRef.current = false
   }, [open, initialProxy?.id])
 
   useEffect(() => {
@@ -165,9 +188,37 @@ function ProxyFormDialog({
 
   useEffect(() => {
     if (mode === 'add' && open) {
+      if (skipPortDefaultRef.current) {
+        skipPortDefaultRef.current = false
+        return
+      }
+
       setValue('port', DEFAULT_PORTS[protocol as ProxyProtocol])
     }
   }, [protocol, mode, open, setValue])
+
+  const applyQuickFill = useCallback(() => {
+    const parsed = parseProxyUrl(quickFillValue)
+
+    if (!parsed) {
+      setQuickFillError(t('proxyForm.quickFillError'))
+      return
+    }
+
+    skipPortDefaultRef.current = true
+    setValue('protocol', parsed.protocol)
+    setValue('host', parsed.host)
+    setValue('port', parsed.port)
+    setValue('username', parsed.username ?? '')
+    setValue('password', parsed.password ?? '')
+
+    if (parsed.username || parsed.password) {
+      setAuthExpanded(true)
+    }
+
+    setQuickFillError(null)
+    setQuickFillValue('')
+  }, [quickFillValue, setValue, t])
 
   const submit = handleSubmit(async (values) => {
     await onSubmit(values)
@@ -200,6 +251,20 @@ function ProxyFormDialog({
             expanded={connectionExpanded}
             onExpandedChange={setConnectionExpanded}
           >
+            {mode === 'add' ? (
+              <ProxyQuickFillPanel
+                value={quickFillValue}
+                error={quickFillError}
+                onChange={(nextValue) => {
+                  setQuickFillValue(nextValue)
+                  if (quickFillError) {
+                    setQuickFillError(null)
+                  }
+                }}
+                onApply={applyQuickFill}
+              />
+            ) : null}
+
             <Controller
               name="protocol"
               control={control}

@@ -27,9 +27,10 @@
     "empty": "No proxies yet. Click \"Add proxy\" to get started.",
     "filters": {
       "title": "Filters",
-      "description": "Narrow the list by location, anonymity, favorites, status, or latency.",
+      "description": "Narrow the list by protocol, location, anonymity, favorites, status, or latency.",
       "country": "Country",
       "city": "City",
+      "protocol": "Protocol",
       "anonymity": "Anonymity",
       "favorite": "Favorites",
       "favoriteAll": "All",
@@ -47,6 +48,13 @@
       "shown": "{{shown}} of {{total}} shown",
       "noResults": "No proxies match the filters",
       "noResultsHint": "Try changing or clearing the filters."
+    },
+    "search": {
+      "title": "Search",
+      "hint": "Matches name, host, IP, country, city, protocol, and more.",
+      "placeholder": "Start typing to filter the list…",
+      "clear": "Clear search",
+      "pending": "Searching…"
     },
     "deleteConfirm": {
       "title": "Delete proxy?",
@@ -90,7 +98,7 @@
       "actions": "Actions"
     },
     "actions": {
-      "check": "Check proxy",
+      "check": "Check",
       "edit": "Edit proxy",
       "delete": "Delete proxy",
       "copyLink": "Copy as link",
@@ -155,7 +163,13 @@
     "city": "City (optional)",
     "cityPlaceholder": "New York",
     "anonymityLevel": "Anonymity (optional)",
-    "anonymityHint": "elite, anonymous, or transparent — as in import files."
+    "anonymityHint": "elite, anonymous, or transparent — as in import files.",
+    "quickFill": "Quick fill from link",
+    "quickFillPlaceholder": "socks5://user:pass@host:1080 or host:port",
+    "quickFillApply": "Apply",
+    "quickFillHint": "Paste a proxy URL with or without protocol — credentials are parsed automatically.",
+    "quickFillError": "Could not parse proxy link. Check the format and try again.",
+    "quickFillOrManual": "or fill manually"
   },
   "proxyIcons": {
     "auto": "Auto",
@@ -262,6 +276,7 @@
     "usernameMax": "Username is too long",
     "passwordMax": "Password is too long",
     "authPair": "Username and password must both be provided",
+    "proxyDuplicate": "This proxy is already in the list",
     "countryCodeInvalid": "Enter a valid two-letter country code",
     "cityMax": "City must be 64 characters or less"
   }

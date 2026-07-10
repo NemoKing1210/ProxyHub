@@ -22,9 +22,10 @@
     "empty": "暂无代理。点击「添加代理」开始。",
     "filters": {
       "title": "筛选",
-      "description": "按位置、匿名性、收藏、状态或延迟缩小列表。",
+      "description": "按协议、位置、匿名性、收藏、状态或延迟缩小列表。",
       "country": "国家",
       "city": "城市",
+      "protocol": "协议",
       "anonymity": "匿名性",
       "favorite": "收藏",
       "favoriteAll": "全部",
@@ -42,6 +43,13 @@
       "shown": "显示 {{shown}} / {{total}}",
       "noResults": "没有符合筛选条件的代理",
       "noResultsHint": "请尝试更改或清除筛选条件。"
+    },
+    "search": {
+      "title": "搜索",
+      "hint": "匹配名称、主机、IP、国家、城市、协议等。",
+      "placeholder": "开始输入以筛选列表…",
+      "clear": "清除搜索",
+      "pending": "搜索中…"
     },
     "deleteConfirm": {
       "title": "删除代理？",
@@ -84,7 +92,7 @@
       "anonymityLevel": "匿名级别",
       "actions": "操作"
     },
-    "actions": { "check": "检测代理", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接", "share": "分享", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除", "enableProxy": "启用代理", "disableProxy": "禁用代理" },
+    "actions": { "check": "检查", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接", "share": "分享", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除", "enableProxy": "启用代理", "disableProxy": "禁用代理" },
     "disabled": "已禁用",
     "sections": {
       "connection": "连接",
@@ -139,7 +147,13 @@
     "city": "城市（可选）",
     "cityPlaceholder": "北京",
     "anonymityLevel": "匿名级别（可选）",
-    "anonymityHint": "elite、anonymous 或 transparent — 与导入文件格式一致。"
+    "anonymityHint": "elite、anonymous 或 transparent — 与导入文件格式一致。",
+    "quickFill": "通过链接快速填写",
+    "quickFillPlaceholder": "socks5://user:pass@host:1080 或 host:port",
+    "quickFillApply": "应用",
+    "quickFillHint": "粘贴带或不带协议的代理 URL — 凭据会自动解析。",
+    "quickFillError": "无法解析代理链接。请检查格式后重试。",
+    "quickFillOrManual": "或手动填写"
   },
   "proxyIcons": {
     "auto": "自动",
@@ -240,6 +254,7 @@
     "usernameMax": "用户名过长",
     "passwordMax": "密码过长",
     "authPair": "用户名和密码必须同时填写",
+    "proxyDuplicate": "该代理已在列表中",
     "countryCodeInvalid": "请输入有效的两位国家代码",
     "cityMax": "城市名称不能超过64个字符"
   }

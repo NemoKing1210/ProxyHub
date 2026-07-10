@@ -22,9 +22,10 @@
     "empty": "Noch keine Proxies. Klicken Sie auf „Proxy hinzufügen“, um zu starten.",
     "filters": {
       "title": "Filter",
-      "description": "Liste nach Standort, Anonymität, Favoriten, Status oder Latenz eingrenzen.",
+      "description": "Liste nach Protokoll, Standort, Anonymität, Favoriten, Status oder Latenz eingrenzen.",
       "country": "Land",
       "city": "Stadt",
+      "protocol": "Protokoll",
       "anonymity": "Anonymität",
       "favorite": "Favoriten",
       "favoriteAll": "Alle",
@@ -42,6 +43,13 @@
       "shown": "{{shown}} von {{total}} angezeigt",
       "noResults": "Keine Proxies entsprechen den Filtern",
       "noResultsHint": "Ändern oder löschen Sie die Filter."
+    },
+    "search": {
+      "title": "Suche",
+      "hint": "Durchsucht Name, Host, IP, Land, Stadt, Protokoll und mehr.",
+      "placeholder": "Tippen, um die Liste zu filtern…",
+      "clear": "Suche löschen",
+      "pending": "Suche…"
     },
     "deleteConfirm": {
       "title": "Proxy löschen?",
@@ -85,7 +93,7 @@
       "actions": "Aktionen"
     },
     "actions": {
-      "check": "Proxy prüfen",
+      "check": "Prüfen",
       "edit": "Bearbeiten",
       "delete": "Löschen",
       "copyLink": "Als Link kopieren",
@@ -149,7 +157,13 @@
     "city": "Stadt (optional)",
     "cityPlaceholder": "Berlin",
     "anonymityLevel": "Anonymität (optional)",
-    "anonymityHint": "elite, anonymous oder transparent — wie in Importdateien."
+    "anonymityHint": "elite, anonymous oder transparent — wie in Importdateien.",
+    "quickFill": "Schnell aus Link ausfüllen",
+    "quickFillPlaceholder": "socks5://user:pass@host:1080 oder host:port",
+    "quickFillApply": "Übernehmen",
+    "quickFillHint": "Proxy-URL mit oder ohne Protokoll einfügen — Zugangsdaten werden automatisch erkannt.",
+    "quickFillError": "Proxy-Link konnte nicht gelesen werden. Format prüfen und erneut versuchen.",
+    "quickFillOrManual": "oder manuell ausfüllen"
   },
   "proxyIcons": {
     "auto": "Automatisch",
@@ -255,6 +269,7 @@
     "usernameMax": "Benutzername zu lang",
     "passwordMax": "Passwort zu lang",
     "authPair": "Benutzername und Passwort müssen beide angegeben werden",
+    "proxyDuplicate": "Dieser Proxy ist bereits in der Liste",
     "countryCodeInvalid": "Geben Sie einen gültigen zweistelligen Ländercode ein",
     "cityMax": "Stadt darf höchstens 64 Zeichen lang sein"
   }

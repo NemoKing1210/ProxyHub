@@ -1,6 +1,6 @@
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
-import { Box, Button, Container, Typography } from '@mui/material'
+import { Box, Button, Container } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -70,21 +70,6 @@ function AppLayout(): React.JSX.Element {
           WebkitBackdropFilter: 'blur(20px) saturate(1.4)'
         }}
       >
-        <Typography
-          variant="subtitle2"
-          sx={{
-            mb: 1.5,
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            fontSize: '0.68rem',
-            color: 'primary.main',
-            opacity: 0.9
-          }}
-        >
-          ProxyChecker
-        </Typography>
-
         <Box
           sx={{
             display: 'inline-flex',

@@ -14,6 +14,7 @@ import {
   resolveProxyStatusFromDomainChecks,
   upsertDomainCheck
 } from '../../../shared/utils/proxy-check-results'
+import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
 import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { useSettingsStore } from './settingsStore'
 import { getEnabledCheckDomains } from '../../../shared/types/settings'
@@ -269,6 +270,10 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   },
 
   addProxy: async (input) => {
+    if (findDuplicateProxy(input, get().proxies)) {
+      return
+    }
+
     const proxy = createProxy(input)
     const proxies = [...get().proxies, proxy]
 
@@ -277,6 +282,10 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   },
 
   updateProxy: async (id, input) => {
+    if (findDuplicateProxy(input, get().proxies, id)) {
+      return
+    }
+
     const proxies = get().proxies.map((proxy) => {
       if (proxy.id !== id) {
         return proxy

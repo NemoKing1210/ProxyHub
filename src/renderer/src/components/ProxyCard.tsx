@@ -20,8 +20,9 @@ import { formatDateTime } from '../../../shared/utils/datetime'
 import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { formatProxyAddress } from '../../../shared/utils/proxy-format'
-import { elevationShadow, surfaceContainer } from '../theme'
+import { elevationShadow } from '../theme'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
+import { getProxyProtocolStyles } from '../utils/proxy-protocol-styles'
 import ProxyCardAvatar from './ProxyCardAvatar'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
@@ -99,6 +100,10 @@ function ProxyCard({
   const address = formatProxyAddress(proxy)
   const domainChecks = useMemo(() => getProxyDomainChecks(proxy), [proxy])
   const colorStyles = useMemo(() => getProxyColorStyles(theme, proxy.color), [theme, proxy.color])
+  const protocolStyles = useMemo(
+    () => getProxyProtocolStyles(theme, proxy.protocol),
+    [theme, proxy.protocol]
+  )
 
   const connectionFields = useMemo(() => {
     const fields: ImportantField[] = [
@@ -338,10 +343,17 @@ function ProxyCard({
                 sx={{
                   fontWeight: 700,
                   letterSpacing: 0.5,
-                  bgcolor: surfaceContainer(theme, 'high'),
-                  color: 'primary.main',
+                  bgcolor: protocolStyles.background,
+                  color: protocolStyles.main,
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'background-color 150ms ease',
+                  '&:hover': {
+                    bgcolor: alpha(
+                      protocolStyles.main,
+                      theme.palette.mode === 'dark' ? 0.36 : 0.2
+                    )
+                  }
                 }}
               />
               <Typography

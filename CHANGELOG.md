@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-07-10
+
+### Added
+
+- Quick fill from proxy link when adding a proxy (with or without protocol, including credentials)
+- Duplicate proxy validation when adding or editing (protocol, host, port, and credentials)
+- Protocol filter in the proxy list filters
+- Universal search below filters (name, host, IP, country, city, protocol, and more) with debounced input
+
+### Changed
+
+- Removed app name from the header navigation bar
+- Renamed proxy card action from “Check proxy” to “Check”
+- Protocol badges on proxy cards use distinct colors per protocol (HTTP, HTTPS, SOCKS4, SOCKS5)
+- Redesigned quick-fill and search panels with clearer layout and focus states
+
 ## [1.14.0] - 2026-07-10
 
 ### Added

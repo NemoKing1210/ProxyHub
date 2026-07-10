@@ -2,11 +2,23 @@ import { z } from 'zod'
 import type { TFunction } from 'i18next'
 import type { CheckDomainEntry } from '../../../shared/types/settings'
 import { getCheckDomainNames } from '../../../shared/types/settings'
+import type { Proxy } from '../../../shared/types/proxy'
 import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_FORM_VALUES } from '../../../shared/types/proxy'
+import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
 
 const countryCodePattern = /^[A-Za-z]{2}$/
 
-export function createProxyFormSchema(t: TFunction) {
+export interface ProxyFormSchemaContext {
+  existingProxies: Array<
+    Pick<Proxy, 'id' | 'protocol' | 'host' | 'port' | 'username' | 'password'>
+  >
+  editingProxyId?: string
+}
+
+export function createProxyFormSchema(
+  t: TFunction,
+  getContext: () => ProxyFormSchemaContext = () => ({ existingProxies: [] })
+) {
   return z
     .object({
       label: z.string().trim().max(64, t('validation.labelMax')).optional(),
@@ -56,6 +68,32 @@ export function createProxyFormSchema(t: TFunction) {
           code: z.ZodIssueCode.custom,
           message: t('validation.authPair'),
           path: hasUsername ? ['password'] : ['username']
+        })
+      }
+
+      const { existingProxies, editingProxyId } = getContext()
+
+      if (existingProxies.length === 0) {
+        return
+      }
+
+      const duplicate = findDuplicateProxy(
+        {
+          protocol: data.protocol,
+          host: data.host.trim(),
+          port: data.port,
+          username: data.username?.trim() || undefined,
+          password: data.password || undefined
+        },
+        existingProxies,
+        editingProxyId
+      )
+
+      if (duplicate) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t('validation.proxyDuplicate'),
+          path: ['host']
         })
       }
     })

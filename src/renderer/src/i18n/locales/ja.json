@@ -22,9 +22,10 @@
     "empty": "プロキシがありません。「プロキシを追加」をクリックして開始してください。",
     "filters": {
       "title": "フィルター",
-      "description": "場所、匿名性、お気に入り、ステータス、遅延でリストを絞り込みます。",
+      "description": "プロトコル、場所、匿名性、お気に入り、ステータス、遅延でリストを絞り込みます。",
       "country": "国",
       "city": "都市",
+      "protocol": "プロトコル",
       "anonymity": "匿名性",
       "favorite": "お気に入り",
       "favoriteAll": "すべて",
@@ -42,6 +43,13 @@
       "shown": "{{shown}} / {{total}} 件表示",
       "noResults": "フィルターに一致するプロキシがありません",
       "noResultsHint": "フィルターを変更またはクリアしてください。"
+    },
+    "search": {
+      "title": "検索",
+      "hint": "名前、ホスト、IP、国、都市、プロトコルなどに一致します。",
+      "placeholder": "入力してリストを絞り込み…",
+      "clear": "検索をクリア",
+      "pending": "検索中…"
     },
     "deleteConfirm": {
       "title": "プロキシを削除しますか？",
@@ -85,7 +93,7 @@
       "actions": "操作"
     },
     "actions": {
-      "check": "プロキシを確認",
+      "check": "確認",
       "edit": "編集",
       "delete": "削除",
       "copyLink": "リンクとしてコピー",
@@ -149,7 +157,13 @@
     "city": "都市（任意）",
     "cityPlaceholder": "東京",
     "anonymityLevel": "匿名性（任意）",
-    "anonymityHint": "elite、anonymous、transparent — インポートファイルと同じ形式。"
+    "anonymityHint": "elite、anonymous、transparent — インポートファイルと同じ形式。",
+    "quickFill": "リンクからクイック入力",
+    "quickFillPlaceholder": "socks5://user:pass@host:1080 または host:port",
+    "quickFillApply": "適用",
+    "quickFillHint": "プロトコルあり・なしのプロキシURLを貼り付け — 認証情報は自動で解析されます。",
+    "quickFillError": "プロキシリンクを解析できませんでした。形式を確認して再試行してください。",
+    "quickFillOrManual": "または手動で入力"
   },
   "proxyIcons": {
     "auto": "自動",
@@ -250,6 +264,7 @@
     "usernameMax": "ユーザー名が長すぎます",
     "passwordMax": "パスワードが長すぎます",
     "authPair": "ユーザー名とパスワードは両方入力してください",
+    "proxyDuplicate": "このプロキシは既にリストにあります",
     "countryCodeInvalid": "有効な2文字の国コードを入力してください",
     "cityMax": "都市名は64文字以内にしてください"
   }

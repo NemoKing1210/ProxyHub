@@ -22,9 +22,10 @@
     "empty": "Aún no hay proxies. Haz clic en \"Añadir proxy\" para empezar.",
     "filters": {
       "title": "Filtros",
-      "description": "Reduce la lista por ubicación, anonimato, favoritos, estado o latencia.",
+      "description": "Reduce la lista por protocolo, ubicación, anonimato, favoritos, estado o latencia.",
       "country": "País",
       "city": "Ciudad",
+      "protocol": "Protocolo",
       "anonymity": "Anonimato",
       "favorite": "Favoritos",
       "favoriteAll": "Todos",
@@ -42,6 +43,13 @@
       "shown": "{{shown}} de {{total}} mostrados",
       "noResults": "Ningún proxy coincide con los filtros",
       "noResultsHint": "Prueba a cambiar o borrar los filtros."
+    },
+    "search": {
+      "title": "Buscar",
+      "hint": "Coincide con nombre, host, IP, país, ciudad, protocolo y más.",
+      "placeholder": "Empieza a escribir para filtrar la lista…",
+      "clear": "Borrar búsqueda",
+      "pending": "Buscando…"
     },
     "deleteConfirm": {
       "title": "¿Eliminar proxy?",
@@ -85,7 +93,7 @@
       "actions": "Acciones"
     },
     "actions": {
-      "check": "Comprobar proxy",
+      "check": "Comprobar",
       "edit": "Editar",
       "delete": "Eliminar",
       "copyLink": "Copiar como enlace",
@@ -149,7 +157,13 @@
     "city": "Ciudad (opcional)",
     "cityPlaceholder": "Madrid",
     "anonymityLevel": "Anonimato (opcional)",
-    "anonymityHint": "elite, anonymous o transparent — como en archivos de importación."
+    "anonymityHint": "elite, anonymous o transparent — como en archivos de importación.",
+    "quickFill": "Rellenar rápido desde enlace",
+    "quickFillPlaceholder": "socks5://user:pass@host:1080 o host:port",
+    "quickFillApply": "Aplicar",
+    "quickFillHint": "Pega una URL de proxy con o sin protocolo; las credenciales se detectan automáticamente.",
+    "quickFillError": "No se pudo analizar el enlace del proxy. Comprueba el formato e inténtalo de nuevo.",
+    "quickFillOrManual": "o rellena manualmente"
   },
   "proxyIcons": {
     "auto": "Auto",
@@ -255,6 +269,7 @@
     "usernameMax": "Usuario demasiado largo",
     "passwordMax": "Contraseña demasiado larga",
     "authPair": "Usuario y contraseña deben proporcionarse juntos",
+    "proxyDuplicate": "Este proxy ya está en la lista",
     "countryCodeInvalid": "Introduce un código de país válido de dos letras",
     "cityMax": "La ciudad no puede superar 64 caracteres"
   }

@@ -22,8 +22,8 @@ import { useTheme } from '@mui/material/styles'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
-import { PROXY_ANONYMITY_LEVELS } from '../../../shared/types/proxy'
-import type { Proxy } from '../../../shared/types/proxy'
+import { PROXY_ANONYMITY_LEVELS, PROXY_PROTOCOLS } from '../../../shared/types/proxy'
+import type { Proxy, ProxyProtocol } from '../../../shared/types/proxy'
 import {
   DEFAULT_PROXY_LIST_FILTERS,
   MAX_LATENCY_FILTER_DEFAULT_MS,
@@ -62,6 +62,16 @@ function getCountryOptions(proxies: Proxy[]): string[] {
   })
 }
 
+function getProtocolOptions(proxies: Proxy[]): ProxyProtocol[] {
+  const protocols = new Set<ProxyProtocol>()
+
+  for (const proxy of proxies) {
+    protocols.add(proxy.protocol)
+  }
+
+  return PROXY_PROTOCOLS.filter((protocol) => protocols.has(protocol))
+}
+
 function getCityOptions(proxies: Proxy[], countryCode: string): string[] {
   const cities = new Map<string, string>()
 
@@ -88,6 +98,7 @@ function ProxyListFilters({
   const theme = useTheme()
 
   const countryOptions = useMemo(() => getCountryOptions(proxies), [proxies])
+  const protocolOptions = useMemo(() => getProtocolOptions(proxies), [proxies])
   const cityOptions = useMemo(
     () => getCityOptions(proxies, filters.countryCode),
     [proxies, filters.countryCode]
@@ -148,6 +159,26 @@ function ProxyListFilters({
     >
       <Stack spacing={2.5}>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+          <TextField
+            select
+            label={t('proxyList.filters.protocol')}
+            value={filters.protocol}
+            onChange={(event) =>
+              updateFilters({
+                protocol: event.target.value as ProxyListFilters['protocol']
+              })
+            }
+            fullWidth
+            disabled={protocolOptions.length === 0}
+          >
+            <MenuItem value="">{t('proxyList.filters.all')}</MenuItem>
+            {protocolOptions.map((protocol) => (
+              <MenuItem key={protocol} value={protocol}>
+                {protocol.toUpperCase()}
+              </MenuItem>
+            ))}
+          </TextField>
+
           <TextField
             select
             label={t('proxyList.filters.country')}
