@@ -7,28 +7,37 @@ import { Box, Button, Chip, CircularProgress, Paper, Stack, Typography } from '@
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Proxy } from '../../../shared/types/proxy'
+import type { Proxy, ProxyInput } from '../../../shared/types/proxy'
+import { DEFAULT_PROXY_COLOR_ID, DEFAULT_PROXY_ICON_ID } from '../../../shared/types/proxy'
+import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
+import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
+import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
+import { normalizeProxyIconId } from '../../../shared/utils/proxy-icons'
 import { useProxyStore } from '../store/proxyStore'
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
 import ProxyFormDialog from './ProxyFormDialog'
 
-function toProxyInput(values: ProxyFormValues): {
-  protocol: ProxyFormValues['protocol']
-  host: string
-  port: number
-  label?: string
-  username?: string
-  password?: string
-} {
+function toProxyInput(values: ProxyFormValues): ProxyInput {
   return {
     protocol: values.protocol,
     host: values.host.trim(),
     port: values.port,
     label: values.label?.trim() || undefined,
+    icon: (() => {
+      const icon = normalizeProxyIconId(values.icon)
+      return icon && icon !== DEFAULT_PROXY_ICON_ID ? icon : undefined
+    })(),
+    color: (() => {
+      const color = normalizeProxyColorId(values.color)
+      return color && color !== DEFAULT_PROXY_COLOR_ID ? color : undefined
+    })(),
     username: values.username?.trim() || undefined,
-    password: values.password || undefined
+    password: values.password || undefined,
+    countryCode: normalizeCountryCode(values.countryCode),
+    city: values.city?.trim() || undefined,
+    anonymityLevel: normalizeAnonymityLevel(values.anonymityLevel)
   }
 }
 

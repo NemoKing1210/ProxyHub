@@ -33,6 +33,9 @@
       "checkedAt": "जांच समय",
       "createdAt": "बनाया गया",
       "proxyUrl": "प्रॉक्सी URL",
+      "country": "देश",
+      "city": "शहर",
+      "anonymityLevel": "गुमनामी",
       "actions": "क्रियाएं"
     },
     "actions": {
@@ -65,12 +68,67 @@
     "addTitle": "प्रॉक्सी जोड़ें",
     "editTitle": "प्रॉक्सी संपादित करें",
     "label": "लेबल (वैकल्पिक)",
+    "icon": "आइकन",
+    "iconHint": "प्रॉक्सी कार्ड के शीर्ष पर दिखाया जाता है।",
+    "color": "रंग",
+    "colorHint": "प्रॉक्सी कार्ड पर एक्सेंट रंग।",
+    "previewFallback": "प्रॉक्सी नाम",
+    "previewHint": "कार्ड हेडर पूर्वावलोकन",
+    "sections": {
+      "appearance": "दिखावट",
+      "appearanceDescription": "लेबल, आइकन और रंग से प्रॉक्सी पहचानें।",
+      "connection": "कनेक्शन",
+      "connectionDescription": "प्रॉक्सी सर्वर का पता और प्रोटोकॉल।",
+      "location": "स्थान और मेटाडेटा",
+      "locationDescription": "देश, शहर और गुमनामी — आयात और फ़िल्टर के लिए उपयोगी।",
+      "authentication": "प्रमाणीकरण",
+      "authenticationDescription": "यदि प्रॉक्सी को प्राधिकरण चाहिए तो क्रेडेंशियल।"
+    },
     "protocol": "प्रोटोकॉल",
     "host": "होस्ट",
     "hostPlaceholder": "192.168.1.1 या proxy.example.com",
     "port": "पोर्ट",
     "username": "उपयोगकर्ता नाम (वैकल्पिक)",
-    "password": "पासवर्ड (वैकल्पिक)"
+    "password": "पासवर्ड (वैकल्पिक)",
+    "country": "देश (वैकल्पिक)",
+    "countryPlaceholder": "IN",
+    "countryHint": "ISO 3166-1 alpha-2 कोड, जैसे IN या अज्ञात के लिए ZZ।",
+    "city": "शहर (वैकल्पिक)",
+    "cityPlaceholder": "मुंबई",
+    "anonymityLevel": "गुमनामी स्तर (वैकल्पिक)",
+    "anonymityHint": "elite, anonymous या transparent — आयात फ़ाइलों जैसा।"
+  },
+  "proxyIcons": {
+    "router": "राउटर",
+    "dns": "नेटवर्क",
+    "cloud": "क्लाउड",
+    "public": "ग्लोब",
+    "shield": "ढाल",
+    "vpn": "VPN",
+    "storage": "सर्वर",
+    "home": "घर",
+    "work": "काम",
+    "travel": "यात्रा",
+    "star": "स्टार",
+    "favorite": "पसंदीदा"
+  },
+  "proxyColors": {
+    "blue": "नीला",
+    "green": "हरा",
+    "teal": "टील",
+    "cyan": "सियान",
+    "indigo": "इंडिगो",
+    "purple": "बैंगनी",
+    "pink": "गुलाबी",
+    "red": "लाल",
+    "orange": "नारंगी",
+    "amber": "एम्बर",
+    "slate": "स्लेट"
+  },
+  "proxyAnonymity": {
+    "elite": "Elite",
+    "anonymous": "Anonymous",
+    "transparent": "Transparent"
   },
   "proxyStatus": {
     "unknown": "जांच नहीं",
@@ -105,7 +163,7 @@
     "checkAllConcurrencyHint": "समानांतर मोड में एक साथ जांची जाने वाली प्रॉक्सी की अधिकतम संख्या।",
     "checkAllConcurrencyValue": "{{value}} प्रॉक्सी",
     "checkDomains": "जांच डोमेन (वैकल्पिक)",
-    "checkDomainsHint": "वैकल्पिक। प्रॉक्सी इन डोमेन के विरुद्ध भी जांचे जाते हैं। कॉन्फ़िगर होने पर, कम से कम एक डोमेन प्रतिक्रिया दे तो प्रॉक्सी सक्रिय माना जाता है।",
+    "checkDomainsHint": "वैकल्पिक। प्रॉक्सी इन डोमेन के विरुद्ध भी जांचे जाते हैं। कॉन्फ़िगर होने पर, कम से कम एक डोमेन प्रतिक्रिया दे तो प्रॉक्सी सक्रिय माना जाता है। example.com या httpbin.org बेहतर हैं; google.com अक्सर प्रॉक्सी ट्रैफ़िक ब्लॉक करता है।",
     "checkDomainsEmpty": "कोई डोमेन कॉन्फ़िगर नहीं है। प्रॉक्सी केवल पते की उपलब्धता से जांचे जाते हैं।",
     "domainPlaceholder": "example.com",
     "addDomain": "डोमेन जोड़ें",
@@ -137,6 +195,8 @@
     "labelMax": "लेबल अधिकतम 64 अक्षर",
     "usernameMax": "उपयोगकर्ता नाम बहुत लंबा",
     "passwordMax": "पासवर्ड बहुत लंबा",
-    "authPair": "उपयोगकर्ता नाम और पासवर्ड दोनों आवश्यक हैं"
+    "authPair": "उपयोगकर्ता नाम और पासवर्ड दोनों आवश्यक हैं",
+    "countryCodeInvalid": "मान्य दो-अक्षर का देश कोड दर्ज करें",
+    "cityMax": "शहर 64 अक्षरों से अधिक नहीं हो सकता"
   }
 }

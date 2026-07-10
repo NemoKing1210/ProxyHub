@@ -33,6 +33,9 @@
       "checkedAt": "Geprüft am",
       "createdAt": "Erstellt am",
       "proxyUrl": "Proxy-URL",
+      "country": "Land",
+      "city": "Stadt",
+      "anonymityLevel": "Anonymität",
       "actions": "Aktionen"
     },
     "actions": {
@@ -64,12 +67,67 @@
     "addTitle": "Proxy hinzufügen",
     "editTitle": "Proxy bearbeiten",
     "label": "Bezeichnung (optional)",
+    "icon": "Symbol",
+    "iconHint": "Wird in der Kopfzeile der Proxy-Karte angezeigt.",
+    "color": "Farbe",
+    "colorHint": "Akzentfarbe auf der Proxy-Karte.",
+    "previewFallback": "Proxy-Name",
+    "previewHint": "Vorschau der Kartenkopfzeile",
+    "sections": {
+      "appearance": "Erscheinungsbild",
+      "appearanceDescription": "Bezeichnung, Symbol und Farbe zur schnellen Erkennung.",
+      "connection": "Verbindung",
+      "connectionDescription": "Adresse und Protokoll des Proxy-Servers.",
+      "location": "Standort & Metadaten",
+      "locationDescription": "Land, Stadt und Anonymität — nützlich für Import und Filterung.",
+      "authentication": "Authentifizierung",
+      "authenticationDescription": "Zugangsdaten, falls der Proxy eine Anmeldung erfordert."
+    },
     "protocol": "Protokoll",
     "host": "Host",
     "hostPlaceholder": "192.168.1.1 oder proxy.example.com",
     "port": "Port",
     "username": "Benutzername (optional)",
-    "password": "Passwort (optional)"
+    "password": "Passwort (optional)",
+    "country": "Land (optional)",
+    "countryPlaceholder": "DE",
+    "countryHint": "ISO 3166-1 alpha-2-Code, z. B. DE oder ZZ für unbekannt.",
+    "city": "Stadt (optional)",
+    "cityPlaceholder": "Berlin",
+    "anonymityLevel": "Anonymität (optional)",
+    "anonymityHint": "elite, anonymous oder transparent — wie in Importdateien."
+  },
+  "proxyIcons": {
+    "router": "Router",
+    "dns": "Netzwerk",
+    "cloud": "Cloud",
+    "public": "Globus",
+    "shield": "Schild",
+    "vpn": "VPN",
+    "storage": "Server",
+    "home": "Zuhause",
+    "work": "Arbeit",
+    "travel": "Reise",
+    "star": "Stern",
+    "favorite": "Favorit"
+  },
+  "proxyColors": {
+    "blue": "Blau",
+    "green": "Grün",
+    "teal": "Türkis",
+    "cyan": "Cyan",
+    "indigo": "Indigo",
+    "purple": "Lila",
+    "pink": "Rosa",
+    "red": "Rot",
+    "orange": "Orange",
+    "amber": "Bernstein",
+    "slate": "Schiefergrau"
+  },
+  "proxyAnonymity": {
+    "elite": "Elite",
+    "anonymous": "Anonymous",
+    "transparent": "Transparent"
   },
   "proxyStatus": {
     "unknown": "Nicht geprüft",
@@ -104,7 +162,7 @@
     "checkAllConcurrencyHint": "Maximale Anzahl gleichzeitig geprüfter Proxys im Parallelmodus.",
     "checkAllConcurrencyValue": "{{value}} Proxys",
     "checkDomains": "Prüfdomains (optional)",
-    "checkDomainsHint": "Optional. Proxies werden zusätzlich gegen diese Domains geprüft. Wenn konfiguriert, gilt ein Proxy als aktiv, wenn mindestens eine Domain antwortet.",
+    "checkDomainsHint": "Optional. Proxies werden zusätzlich gegen diese Domains geprüft. Wenn konfiguriert, gilt ein Proxy als aktiv, wenn mindestens eine Domain antwortet. Empfohlen: example.com oder httpbin.org; google.com blockiert oft Proxy-Verkehr.",
     "checkDomainsEmpty": "Keine Domains konfiguriert. Proxies werden nur über die Erreichbarkeit der Adresse geprüft.",
     "domainPlaceholder": "example.com",
     "addDomain": "Domain hinzufügen",
@@ -136,6 +194,8 @@
     "labelMax": "Bezeichnung maximal 64 Zeichen",
     "usernameMax": "Benutzername zu lang",
     "passwordMax": "Passwort zu lang",
-    "authPair": "Benutzername und Passwort müssen beide angegeben werden"
+    "authPair": "Benutzername und Passwort müssen beide angegeben werden",
+    "countryCodeInvalid": "Geben Sie einen gültigen zweistelligen Ländercode ein",
+    "cityMax": "Stadt darf höchstens 64 Zeichen lang sein"
   }
 }

@@ -38,6 +38,9 @@
       "checkedAt": "Checked at",
       "createdAt": "Created at",
       "proxyUrl": "Proxy URL",
+      "country": "Country",
+      "city": "City",
+      "anonymityLevel": "Anonymity",
       "actions": "Actions"
     },
     "actions": {
@@ -70,12 +73,67 @@
     "addTitle": "Add proxy",
     "editTitle": "Edit proxy",
     "label": "Label (optional)",
+    "icon": "Icon",
+    "iconHint": "Displayed on the proxy card header.",
+    "color": "Color",
+    "colorHint": "Accent color on the proxy card.",
+    "previewFallback": "Proxy name",
+    "previewHint": "Card header preview",
+    "sections": {
+      "appearance": "Appearance",
+      "appearanceDescription": "Label, icon, and color to recognize proxies at a glance.",
+      "connection": "Connection",
+      "connectionDescription": "Proxy server address and protocol.",
+      "location": "Location & metadata",
+      "locationDescription": "Country, city, and anonymity — useful for import and filtering.",
+      "authentication": "Authentication",
+      "authenticationDescription": "Credentials if the proxy requires authorization."
+    },
     "protocol": "Protocol",
     "host": "Host",
     "hostPlaceholder": "192.168.1.1 or proxy.example.com",
     "port": "Port",
     "username": "Username (optional)",
-    "password": "Password (optional)"
+    "password": "Password (optional)",
+    "country": "Country (optional)",
+    "countryPlaceholder": "US",
+    "countryHint": "ISO 3166-1 alpha-2 code, e.g. US or ZZ for unknown.",
+    "city": "City (optional)",
+    "cityPlaceholder": "New York",
+    "anonymityLevel": "Anonymity (optional)",
+    "anonymityHint": "elite, anonymous, or transparent — as in import files."
+  },
+  "proxyIcons": {
+    "router": "Router",
+    "dns": "Network",
+    "cloud": "Cloud",
+    "public": "Globe",
+    "shield": "Shield",
+    "vpn": "VPN",
+    "storage": "Server",
+    "home": "Home",
+    "work": "Work",
+    "travel": "Travel",
+    "star": "Star",
+    "favorite": "Favorite"
+  },
+  "proxyColors": {
+    "blue": "Blue",
+    "green": "Green",
+    "teal": "Teal",
+    "cyan": "Cyan",
+    "indigo": "Indigo",
+    "purple": "Purple",
+    "pink": "Pink",
+    "red": "Red",
+    "orange": "Orange",
+    "amber": "Amber",
+    "slate": "Slate"
+  },
+  "proxyAnonymity": {
+    "elite": "Elite",
+    "anonymous": "Anonymous",
+    "transparent": "Transparent"
   },
   "proxyStatus": {
     "pending": "Waiting",
@@ -111,7 +169,7 @@
     "checkAllConcurrencyHint": "Maximum number of proxies checked at the same time in parallel mode.",
     "checkAllConcurrencyValue": "{{value}} proxies",
     "checkDomains": "Check domains (optional)",
-    "checkDomainsHint": "Optional. Proxies are also tested against these domains. When configured, a proxy is considered alive if at least one domain responds.",
+    "checkDomainsHint": "Optional. Proxies are also tested against these domains. When configured, a proxy is considered alive if at least one domain responds. Prefer reliable targets such as example.com or httpbin.org; google.com often blocks proxy traffic.",
     "checkDomainsEmpty": "No domains configured. Proxies are checked by address reachability only.",
     "domainPlaceholder": "example.com",
     "addDomain": "Add domain",
@@ -143,6 +201,8 @@
     "labelMax": "Label must be 64 characters or less",
     "usernameMax": "Username is too long",
     "passwordMax": "Password is too long",
-    "authPair": "Username and password must both be provided"
+    "authPair": "Username and password must both be provided",
+    "countryCodeInvalid": "Enter a valid two-letter country code",
+    "cityMax": "City must be 64 characters or less"
   }
 }

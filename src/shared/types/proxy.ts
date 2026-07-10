@@ -1,5 +1,44 @@
 export type ProxyProtocol = 'http' | 'https' | 'socks4' | 'socks5'
 
+export type ProxyAnonymityLevel = 'elite' | 'anonymous' | 'transparent'
+
+export const PROXY_ICON_IDS = [
+  'router',
+  'dns',
+  'cloud',
+  'public',
+  'shield',
+  'vpn',
+  'storage',
+  'home',
+  'work',
+  'travel',
+  'star',
+  'favorite'
+] as const
+
+export type ProxyIconId = (typeof PROXY_ICON_IDS)[number]
+
+export const DEFAULT_PROXY_ICON_ID: ProxyIconId = 'router'
+
+export const PROXY_COLOR_IDS = [
+  'blue',
+  'green',
+  'teal',
+  'cyan',
+  'indigo',
+  'purple',
+  'pink',
+  'red',
+  'orange',
+  'amber',
+  'slate'
+] as const
+
+export type ProxyColorId = (typeof PROXY_COLOR_IDS)[number]
+
+export const DEFAULT_PROXY_COLOR_ID: ProxyColorId = 'blue'
+
 export type ProxyStatus = 'unknown' | 'checking' | 'alive' | 'dead'
 
 export interface ProxyCheckErrorDetail {
@@ -39,6 +78,11 @@ export interface Proxy {
   username?: string
   password?: string
   label?: string
+  icon?: ProxyIconId
+  color?: ProxyColorId
+  countryCode?: string
+  city?: string
+  anonymityLevel?: ProxyAnonymityLevel
   createdAt: string
   status: ProxyStatus
   latencyMs?: number
@@ -58,6 +102,11 @@ export interface ProxyInput {
   username?: string
   password?: string
   label?: string
+  icon?: ProxyIconId
+  color?: ProxyColorId
+  countryCode?: string
+  city?: string
+  anonymityLevel?: ProxyAnonymityLevel
 }
 
 export interface ProxyCheckResult {
@@ -85,6 +134,8 @@ export type ProxyCheckProgress =
   | { phase: 'complete'; result: ProxyCheckResult }
 
 export const PROXY_PROTOCOLS: ProxyProtocol[] = ['http', 'https', 'socks4', 'socks5']
+
+export const PROXY_ANONYMITY_LEVELS: ProxyAnonymityLevel[] = ['elite', 'anonymous', 'transparent']
 
 export const DEFAULT_PORTS: Record<ProxyProtocol, number> = {
   http: 80,

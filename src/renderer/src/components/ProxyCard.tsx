@@ -3,24 +3,31 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import LinkIcon from '@mui/icons-material/Link'
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
-import RouterOutlinedIcon from '@mui/icons-material/RouterOutlined'
+import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import { Box, Button, Chip, CircularProgress, Stack, Typography } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Proxy } from '../../../shared/types/proxy'
+import { findProxyCountry } from '../../../shared/constants/proxy-countries'
+import type { Proxy, ProxyAnonymityLevel } from '../../../shared/types/proxy'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
-import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
+import { elevationShadow, surfaceContainer } from '../theme'
+import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
+import CountryFlag from './CountryFlag'
 import LatencyText from './LatencyText'
 import ProxyConnectivityResultCard from './ProxyConnectivityResult'
 import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
+import ProxyIcon from './ProxyIcon'
 import ProxyStatusChip from './ProxyStatusChip'
 
 interface ProxyCardProps {
@@ -40,6 +47,28 @@ interface ImportantField {
   secret?: boolean
 }
 
+const metadataChipSx = {
+  border: 'none',
+  '& .MuiChip-label': {
+    px: 1,
+    py: 0.375
+  }
+} as const
+
+function AnonymityLevelIcon({ level }: { level: ProxyAnonymityLevel }): React.JSX.Element {
+  const iconSx = { fontSize: 16 }
+
+  if (level === 'elite') {
+    return <ShieldOutlinedIcon sx={iconSx} />
+  }
+
+  if (level === 'anonymous') {
+    return <VisibilityOffOutlinedIcon sx={iconSx} />
+  }
+
+  return <VisibilityOutlinedIcon sx={iconSx} />
+}
+
 function ProxyCard({
   proxy,
   isChecking,
@@ -50,7 +79,6 @@ function ProxyCard({
 }: ProxyCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
-  const palette = getPalette(theme)
   const [linkCopied, setLinkCopied] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
 
@@ -65,6 +93,7 @@ function ProxyCard({
   const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)
   const domainChecks = useMemo(() => getProxyDomainChecks(proxy), [proxy])
+  const colorStyles = useMemo(() => getProxyColorStyles(theme, proxy.color), [theme, proxy.color])
 
   const connectionFields = useMemo(() => {
     const fields: ImportantField[] = [
@@ -97,17 +126,28 @@ function ProxyCard({
       })
     }
 
-    return fields
-  }, [proxy, t])
-
-  const resultFields = useMemo(() => {
-    const fields: ImportantField[] = []
-
-    if (proxy.checkTarget && proxy.status === 'alive') {
+    if (proxy.countryCode) {
+      const country = findProxyCountry(proxy.countryCode)
       fields.push({
-        label: t('proxyList.columns.checkTarget'),
-        value: proxy.checkTarget,
+        label: t('proxyList.columns.country'),
+        value: proxy.countryCode,
+        displayValue: country ? `${country.name} (${proxy.countryCode})` : proxy.countryCode,
         monospace: true
+      })
+    }
+
+    if (proxy.city) {
+      fields.push({
+        label: t('proxyList.columns.city'),
+        value: proxy.city
+      })
+    }
+
+    if (proxy.anonymityLevel) {
+      fields.push({
+        label: t('proxyList.columns.anonymityLevel'),
+        value: proxy.anonymityLevel,
+        displayValue: t(`proxyAnonymity.${proxy.anonymityLevel}`)
       })
     }
 
@@ -174,22 +214,22 @@ function ProxyCard({
               height: 44,
               borderRadius: 2.5,
               flexShrink: 0,
-              bgcolor: surfaceTint(theme),
-              color: 'primary.main',
+              bgcolor: colorStyles.background,
+              color: colorStyles.main,
               ...(isChecking
                 ? {
                     animation: 'iconPulse 1.6s ease-in-out infinite',
                     '@keyframes iconPulse': {
                       '0%, 100%': {
-                        boxShadow: `0 0 0 0 ${withThemeAlpha(theme, palette.primary.main, 0.3)}`
+                        boxShadow: `0 0 0 0 ${colorStyles.ring}`
                       },
-                      '50%': { boxShadow: `0 0 0 8px ${withThemeAlpha(theme, palette.primary.main, 0)}` }
+                      '50%': { boxShadow: `0 0 0 8px ${alpha(colorStyles.main, 0)}` }
                     }
                   }
                 : {})
             }}
           >
-            <RouterOutlinedIcon fontSize="small" />
+            <ProxyIcon iconId={proxy.icon} fontSize="small" />
           </Box>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -224,6 +264,56 @@ function ProxyCard({
                 {address}
               </Typography>
             </Stack>
+
+            {(proxy.countryCode || proxy.city || proxy.anonymityLevel) && (
+              <Stack direction="row" spacing={0.75} sx={{ mt: 1, flexWrap: 'wrap' }}>
+                {proxy.countryCode && (
+                  <Chip
+                    size="small"
+                    label={
+                      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
+                        <CountryFlag countryCode={proxy.countryCode} size={16} />
+                        <span>
+                          {findProxyCountry(proxy.countryCode)?.name ?? proxy.countryCode}
+                        </span>
+                      </Stack>
+                    }
+                    sx={metadataChipSx}
+                  />
+                )}
+                {proxy.city && (
+                  <Chip
+                    size="small"
+                    label={
+                      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
+                        <LocationOnOutlinedIcon sx={{ fontSize: 16 }} />
+                        <span>{proxy.city}</span>
+                      </Stack>
+                    }
+                    sx={metadataChipSx}
+                  />
+                )}
+                {proxy.anonymityLevel && (
+                  <Chip
+                    size="small"
+                    label={
+                      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
+                        <AnonymityLevelIcon level={proxy.anonymityLevel} />
+                        <span>{t(`proxyAnonymity.${proxy.anonymityLevel}`)}</span>
+                      </Stack>
+                    }
+                    color={
+                      proxy.anonymityLevel === 'elite'
+                        ? 'success'
+                        : proxy.anonymityLevel === 'anonymous'
+                          ? 'info'
+                          : 'warning'
+                    }
+                    sx={metadataChipSx}
+                  />
+                )}
+              </Stack>
+            )}
           </Box>
         </Stack>
 
@@ -250,7 +340,6 @@ function ProxyCard({
               description={t('proxyList.sections.resultsDescription')}
             >
               <Stack spacing={2}>
-                {resultFields.length > 0 && renderFields(resultFields)}
                 {proxy.connectivity && (
                   <ProxyConnectivityResultCard connectivity={proxy.connectivity} />
                 )}

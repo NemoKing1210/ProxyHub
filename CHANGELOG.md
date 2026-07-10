@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-07-10
+
+### Added
+
+- Custom icon per proxy (12 variants) shown in the card header
+- Custom accent color per proxy with tinted icon background on the card
+- Optional proxy metadata: country, city, and anonymity level (elite / anonymous / transparent)
+- Proxy editor grouped into collapsible sections: Connection, Authentication, Location & metadata, and Appearance
+- CSV import/export helpers for the metadata line format (`host,port,protocol,anonymity,false,country,city`)
+
+### Changed
+
+- Proxy form: Connection section is expanded by default; other sections are collapsed
+- Icon and color are selected via dropdowns with preview
+- Country field uses flag icons in the select (same style as Settings)
+- Metadata badges on proxy cards use consistent padding and icons
+
+### Fixed
+
+- Country select crash when rendering flag labels
+- Parallel “Check all” could hide the results section when the batch finished
+- Proxy card icon background not rendering due to invalid CSS from `theme.alpha()` on hex colors
+
+## [1.9.1] - 2026-07-10
+
+### Fixed
+
+- Domain checks through HTTP proxies now use `HttpsProxyAgent` with CONNECT tunneling instead of `HttpProxyAgent`, which caused HTTP 503 errors on all HTTPS domain tests
+- HTTPS check requests now send browser-like headers (User-Agent, Accept, Accept-Language) and use HEAD for domain availability probes
+
+### Changed
+
+- Settings hint for check domains recommends example.com or httpbin.org over google.com, which often blocks proxy traffic
+
 ## [1.9.0] - 2026-07-10
 
 ### Added

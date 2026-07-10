@@ -38,6 +38,9 @@
       "checkedAt": "Проверен",
       "createdAt": "Создан",
       "proxyUrl": "Ссылка прокси",
+      "country": "Страна",
+      "city": "Город",
+      "anonymityLevel": "Анонимность",
       "actions": "Действия"
     },
     "actions": {
@@ -70,12 +73,67 @@
     "addTitle": "Добавить прокси",
     "editTitle": "Редактировать прокси",
     "label": "Метка (необязательно)",
+    "icon": "Иконка",
+    "iconHint": "Отображается в шапке карточки прокси.",
+    "color": "Цвет",
+    "colorHint": "Акцентный цвет в шапке карточки.",
+    "previewFallback": "Название прокси",
+    "previewHint": "Превью шапки карточки",
+    "sections": {
+      "appearance": "Внешний вид",
+      "appearanceDescription": "Метка, иконка и цвет для быстрого распознавания.",
+      "connection": "Подключение",
+      "connectionDescription": "Адрес и протокол прокси-сервера.",
+      "location": "Локация и метаданные",
+      "locationDescription": "Страна, город и уровень анонимности — для импорта и фильтрации.",
+      "authentication": "Аутентификация",
+      "authenticationDescription": "Учётные данные, если прокси требует авторизацию."
+    },
     "protocol": "Протокол",
     "host": "Хост",
     "hostPlaceholder": "192.168.1.1 или proxy.example.com",
     "port": "Порт",
     "username": "Логин (необязательно)",
-    "password": "Пароль (необязательно)"
+    "password": "Пароль (необязательно)",
+    "country": "Страна (необязательно)",
+    "countryPlaceholder": "RU",
+    "countryHint": "Код ISO 3166-1 alpha-2, например RU или ZZ для неизвестной страны.",
+    "city": "Город (необязательно)",
+    "cityPlaceholder": "Москва",
+    "anonymityLevel": "Анонимность (необязательно)",
+    "anonymityHint": "elite, anonymous или transparent — как в файлах импорта."
+  },
+  "proxyIcons": {
+    "router": "Роутер",
+    "dns": "Сеть",
+    "cloud": "Облако",
+    "public": "Глобус",
+    "shield": "Щит",
+    "vpn": "VPN",
+    "storage": "Сервер",
+    "home": "Дом",
+    "work": "Работа",
+    "travel": "Путешествия",
+    "star": "Звезда",
+    "favorite": "Избранное"
+  },
+  "proxyColors": {
+    "blue": "Синий",
+    "green": "Зелёный",
+    "teal": "Бирюзовый",
+    "cyan": "Голубой",
+    "indigo": "Индиго",
+    "purple": "Фиолетовый",
+    "pink": "Розовый",
+    "red": "Красный",
+    "orange": "Оранжевый",
+    "amber": "Янтарный",
+    "slate": "Серый"
+  },
+  "proxyAnonymity": {
+    "elite": "Elite",
+    "anonymous": "Anonymous",
+    "transparent": "Transparent"
   },
   "proxyStatus": {
     "pending": "Ожидание",
@@ -111,7 +169,7 @@
     "checkAllConcurrencyHint": "Сколько прокси проверяется одновременно в параллельном режиме.",
     "checkAllConcurrencyValue": "{{value}} прокси",
     "checkDomains": "Домены для проверки (необязательно)",
-    "checkDomainsHint": "Необязательно. Прокси дополнительно проверяются по этим доменам. Если домены заданы, прокси считается рабочим, когда отвечает хотя бы один домен.",
+    "checkDomainsHint": "Необязательно. Прокси дополнительно проверяются по этим доменам. Если домены заданы, прокси считается рабочим, когда отвечает хотя бы один домен. Рекомендуются example.com или httpbin.org; google.com часто блокирует прокси.",
     "checkDomainsEmpty": "Домены не заданы. Прокси проверяются только по доступности адреса.",
     "domainPlaceholder": "example.com",
     "addDomain": "Добавить домен",
@@ -143,6 +201,8 @@
     "labelMax": "Метка — не более 64 символов",
     "usernameMax": "Слишком длинный логин",
     "passwordMax": "Слишком длинный пароль",
-    "authPair": "Логин и пароль нужно указать оба"
+    "authPair": "Логин и пароль нужно указать оба",
+    "countryCodeInvalid": "Введите корректный двухбуквенный код страны",
+    "cityMax": "Город не должен превышать 64 символа"
   }
 }

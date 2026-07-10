@@ -1,5 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined'
+import LanOutlinedIcon from '@mui/icons-material/LanOutlined'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -7,14 +12,31 @@ import {
   DialogTitle,
   MenuItem,
   Stack,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material'
-import { useEffect, useMemo } from 'react'
+import { useTheme } from '@mui/material/styles'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { findProxyCountry, PROXY_COUNTRIES } from '../../../shared/constants/proxy-countries'
 import type { Proxy, ProxyProtocol } from '../../../shared/types/proxy'
-import { DEFAULT_PORTS } from '../../../shared/types/proxy'
+import {
+  DEFAULT_PORTS,
+  DEFAULT_PROXY_COLOR_ID,
+  DEFAULT_PROXY_ICON_ID,
+  PROXY_ANONYMITY_LEVELS,
+  PROXY_COLOR_IDS,
+  PROXY_ICON_IDS
+} from '../../../shared/types/proxy'
+import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
+import { resolveProxyIconId } from '../../../shared/utils/proxy-icons'
+import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import { createProxyFormSchema, type ProxyFormValues } from '../validation/proxySchema'
+import CountryFlag from './CountryFlag'
+import ProxyColorSwatch from './ProxyColorSwatch'
+import ProxyFormSection from './ProxyFormSection'
+import ProxyIcon from './ProxyIcon'
 
 interface ProxyFormDialogProps {
   open: boolean
@@ -32,15 +54,21 @@ function ProxyFormDialog({
   onSubmit
 }: ProxyFormDialogProps): React.JSX.Element {
   const { t } = useTranslation()
+  const theme = useTheme()
   const schema = useMemo(() => createProxyFormSchema(t), [t])
 
   const defaultValues: ProxyFormValues = {
     label: '',
+    icon: DEFAULT_PROXY_ICON_ID,
+    color: DEFAULT_PROXY_COLOR_ID,
     protocol: 'http',
     host: '',
     port: DEFAULT_PORTS.http,
     username: '',
-    password: ''
+    password: '',
+    countryCode: '',
+    city: '',
+    anonymityLevel: ''
   }
 
   const {
@@ -57,6 +85,58 @@ function ProxyFormDialog({
   })
 
   const protocol = watch('protocol')
+  const previewIcon = watch('icon')
+  const previewColor = watch('color')
+  const previewLabel = watch('label')
+  const previewHost = watch('host')
+  const previewColorStyles = useMemo(
+    () => getProxyColorStyles(theme, previewColor),
+    [theme, previewColor]
+  )
+  const previewIconId = resolveProxyIconId(previewIcon)
+  const [appearanceExpanded, setAppearanceExpanded] = useState(false)
+  const [connectionExpanded, setConnectionExpanded] = useState(true)
+  const [authExpanded, setAuthExpanded] = useState(false)
+  const [locationExpanded, setLocationExpanded] = useState(false)
+
+  useEffect(() => {
+    if (!open) return
+
+    setAppearanceExpanded(false)
+    setConnectionExpanded(true)
+    setAuthExpanded(false)
+    setLocationExpanded(false)
+  }, [open, initialProxy?.id])
+
+  useEffect(() => {
+    if (errors.label || errors.icon || errors.color) {
+      setAppearanceExpanded(true)
+    }
+
+    if (errors.protocol || errors.host || errors.port) {
+      setConnectionExpanded(true)
+    }
+
+    if (errors.username || errors.password) {
+      setAuthExpanded(true)
+    }
+
+    if (errors.countryCode || errors.city || errors.anonymityLevel) {
+      setLocationExpanded(true)
+    }
+  }, [
+    errors.label,
+    errors.icon,
+    errors.color,
+    errors.protocol,
+    errors.host,
+    errors.port,
+    errors.username,
+    errors.password,
+    errors.countryCode,
+    errors.city,
+    errors.anonymityLevel
+  ])
 
   useEffect(() => {
     if (!open) return
@@ -64,11 +144,16 @@ function ProxyFormDialog({
     if (initialProxy) {
       reset({
         label: initialProxy.label ?? '',
+        icon: initialProxy.icon ?? DEFAULT_PROXY_ICON_ID,
+        color: initialProxy.color ?? DEFAULT_PROXY_COLOR_ID,
         protocol: initialProxy.protocol,
         host: initialProxy.host,
         port: initialProxy.port,
         username: initialProxy.username ?? '',
-        password: initialProxy.password ?? ''
+        password: initialProxy.password ?? '',
+        countryCode: initialProxy.countryCode ?? '',
+        city: initialProxy.city ?? '',
+        anonymityLevel: initialProxy.anonymityLevel ?? ''
       })
       return
     }
@@ -104,105 +189,355 @@ function ProxyFormDialog({
       </DialogTitle>
 
       <DialogContent>
-        <Stack spacing={2.5} sx={{ mt: 1 }}>
-          <Controller
-            name="label"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label={t('proxyForm.label')}
-                fullWidth
-                error={Boolean(errors.label)}
-                helperText={errors.label?.message}
-              />
-            )}
-          />
+        <Stack spacing={2} sx={{ mt: 1 }}>
+          <ProxyFormSection
+            icon={<LanOutlinedIcon sx={{ fontSize: 18 }} />}
+            title={t('proxyForm.sections.connection')}
+            description={t('proxyForm.sections.connectionDescription')}
+            collapsible
+            expanded={connectionExpanded}
+            onExpandedChange={setConnectionExpanded}
+          >
+            <Controller
+              name="protocol"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={t('proxyForm.protocol')}
+                  fullWidth
+                  error={Boolean(errors.protocol)}
+                  helperText={errors.protocol?.message}
+                >
+                  <MenuItem value="http">HTTP</MenuItem>
+                  <MenuItem value="https">HTTPS</MenuItem>
+                  <MenuItem value="socks4">SOCKS4</MenuItem>
+                  <MenuItem value="socks5">SOCKS5</MenuItem>
+                </TextField>
+              )}
+            />
 
-          <Controller
-            name="protocol"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                select
-                label={t('proxyForm.protocol')}
-                fullWidth
-                error={Boolean(errors.protocol)}
-                helperText={errors.protocol?.message}
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Controller
+                name="host"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t('proxyForm.host')}
+                    placeholder={t('proxyForm.hostPlaceholder')}
+                    fullWidth
+                    required
+                    sx={{ flex: 1 }}
+                    error={Boolean(errors.host)}
+                    helperText={errors.host?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="port"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    label={t('proxyForm.port')}
+                    type="number"
+                    required
+                    sx={{ width: { xs: '100%', sm: 140 } }}
+                    value={field.value}
+                    onChange={(event) => field.onChange(Number(event.target.value))}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    inputRef={field.ref}
+                    error={Boolean(errors.port)}
+                    helperText={errors.port?.message}
+                  />
+                )}
+              />
+            </Stack>
+          </ProxyFormSection>
+
+          <ProxyFormSection
+            icon={<LockOutlinedIcon sx={{ fontSize: 18 }} />}
+            title={t('proxyForm.sections.authentication')}
+            description={t('proxyForm.sections.authenticationDescription')}
+            collapsible
+            expanded={authExpanded}
+            onExpandedChange={setAuthExpanded}
+          >
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Controller
+                name="username"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t('proxyForm.username')}
+                    fullWidth
+                    sx={{ flex: 1 }}
+                    error={Boolean(errors.username)}
+                    helperText={errors.username?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t('proxyForm.password')}
+                    type="password"
+                    fullWidth
+                    sx={{ flex: 1 }}
+                    error={Boolean(errors.password)}
+                    helperText={errors.password?.message}
+                  />
+                )}
+              />
+            </Stack>
+          </ProxyFormSection>
+
+          <ProxyFormSection
+            icon={<FmdGoodOutlinedIcon sx={{ fontSize: 18 }} />}
+            title={t('proxyForm.sections.location')}
+            description={t('proxyForm.sections.locationDescription')}
+            collapsible
+            expanded={locationExpanded}
+            onExpandedChange={setLocationExpanded}
+          >
+            <Controller
+              name="countryCode"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={t('proxyForm.country')}
+                  fullWidth
+                  error={Boolean(errors.countryCode)}
+                  helperText={errors.countryCode?.message ?? t('proxyForm.countryHint')}
+                  slotProps={{
+                    select: {
+                      renderValue: (selected) => {
+                        const code = String(selected)
+
+                        if (!code) {
+                          return t('common.none')
+                        }
+
+                        const country = findProxyCountry(code)
+
+                        return (
+                          <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                            <CountryFlag countryCode={code} />
+                            <span>
+                              {country ? `${country.name} (${country.code})` : code}
+                            </span>
+                          </Stack>
+                        )
+                      }
+                    }
+                  }}
+                >
+                  <MenuItem value="">{t('common.none')}</MenuItem>
+                  {PROXY_COUNTRIES.map((country) => (
+                    <MenuItem key={country.code} value={country.code}>
+                      <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                        <CountryFlag countryCode={country.code} />
+                        <span>
+                          {country.name} ({country.code})
+                        </span>
+                      </Stack>
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Controller
+                name="city"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t('proxyForm.city')}
+                    placeholder={t('proxyForm.cityPlaceholder')}
+                    fullWidth
+                    sx={{ flex: 1 }}
+                    error={Boolean(errors.city)}
+                    helperText={errors.city?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="anonymityLevel"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label={t('proxyForm.anonymityLevel')}
+                    fullWidth
+                    sx={{ flex: 1 }}
+                    error={Boolean(errors.anonymityLevel)}
+                    helperText={errors.anonymityLevel?.message ?? t('proxyForm.anonymityHint')}
+                  >
+                    <MenuItem value="">{t('common.none')}</MenuItem>
+                    {PROXY_ANONYMITY_LEVELS.map((level) => (
+                      <MenuItem key={level} value={level}>
+                        {t(`proxyAnonymity.${level}`)}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Stack>
+          </ProxyFormSection>
+
+          <ProxyFormSection
+            icon={<PaletteOutlinedIcon sx={{ fontSize: 18 }} />}
+            title={t('proxyForm.sections.appearance')}
+            description={t('proxyForm.sections.appearanceDescription')}
+            collapsible
+            expanded={appearanceExpanded}
+            onExpandedChange={setAppearanceExpanded}
+          >
+            <Controller
+              name="label"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label={t('proxyForm.label')}
+                  fullWidth
+                  error={Boolean(errors.label)}
+                  helperText={errors.label?.message}
+                />
+              )}
+            />
+
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              sx={{ alignItems: { sm: 'flex-start' } }}
+            >
+              <Controller
+                name="icon"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label={t('proxyForm.icon')}
+                    fullWidth
+                    error={Boolean(errors.icon)}
+                    helperText={errors.icon?.message ?? t('proxyForm.iconHint')}
+                    slotProps={{
+                      select: {
+                        renderValue: (selected) => {
+                          const iconId = resolveProxyIconId(String(selected))
+
+                          return (
+                            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                              <ProxyIcon iconId={iconId} fontSize="small" />
+                              <span>{t(`proxyIcons.${iconId}`)}</span>
+                            </Stack>
+                          )
+                        }
+                      }
+                    }}
+                  >
+                    {PROXY_ICON_IDS.map((iconId) => (
+                      <MenuItem key={iconId} value={iconId}>
+                        <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                          <ProxyIcon iconId={iconId} fontSize="small" />
+                          <span>{t(`proxyIcons.${iconId}`)}</span>
+                        </Stack>
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+
+              <Controller
+                name="color"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label={t('proxyForm.color')}
+                    fullWidth
+                    error={Boolean(errors.color)}
+                    helperText={errors.color?.message ?? t('proxyForm.colorHint')}
+                    slotProps={{
+                      select: {
+                        renderValue: (selected) => {
+                          const colorId = resolveProxyColorId(String(selected))
+
+                          return (
+                            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                              <ProxyColorSwatch colorId={colorId} size={20} />
+                              <span>{t(`proxyColors.${colorId}`)}</span>
+                            </Stack>
+                          )
+                        }
+                      }
+                    }}
+                  >
+                    {PROXY_COLOR_IDS.map((colorId) => (
+                      <MenuItem key={colorId} value={colorId}>
+                        <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                          <ProxyColorSwatch colorId={colorId} size={20} />
+                          <span>{t(`proxyColors.${colorId}`)}</span>
+                        </Stack>
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Stack>
+
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
+                p: 1.5,
+                borderRadius: 2,
+                bgcolor: 'background.paper'
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
+                  borderRadius: 2,
+                  flexShrink: 0,
+                  bgcolor: previewColorStyles.background,
+                  color: previewColorStyles.main
+                }}
               >
-                <MenuItem value="http">HTTP</MenuItem>
-                <MenuItem value="https">HTTPS</MenuItem>
-                <MenuItem value="socks4">SOCKS4</MenuItem>
-                <MenuItem value="socks5">SOCKS5</MenuItem>
-              </TextField>
-            )}
-          />
-
-          <Controller
-            name="host"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label={t('proxyForm.host')}
-                placeholder={t('proxyForm.hostPlaceholder')}
-                fullWidth
-                required
-                error={Boolean(errors.host)}
-                helperText={errors.host?.message}
-              />
-            )}
-          />
-
-          <Controller
-            name="port"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                label={t('proxyForm.port')}
-                type="number"
-                fullWidth
-                required
-                value={field.value}
-                onChange={(event) => field.onChange(Number(event.target.value))}
-                onBlur={field.onBlur}
-                name={field.name}
-                inputRef={field.ref}
-                error={Boolean(errors.port)}
-                helperText={errors.port?.message}
-              />
-            )}
-          />
-
-          <Controller
-            name="username"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label={t('proxyForm.username')}
-                fullWidth
-                error={Boolean(errors.username)}
-                helperText={errors.username?.message}
-              />
-            )}
-          />
-
-          <Controller
-            name="password"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label={t('proxyForm.password')}
-                type="password"
-                fullWidth
-                error={Boolean(errors.password)}
-                helperText={errors.password?.message}
-              />
-            )}
-          />
+                <ProxyIcon iconId={previewIconId} fontSize="small" />
+              </Box>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography variant="subtitle2" noWrap>
+                  {previewLabel?.trim() || previewHost?.trim() || t('proxyForm.previewFallback')}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {t('proxyForm.previewHint')}
+                </Typography>
+              </Box>
+            </Box>
+          </ProxyFormSection>
         </Stack>
       </DialogContent>
 

@@ -33,6 +33,9 @@
       "checkedAt": "تاريخ الفحص",
       "createdAt": "تاريخ الإنشاء",
       "proxyUrl": "رابط البروكسي",
+      "country": "الدولة",
+      "city": "المدينة",
+      "anonymityLevel": "مستوى التخفي",
       "actions": "الإجراءات"
     },
     "actions": {
@@ -65,12 +68,67 @@
     "addTitle": "إضافة بروكسي",
     "editTitle": "تعديل البروكسي",
     "label": "التسمية (اختياري)",
+    "icon": "أيقونة",
+    "iconHint": "تظهر في رأس بطاقة البروكسي.",
+    "color": "اللون",
+    "colorHint": "لون التمييز على بطاقة البروكسي.",
+    "previewFallback": "اسم البروكسي",
+    "previewHint": "معاينة رأس البطاقة",
+    "sections": {
+      "appearance": "المظهر",
+      "appearanceDescription": "التسمية والأيقونة واللون للتعرف السريع على البروكسيات.",
+      "connection": "الاتصال",
+      "connectionDescription": "عنوان وبروتوكول خادم البروكسي.",
+      "location": "الموقع والبيانات الوصفية",
+      "locationDescription": "البلد والمدينة ومستوى التخفي — مفيد للاستيراد والتصفية.",
+      "authentication": "المصادقة",
+      "authenticationDescription": "بيانات الاعتماد إذا كان البروكسي يتطلب تفويضًا."
+    },
     "protocol": "البروتوكول",
     "host": "المضيف",
     "hostPlaceholder": "192.168.1.1 أو proxy.example.com",
     "port": "المنفذ",
     "username": "اسم المستخدم (اختياري)",
-    "password": "كلمة المرور (اختياري)"
+    "password": "كلمة المرور (اختياري)",
+    "country": "الدولة (اختياري)",
+    "countryPlaceholder": "SA",
+    "countryHint": "رمز ISO 3166-1 alpha-2، مثل SA أو ZZ للغير معروف.",
+    "city": "المدينة (اختياري)",
+    "cityPlaceholder": "الرياض",
+    "anonymityLevel": "مستوى التخفي (اختياري)",
+    "anonymityHint": "elite أو anonymous أو transparent — كما في ملفات الاستيراد."
+  },
+  "proxyIcons": {
+    "router": "موجه",
+    "dns": "شبكة",
+    "cloud": "سحابة",
+    "public": "كرة أرضية",
+    "shield": "درع",
+    "vpn": "VPN",
+    "storage": "خادم",
+    "home": "منزل",
+    "work": "عمل",
+    "travel": "سفر",
+    "star": "نجمة",
+    "favorite": "مفضلة"
+  },
+  "proxyColors": {
+    "blue": "أزرق",
+    "green": "أخضر",
+    "teal": "أزرق مخضر",
+    "cyan": "سماوي",
+    "indigo": "نيلي",
+    "purple": "بنفسجي",
+    "pink": "وردي",
+    "red": "أحمر",
+    "orange": "برتقالي",
+    "amber": "كهرماني",
+    "slate": "رمادي"
+  },
+  "proxyAnonymity": {
+    "elite": "Elite",
+    "anonymous": "Anonymous",
+    "transparent": "Transparent"
   },
   "proxyStatus": {
     "unknown": "لم يُفحص",
@@ -105,7 +163,7 @@
     "checkAllConcurrencyHint": "الحد الأقصى لعدد البروكسيات التي تُفحص في نفس الوقت.",
     "checkAllConcurrencyValue": "{{value}} بروكسي",
     "checkDomains": "نطاقات الفحص (اختياري)",
-    "checkDomainsHint": "اختياري. يتم أيضاً اختبار البروكسيات على هذه النطاقات. عند التكوين، يُعتبر البروكسي نشطاً إذا استجاب نطاق واحد على الأقل.",
+    "checkDomainsHint": "اختياري. يتم أيضاً اختبار البروكسيات على هذه النطاقات. عند التكوين، يُعتبر البروكسي نشطاً إذا استجاب نطاق واحد على الأقل. يُفضّل example.com أو httpbin.org؛ google.com يحجب غالباً حركة البروكسي.",
     "checkDomainsEmpty": "لا توجد نطاقات مُكوّنة. يتم فحص البروكسيات عبر إمكانية الوصول إلى العنوان فقط.",
     "domainPlaceholder": "example.com",
     "addDomain": "إضافة نطاق",
@@ -137,6 +195,8 @@
     "labelMax": "التسمية بحد أقصى 64 حرفاً",
     "usernameMax": "اسم المستخدم طويل جداً",
     "passwordMax": "كلمة المرور طويلة جداً",
-    "authPair": "يجب إدخال اسم المستخدم وكلمة المرور معاً"
+    "authPair": "يجب إدخال اسم المستخدم وكلمة المرور معاً",
+    "countryCodeInvalid": "أدخل رمز دولة صالحاً من حرفين",
+    "cityMax": "يجب ألا تتجاوز المدينة 64 حرفاً"
   }
 }

@@ -1,7 +1,6 @@
 import http from 'http'
 import https from 'https'
 import net from 'net'
-import { HttpProxyAgent } from 'http-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import type {
@@ -21,6 +20,14 @@ import {
 const DEFAULT_CONCURRENCY = 1
 const EXTERNAL_IP_URL = 'https://api.ipify.org?format=json'
 
+const PROXY_CHECK_HEADERS: Readonly<Record<string, string>> = {
+  'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+  Accept: '*/*',
+  'Accept-Language': 'en-US,en;q=0.9',
+  Connection: 'close'
+}
+
 function createAgent(proxy: Proxy): http.Agent {
   const proxyUrl = buildProxyUrl(proxy)
 
@@ -28,11 +35,20 @@ function createAgent(proxy: Proxy): http.Agent {
     return new SocksProxyAgent(proxyUrl)
   }
 
-  if (proxy.protocol === 'https') {
-    return new HttpsProxyAgent(proxyUrl)
-  }
+  return new HttpsProxyAgent(proxyUrl)
+}
 
-  return new HttpProxyAgent(proxyUrl)
+function createHttpsRequestOptions(
+  agent: http.Agent,
+  timeoutMs: number,
+  method: 'GET' | 'HEAD' = 'GET'
+): https.RequestOptions {
+  return {
+    agent,
+    timeout: timeoutMs,
+    method,
+    headers: { ...PROXY_CHECK_HEADERS }
+  }
 }
 
 function normalizeDomain(domain: string): string {
@@ -124,12 +140,9 @@ function requestThroughProxy(
   return new Promise((resolve, reject) => {
     const start = Date.now()
 
-    const request = https.get(
+    const request = https.request(
       checkUrl,
-      {
-        agent,
-        timeout: timeoutMs
-      },
+      createHttpsRequestOptions(agent, timeoutMs, 'HEAD'),
       (response) => {
         response.resume()
 
@@ -150,6 +163,8 @@ function requestThroughProxy(
     request.on('error', (error) => {
       reject(error)
     })
+
+    request.end()
   })
 }
 
@@ -157,10 +172,7 @@ function fetchExternalIp(agent: http.Agent, timeoutMs: number): Promise<string> 
   return new Promise((resolve, reject) => {
     const request = https.get(
       EXTERNAL_IP_URL,
-      {
-        agent,
-        timeout: timeoutMs
-      },
+      createHttpsRequestOptions(agent, timeoutMs),
       (response) => {
         let body = ''
 

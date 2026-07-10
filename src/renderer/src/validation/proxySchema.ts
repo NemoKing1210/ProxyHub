@@ -1,10 +1,15 @@
 import { z } from 'zod'
 import type { TFunction } from 'i18next'
+import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_IDS } from '../../../shared/types/proxy'
+
+const countryCodePattern = /^[A-Za-z]{2}$/
 
 export function createProxyFormSchema(t: TFunction) {
   return z
     .object({
       label: z.string().trim().max(64, t('validation.labelMax')).optional(),
+      icon: z.enum(PROXY_ICON_IDS),
+      color: z.enum(PROXY_COLOR_IDS),
       protocol: z.enum(['http', 'https', 'socks4', 'socks5']),
       host: z
         .string()
@@ -29,7 +34,16 @@ export function createProxyFormSchema(t: TFunction) {
         .min(1, t('validation.portMin'))
         .max(65535, t('validation.portMax')),
       username: z.string().trim().max(128, t('validation.usernameMax')).optional(),
-      password: z.string().max(128, t('validation.passwordMax')).optional()
+      password: z.string().max(128, t('validation.passwordMax')).optional(),
+      countryCode: z
+        .string()
+        .trim()
+        .refine((value) => value === '' || countryCodePattern.test(value), t('validation.countryCodeInvalid'))
+        .optional(),
+      city: z.string().trim().max(64, t('validation.cityMax')).optional(),
+      anonymityLevel: z
+        .union([z.literal(''), z.enum(PROXY_ANONYMITY_LEVELS)])
+        .optional()
     })
     .superRefine((data, ctx) => {
       const hasUsername = Boolean(data.username)

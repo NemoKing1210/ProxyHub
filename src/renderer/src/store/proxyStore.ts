@@ -143,13 +143,15 @@ async function checkAllParallel(
   })
 
   const unsubscribe = window.api.onCheckProgress((progress) => {
-    const updated = applyLiveProgress(get().proxies, progress)
+    set((state) => {
+      const updated = applyLiveProgress(state.proxies, progress)
 
-    set({ proxies: updated })
+      if (progress.phase === 'complete') {
+        void persist(updated)
+      }
 
-    if (progress.phase === 'complete') {
-      void persist(updated)
-    }
+      return { proxies: updated }
+    })
   })
 
   try {
@@ -157,7 +159,9 @@ async function checkAllParallel(
   } finally {
     unsubscribe()
 
-    const finalized = get().proxies.map(finalizeIncompleteProxy)
+    const finalized = get().proxies.map((proxy) =>
+      proxy.checkedAt ? proxy : finalizeIncompleteProxy(proxy)
+    )
 
     set({
       isCheckingAll: false,

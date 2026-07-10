@@ -85,7 +85,14 @@ export function resolveProxyStatus(
 
 export function finalizeIncompleteProxy(proxy: Proxy): Proxy {
   if (proxy.status !== 'checking') {
-    return proxy
+    if (proxy.checkedAt || (proxy.status !== 'alive' && proxy.status !== 'dead')) {
+      return proxy
+    }
+
+    return {
+      ...proxy,
+      checkedAt: new Date().toISOString()
+    }
   }
 
   const connectivity =

@@ -33,6 +33,9 @@
       "checkedAt": "確認日時",
       "createdAt": "作成日時",
       "proxyUrl": "プロキシURL",
+      "country": "国",
+      "city": "都市",
+      "anonymityLevel": "匿名性",
       "actions": "操作"
     },
     "actions": {
@@ -64,12 +67,67 @@
     "addTitle": "プロキシを追加",
     "editTitle": "プロキシを編集",
     "label": "ラベル（任意）",
+    "icon": "アイコン",
+    "iconHint": "プロキシカードのヘッダーに表示されます。",
+    "color": "色",
+    "colorHint": "プロキシカードのアクセントカラー。",
+    "previewFallback": "プロキシ名",
+    "previewHint": "カードヘッダーのプレビュー",
+    "sections": {
+      "appearance": "外観",
+      "appearanceDescription": "ラベル、アイコン、色でプロキシを一目で識別。",
+      "connection": "接続",
+      "connectionDescription": "プロキシサーバーのアドレスとプロトコル。",
+      "location": "所在地とメタデータ",
+      "locationDescription": "国、都市、匿名性 — インポートやフィルタに便利。",
+      "authentication": "認証",
+      "authenticationDescription": "プロキシが認証を要求する場合の資格情報。"
+    },
     "protocol": "プロトコル",
     "host": "ホスト",
     "hostPlaceholder": "192.168.1.1 または proxy.example.com",
     "port": "ポート",
     "username": "ユーザー名（任意）",
-    "password": "パスワード（任意）"
+    "password": "パスワード（任意）",
+    "country": "国（任意）",
+    "countryPlaceholder": "JP",
+    "countryHint": "ISO 3166-1 alpha-2 コード（例: JP、不明は ZZ）。",
+    "city": "都市（任意）",
+    "cityPlaceholder": "東京",
+    "anonymityLevel": "匿名性（任意）",
+    "anonymityHint": "elite、anonymous、transparent — インポートファイルと同じ形式。"
+  },
+  "proxyIcons": {
+    "router": "ルーター",
+    "dns": "ネットワーク",
+    "cloud": "クラウド",
+    "public": "地球",
+    "shield": "シールド",
+    "vpn": "VPN",
+    "storage": "サーバー",
+    "home": "ホーム",
+    "work": "仕事",
+    "travel": "旅行",
+    "star": "スター",
+    "favorite": "お気に入り"
+  },
+  "proxyColors": {
+    "blue": "青",
+    "green": "緑",
+    "teal": "ティール",
+    "cyan": "シアン",
+    "indigo": "インディゴ",
+    "purple": "紫",
+    "pink": "ピンク",
+    "red": "赤",
+    "orange": "オレンジ",
+    "amber": "アンバー",
+    "slate": "スレート"
+  },
+  "proxyAnonymity": {
+    "elite": "Elite",
+    "anonymous": "Anonymous",
+    "transparent": "Transparent"
   },
   "proxyStatus": { "unknown": "未確認", "checking": "確認中", "alive": "稼働", "dead": "停止" },
   "settings": {
@@ -99,7 +157,7 @@
     "checkAllConcurrencyHint": "並列モードで同時に確認するプロキシの最大数。",
     "checkAllConcurrencyValue": "{{value}} 件",
     "checkDomains": "確認ドメイン（任意）",
-    "checkDomainsHint": "任意です。プロキシはこれらのドメインに対してもテストされます。設定した場合、1つでも応答があれば稼働とみなします。",
+    "checkDomainsHint": "任意です。プロキシはこれらのドメインに対してもテストされます。設定した場合、1つでも応答があれば稼働とみなします。example.com や httpbin.org を推奨します。google.com はプロキシをブロックすることが多いです。",
     "checkDomainsEmpty": "ドメインは未設定です。プロキシはアドレスの到達性のみで確認されます。",
     "domainPlaceholder": "example.com",
     "addDomain": "ドメインを追加",
@@ -131,6 +189,8 @@
     "labelMax": "ラベルは64文字以内",
     "usernameMax": "ユーザー名が長すぎます",
     "passwordMax": "パスワードが長すぎます",
-    "authPair": "ユーザー名とパスワードは両方入力してください"
+    "authPair": "ユーザー名とパスワードは両方入力してください",
+    "countryCodeInvalid": "有効な2文字の国コードを入力してください",
+    "cityMax": "都市名は64文字以内にしてください"
   }
 }
