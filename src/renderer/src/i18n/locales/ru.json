@@ -47,6 +47,7 @@
       "maxLatencyEnabled": "Ограничить по задержке",
       "maxLatencyValue": "{{value}} мс",
       "all": "Все",
+      "activeCount": "{{count}} активных фильтров",
       "clear": "Сбросить фильтры",
       "shown": "Показано: {{shown}} из {{total}}",
       "noResults": "Нет прокси по выбранным фильтрам",
@@ -240,6 +241,18 @@
     "alive": "Работает",
     "dead": "Не работает"
   },
+  "checkToast": {
+    "aliveTitle": "{{name}} — Работает",
+    "deadTitle": "{{name}} — Не работает",
+    "latency": "{{value}} мс",
+    "externalIp": "Внешний IP: {{ip}}",
+    "checkTarget": "Через {{domain}}",
+    "batchTitle": "Проверка завершена",
+    "batchAllAlive": "Все {{total}} прокси работают",
+    "batchAllDead": "Все {{total}} прокси не работают",
+    "batchPartial": "{{alive}} работают, {{dead}} не работают из {{total}}",
+    "batchEmptyTitle": "Прокси не были проверены"
+  },
   "settings": {
     "title": "Настройки",
     "description": "Настройте внешний вид и параметры проверки прокси.",
@@ -263,6 +276,10 @@
     "proxyCardViewCompact": "Миниатюрный",
     "trayEnabled": "Показывать в системном трее",
     "trayEnabledHint": "Оставлять ProxyChecker в трее при закрытии окна. ПКМ по иконке — меню избранных прокси и действия приложения.",
+    "startMinimized": "Запускать свёрнутым",
+    "startMinimizedHint": "При запуске скрывать окно и оставлять приложение только в трее.",
+    "backgroundCheckNotifications": "Нативные уведомления в фоне",
+    "backgroundCheckNotificationsHint": "Показывать результаты проверки системными уведомлениями, когда окно свёрнуто или скрыто.",
     "checkTimeout": "Таймаут подключения",
     "checkTimeoutHint": "Максимальное время ожидания при проверке. Увеличьте для медленных прокси.",
     "checkTimeoutValue": "{{value}} с",

@@ -310,6 +310,16 @@ function buildComponentOverrides(): Theme['components'] {
             ? {
                 boxShadow: `0 4px 16px ${withAlpha(theme, getPalette(theme).success.main, 0.35)}`
               }
+            : {}),
+          ...(ownerState.variant === 'filled' && ownerState.severity === 'warning'
+            ? {
+                boxShadow: `0 4px 16px ${withAlpha(theme, getPalette(theme).warning.main, 0.35)}`
+              }
+            : {}),
+          ...(ownerState.variant === 'filled' && ownerState.severity === 'error'
+            ? {
+                boxShadow: `0 4px 16px ${withAlpha(theme, getPalette(theme).error.main, 0.3)}`
+              }
             : {})
         })
       }

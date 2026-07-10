@@ -46,6 +46,7 @@
       "maxLatencyEnabled": "Обмежити за затримкою",
       "maxLatencyValue": "{{value}} мс",
       "all": "Усі",
+      "activeCount": "{{count}} активних фільтрів",
       "clear": "Скинути фільтри",
       "shown": "Показано: {{shown}} з {{total}}",
       "noResults": "Немає проксі за обраними фільтрами",
@@ -238,6 +239,18 @@
     "checking": "Перевірка",
     "alive": "Працює",
     "dead": "Не працює"
+  },
+  "checkToast": {
+    "aliveTitle": "{{name}} — Працює",
+    "deadTitle": "{{name}} — Не працює",
+    "latency": "{{value}} мс",
+    "externalIp": "Зовнішній IP: {{ip}}",
+    "checkTarget": "Через {{domain}}",
+    "batchTitle": "Перевірку завершено",
+    "batchAllAlive": "Усі {{total}} проксі працюють",
+    "batchAllDead": "Усі {{total}} проксі не працюють",
+    "batchPartial": "{{alive}} працюють, {{dead}} не працюють з {{total}}",
+    "batchEmptyTitle": "Проксі не перевірялися"
   },
   "settings": {
     "title": "Налаштування",

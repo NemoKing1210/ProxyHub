@@ -33,6 +33,7 @@ import {
   type ProxyFavoriteFilter,
   type ProxyListFilters,
   type ProxyStatusFilter,
+  countActiveFilters,
   hasActiveFilters
 } from '../utils/filter-proxies'
 import { surfaceContainer } from '../theme'
@@ -105,6 +106,7 @@ function ProxyListFilters({
   )
 
   const isFiltered = hasActiveFilters(filters)
+  const activeFilterCount = countActiveFilters(filters)
   const latencyLimitEnabled = filters.maxLatencyMs !== null
   const latencyValue = filters.maxLatencyMs ?? MAX_LATENCY_FILTER_DEFAULT_MS
 
@@ -151,7 +153,28 @@ function ProxyListFilters({
   return (
     <ContentSection
       icon={<FilterListIcon fontSize="small" />}
-      title={t('proxyList.filters.title')}
+      title={
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <span>{t('proxyList.filters.title')}</span>
+          {activeFilterCount > 0 && (
+            <Chip
+              label={activeFilterCount}
+              size="small"
+              color="primary"
+              title={t('proxyList.filters.activeCount', { count: activeFilterCount })}
+              sx={{
+                height: 22,
+                minWidth: 22,
+                fontWeight: 700,
+                '& .MuiChip-label': {
+                  px: 0.75,
+                  lineHeight: 1
+                }
+              }}
+            />
+          )}
+        </Stack>
+      }
       description={t('proxyList.filters.description')}
       collapsible
       defaultExpanded={false}

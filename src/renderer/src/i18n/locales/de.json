@@ -41,6 +41,7 @@
       "maxLatencyEnabled": "Nach Latenz begrenzen",
       "maxLatencyValue": "{{value}} ms",
       "all": "Alle",
+      "activeCount": "{{count}} aktive Filter",
       "clear": "Filter zurücksetzen",
       "shown": "{{shown}} von {{total}} angezeigt",
       "noResults": "Keine Proxies entsprechen den Filtern",
@@ -231,6 +232,18 @@
     "checking": "Prüfung läuft",
     "alive": "Aktiv",
     "dead": "Inaktiv"
+  },
+  "checkToast": {
+    "aliveTitle": "{{name}} — Aktiv",
+    "deadTitle": "{{name}} — Inaktiv",
+    "latency": "{{value}} ms",
+    "externalIp": "Externe IP: {{ip}}",
+    "checkTarget": "Über {{domain}}",
+    "batchTitle": "Prüfung abgeschlossen",
+    "batchAllAlive": "Alle {{total}} Proxys sind aktiv",
+    "batchAllDead": "Alle {{total}} Proxys sind inaktiv",
+    "batchPartial": "{{alive}} aktiv, {{dead}} inaktiv von {{total}}",
+    "batchEmptyTitle": "Keine Proxys geprüft"
   },
   "settings": {
     "title": "Einstellungen",

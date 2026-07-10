@@ -41,6 +41,7 @@
       "maxLatencyEnabled": "按延迟限制",
       "maxLatencyValue": "{{value}} ms",
       "all": "全部",
+      "activeCount": "{{count}} 个筛选条件",
       "clear": "清除筛选",
       "shown": "显示 {{shown}} / {{total}}",
       "noResults": "没有符合筛选条件的代理",
@@ -216,6 +217,18 @@
     "transparent": "Transparent"
   },
   "proxyStatus": { "unknown": "未检测", "checking": "检测中", "alive": "可用", "dead": "不可用" },
+  "checkToast": {
+    "aliveTitle": "{{name}} — 可用",
+    "deadTitle": "{{name}} — 不可用",
+    "latency": "{{value}} ms",
+    "externalIp": "外部 IP：{{ip}}",
+    "checkTarget": "通过 {{domain}}",
+    "batchTitle": "检测完成",
+    "batchAllAlive": "全部 {{total}} 个代理可用",
+    "batchAllDead": "全部 {{total}} 个代理不可用",
+    "batchPartial": "{{total}} 个中 {{alive}} 个可用，{{dead}} 个不可用",
+    "batchEmptyTitle": "未检测任何代理"
+  },
   "settings": {
     "title": "设置",
     "description": "配置外观和代理检测参数。",

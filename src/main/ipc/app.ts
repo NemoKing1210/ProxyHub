@@ -7,6 +7,9 @@ import { parseChangelog } from '../../shared/utils/changelog'
 import { parsePackageAuthor } from '../../shared/utils/package-author'
 import { resolveGitHubUsername } from '../../shared/utils/github'
 import { syncTitleBarTheme } from '../services/title-bar'
+import { showNativeNotification } from '../services/notifications'
+import { isMainWindowBackgrounded } from '../services/main-window'
+import type { AppNotificationPayload } from '../../shared/types/api'
 
 interface PackageJson {
   version: string
@@ -61,5 +64,9 @@ export function registerAppIpc(): void {
     }
 
     syncTitleBarTheme(window, mode)
+  })
+  ipcMain.handle('app:is-backgrounded', async () => isMainWindowBackgrounded())
+  ipcMain.handle('app:show-notification', async (_event, payload: AppNotificationPayload) => {
+    return showNativeNotification(payload)
   })
 }

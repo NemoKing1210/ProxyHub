@@ -47,6 +47,7 @@
       "maxLatencyEnabled": "Limit by latency",
       "maxLatencyValue": "{{value}} ms",
       "all": "All",
+      "activeCount": "{{count}} filters active",
       "clear": "Clear filters",
       "shown": "{{shown}} of {{total}} shown",
       "noResults": "No proxies match the filters",
@@ -240,6 +241,18 @@
     "alive": "Alive",
     "dead": "Dead"
   },
+  "checkToast": {
+    "aliveTitle": "{{name}} — Alive",
+    "deadTitle": "{{name}} — Dead",
+    "latency": "{{value}} ms",
+    "externalIp": "External IP: {{ip}}",
+    "checkTarget": "Via {{domain}}",
+    "batchTitle": "Check complete",
+    "batchAllAlive": "All {{total}} proxies are alive",
+    "batchAllDead": "All {{total}} proxies are dead",
+    "batchPartial": "{{alive}} alive, {{dead}} dead out of {{total}}",
+    "batchEmptyTitle": "No proxies were checked"
+  },
   "settings": {
     "title": "Settings",
     "description": "Configure appearance and how proxies are checked.",
@@ -263,6 +276,10 @@
     "proxyCardViewCompact": "Compact",
     "trayEnabled": "Show in system tray",
     "trayEnabledHint": "Keep ProxyChecker in the tray when the window is closed. Right-click the tray icon for favorite proxies and app actions.",
+    "startMinimized": "Start minimized",
+    "startMinimizedHint": "Launch the app hidden in the system tray instead of opening the window.",
+    "backgroundCheckNotifications": "Native notifications in background",
+    "backgroundCheckNotificationsHint": "Show check results as system notifications when the window is minimized or hidden.",
     "checkTimeout": "Connection timeout",
     "checkTimeoutHint": "Maximum wait time for each proxy check. Increase for slow proxies.",
     "checkTimeoutValue": "{{value}} s",

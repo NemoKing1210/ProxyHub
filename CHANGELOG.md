@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.20.0] - 2026-07-10
+
+### Added
+
+- Check result toasts with detailed single-proxy messages, batch summaries, and severity-based colors
+- Native system notifications for check results when the window is minimized or hidden (on by default)
+- “Start minimized” setting in System, shown only when tray integration is enabled
+- Active filter count badge in the Filters section header
+
+### Changed
+
+- System settings redesigned as card-style toggle rows with grouped tray options
+
 ## [1.19.0] - 2026-07-10
 
 ### Added

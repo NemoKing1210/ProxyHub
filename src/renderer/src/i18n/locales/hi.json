@@ -41,6 +41,7 @@
       "maxLatencyEnabled": "विलंबता से सीमित करें",
       "maxLatencyValue": "{{value}} ms",
       "all": "सभी",
+      "activeCount": "{{count}} सक्रिय फ़िल्टर",
       "clear": "फ़िल्टर साफ़ करें",
       "shown": "{{shown}} में से {{total}} दिखाए गए",
       "noResults": "कोई प्रॉक्सी फ़िल्टर से मेल नहीं खाता",
@@ -232,6 +233,18 @@
     "checking": "जांच हो रही है",
     "alive": "सक्रिय",
     "dead": "निष्क्रिय"
+  },
+  "checkToast": {
+    "aliveTitle": "{{name}} — सक्रिय",
+    "deadTitle": "{{name}} — निष्क्रिय",
+    "latency": "{{value}} ms",
+    "externalIp": "बाहरी IP: {{ip}}",
+    "checkTarget": "{{domain}} के माध्यम से",
+    "batchTitle": "जांच पूरी",
+    "batchAllAlive": "सभी {{total}} प्रॉक्सी सक्रिय हैं",
+    "batchAllDead": "सभी {{total}} प्रॉक्सी निष्क्रिय हैं",
+    "batchPartial": "{{total}} में से {{alive}} सक्रिय, {{dead}} निष्क्रिय",
+    "batchEmptyTitle": "कोई प्रॉक्सी जांची नहीं गई"
   },
   "settings": {
     "title": "सेटिंग्स",

@@ -24,6 +24,8 @@ const api: AppAPI = {
   openExternal: (url) => ipcRenderer.invoke('app:open-external', url),
   setTitleBarTheme: (mode) => ipcRenderer.invoke('app:set-title-bar-theme', mode),
   showMainWindow: () => ipcRenderer.invoke('tray:show-main'),
+  isMainWindowBackgrounded: () => ipcRenderer.invoke('app:is-backgrounded'),
+  showNotification: (payload) => ipcRenderer.invoke('app:show-notification', payload),
   onTrayProxiesUpdated: (callback) => {
     const handler = (): void => {
       callback()

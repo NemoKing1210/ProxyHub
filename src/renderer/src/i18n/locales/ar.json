@@ -41,6 +41,7 @@
       "maxLatencyEnabled": "الحد حسب زمن الاستجابة",
       "maxLatencyValue": "{{value}} ms",
       "all": "الكل",
+      "activeCount": "{{count}} فلاتر نشطة",
       "clear": "مسح الفلاتر",
       "shown": "عرض {{shown}} من {{total}}",
       "noResults": "لا توجد بروكسيات تطابق الفلاتر",
@@ -232,6 +233,18 @@
     "checking": "جارٍ الفحص",
     "alive": "نشط",
     "dead": "غير نشط"
+  },
+  "checkToast": {
+    "aliveTitle": "{{name}} — نشط",
+    "deadTitle": "{{name}} — غير نشط",
+    "latency": "{{value}} ms",
+    "externalIp": "IP خارجي: {{ip}}",
+    "checkTarget": "عبر {{domain}}",
+    "batchTitle": "اكتمل الفحص",
+    "batchAllAlive": "جميع {{total}} بروكسيات نشطة",
+    "batchAllDead": "جميع {{total}} بروكسيات غير نشطة",
+    "batchPartial": "{{alive}} نشطة و{{dead}} غير نشطة من {{total}}",
+    "batchEmptyTitle": "لم يُفحص أي بروكسي"
   },
   "settings": {
     "title": "الإعدادات",

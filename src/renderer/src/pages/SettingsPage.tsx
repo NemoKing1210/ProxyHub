@@ -11,7 +11,6 @@ import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightne
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
 import ViewAgendaOutlinedIcon from '@mui/icons-material/ViewAgendaOutlined'
 import ViewCompactOutlinedIcon from '@mui/icons-material/ViewCompactOutlined'
-import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined'
 import {
   Alert,
   Box,
@@ -48,6 +47,7 @@ import {
 import ContentSection from '../components/ContentSection'
 import ChangelogView from '../components/ChangelogView'
 import LanguageFlag from '../components/LanguageFlag'
+import SettingsSystemSection from '../components/SettingsSystemSection'
 import { useSettingsStore } from '../store/settingsStore'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
 import { normalizeDomainInput, validateDomain } from '../validation/proxySchema'
@@ -227,7 +227,20 @@ function SettingsPage(): React.JSX.Element {
   }
 
   const handleTrayEnabledChange = async (enabled: boolean): Promise<void> => {
-    await updateSettings({ trayEnabled: enabled })
+    await updateSettings({
+      trayEnabled: enabled,
+      startMinimized: enabled ? settings.startMinimized : false
+    })
+    notifySaved()
+  }
+
+  const handleBackgroundCheckNotificationsChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ backgroundCheckNotifications: enabled })
+    notifySaved()
+  }
+
+  const handleStartMinimizedChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ startMinimized: enabled })
     notifySaved()
   }
 
@@ -341,31 +354,16 @@ function SettingsPage(): React.JSX.Element {
           </Stack>
         </ContentSection>
 
-        <ContentSection
-          icon={<WidgetsOutlinedIcon fontSize="small" />}
-          title={t('settings.sections.system')}
-          description={t('settings.sections.systemDescription')}
-          collapsible
-          defaultExpanded={false}
-        >
-          <FormControlLabel
-            control={
-              <Switch
-                checked={settings.trayEnabled}
-                onChange={(event) => void handleTrayEnabledChange(event.target.checked)}
-              />
-            }
-            label={
-              <Box>
-                <Typography variant="subtitle2">{t('settings.trayEnabled')}</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {t('settings.trayEnabledHint')}
-                </Typography>
-              </Box>
-            }
-            sx={{ alignItems: 'flex-start', m: 0 }}
-          />
-        </ContentSection>
+        <SettingsSystemSection
+          trayEnabled={settings.trayEnabled}
+          startMinimized={settings.startMinimized}
+          backgroundCheckNotifications={settings.backgroundCheckNotifications}
+          onTrayEnabledChange={(enabled) => void handleTrayEnabledChange(enabled)}
+          onStartMinimizedChange={(enabled) => void handleStartMinimizedChange(enabled)}
+          onBackgroundCheckNotificationsChange={(enabled) =>
+            void handleBackgroundCheckNotificationsChange(enabled)
+          }
+        />
 
         <ContentSection
           icon={<NetworkCheckOutlinedIcon fontSize="small" />}

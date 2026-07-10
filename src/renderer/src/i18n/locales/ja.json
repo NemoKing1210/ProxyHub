@@ -41,6 +41,7 @@
       "maxLatencyEnabled": "遅延で制限",
       "maxLatencyValue": "{{value}} ms",
       "all": "すべて",
+      "activeCount": "{{count}} 件のフィルター",
       "clear": "フィルターをクリア",
       "shown": "{{shown}} / {{total}} 件表示",
       "noResults": "フィルターに一致するプロキシがありません",
@@ -227,6 +228,18 @@
     "transparent": "Transparent"
   },
   "proxyStatus": { "unknown": "未確認", "checking": "確認中", "alive": "稼働", "dead": "停止" },
+  "checkToast": {
+    "aliveTitle": "{{name}} — 稼働",
+    "deadTitle": "{{name}} — 停止",
+    "latency": "{{value}} ms",
+    "externalIp": "外部 IP: {{ip}}",
+    "checkTarget": "{{domain}} 経由",
+    "batchTitle": "確認完了",
+    "batchAllAlive": "全 {{total}} 件のプロキシが稼働中",
+    "batchAllDead": "全 {{total}} 件のプロキシが停止",
+    "batchPartial": "{{total}} 件中 {{alive}} 件稼働、{{dead}} 件停止",
+    "batchEmptyTitle": "プロキシは確認されませんでした"
+  },
   "settings": {
     "title": "設定",
     "description": "外観とプロキシ確認の設定を行います。",

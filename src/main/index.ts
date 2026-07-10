@@ -47,6 +47,10 @@ async function createWindow(): Promise<void> {
   applyTitleBarThemeFromSettings(mainWindow, settings.theme)
 
   mainWindow.on('ready-to-show', () => {
+    if (settings.trayEnabled && settings.startMinimized) {
+      return
+    }
+
     mainWindow.show()
   })
 

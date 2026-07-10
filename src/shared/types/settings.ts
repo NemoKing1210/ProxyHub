@@ -22,6 +22,8 @@ export interface AppSettings {
   checkAllMode: CheckAllMode
   checkAllConcurrency: number
   trayEnabled: boolean
+  startMinimized: boolean
+  backgroundCheckNotifications: boolean
   proxyCardView: ProxyCardViewMode
   proxyListView: ProxyListViewState
 }
@@ -42,6 +44,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   checkAllMode: 'sequential',
   checkAllConcurrency: CHECK_ALL_CONCURRENCY_DEFAULT,
   trayEnabled: false,
+  startMinimized: false,
+  backgroundCheckNotifications: true,
   proxyCardView: 'standard',
   proxyListView: DEFAULT_PROXY_LIST_VIEW
 }
@@ -116,12 +120,16 @@ export function getEnabledCheckDomains(checkDomains: CheckDomainEntry[]): string
 export function normalizeSettings(settings: Partial<AppSettings> | undefined): AppSettings {
   const merged = { ...DEFAULT_SETTINGS, ...(settings ?? {}) }
 
+  const trayEnabled = merged.trayEnabled === true
+
   return {
     ...merged,
     checkDomains: normalizeCheckDomains(merged.checkDomains),
     checkAllMode: merged.checkAllMode === 'parallel' ? 'parallel' : 'sequential',
     checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency),
-    trayEnabled: merged.trayEnabled === true,
+    trayEnabled,
+    startMinimized: trayEnabled && merged.startMinimized === true,
+    backgroundCheckNotifications: merged.backgroundCheckNotifications !== false,
     proxyCardView: merged.proxyCardView === 'compact' ? 'compact' : 'standard',
     proxyListView: normalizeProxyListView(merged.proxyListView)
   }

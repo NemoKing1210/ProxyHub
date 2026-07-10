@@ -31,6 +31,14 @@ export function hideMainWindow(): void {
   mainWindow.hide()
 }
 
+export function isMainWindowBackgrounded(): boolean {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    return true
+  }
+
+  return !mainWindow.isVisible() || mainWindow.isMinimized()
+}
+
 export function openProxyFromTray(proxyId: string): void {
   showMainWindow()
 

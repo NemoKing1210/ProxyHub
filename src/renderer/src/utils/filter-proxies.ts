@@ -33,16 +33,21 @@ export function getProxyDisplayLatency(proxy: Proxy): number | undefined {
 }
 
 export function hasActiveFilters(filters: ProxyListFilters): boolean {
-  return (
-    filters.searchQuery.trim() !== '' ||
-    filters.countryCode !== '' ||
-    filters.city !== '' ||
-    filters.protocol !== '' ||
-    filters.anonymityLevel !== '' ||
-    filters.favorite !== 'all' ||
-    filters.status !== 'all' ||
-    filters.maxLatencyMs !== null
-  )
+  return countActiveFilters(filters) > 0 || filters.searchQuery.trim() !== ''
+}
+
+export function countActiveFilters(filters: ProxyListFilters): number {
+  let count = 0
+
+  if (filters.protocol !== '') count += 1
+  if (filters.countryCode !== '') count += 1
+  if (filters.city !== '') count += 1
+  if (filters.anonymityLevel !== '') count += 1
+  if (filters.favorite !== 'all') count += 1
+  if (filters.status !== 'all') count += 1
+  if (filters.maxLatencyMs !== null) count += 1
+
+  return count
 }
 
 export function filterProxies(proxies: Proxy[], filters: ProxyListFilters): Proxy[] {
