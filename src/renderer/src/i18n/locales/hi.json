@@ -12,6 +12,7 @@
       "latency": "विलंबता", "checkTarget": "जांच लक्ष्य", "externalIp": "बाहरी IP", "checkedAt": "जांच समय", "createdAt": "बनाया गया", "proxyUrl": "प्रॉक्सी URL", "actions": "क्रियाएं"
     },
     "actions": { "check": "प्रॉक्सी जांचें", "edit": "संपादित करें", "delete": "हटाएं", "copyLink": "लिंक के रूप में कॉपी करें" },
+    "sections": { "connection": "कनेक्शन", "connectionDescription": "होस्ट, पोर्ट और प्रमाणीकरण।", "results": "जांच परिणाम", "resultsDescription": "नवीनतम उपलब्धता परीक्षण का डेटा।" },
     "latencyMs": "{{value}} मि.से.",
     "authEnabled": "प्रमाणीकरण",
     "errorDetailsTitle": "त्रुटि विवरण",

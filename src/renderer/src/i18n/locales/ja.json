@@ -12,6 +12,7 @@
       "latency": "遅延", "checkTarget": "確認先", "externalIp": "外部IP", "checkedAt": "確認日時", "createdAt": "作成日時", "proxyUrl": "プロキシURL", "actions": "操作"
     },
     "actions": { "check": "プロキシを確認", "edit": "編集", "delete": "削除", "copyLink": "リンクとしてコピー" },
+    "sections": { "connection": "接続", "connectionDescription": "ホスト、ポート、認証情報。", "results": "確認結果", "resultsDescription": "最新の可用性テストのデータ。" },
     "latencyMs": "{{value}} ms",
     "authEnabled": "認証",
     "errorDomain": "ドメイン",

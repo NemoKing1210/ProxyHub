@@ -12,6 +12,7 @@
       "latency": "الزمن", "checkTarget": "هدف الفحص", "externalIp": "IP خارجي", "checkedAt": "تاريخ الفحص", "createdAt": "تاريخ الإنشاء", "proxyUrl": "رابط البروكسي", "actions": "الإجراءات"
     },
     "actions": { "check": "فحص البروكسي", "edit": "تعديل", "delete": "حذف", "copyLink": "نسخ كرابط" },
+    "sections": { "connection": "الاتصال", "connectionDescription": "المضيف والمنفذ وبيانات الاعتماد.", "results": "نتائج الفحص", "resultsDescription": "بيانات آخر اختبار توفر." },
     "latencyMs": "{{value}} مللي ث",
     "authEnabled": "مصادقة",
     "errorDetailsTitle": "تفاصيل الخطأ",

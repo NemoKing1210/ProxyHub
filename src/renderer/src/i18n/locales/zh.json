@@ -13,6 +13,7 @@
       "latency": "延迟", "checkTarget": "检测目标", "externalIp": "外部 IP", "checkedAt": "检测时间", "createdAt": "创建时间", "proxyUrl": "代理链接", "actions": "操作"
     },
     "actions": { "check": "检测代理", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接" },
+    "sections": { "connection": "连接", "connectionDescription": "主机、端口和认证信息。", "results": "检测结果", "resultsDescription": "最近一次可用性测试的数据。" },
     "latencyMs": "{{value}} 毫秒",
     "authEnabled": "认证",
     "errorDetailsTitle": "错误详情",

@@ -30,7 +30,7 @@ import {
   type AppLanguage,
   type ThemeMode
 } from '../../../shared/types/settings'
-import SettingsSection from '../components/SettingsSection'
+import ContentSection from '../components/ContentSection'
 import { useSettingsStore } from '../store/settingsStore'
 import { normalizeDomainInput, validateDomain } from '../validation/proxySchema'
 
@@ -126,7 +126,7 @@ function SettingsPage(): React.JSX.Element {
       </Typography>
 
       <Stack spacing={3}>
-        <SettingsSection
+        <ContentSection
           icon={<PaletteOutlinedIcon fontSize="small" />}
           title={t('settings.sections.appearance')}
           description={t('settings.sections.appearanceDescription')}
@@ -179,9 +179,9 @@ function SettingsPage(): React.JSX.Element {
               ))}
             </TextField>
           </Stack>
-        </SettingsSection>
+        </ContentSection>
 
-        <SettingsSection
+        <ContentSection
           icon={<NetworkCheckOutlinedIcon fontSize="small" />}
           title={t('settings.sections.checking')}
           description={t('settings.sections.checkingDescription')}
@@ -306,7 +306,7 @@ function SettingsPage(): React.JSX.Element {
               </Stack>
             </Box>
           </Stack>
-        </SettingsSection>
+        </ContentSection>
       </Stack>
 
       <Snackbar

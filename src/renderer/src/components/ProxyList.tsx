@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  LinearProgress,
   Paper,
   Stack,
   Typography
@@ -109,8 +108,6 @@ function ProxyList(): React.JSX.Element {
           </Button>
         </Stack>
       </Stack>
-
-      {isCheckingAll && <LinearProgress sx={{ mb: 2 }} />}
 
       {isLoading ? (
         <Paper

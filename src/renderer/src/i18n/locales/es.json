@@ -12,6 +12,7 @@
       "latency": "Latencia", "checkTarget": "Objetivo", "externalIp": "IP externa", "checkedAt": "Comprobado", "createdAt": "Creado", "proxyUrl": "URL del proxy", "actions": "Acciones"
     },
     "actions": { "check": "Comprobar proxy", "edit": "Editar", "delete": "Eliminar", "copyLink": "Copiar como enlace" },
+    "sections": { "connection": "Conexión", "connectionDescription": "Host, puerto y credenciales.", "results": "Resultados", "resultsDescription": "Datos de la última prueba de disponibilidad." },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
     "errorDomain": "Dominio",

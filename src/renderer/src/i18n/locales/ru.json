@@ -44,6 +44,12 @@
       "delete": "Удалить",
       "copyLink": "Скопировать как ссылку"
     },
+    "sections": {
+      "connection": "Подключение",
+      "connectionDescription": "Хост, порт и данные авторизации.",
+      "results": "Результаты проверки",
+      "resultsDescription": "Данные последней проверки доступности."
+    },
     "latencyMs": "{{value}} мс",
     "authEnabled": "Авторизация",
     "errorDetailsTitle": "Подробности ошибки",

@@ -44,6 +44,12 @@
       "delete": "Delete proxy",
       "copyLink": "Copy as link"
     },
+    "sections": {
+      "connection": "Connection",
+      "connectionDescription": "Host, port, and authentication credentials.",
+      "results": "Check results",
+      "resultsDescription": "Data from the latest availability test."
+    },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
     "errorDetailsTitle": "Error details",

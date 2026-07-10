@@ -1,17 +1,16 @@
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import LinkIcon from '@mui/icons-material/Link'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import RouterOutlinedIcon from '@mui/icons-material/RouterOutlined'
+import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
 import {
   Box,
   Button,
-  Card,
-  CardActions,
-  CardContent,
   Chip,
   CircularProgress,
-  Divider,
   Stack,
   Typography
 } from '@mui/material'
@@ -19,7 +18,8 @@ import { alpha, useTheme } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
-import { buildProxyUrl } from '../../../shared/utils/proxy-format'
+import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
+import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
 import ProxyErrorPopover from './ProxyErrorPopover'
 import ProxyStatusChip from './ProxyStatusChip'
@@ -54,8 +54,9 @@ function ProxyCard({
   const [linkCopied, setLinkCopied] = useState(false)
 
   const proxyUrl = buildProxyUrl(proxy)
+  const address = formatProxyAddress(proxy)
 
-  const importantFields = useMemo(() => {
+  const connectionFields = useMemo(() => {
     const fields: ImportantField[] = [
       {
         label: t('proxyForm.host'),
@@ -85,6 +86,12 @@ function ProxyCard({
         secret: true
       })
     }
+
+    return fields
+  }, [proxy, t])
+
+  const resultFields = useMemo(() => {
+    const fields: ImportantField[] = []
 
     if (proxy.latencyMs !== undefined) {
       fields.push({
@@ -118,75 +125,130 @@ function ProxyCard({
     window.setTimeout(() => setLinkCopied(false), 1500)
   }
 
+  const renderFields = (fields: ImportantField[]): React.JSX.Element => (
+    <Stack spacing={1}>
+      {fields.map((field) => (
+        <CopyableField
+          key={field.label}
+          label={field.label}
+          value={field.value}
+          displayValue={field.displayValue}
+          monospace={field.monospace}
+          secret={field.secret}
+        />
+      ))}
+    </Stack>
+  )
+
   return (
-    <Card
-      elevation={0}
+    <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        border: 1,
-        borderColor: 'divider',
-        transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+        borderRadius: 2.5,
+        bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.06 : 0.04),
+        transition: 'box-shadow 0.2s ease, background-color 0.2s ease',
         '&:hover': {
+          bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.09 : 0.06),
           boxShadow:
             theme.palette.mode === 'dark'
-              ? `0 12px 28px ${alpha(theme.palette.common.black, 0.45)}`
-              : `0 12px 28px ${alpha(theme.palette.primary.main, 0.12)}`
+              ? `0 10px 24px ${alpha(theme.palette.common.black, 0.35)}`
+              : `0 10px 24px ${alpha(theme.palette.primary.main, 0.1)}`
         }
       }}
     >
-      <CardContent
-        sx={{
-          flex: 1,
-          minWidth: 0,
-          py: 2,
-          '&:last-child': { pb: proxy.error ? 1.5 : 2 }
-        }}
-      >
-        <Stack spacing={1.5}>
-          <Box>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 0.75 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }} noWrap>
+      <Box sx={{ p: { xs: 2.5, sm: 3 } }}>
+        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start', mb: 2.5 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 40,
+              height: 40,
+              borderRadius: 2,
+              flexShrink: 0,
+              bgcolor: alpha(theme.palette.primary.main, 0.14),
+              color: 'primary.main'
+            }}
+          >
+            <RouterOutlinedIcon fontSize="small" />
+          </Box>
+
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ fontSize: '1.05rem', fontWeight: 600, lineHeight: 1.3 }}
+                noWrap
+              >
                 {proxy.label || proxy.host}
               </Typography>
               <ProxyStatusChip status={proxy.status} />
             </Stack>
-            <Chip
-              label={proxy.protocol.toUpperCase()}
-              size="small"
-              sx={{
-                fontWeight: 700,
-                letterSpacing: 0.4,
-                bgcolor: alpha(theme.palette.primary.main, 0.12),
-                color: 'primary.main'
-              }}
-            />
-          </Box>
 
-          <Stack spacing={1}>
-            {importantFields.map((field) => (
-              <CopyableField
-                key={field.label}
-                label={field.label}
-                value={field.value}
-                displayValue={field.displayValue}
-                monospace={field.monospace}
-                secret={field.secret}
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Chip
+                label={proxy.protocol.toUpperCase()}
+                size="small"
+                sx={{
+                  fontWeight: 700,
+                  letterSpacing: 0.4,
+                  bgcolor: alpha(theme.palette.primary.main, 0.12),
+                  color: 'primary.main'
+                }}
               />
-            ))}
-          </Stack>
+              <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
+                {address}
+              </Typography>
+            </Stack>
+          </Box>
+        </Stack>
+
+        <Stack spacing={2}>
+          <ContentSection
+            nested
+            collapsible
+            defaultExpanded={false}
+            icon={<DnsOutlinedIcon fontSize="small" />}
+            title={t('proxyList.sections.connection')}
+            description={t('proxyList.sections.connectionDescription')}
+          >
+            {renderFields(connectionFields)}
+          </ContentSection>
+
+          {resultFields.length > 0 && (
+            <ContentSection
+              nested
+              icon={<SpeedOutlinedIcon fontSize="small" />}
+              title={t('proxyList.sections.results')}
+              description={t('proxyList.sections.resultsDescription')}
+            >
+              {renderFields(resultFields)}
+            </ContentSection>
+          )}
         </Stack>
 
         {proxy.error && (
-          <Box sx={{ mt: 1.5 }}>
+          <Box sx={{ mt: 2 }}>
             <ProxyErrorPopover error={proxy.error} errorDetails={proxy.errorDetails} />
           </Box>
         )}
-      </CardContent>
+      </Box>
 
-      <Divider />
-
-      <CardActions sx={{ px: 1.5, py: 1.25, gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+      <Box
+        sx={{
+          px: { xs: 2.5, sm: 3 },
+          pb: { xs: 2.5, sm: 3 },
+          pt: 0,
+          display: 'flex',
+          gap: 1,
+          flexWrap: 'wrap',
+          justifyContent: 'flex-end'
+        }}
+      >
         <Button
           size="small"
           variant="outlined"
@@ -227,8 +289,8 @@ function ProxyCard({
         >
           {t('proxyList.actions.delete')}
         </Button>
-      </CardActions>
-    </Card>
+      </Box>
+    </Box>
   )
 }
 
