@@ -1,6 +1,11 @@
 {
-  "app": { "title": "ProxyChecker" },
-  "nav": { "proxies": "البروكسيات", "settings": "الإعدادات" },
+  "app": {
+    "title": "ProxyChecker"
+  },
+  "nav": {
+    "proxies": "البروكسيات",
+    "settings": "الإعدادات"
+  },
   "common": {
     "cancel": "إلغاء",
     "save": "حفظ",
@@ -21,7 +26,7 @@
     "statsFavorites": "{{count}} مفضّل",
     "checkAll": "فحص الكل",
     "addProxy": "إضافة بروكسي",
-    "empty": "لا توجد بروكسيات بعد. انقر \"إضافة بروكسي\" للبدء.",
+    "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
       "title": "الفلاتر",
       "description": "تضييق القائمة حسب البروتوكول أو الموقع أو الخصوصية أو المفضلة أو الحالة أو زمن الاستجابة.",
@@ -131,7 +136,12 @@
       "addToFavorites": "إضافة إلى المفضلة",
       "removeFromFavorites": "إزالة من المفضلة",
       "enableProxy": "تفعيل البروكسي",
-      "disableProxy": "تعطيل البروكسي"
+      "disableProxy": "تعطيل البروكسي",
+      "moveToGroup": "Move to group",
+      "removeFromGroup": "Remove from group",
+      "noGroup": "No group",
+      "noGroups": "No groups yet",
+      "currentGroup": "Current: {{name}}"
     },
     "disabled": "معطّل",
     "sections": {
@@ -157,7 +167,9 @@
     "errorDomain": "النطاق",
     "errorUrl": "URL",
     "errorMessage": "الرسالة",
-    "errorCode": "الرمز"
+    "errorCode": "الرمز",
+    "add": "Add",
+    "addGroup": "Add group"
   },
   "proxyForm": {
     "addTitle": "إضافة بروكسي",
@@ -177,7 +189,9 @@
       "location": "الموقع والبيانات الوصفية",
       "locationDescription": "البلد والمدينة ومستوى التخفي — مفيد للاستيراد والتصفية.",
       "authentication": "المصادقة",
-      "authenticationDescription": "بيانات الاعتماد إذا كان البروكسي يتطلب تفويضًا."
+      "authenticationDescription": "بيانات الاعتماد إذا كان البروكسي يتطلب تفويضًا.",
+      "group": "Group",
+      "groupDescription": "Optional folder to organize proxies in the list."
     },
     "protocol": "البروتوكول",
     "host": "المضيف",
@@ -197,7 +211,9 @@
     "quickFillApply": "تطبيق",
     "quickFillHint": "الصق رابط البروكسي مع البروتوكول أو بدونه — يتم تحليل بيانات الاعتماد تلقائياً.",
     "quickFillError": "تعذر تحليل رابط البروكسي. تحقق من التنسيق وحاول مرة أخرى.",
-    "quickFillOrManual": "أو املأ يدوياً"
+    "quickFillOrManual": "أو املأ يدوياً",
+    "group": "Group (optional)",
+    "groupHint": "Move the proxy into a folder in the list."
   },
   "proxyIcons": {
     "auto": "تلقائي",
@@ -320,6 +336,39 @@
     "authPair": "يجب إدخال اسم المستخدم وكلمة المرور معاً",
     "proxyDuplicate": "هذا البروكسي موجود بالفعل في القائمة",
     "countryCodeInvalid": "أدخل رمز دولة صالحاً من حرفين",
-    "cityMax": "يجب ألا تتجاوز المدينة 64 حرفاً"
+    "cityMax": "يجب ألا تتجاوز المدينة 64 حرفاً",
+    "groupNotFound": "Selected group no longer exists"
+  },
+  "proxyGroup": {
+    "addTitle": "Add group",
+    "editTitle": "Rename group",
+    "name": "Name",
+    "namePlaceholder": "Work, Home, Testing…",
+    "edit": "Rename",
+    "delete": "Delete group",
+    "actions": "Group actions",
+    "proxyCount_one": "{{count}} proxy",
+    "proxyCount_other": "{{count}} proxies",
+    "deleteConfirm": {
+      "title": "Delete group?",
+      "message": "Delete group \"{{name}}\"? This cannot be undone.",
+      "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "validation": {
+      "nameRequired": "Group name is required",
+      "nameMax": "Name must be 64 characters or less",
+      "nameDuplicate": "A group with this name already exists"
+    },
+    "icon": "Icon",
+    "iconHint": "Default uses the folder icon.",
+    "color": "Color",
+    "colorHint": "Default uses the app accent color.",
+    "defaultIcon": "Folder (default)",
+    "defaultColor": "Default color",
+    "changeIcon": "Change icon",
+    "changeColor": "Change color",
+    "previewFallback": "Group name",
+    "previewHint": "Group header preview",
+    "addProxy": "Add proxy"
   }
 }

@@ -1,8 +1,10 @@
+import type { ProxyGroup } from '../../shared/types/proxy-group'
 import type { Proxy } from '../../shared/types/proxy'
 import { DEFAULT_SETTINGS, normalizeSettings, type AppSettings } from '../../shared/types/settings'
 
 interface StoreSchema {
   proxies: Proxy[]
+  groups: ProxyGroup[]
   settings: AppSettings
 }
 
@@ -15,6 +17,7 @@ const storeOptions = {
   name: 'proxy-checker',
   defaults: {
     proxies: [] as Proxy[],
+    groups: [] as ProxyGroup[],
     settings: DEFAULT_SETTINGS
   }
 }
@@ -37,6 +40,14 @@ export async function getProxies(): Promise<Proxy[]> {
 
 export async function saveProxies(proxies: Proxy[]): Promise<void> {
   ;(await getStore()).set('proxies', proxies)
+}
+
+export async function getGroups(): Promise<ProxyGroup[]> {
+  return (await getStore()).get('groups')
+}
+
+export async function saveGroups(groups: ProxyGroup[]): Promise<void> {
+  ;(await getStore()).set('groups', groups)
 }
 
 export async function getSettings(): Promise<AppSettings> {

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.23.0] - 2026-07-10
+
+### Added
+
+- Proxy groups (folders): create groups from the Add menu, optionally assign a group when adding or editing a proxy, and browse the list with ungrouped proxies first followed by grouped sections
+- Group appearance: custom icon and color, with the group section background tinted to match
+- Quick group actions: move a proxy to or from a group via the proxy card context menu; add a proxy directly into a group from the group header
+
 ## [1.22.0] - 2026-07-10
 
 ### Added

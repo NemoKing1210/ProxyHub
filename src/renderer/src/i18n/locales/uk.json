@@ -26,7 +26,7 @@
     "statsFavorites": "Обраних: {{count}}",
     "checkAll": "Перевірити всі",
     "addProxy": "Додати проксі",
-    "empty": "Проксі поки немає. Натисніть «Додати проксі», щоб почати.",
+    "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
       "title": "Фільтри",
       "description": "Звузьте список за протоколом, країною, містом, анонімністю, обраним, статусом або затримкою.",
@@ -136,7 +136,12 @@
       "addToFavorites": "Додати до обраного",
       "removeFromFavorites": "Прибрати з обраного",
       "enableProxy": "Увімкнути проксі",
-      "disableProxy": "Вимкнути проксі"
+      "disableProxy": "Вимкнути проксі",
+      "moveToGroup": "Move to group",
+      "removeFromGroup": "Remove from group",
+      "noGroup": "No group",
+      "noGroups": "No groups yet",
+      "currentGroup": "Current: {{name}}"
     },
     "disabled": "Вимкнено",
     "sections": {
@@ -162,7 +167,9 @@
     "errorDomain": "Домен",
     "errorUrl": "URL",
     "errorMessage": "Повідомлення",
-    "errorCode": "Код"
+    "errorCode": "Код",
+    "add": "Add",
+    "addGroup": "Add group"
   },
   "proxyForm": {
     "addTitle": "Додати проксі",
@@ -182,7 +189,9 @@
       "location": "Локація та метадані",
       "locationDescription": "Країна, місто та рівень анонімності — для імпорту та фільтрації.",
       "authentication": "Аутентифікація",
-      "authenticationDescription": "Облікові дані, якщо проксі вимагає авторизацію."
+      "authenticationDescription": "Облікові дані, якщо проксі вимагає авторизацію.",
+      "group": "Group",
+      "groupDescription": "Optional folder to organize proxies in the list."
     },
     "protocol": "Протокол",
     "host": "Хост",
@@ -202,7 +211,9 @@
     "quickFillApply": "Застосувати",
     "quickFillHint": "Вставте посилання на проксі з протоколом або без — облікові дані розпізнаються автоматично.",
     "quickFillError": "Не вдалося розібрати посилання. Перевірте формат і спробуйте знову.",
-    "quickFillOrManual": "або заповніть вручну"
+    "quickFillOrManual": "або заповніть вручну",
+    "group": "Group (optional)",
+    "groupHint": "Move the proxy into a folder in the list."
   },
   "proxyIcons": {
     "auto": "Авто",
@@ -326,6 +337,39 @@
     "authPair": "Логін і пароль потрібно вказати обидва",
     "proxyDuplicate": "Такий проксі вже є в списку",
     "countryCodeInvalid": "Введіть коректний двобуквений код країни",
-    "cityMax": "Місто не повинно перевищувати 64 символи"
+    "cityMax": "Місто не повинно перевищувати 64 символи",
+    "groupNotFound": "Selected group no longer exists"
+  },
+  "proxyGroup": {
+    "addTitle": "Add group",
+    "editTitle": "Rename group",
+    "name": "Name",
+    "namePlaceholder": "Work, Home, Testing…",
+    "edit": "Rename",
+    "delete": "Delete group",
+    "actions": "Group actions",
+    "proxyCount_one": "{{count}} proxy",
+    "proxyCount_other": "{{count}} proxies",
+    "deleteConfirm": {
+      "title": "Delete group?",
+      "message": "Delete group \"{{name}}\"? This cannot be undone.",
+      "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "validation": {
+      "nameRequired": "Group name is required",
+      "nameMax": "Name must be 64 characters or less",
+      "nameDuplicate": "A group with this name already exists"
+    },
+    "icon": "Icon",
+    "iconHint": "Default uses the folder icon.",
+    "color": "Color",
+    "colorHint": "Default uses the app accent color.",
+    "defaultIcon": "Folder (default)",
+    "defaultColor": "Default color",
+    "changeIcon": "Change icon",
+    "changeColor": "Change color",
+    "previewFallback": "Group name",
+    "previewHint": "Group header preview",
+    "addProxy": "Add proxy"
   }
 }

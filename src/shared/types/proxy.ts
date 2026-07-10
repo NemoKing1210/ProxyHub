@@ -92,6 +92,7 @@ export interface Proxy {
   anonymityLevel?: ProxyAnonymityLevel
   isFavorite?: boolean
   isEnabled?: boolean
+  groupId?: string
   createdAt: string
   status: ProxyStatus
   latencyMs?: number
@@ -117,6 +118,7 @@ export interface ProxyInput {
   countryCode?: string
   city?: string
   anonymityLevel?: ProxyAnonymityLevel
+  groupId?: string
 }
 
 export interface ProxyCheckResult {

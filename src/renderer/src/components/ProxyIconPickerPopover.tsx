@@ -1,5 +1,6 @@
 import AutoModeOutlinedIcon from '@mui/icons-material/AutoModeOutlined'
 import CheckIcon from '@mui/icons-material/Check'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import { Box, IconButton, Popover, Tooltip, Typography } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +13,7 @@ interface ProxyIconPickerPopoverProps {
   open: boolean
   value?: ProxyIconId
   countryCode?: string
+  defaultOption?: 'auto' | 'folder'
   onClose: () => void
   onSelect: (iconId: ProxyIconId | undefined) => void
 }
@@ -21,12 +23,15 @@ function ProxyIconPickerPopover({
   open,
   value,
   countryCode,
+  defaultOption = 'auto',
   onClose,
   onSelect
 }: ProxyIconPickerPopoverProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const isAuto = value === undefined
+  const isDefault = value === undefined
+  const defaultLabel =
+    defaultOption === 'folder' ? t('proxyGroup.defaultIcon') : t('proxyIcons.auto')
 
   return (
     <Popover
@@ -56,29 +61,31 @@ function ProxyIconPickerPopover({
           gap: 0.5
         }}
       >
-        <Tooltip title={t('proxyIcons.auto')} arrow>
+        <Tooltip title={defaultLabel} arrow>
           <IconButton
             onClick={() => onSelect(undefined)}
-            aria-label={t('proxyIcons.auto')}
-            aria-pressed={isAuto}
+            aria-label={defaultLabel}
+            aria-pressed={isDefault}
             sx={{
               position: 'relative',
               borderRadius: 2,
               py: 1.25,
-              color: isAuto ? 'primary.main' : 'text.secondary',
-              bgcolor: isAuto ? alpha(theme.palette.primary.main, 0.14) : 'transparent',
+              color: isDefault ? 'primary.main' : 'text.secondary',
+              bgcolor: isDefault ? alpha(theme.palette.primary.main, 0.14) : 'transparent',
               '&:hover': {
-                bgcolor: alpha(theme.palette.primary.main, isAuto ? 0.2 : 0.1),
+                bgcolor: alpha(theme.palette.primary.main, isDefault ? 0.2 : 0.1),
                 color: 'primary.main'
               }
             }}
           >
-            {countryCode ? (
+            {defaultOption === 'folder' ? (
+              <FolderOutlinedIcon fontSize="small" />
+            ) : countryCode ? (
               <ProxyCardAvatar countryCode={countryCode} flagSize={20} />
             ) : (
               <AutoModeOutlinedIcon fontSize="small" />
             )}
-            {isAuto ? (
+            {isDefault ? (
               <CheckIcon
                 sx={{
                   position: 'absolute',

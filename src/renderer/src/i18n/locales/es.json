@@ -1,6 +1,11 @@
 {
-  "app": { "title": "ProxyChecker" },
-  "nav": { "proxies": "Proxies", "settings": "Ajustes" },
+  "app": {
+    "title": "ProxyChecker"
+  },
+  "nav": {
+    "proxies": "Proxies",
+    "settings": "Ajustes"
+  },
   "common": {
     "cancel": "Cancelar",
     "save": "Guardar",
@@ -21,7 +26,7 @@
     "statsFavorites": "{{count}} favoritos",
     "checkAll": "Comprobar todos",
     "addProxy": "Añadir proxy",
-    "empty": "Aún no hay proxies. Haz clic en \"Añadir proxy\" para empezar.",
+    "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
       "title": "Filtros",
       "description": "Reduce la lista por protocolo, ubicación, anonimato, favoritos, estado o latencia.",
@@ -131,7 +136,12 @@
       "addToFavorites": "Añadir a favoritos",
       "removeFromFavorites": "Quitar de favoritos",
       "enableProxy": "Activar proxy",
-      "disableProxy": "Desactivar proxy"
+      "disableProxy": "Desactivar proxy",
+      "moveToGroup": "Move to group",
+      "removeFromGroup": "Remove from group",
+      "noGroup": "No group",
+      "noGroups": "No groups yet",
+      "currentGroup": "Current: {{name}}"
     },
     "disabled": "Desactivado",
     "sections": {
@@ -156,7 +166,9 @@
     "errorDomain": "Dominio",
     "errorUrl": "URL",
     "errorMessage": "Mensaje",
-    "errorCode": "Código"
+    "errorCode": "Código",
+    "add": "Add",
+    "addGroup": "Add group"
   },
   "proxyForm": {
     "addTitle": "Añadir proxy",
@@ -176,7 +188,9 @@
       "location": "Ubicación y metadatos",
       "locationDescription": "País, ciudad y anonimato — útil para importación y filtrado.",
       "authentication": "Autenticación",
-      "authenticationDescription": "Credenciales si el proxy requiere autorización."
+      "authenticationDescription": "Credenciales si el proxy requiere autorización.",
+      "group": "Group",
+      "groupDescription": "Optional folder to organize proxies in the list."
     },
     "protocol": "Protocolo",
     "host": "Host",
@@ -196,7 +210,9 @@
     "quickFillApply": "Aplicar",
     "quickFillHint": "Pega una URL de proxy con o sin protocolo; las credenciales se detectan automáticamente.",
     "quickFillError": "No se pudo analizar el enlace del proxy. Comprueba el formato e inténtalo de nuevo.",
-    "quickFillOrManual": "o rellena manualmente"
+    "quickFillOrManual": "o rellena manualmente",
+    "group": "Group (optional)",
+    "groupHint": "Move the proxy into a folder in the list."
   },
   "proxyIcons": {
     "auto": "Auto",
@@ -319,6 +335,39 @@
     "authPair": "Usuario y contraseña deben proporcionarse juntos",
     "proxyDuplicate": "Este proxy ya está en la lista",
     "countryCodeInvalid": "Introduce un código de país válido de dos letras",
-    "cityMax": "La ciudad no puede superar 64 caracteres"
+    "cityMax": "La ciudad no puede superar 64 caracteres",
+    "groupNotFound": "Selected group no longer exists"
+  },
+  "proxyGroup": {
+    "addTitle": "Add group",
+    "editTitle": "Rename group",
+    "name": "Name",
+    "namePlaceholder": "Work, Home, Testing…",
+    "edit": "Rename",
+    "delete": "Delete group",
+    "actions": "Group actions",
+    "proxyCount_one": "{{count}} proxy",
+    "proxyCount_other": "{{count}} proxies",
+    "deleteConfirm": {
+      "title": "Delete group?",
+      "message": "Delete group \"{{name}}\"? This cannot be undone.",
+      "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "validation": {
+      "nameRequired": "Group name is required",
+      "nameMax": "Name must be 64 characters or less",
+      "nameDuplicate": "A group with this name already exists"
+    },
+    "icon": "Icon",
+    "iconHint": "Default uses the folder icon.",
+    "color": "Color",
+    "colorHint": "Default uses the app accent color.",
+    "defaultIcon": "Folder (default)",
+    "defaultColor": "Default color",
+    "changeIcon": "Change icon",
+    "changeColor": "Change color",
+    "previewFallback": "Group name",
+    "previewHint": "Group header preview",
+    "addProxy": "Add proxy"
   }
 }

@@ -1,6 +1,11 @@
 {
-  "app": { "title": "ProxyChecker" },
-  "nav": { "proxies": "代理", "settings": "设置" },
+  "app": {
+    "title": "ProxyChecker"
+  },
+  "nav": {
+    "proxies": "代理",
+    "settings": "设置"
+  },
   "common": {
     "cancel": "取消",
     "save": "保存",
@@ -21,7 +26,7 @@
     "statsFavorites": "收藏 {{count}}",
     "checkAll": "全部检测",
     "addProxy": "添加代理",
-    "empty": "暂无代理。点击「添加代理」开始。",
+    "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
       "title": "筛选",
       "description": "按协议、位置、匿名性、收藏、状态或延迟缩小列表。",
@@ -120,7 +125,24 @@
       "anonymityLevel": "匿名级别",
       "actions": "操作"
     },
-    "actions": { "check": "检查", "edit": "编辑", "delete": "删除", "copyAddress": "复制地址", "copyLink": "复制为链接", "share": "分享", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除", "enableProxy": "启用代理", "disableProxy": "禁用代理" },
+    "actions": {
+      "check": "检查",
+      "edit": "编辑",
+      "delete": "删除",
+      "copyAddress": "复制地址",
+      "copyLink": "复制为链接",
+      "share": "分享",
+      "changeIcon": "更改图标",
+      "addToFavorites": "添加到收藏",
+      "removeFromFavorites": "从收藏中移除",
+      "enableProxy": "启用代理",
+      "disableProxy": "禁用代理",
+      "moveToGroup": "Move to group",
+      "removeFromGroup": "Remove from group",
+      "noGroup": "No group",
+      "noGroups": "No groups yet",
+      "currentGroup": "Current: {{name}}"
+    },
     "disabled": "已禁用",
     "sections": {
       "connection": "连接",
@@ -145,7 +167,9 @@
     "errorDomain": "域名",
     "errorUrl": "URL",
     "errorMessage": "消息",
-    "errorCode": "代码"
+    "errorCode": "代码",
+    "add": "Add",
+    "addGroup": "Add group"
   },
   "proxyForm": {
     "addTitle": "添加代理",
@@ -165,7 +189,9 @@
       "location": "位置与元数据",
       "locationDescription": "国家、城市和匿名级别 — 便于导入和筛选。",
       "authentication": "身份验证",
-      "authenticationDescription": "代理需要授权时的凭据。"
+      "authenticationDescription": "代理需要授权时的凭据。",
+      "group": "Group",
+      "groupDescription": "Optional folder to organize proxies in the list."
     },
     "protocol": "协议",
     "host": "主机",
@@ -185,7 +211,9 @@
     "quickFillApply": "应用",
     "quickFillHint": "粘贴带或不带协议的代理 URL — 凭据会自动解析。",
     "quickFillError": "无法解析代理链接。请检查格式后重试。",
-    "quickFillOrManual": "或手动填写"
+    "quickFillOrManual": "或手动填写",
+    "group": "Group (optional)",
+    "groupHint": "Move the proxy into a folder in the list."
   },
   "proxyIcons": {
     "auto": "自动",
@@ -220,7 +248,12 @@
     "anonymous": "Anonymous",
     "transparent": "Transparent"
   },
-  "proxyStatus": { "unknown": "未检测", "checking": "检测中", "alive": "可用", "dead": "不可用" },
+  "proxyStatus": {
+    "unknown": "未检测",
+    "checking": "检测中",
+    "alive": "可用",
+    "dead": "不可用"
+  },
   "checkToast": {
     "aliveTitle": "{{name}} — 可用",
     "deadTitle": "{{name}} — 不可用",
@@ -303,6 +336,39 @@
     "authPair": "用户名和密码必须同时填写",
     "proxyDuplicate": "该代理已在列表中",
     "countryCodeInvalid": "请输入有效的两位国家代码",
-    "cityMax": "城市名称不能超过64个字符"
+    "cityMax": "城市名称不能超过64个字符",
+    "groupNotFound": "Selected group no longer exists"
+  },
+  "proxyGroup": {
+    "addTitle": "Add group",
+    "editTitle": "Rename group",
+    "name": "Name",
+    "namePlaceholder": "Work, Home, Testing…",
+    "edit": "Rename",
+    "delete": "Delete group",
+    "actions": "Group actions",
+    "proxyCount_one": "{{count}} proxy",
+    "proxyCount_other": "{{count}} proxies",
+    "deleteConfirm": {
+      "title": "Delete group?",
+      "message": "Delete group \"{{name}}\"? This cannot be undone.",
+      "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "validation": {
+      "nameRequired": "Group name is required",
+      "nameMax": "Name must be 64 characters or less",
+      "nameDuplicate": "A group with this name already exists"
+    },
+    "icon": "Icon",
+    "iconHint": "Default uses the folder icon.",
+    "color": "Color",
+    "colorHint": "Default uses the app accent color.",
+    "defaultIcon": "Folder (default)",
+    "defaultColor": "Default color",
+    "changeIcon": "Change icon",
+    "changeColor": "Change color",
+    "previewFallback": "Group name",
+    "previewHint": "Group header preview",
+    "addProxy": "Add proxy"
   }
 }

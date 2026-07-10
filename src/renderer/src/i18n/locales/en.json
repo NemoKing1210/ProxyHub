@@ -26,8 +26,10 @@
     "statsEnabled": "{{count}} enabled",
     "statsFavorites": "{{count}} favorites",
     "checkAll": "Check all",
+    "add": "Add",
     "addProxy": "Add proxy",
-    "empty": "No proxies yet. Click \"Add proxy\" to get started.",
+    "addGroup": "Add group",
+    "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
       "title": "Filters",
       "description": "Narrow the list by protocol, location, anonymity, favorites, status, activity, or latency.",
@@ -138,7 +140,12 @@
       "addToFavorites": "Add to favorites",
       "removeFromFavorites": "Remove from favorites",
       "enableProxy": "Enable proxy",
-      "disableProxy": "Disable proxy"
+      "disableProxy": "Disable proxy",
+      "moveToGroup": "Move to group",
+      "removeFromGroup": "Remove from group",
+      "noGroup": "No group",
+      "noGroups": "No groups yet",
+      "currentGroup": "Current: {{name}}"
     },
     "disabled": "Disabled",
     "sections": {
@@ -186,7 +193,9 @@
       "authentication": "Authentication",
       "authenticationDescription": "Credentials if the proxy requires authorization.",
       "mtprotoAuthentication": "MTProto secret",
-      "mtprotoAuthenticationDescription": "Secret key from the tg:// or t.me/proxy link."
+      "mtprotoAuthenticationDescription": "Secret key from the tg:// or t.me/proxy link.",
+      "group": "Group",
+      "groupDescription": "Optional folder to organize proxies in the list."
     },
     "protocol": "Protocol",
     "host": "Host",
@@ -204,12 +213,46 @@
     "cityPlaceholder": "New York",
     "anonymityLevel": "Anonymity (optional)",
     "anonymityHint": "elite, anonymous, or transparent — as in import files.",
+    "group": "Group (optional)",
+    "groupHint": "Move the proxy into a folder in the list.",
     "quickFill": "Quick fill from link",
     "quickFillPlaceholder": "socks5://user:pass@host:1080, tg://proxy?... or host:port",
     "quickFillApply": "Apply",
     "quickFillHint": "Paste a proxy URL with or without protocol — credentials are parsed automatically.",
     "quickFillError": "Could not parse proxy link. Check the format and try again.",
     "quickFillOrManual": "or fill manually"
+  },
+  "proxyGroup": {
+    "addTitle": "Add group",
+    "editTitle": "Rename group",
+    "name": "Name",
+    "namePlaceholder": "Work, Home, Testing…",
+    "edit": "Rename",
+    "delete": "Delete group",
+    "actions": "Group actions",
+    "icon": "Icon",
+    "iconHint": "Default uses the folder icon.",
+    "color": "Color",
+    "colorHint": "Default uses the app accent color.",
+    "defaultIcon": "Folder (default)",
+    "defaultColor": "Default color",
+    "changeIcon": "Change icon",
+    "changeColor": "Change color",
+    "addProxy": "Add proxy",
+    "previewFallback": "Group name",
+    "previewHint": "Group header preview",
+    "proxyCount_one": "{{count}} proxy",
+    "proxyCount_other": "{{count}} proxies",
+    "deleteConfirm": {
+      "title": "Delete group?",
+      "message": "Delete group \"{{name}}\"? This cannot be undone.",
+      "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "validation": {
+      "nameRequired": "Group name is required",
+      "nameMax": "Name must be 64 characters or less",
+      "nameDuplicate": "A group with this name already exists"
+    }
   },
   "proxyIcons": {
     "auto": "Auto",
@@ -356,6 +399,7 @@
     "mtprotoNoAuth": "MTProto proxies use a secret instead of username and password",
     "proxyDuplicate": "This proxy is already in the list",
     "countryCodeInvalid": "Enter a valid two-letter country code",
-    "cityMax": "City must be 64 characters or less"
+    "cityMax": "City must be 64 characters or less",
+    "groupNotFound": "Selected group no longer exists"
   }
 }

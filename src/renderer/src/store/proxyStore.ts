@@ -31,7 +31,18 @@ interface ProxyState {
   patchProxy: (
     id: string,
     patch: Partial<
-      Pick<Proxy, 'label' | 'icon' | 'color' | 'countryCode' | 'city' | 'anonymityLevel' | 'isFavorite' | 'isEnabled'>
+      Pick<
+        Proxy,
+        | 'label'
+        | 'icon'
+        | 'color'
+        | 'countryCode'
+        | 'city'
+        | 'anonymityLevel'
+        | 'isFavorite'
+        | 'isEnabled'
+        | 'groupId'
+      >
     >
   ) => Promise<void>
   toggleFavorite: (id: string) => Promise<void>

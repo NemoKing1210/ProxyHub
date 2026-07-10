@@ -1,23 +1,27 @@
 import AddIcon from '@mui/icons-material/Add'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
+import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import StarIcon from '@mui/icons-material/Star'
 import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
-import { Box, Button, Chip, CircularProgress, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, Chip, CircularProgress, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Stack, Typography } from '@mui/material'
 import type { SxProps, Theme } from '@mui/material/styles'
 import { useTheme } from '@mui/material/styles'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useState, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Proxy, ProxyIconId, ProxyInput } from '../../../shared/types/proxy'
+import type { Proxy, ProxyColorId, ProxyIconId, ProxyInput } from '../../../shared/types/proxy'
+import type { ProxyGroup, ProxyGroupInput } from '../../../shared/types/proxy-group'
 import { DEFAULT_PROXY_COLOR_ID, PROXY_ICON_AUTO_VALUE } from '../../../shared/types/proxy'
 import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
 import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
 import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
 import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { useProxyListViewState } from '../hooks/useProxyListViewState'
+import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
 import { filterProxies, hasActiveFilters } from '../utils/filter-proxies'
@@ -30,12 +34,16 @@ import {
   usePrefersReducedMotion
 } from '../utils/list-motion'
 import { sortProxies, sortProxiesByFavorite } from '../utils/sort-proxies'
+import { organizeProxiesByGroup } from '../utils/organize-proxies-by-group'
 import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyDetailsDialog from './ProxyDetailsDialog'
 import ProxyFormDialog from './ProxyFormDialog'
+import ProxyGroupDeleteConfirmDialog from './ProxyGroupDeleteConfirmDialog'
+import ProxyGroupFormDialog from './ProxyGroupFormDialog'
+import ProxyGroupSection from './ProxyGroupSection'
 import ProxyListFilters from './ProxyListFilters'
 import ProxyListSearch from './ProxyListSearch'
 import ProxyListSort from './ProxyListSort'
@@ -56,7 +64,8 @@ function toProxyInput(values: ProxyFormValues): ProxyInput {
     secret: values.secret?.trim() || undefined,
     countryCode: normalizeCountryCode(values.countryCode),
     city: values.city?.trim() || undefined,
-    anonymityLevel: normalizeAnonymityLevel(values.anonymityLevel)
+    anonymityLevel: normalizeAnonymityLevel(values.anonymityLevel),
+    groupId: values.groupId || undefined
   }
 }
 
@@ -88,11 +97,26 @@ function ProxyList(): React.JSX.Element {
     detailsProxyId,
     setDetailsProxyId
   } = useProxyStore()
+  const {
+    groups,
+    isLoading: isGroupsLoading,
+    loadGroups,
+    addGroup,
+    updateGroup,
+    patchGroup,
+    removeGroup
+  } = useGroupStore()
   const proxyCardView = useSettingsStore((state) => state.settings.proxyCardView)
 
+  const [addMenuAnchor, setAddMenuAnchor] = useState<HTMLElement | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<'add' | 'edit'>('add')
   const [editingProxy, setEditingProxy] = useState<Proxy | undefined>()
+  const [addProxyGroupId, setAddProxyGroupId] = useState<string | undefined>()
+  const [groupDialogOpen, setGroupDialogOpen] = useState(false)
+  const [groupDialogMode, setGroupDialogMode] = useState<'add' | 'edit'>('add')
+  const [editingGroup, setEditingGroup] = useState<ProxyGroup | undefined>()
+  const [deletingGroup, setDeletingGroup] = useState<ProxyGroup | undefined>()
   const [deletingProxy, setDeletingProxy] = useState<Proxy | undefined>()
   const {
     filters,
@@ -107,22 +131,81 @@ function ProxyList(): React.JSX.Element {
 
   useEffect(() => {
     void loadProxies()
-  }, [loadProxies])
+    void loadGroups()
+  }, [loadProxies, loadGroups])
+
+  const closeAddMenu = (): void => {
+    setAddMenuAnchor(null)
+  }
 
   const openAddDialog = (): void => {
+    closeAddMenu()
     setDialogMode('add')
     setEditingProxy(undefined)
+    setAddProxyGroupId(undefined)
     setDialogOpen(true)
+  }
+
+  const openAddDialogForGroup = (group: ProxyGroup): void => {
+    setDialogMode('add')
+    setEditingProxy(undefined)
+    setAddProxyGroupId(group.id)
+    setDialogOpen(true)
+  }
+
+  const openAddGroupDialog = (): void => {
+    closeAddMenu()
+    setGroupDialogMode('add')
+    setEditingGroup(undefined)
+    setGroupDialogOpen(true)
+  }
+
+  const openEditGroupDialog = (group: ProxyGroup): void => {
+    setGroupDialogMode('edit')
+    setEditingGroup(group)
+    setGroupDialogOpen(true)
   }
 
   const openEditDialog = (proxy: Proxy): void => {
     setDialogMode('edit')
     setEditingProxy(proxy)
+    setAddProxyGroupId(undefined)
     setDialogOpen(true)
   }
 
   const openDeleteDialog = (proxy: Proxy): void => {
     setDeletingProxy(proxy)
+  }
+
+  const handleGroupSubmit = async (input: ProxyGroupInput): Promise<boolean> => {
+    if (groupDialogMode === 'add') {
+      const created = await addGroup(input)
+      return created !== null
+    }
+
+    if (editingGroup) {
+      return updateGroup(editingGroup.id, input)
+    }
+
+    return false
+  }
+
+  const handleGroupIconChange = async (
+    group: ProxyGroup,
+    iconId: ProxyIconId | undefined
+  ): Promise<void> => {
+    await patchGroup(group.id, { icon: iconId })
+  }
+
+  const handleGroupColorChange = async (
+    group: ProxyGroup,
+    colorId: ProxyColorId | undefined
+  ): Promise<void> => {
+    await patchGroup(group.id, { color: colorId })
+  }
+
+  const handleGroupDeleteConfirm = async (groupId: string): Promise<void> => {
+    await removeGroup(groupId)
   }
 
   const handleDeleteConfirm = async (proxyId: string): Promise<void> => {
@@ -146,20 +229,74 @@ function ProxyList(): React.JSX.Element {
     await patchProxy(proxy.id, { icon: iconId })
   }
 
+  const handleGroupChange = async (proxy: Proxy, groupId: string | undefined): Promise<void> => {
+    await patchProxy(proxy.id, { groupId })
+  }
+
   const filteredProxies = useMemo(() => filterProxies(proxies, filters), [proxies, filters])
+  const filtersActive = hasActiveFilters(filters)
   const visibleProxies = useMemo(() => {
     const sorted = sortProxies(filteredProxies, sortField, sortDirection)
     return sortProxiesByFavorite(sorted)
   }, [filteredProxies, sortField, sortDirection])
+  const organizedList = useMemo(
+    () => organizeProxiesByGroup(visibleProxies, groups),
+    [visibleProxies, groups]
+  )
+  const visibleGroupSections = useMemo(() => {
+    if (filtersActive) {
+      return organizedList.groups.filter((section) => section.proxies.length > 0)
+    }
+
+    return organizedList.groups
+  }, [organizedList.groups, filtersActive])
+  const hasVisibleItems = organizedList.ungrouped.length > 0 || visibleGroupSections.length > 0
   const checkableProxyIds = useMemo(
     () => filterEnabledProxies(visibleProxies).map((proxy) => proxy.id),
     [visibleProxies]
   )
-  const filtersActive = hasActiveFilters(filters)
+  const isInitialLoading = (isLoading || isGroupsLoading) && proxies.length === 0 && groups.length === 0
+  const isEmpty = proxies.length === 0 && groups.length === 0
+
+  const renderProxyCard = (proxy: Proxy): React.JSX.Element => (
+    <motion.div
+      key={proxy.id}
+      layout={!reducedMotion}
+      variants={reducedMotion ? undefined : proxyCardVariants}
+      initial={reducedMotion ? false : 'initial'}
+      animate={reducedMotion ? undefined : 'animate'}
+      exit={reducedMotion ? undefined : 'exit'}
+      transition={
+        reducedMotion
+          ? { duration: 0 }
+          : { layout: listLayoutTransition, ...listItemTransition }
+      }
+      style={{ overflow: 'hidden' }}
+    >
+      <ProxyCard
+        proxy={proxy}
+        groups={groups}
+        variant={proxyCardView}
+        isChecking={checkingIds.has(proxy.id)}
+        isCheckingAll={isCheckingAll}
+        onCheck={() => void checkProxy(proxy.id)}
+        onEdit={() => openEditDialog(proxy)}
+        onDelete={() => openDeleteDialog(proxy)}
+        onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
+        onToggleFavorite={() => void toggleFavorite(proxy.id)}
+        onToggleEnabled={() => void toggleEnabled(proxy.id)}
+        onGroupChange={(groupId) => void handleGroupChange(proxy, groupId)}
+      />
+    </motion.div>
+  )
+
   const detailsProxy = useMemo(
     () => proxies.find((proxy) => proxy.id === detailsProxyId),
     [proxies, detailsProxyId]
   )
+  const deletingGroupProxyCount = deletingGroup
+    ? proxies.filter((proxy) => proxy.groupId === deletingGroup.id).length
+    : 0
 
   const aliveCount = proxies.filter((proxy) => proxy.status === 'alive').length
   const deadCount = proxies.filter((proxy) => proxy.status === 'dead').length
@@ -331,13 +468,32 @@ function ProxyList(): React.JSX.Element {
           >
             {t('proxyList.checkAll')}
           </Button>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={openAddDialog}>
-            {t('proxyList.addProxy')}
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            endIcon={<ArrowDropDownIcon />}
+            onClick={(event) => setAddMenuAnchor(event.currentTarget)}
+          >
+            {t('proxyList.add')}
           </Button>
+          <Menu anchorEl={addMenuAnchor} open={Boolean(addMenuAnchor)} onClose={closeAddMenu}>
+            <MenuItem onClick={openAddDialog}>
+              <ListItemIcon>
+                <DnsOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{t('proxyList.addProxy')}</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={openAddGroupDialog}>
+              <ListItemIcon>
+                <CreateNewFolderOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{t('proxyList.addGroup')}</ListItemText>
+            </MenuItem>
+          </Menu>
         </Stack>
       </Stack>
 
-      {isLoading && proxies.length === 0 ? (
+      {isInitialLoading ? (
         <Paper
           sx={{
             py: 10,
@@ -354,7 +510,7 @@ function ProxyList(): React.JSX.Element {
             {t('proxyList.title')}
           </Typography>
         </Paper>
-      ) : proxies.length === 0 ? (
+      ) : isEmpty ? (
         <Paper
           sx={{
             py: 10,
@@ -386,10 +542,11 @@ function ProxyList(): React.JSX.Element {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={openAddDialog}
+            endIcon={<ArrowDropDownIcon />}
+            onClick={(event) => setAddMenuAnchor(event.currentTarget)}
             sx={{ mt: 1 }}
           >
-            {t('proxyList.addProxy')}
+            {t('proxyList.add')}
           </Button>
         </Paper>
       ) : (
@@ -423,7 +580,7 @@ function ProxyList(): React.JSX.Element {
             </Box>
           </Stack>
 
-          {visibleProxies.length === 0 ? (
+          {!hasVisibleItems ? (
             <Paper
               sx={{
                 py: 6,
@@ -448,11 +605,12 @@ function ProxyList(): React.JSX.Element {
             </Paper>
           ) : (
             <AnimatePresence mode="popLayout" initial={false}>
-              {visibleProxies.map((proxy) => (
+              {organizedList.ungrouped.map((proxy) => renderProxyCard(proxy))}
+
+              {visibleGroupSections.map((section) => (
                 <motion.div
-                  key={proxy.id}
+                  key={section.group.id}
                   layout={!reducedMotion}
-                  variants={reducedMotion ? undefined : proxyCardVariants}
                   initial={reducedMotion ? false : 'initial'}
                   animate={reducedMotion ? undefined : 'animate'}
                   exit={reducedMotion ? undefined : 'exit'}
@@ -461,20 +619,18 @@ function ProxyList(): React.JSX.Element {
                       ? { duration: 0 }
                       : { layout: listLayoutTransition, ...listItemTransition }
                   }
-                  style={{ overflow: 'hidden' }}
                 >
-                  <ProxyCard
-                    proxy={proxy}
-                    variant={proxyCardView}
-                    isChecking={checkingIds.has(proxy.id)}
-                    isCheckingAll={isCheckingAll}
-                    onCheck={() => void checkProxy(proxy.id)}
-                    onEdit={() => openEditDialog(proxy)}
-                    onDelete={() => openDeleteDialog(proxy)}
-                    onIconChange={(iconId) => void handleIconChange(proxy, iconId)}
-                    onToggleFavorite={() => void toggleFavorite(proxy.id)}
-                    onToggleEnabled={() => void toggleEnabled(proxy.id)}
-                  />
+                  <ProxyGroupSection
+                    group={section.group}
+                    proxyCount={section.proxies.length}
+                    onEdit={() => openEditGroupDialog(section.group)}
+                    onDelete={() => setDeletingGroup(section.group)}
+                    onIconChange={(iconId) => void handleGroupIconChange(section.group, iconId)}
+                    onColorChange={(colorId) => void handleGroupColorChange(section.group, colorId)}
+                    onAddProxy={() => openAddDialogForGroup(section.group)}
+                  >
+                    {section.proxies.map((proxy) => renderProxyCard(proxy))}
+                  </ProxyGroupSection>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -486,9 +642,31 @@ function ProxyList(): React.JSX.Element {
         open={dialogOpen}
         mode={dialogMode}
         initialProxy={editingProxy}
+        initialGroupId={addProxyGroupId}
         existingProxies={proxies}
-        onClose={() => setDialogOpen(false)}
+        groups={groups}
+        onClose={() => {
+          setDialogOpen(false)
+          setAddProxyGroupId(undefined)
+        }}
         onSubmit={handleSubmit}
+      />
+
+      <ProxyGroupFormDialog
+        open={groupDialogOpen}
+        mode={groupDialogMode}
+        initialGroup={editingGroup}
+        existingGroups={groups}
+        onClose={() => setGroupDialogOpen(false)}
+        onSubmit={handleGroupSubmit}
+      />
+
+      <ProxyGroupDeleteConfirmDialog
+        open={Boolean(deletingGroup)}
+        group={deletingGroup}
+        proxyCount={deletingGroupProxyCount}
+        onClose={() => setDeletingGroup(undefined)}
+        onConfirm={handleGroupDeleteConfirm}
       />
 
       <ProxyDeleteConfirmDialog

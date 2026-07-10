@@ -6,6 +6,8 @@ import type { ProxyCheckProgress } from '../shared/types/proxy'
 const api: AppAPI = {
   getProxies: () => ipcRenderer.invoke('proxy:get-all'),
   saveProxies: (proxies) => ipcRenderer.invoke('proxy:save-all', proxies),
+  getGroups: () => ipcRenderer.invoke('groups:get-all'),
+  saveGroups: (groups) => ipcRenderer.invoke('groups:save-all', groups),
   checkProxy: (proxy, options) => ipcRenderer.invoke('proxy:check', proxy, options),
   checkAll: (proxies, options) => ipcRenderer.invoke('proxy:check-all', proxies, options),
   onCheckProgress: (callback) => {

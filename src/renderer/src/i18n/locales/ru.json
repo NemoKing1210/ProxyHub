@@ -26,8 +26,10 @@
     "statsEnabled": "Активных: {{count}}",
     "statsFavorites": "Избранных: {{count}}",
     "checkAll": "Проверить все",
+    "add": "Добавить",
     "addProxy": "Добавить прокси",
-    "empty": "Прокси пока нет. Нажмите «Добавить прокси», чтобы начать.",
+    "addGroup": "Добавить группу",
+    "empty": "Прокси пока нет. Нажмите «Добавить», чтобы начать.",
     "filters": {
       "title": "Фильтры",
       "description": "Сузьте список по протоколу, стране, городу, анонимности, избранному, статусу, активности или задержке.",
@@ -138,7 +140,12 @@
       "addToFavorites": "Добавить в избранное",
       "removeFromFavorites": "Убрать из избранного",
       "enableProxy": "Включить прокси",
-      "disableProxy": "Отключить прокси"
+      "disableProxy": "Отключить прокси",
+      "moveToGroup": "Переместить в группу",
+      "removeFromGroup": "Убрать из группы",
+      "noGroup": "Без группы",
+      "noGroups": "Групп пока нет",
+      "currentGroup": "Сейчас: {{name}}"
     },
     "disabled": "Отключён",
     "sections": {
@@ -186,7 +193,9 @@
       "authentication": "Аутентификация",
       "authenticationDescription": "Учётные данные, если прокси требует авторизацию.",
       "mtprotoAuthentication": "Секрет MTProto",
-      "mtprotoAuthenticationDescription": "Секретный ключ из ссылки tg:// или t.me/proxy."
+      "mtprotoAuthenticationDescription": "Секретный ключ из ссылки tg:// или t.me/proxy.",
+      "group": "Группа",
+      "groupDescription": "Необязательная папка для организации прокси в списке."
     },
     "protocol": "Протокол",
     "host": "Хост",
@@ -204,12 +213,48 @@
     "cityPlaceholder": "Москва",
     "anonymityLevel": "Анонимность (необязательно)",
     "anonymityHint": "elite, anonymous или transparent — как в файлах импорта.",
+    "group": "Группа (необязательно)",
+    "groupHint": "Поместить прокси в папку в списке.",
     "quickFill": "Быстрое заполнение по ссылке",
     "quickFillPlaceholder": "socks5://user:pass@host:1080, tg://proxy?... или host:port",
     "quickFillApply": "Применить",
     "quickFillHint": "Вставьте ссылку на прокси с протоколом или без — учётные данные распознаются автоматически.",
     "quickFillError": "Не удалось разобрать ссылку. Проверьте формат и попробуйте снова.",
     "quickFillOrManual": "или заполните вручную"
+  },
+  "proxyGroup": {
+    "addTitle": "Добавить группу",
+    "editTitle": "Переименовать группу",
+    "name": "Название",
+    "namePlaceholder": "Работа, Дом, Тест…",
+    "edit": "Переименовать",
+    "delete": "Удалить группу",
+    "actions": "Действия с группой",
+    "icon": "Иконка",
+    "iconHint": "По умолчанию — иконка папки.",
+    "color": "Цвет",
+    "colorHint": "По умолчанию — акцентный цвет приложения.",
+    "defaultIcon": "Папка (по умолчанию)",
+    "defaultColor": "Цвет по умолчанию",
+    "changeIcon": "Сменить иконку",
+    "changeColor": "Сменить цвет",
+    "addProxy": "Добавить прокси",
+    "previewFallback": "Название группы",
+    "previewHint": "Превью заголовка группы",
+    "proxyCount_one": "{{count}} прокси",
+    "proxyCount_few": "{{count}} прокси",
+    "proxyCount_many": "{{count}} прокси",
+    "proxyCount_other": "{{count}} прокси",
+    "deleteConfirm": {
+      "title": "Удалить группу?",
+      "message": "Удалить группу «{{name}}»? Это действие нельзя отменить.",
+      "messageWithProxies": "Удалить группу «{{name}}»? {{count}} прокси останутся в списке без группы."
+    },
+    "validation": {
+      "nameRequired": "Укажите название группы",
+      "nameMax": "Название — не более 64 символов",
+      "nameDuplicate": "Группа с таким названием уже существует"
+    }
   },
   "proxyIcons": {
     "auto": "Авто",
@@ -356,6 +401,7 @@
     "mtprotoNoAuth": "Для MTProto используется секрет, а не логин и пароль",
     "proxyDuplicate": "Такой прокси уже есть в списке",
     "countryCodeInvalid": "Введите корректный двухбуквенный код страны",
-    "cityMax": "Город не должен превышать 64 символа"
+    "cityMax": "Город не должен превышать 64 символа",
+    "groupNotFound": "Выбранная группа больше не существует"
   }
 }

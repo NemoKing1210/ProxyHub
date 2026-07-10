@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import LanOutlinedIcon from '@mui/icons-material/LanOutlined'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
@@ -21,6 +22,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry, PROXY_COUNTRIES } from '../../../shared/constants/proxy-countries'
 import type { Proxy, ProxyProtocol } from '../../../shared/types/proxy'
+import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import {
   DEFAULT_PORTS,
   DEFAULT_PROXY_COLOR_ID,
@@ -32,7 +34,7 @@ import {
 import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
 import { parseProxyUrl } from '../../../shared/utils/proxy-format'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
-import { createProxyFormSchema, type ProxyFormValues } from '../validation/proxySchema'
+import { createProxyFormSchema, type ProxyFormSchemaContext, type ProxyFormValues } from '../validation/proxySchema'
 import CountryFlag from './CountryFlag'
 import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyColorSwatch from './ProxyColorSwatch'
@@ -44,7 +46,9 @@ interface ProxyFormDialogProps {
   open: boolean
   mode: 'add' | 'edit'
   initialProxy?: Proxy
+  initialGroupId?: string
   existingProxies: Proxy[]
+  groups: ProxyGroup[]
   onClose: () => void
   onSubmit: (values: ProxyFormValues) => Promise<void>
 }
@@ -53,20 +57,24 @@ function ProxyFormDialog({
   open,
   mode,
   initialProxy,
+  initialGroupId,
   existingProxies,
+  groups,
   onClose,
   onSubmit
 }: ProxyFormDialogProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const schemaContextRef = useRef({
+  const schemaContextRef = useRef<ProxyFormSchemaContext>({
     existingProxies,
-    editingProxyId: initialProxy?.id
+    editingProxyId: initialProxy?.id,
+    groups
   })
 
   schemaContextRef.current = {
     existingProxies,
-    editingProxyId: initialProxy?.id
+    editingProxyId: initialProxy?.id,
+    groups
   }
 
   const schema = useMemo(
@@ -86,7 +94,8 @@ function ProxyFormDialog({
     secret: '',
     countryCode: '',
     city: '',
-    anonymityLevel: ''
+    anonymityLevel: '',
+    groupId: ''
   }
 
   const {
@@ -119,6 +128,7 @@ function ProxyFormDialog({
   const [connectionExpanded, setConnectionExpanded] = useState(true)
   const [authExpanded, setAuthExpanded] = useState(false)
   const [locationExpanded, setLocationExpanded] = useState(false)
+  const [groupExpanded, setGroupExpanded] = useState(false)
   const [quickFillValue, setQuickFillValue] = useState('')
   const [quickFillError, setQuickFillError] = useState<string | null>(null)
   const skipPortDefaultRef = useRef(false)
@@ -130,6 +140,7 @@ function ProxyFormDialog({
     setConnectionExpanded(true)
     setAuthExpanded(false)
     setLocationExpanded(false)
+    setGroupExpanded(false)
     setQuickFillValue('')
     setQuickFillError(null)
     skipPortDefaultRef.current = false
@@ -151,6 +162,10 @@ function ProxyFormDialog({
     if (errors.countryCode || errors.city || errors.anonymityLevel) {
       setLocationExpanded(true)
     }
+
+    if (errors.groupId) {
+      setGroupExpanded(true)
+    }
   }, [
     errors.label,
     errors.icon,
@@ -163,7 +178,8 @@ function ProxyFormDialog({
     errors.secret,
     errors.countryCode,
     errors.city,
-    errors.anonymityLevel
+    errors.anonymityLevel,
+    errors.groupId
   ])
 
   useEffect(() => {
@@ -182,13 +198,20 @@ function ProxyFormDialog({
         secret: initialProxy.secret ?? '',
         countryCode: initialProxy.countryCode ?? '',
         city: initialProxy.city ?? '',
-        anonymityLevel: initialProxy.anonymityLevel ?? ''
+        anonymityLevel: initialProxy.anonymityLevel ?? '',
+        groupId: initialProxy.groupId ?? ''
       })
       return
     }
 
-    reset(defaultValues)
-  }, [open, initialProxy, reset])
+    reset({
+      ...defaultValues,
+      groupId: initialGroupId ?? ''
+    })
+    if (initialGroupId) {
+      setGroupExpanded(true)
+    }
+  }, [open, initialProxy, initialGroupId, reset])
 
   useEffect(() => {
     if (mode === 'add' && open) {
@@ -513,6 +536,37 @@ function ProxyFormDialog({
                 )}
               />
             </Stack>
+          </ProxyFormSection>
+
+          <ProxyFormSection
+            icon={<FolderOutlinedIcon sx={{ fontSize: 18 }} />}
+            title={t('proxyForm.sections.group')}
+            description={t('proxyForm.sections.groupDescription')}
+            collapsible
+            expanded={groupExpanded}
+            onExpandedChange={setGroupExpanded}
+          >
+            <Controller
+              name="groupId"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={t('proxyForm.group')}
+                  fullWidth
+                  error={Boolean(errors.groupId)}
+                  helperText={errors.groupId?.message ?? t('proxyForm.groupHint')}
+                >
+                  <MenuItem value="">{t('common.none')}</MenuItem>
+                  {groups.map((group) => (
+                    <MenuItem key={group.id} value={group.id}>
+                      {group.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
           </ProxyFormSection>
 
           <ProxyFormSection

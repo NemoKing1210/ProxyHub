@@ -1,7 +1,8 @@
 import { ipcMain, type WebContents } from 'electron'
 import type { Proxy, ProxyCheckProgress } from '../../shared/types/proxy'
 import type { ProxyCheckOptions } from '../../shared/types/settings'
-import { getProxies, saveProxies } from '../services/app-store'
+import type { ProxyGroup } from '../../shared/types/proxy-group'
+import { getGroups, getProxies, saveGroups, saveProxies } from '../services/app-store'
 import { checkAllProxies, checkProxy } from '../services/proxy-checker'
 import { notifyTrayDataChanged } from './tray'
 
@@ -15,6 +16,12 @@ export function registerProxyIpc(): void {
   ipcMain.handle('proxy:save-all', async (_event, proxies: Proxy[]) => {
     await saveProxies(proxies)
     notifyTrayDataChanged()
+  })
+
+  ipcMain.handle('groups:get-all', async () => getGroups())
+
+  ipcMain.handle('groups:save-all', async (_event, groups: ProxyGroup[]) => {
+    await saveGroups(groups)
   })
 
   ipcMain.handle('proxy:check', async (event, proxy: Proxy, options: ProxyCheckOptions) => {

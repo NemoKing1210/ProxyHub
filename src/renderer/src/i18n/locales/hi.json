@@ -1,6 +1,11 @@
 {
-  "app": { "title": "ProxyChecker" },
-  "nav": { "proxies": "प्रॉक्सी", "settings": "सेटिंग्स" },
+  "app": {
+    "title": "ProxyChecker"
+  },
+  "nav": {
+    "proxies": "प्रॉक्सी",
+    "settings": "सेटिंग्स"
+  },
   "common": {
     "cancel": "रद्द करें",
     "save": "सहेजें",
@@ -21,7 +26,7 @@
     "statsFavorites": "पसंदीदा {{count}}",
     "checkAll": "सभी जांचें",
     "addProxy": "प्रॉक्सी जोड़ें",
-    "empty": "अभी कोई प्रॉक्सी नहीं। शुरू करने के लिए \"प्रॉक्सी जोड़ें\" पर क्लिक करें।",
+    "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
       "title": "फ़िल्टर",
       "description": "प्रोटोकॉल, स्थान, गुमनामी, पसंदीदा, स्थिति या विलंबता से सूची संकुचित करें।",
@@ -131,7 +136,12 @@
       "addToFavorites": "पसंदीदा में जोड़ें",
       "removeFromFavorites": "पसंदीदा से हटाएं",
       "enableProxy": "प्रॉक्सी सक्षम करें",
-      "disableProxy": "प्रॉक्सी अक्षम करें"
+      "disableProxy": "प्रॉक्सी अक्षम करें",
+      "moveToGroup": "Move to group",
+      "removeFromGroup": "Remove from group",
+      "noGroup": "No group",
+      "noGroups": "No groups yet",
+      "currentGroup": "Current: {{name}}"
     },
     "disabled": "अक्षम",
     "sections": {
@@ -157,7 +167,9 @@
     "errorDomain": "डोमेन",
     "errorUrl": "URL",
     "errorMessage": "संदेश",
-    "errorCode": "कोड"
+    "errorCode": "कोड",
+    "add": "Add",
+    "addGroup": "Add group"
   },
   "proxyForm": {
     "addTitle": "प्रॉक्सी जोड़ें",
@@ -177,7 +189,9 @@
       "location": "स्थान और मेटाडेटा",
       "locationDescription": "देश, शहर और गुमनामी — आयात और फ़िल्टर के लिए उपयोगी।",
       "authentication": "प्रमाणीकरण",
-      "authenticationDescription": "यदि प्रॉक्सी को प्राधिकरण चाहिए तो क्रेडेंशियल।"
+      "authenticationDescription": "यदि प्रॉक्सी को प्राधिकरण चाहिए तो क्रेडेंशियल।",
+      "group": "Group",
+      "groupDescription": "Optional folder to organize proxies in the list."
     },
     "protocol": "प्रोटोकॉल",
     "host": "होस्ट",
@@ -197,7 +211,9 @@
     "quickFillApply": "लागू करें",
     "quickFillHint": "प्रोटोकॉल के साथ या बिना प्रॉक्सी URL पेस्ट करें — क्रेडेंशियल स्वचालित रूप से पार्स होते हैं।",
     "quickFillError": "प्रॉक्सी लिंक पार्स नहीं हो सका। प्रारूप जाँचें और पुनः प्रयास करें।",
-    "quickFillOrManual": "या मैन्युअल भरें"
+    "quickFillOrManual": "या मैन्युअल भरें",
+    "group": "Group (optional)",
+    "groupHint": "Move the proxy into a folder in the list."
   },
   "proxyIcons": {
     "auto": "ऑटो",
@@ -320,6 +336,39 @@
     "authPair": "उपयोगकर्ता नाम और पासवर्ड दोनों आवश्यक हैं",
     "proxyDuplicate": "यह प्रॉक्सी पहले से सूची में है",
     "countryCodeInvalid": "मान्य दो-अक्षर का देश कोड दर्ज करें",
-    "cityMax": "शहर 64 अक्षरों से अधिक नहीं हो सकता"
+    "cityMax": "शहर 64 अक्षरों से अधिक नहीं हो सकता",
+    "groupNotFound": "Selected group no longer exists"
+  },
+  "proxyGroup": {
+    "addTitle": "Add group",
+    "editTitle": "Rename group",
+    "name": "Name",
+    "namePlaceholder": "Work, Home, Testing…",
+    "edit": "Rename",
+    "delete": "Delete group",
+    "actions": "Group actions",
+    "proxyCount_one": "{{count}} proxy",
+    "proxyCount_other": "{{count}} proxies",
+    "deleteConfirm": {
+      "title": "Delete group?",
+      "message": "Delete group \"{{name}}\"? This cannot be undone.",
+      "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "validation": {
+      "nameRequired": "Group name is required",
+      "nameMax": "Name must be 64 characters or less",
+      "nameDuplicate": "A group with this name already exists"
+    },
+    "icon": "Icon",
+    "iconHint": "Default uses the folder icon.",
+    "color": "Color",
+    "colorHint": "Default uses the app accent color.",
+    "defaultIcon": "Folder (default)",
+    "defaultColor": "Default color",
+    "changeIcon": "Change icon",
+    "changeColor": "Change color",
+    "previewFallback": "Group name",
+    "previewHint": "Group header preview",
+    "addProxy": "Add proxy"
   }
 }

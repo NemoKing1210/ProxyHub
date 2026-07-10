@@ -1,6 +1,11 @@
 {
-  "app": { "title": "ProxyChecker" },
-  "nav": { "proxies": "プロキシ", "settings": "設定" },
+  "app": {
+    "title": "ProxyChecker"
+  },
+  "nav": {
+    "proxies": "プロキシ",
+    "settings": "設定"
+  },
   "common": {
     "cancel": "キャンセル",
     "save": "保存",
@@ -21,7 +26,7 @@
     "statsFavorites": "お気に入り {{count}}",
     "checkAll": "すべて確認",
     "addProxy": "プロキシを追加",
-    "empty": "プロキシがありません。「プロキシを追加」をクリックして開始してください。",
+    "empty": "No proxies yet. Click \"Add\" to get started.",
     "filters": {
       "title": "フィルター",
       "description": "プロトコル、場所、匿名性、お気に入り、ステータス、遅延でリストを絞り込みます。",
@@ -131,7 +136,12 @@
       "addToFavorites": "お気に入りに追加",
       "removeFromFavorites": "お気に入りから削除",
       "enableProxy": "プロキシを有効化",
-      "disableProxy": "プロキシを無効化"
+      "disableProxy": "プロキシを無効化",
+      "moveToGroup": "Move to group",
+      "removeFromGroup": "Remove from group",
+      "noGroup": "No group",
+      "noGroups": "No groups yet",
+      "currentGroup": "Current: {{name}}"
     },
     "disabled": "無効",
     "sections": {
@@ -156,7 +166,9 @@
     "errorDomain": "ドメイン",
     "errorUrl": "URL",
     "errorMessage": "メッセージ",
-    "errorCode": "コード"
+    "errorCode": "コード",
+    "add": "Add",
+    "addGroup": "Add group"
   },
   "proxyForm": {
     "addTitle": "プロキシを追加",
@@ -176,7 +188,9 @@
       "location": "所在地とメタデータ",
       "locationDescription": "国、都市、匿名性 — インポートやフィルタに便利。",
       "authentication": "認証",
-      "authenticationDescription": "プロキシが認証を要求する場合の資格情報。"
+      "authenticationDescription": "プロキシが認証を要求する場合の資格情報。",
+      "group": "Group",
+      "groupDescription": "Optional folder to organize proxies in the list."
     },
     "protocol": "プロトコル",
     "host": "ホスト",
@@ -196,7 +210,9 @@
     "quickFillApply": "適用",
     "quickFillHint": "プロトコルあり・なしのプロキシURLを貼り付け — 認証情報は自動で解析されます。",
     "quickFillError": "プロキシリンクを解析できませんでした。形式を確認して再試行してください。",
-    "quickFillOrManual": "または手動で入力"
+    "quickFillOrManual": "または手動で入力",
+    "group": "Group (optional)",
+    "groupHint": "Move the proxy into a folder in the list."
   },
   "proxyIcons": {
     "auto": "自動",
@@ -231,7 +247,12 @@
     "anonymous": "Anonymous",
     "transparent": "Transparent"
   },
-  "proxyStatus": { "unknown": "未確認", "checking": "確認中", "alive": "稼働", "dead": "停止" },
+  "proxyStatus": {
+    "unknown": "未確認",
+    "checking": "確認中",
+    "alive": "稼働",
+    "dead": "停止"
+  },
   "checkToast": {
     "aliveTitle": "{{name}} — 稼働",
     "deadTitle": "{{name}} — 停止",
@@ -314,6 +335,39 @@
     "authPair": "ユーザー名とパスワードは両方入力してください",
     "proxyDuplicate": "このプロキシは既にリストにあります",
     "countryCodeInvalid": "有効な2文字の国コードを入力してください",
-    "cityMax": "都市名は64文字以内にしてください"
+    "cityMax": "都市名は64文字以内にしてください",
+    "groupNotFound": "Selected group no longer exists"
+  },
+  "proxyGroup": {
+    "addTitle": "Add group",
+    "editTitle": "Rename group",
+    "name": "Name",
+    "namePlaceholder": "Work, Home, Testing…",
+    "edit": "Rename",
+    "delete": "Delete group",
+    "actions": "Group actions",
+    "proxyCount_one": "{{count}} proxy",
+    "proxyCount_other": "{{count}} proxies",
+    "deleteConfirm": {
+      "title": "Delete group?",
+      "message": "Delete group \"{{name}}\"? This cannot be undone.",
+      "messageWithProxies": "Delete group \"{{name}}\"? {{count}} proxies will stay in the list without a group."
+    },
+    "validation": {
+      "nameRequired": "Group name is required",
+      "nameMax": "Name must be 64 characters or less",
+      "nameDuplicate": "A group with this name already exists"
+    },
+    "icon": "Icon",
+    "iconHint": "Default uses the folder icon.",
+    "color": "Color",
+    "colorHint": "Default uses the app accent color.",
+    "defaultIcon": "Folder (default)",
+    "defaultColor": "Default color",
+    "changeIcon": "Change icon",
+    "changeColor": "Change color",
+    "previewFallback": "Group name",
+    "previewHint": "Group header preview",
+    "addProxy": "Add proxy"
   }
 }

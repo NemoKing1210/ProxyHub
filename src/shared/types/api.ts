@@ -1,5 +1,6 @@
 import type { ThemeMode } from '../types/settings'
 import type { AppInfo } from './app'
+import type { ProxyGroup } from './proxy-group'
 import type { Proxy, ProxyCheckProgress, ProxyCheckResult } from './proxy'
 import type { AppSettings, ProxyCheckOptions } from './settings'
 
@@ -11,6 +12,8 @@ export interface AppNotificationPayload {
 export interface AppAPI {
   getProxies: () => Promise<Proxy[]>
   saveProxies: (proxies: Proxy[]) => Promise<void>
+  getGroups: () => Promise<ProxyGroup[]>
+  saveGroups: (groups: ProxyGroup[]) => Promise<void>
   checkProxy: (proxy: Proxy, options: ProxyCheckOptions) => Promise<ProxyCheckResult>
   checkAll: (proxies: Proxy[], options: ProxyCheckOptions) => Promise<void>
   onCheckProgress: (callback: (progress: ProxyCheckProgress) => void) => () => void

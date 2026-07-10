@@ -2,6 +2,7 @@ import { z } from 'zod'
 import type { TFunction } from 'i18next'
 import type { CheckDomainEntry } from '../../../shared/types/settings'
 import { getCheckDomainNames } from '../../../shared/types/settings'
+import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import type { Proxy } from '../../../shared/types/proxy'
 import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_FORM_VALUES } from '../../../shared/types/proxy'
 import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
@@ -14,6 +15,7 @@ export interface ProxyFormSchemaContext {
     Pick<Proxy, 'id' | 'protocol' | 'host' | 'port' | 'username' | 'password' | 'secret'>
   >
   editingProxyId?: string
+  groups?: ProxyGroup[]
 }
 
 export function createProxyFormSchema(
@@ -59,7 +61,8 @@ export function createProxyFormSchema(
       city: z.string().trim().max(64, t('validation.cityMax')).optional(),
       anonymityLevel: z
         .union([z.literal(''), z.enum(PROXY_ANONYMITY_LEVELS)])
-        .optional()
+        .optional(),
+      groupId: z.string().optional()
     })
     .superRefine((data, ctx) => {
       const isMtproto = data.protocol === 'mtproto'
@@ -131,6 +134,16 @@ export function createProxyFormSchema(
           code: z.ZodIssueCode.custom,
           message: t('validation.proxyDuplicate'),
           path: ['host']
+        })
+      }
+
+      const { groups = [] } = getContext()
+
+      if (data.groupId && !groups.some((group) => group.id === data.groupId)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t('validation.groupNotFound'),
+          path: ['groupId']
         })
       }
     })

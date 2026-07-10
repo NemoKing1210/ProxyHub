@@ -1,8 +1,12 @@
+import CheckIcon from '@mui/icons-material/Check'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import FolderOffOutlinedIcon from '@mui/icons-material/FolderOffOutlined'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
@@ -42,6 +46,7 @@ import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
 import type { Proxy, ProxyAnonymityLevel, ProxyIconId } from '../../../shared/types/proxy'
+import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import type { ProxyCardViewMode } from '../../../shared/types/settings'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
@@ -65,6 +70,7 @@ import ProxyStatusChip from './ProxyStatusChip'
 
 interface ProxyCardProps {
   proxy: Proxy
+  groups?: ProxyGroup[]
   variant?: ProxyCardViewMode
   isChecking: boolean
   isCheckingAll: boolean
@@ -74,6 +80,7 @@ interface ProxyCardProps {
   onIconChange: (iconId: ProxyIconId | undefined) => void
   onToggleFavorite: () => void
   onToggleEnabled: () => void
+  onGroupChange?: (groupId: string | undefined) => void
 }
 
 interface ImportantField {
@@ -114,6 +121,7 @@ function AnonymityLevelIcon({ level }: { level: ProxyAnonymityLevel }): React.JS
 
 function ProxyCard({
   proxy,
+  groups = [],
   variant = 'standard',
   isChecking,
   isCheckingAll,
@@ -122,7 +130,8 @@ function ProxyCard({
   onDelete,
   onIconChange,
   onToggleFavorite,
-  onToggleEnabled
+  onToggleEnabled,
+  onGroupChange
 }: ProxyCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
@@ -132,8 +141,17 @@ function ProxyCard({
   const [shareOpen, setShareOpen] = useState(false)
   const [iconPickerAnchor, setIconPickerAnchor] = useState<HTMLElement | null>(null)
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
+  const [groupMenuAnchor, setGroupMenuAnchor] = useState<HTMLElement | null>(null)
   const iconButtonRef = useRef<HTMLButtonElement>(null)
   const enabled = isProxyEnabled(proxy)
+  const sortedGroups = useMemo(
+    () => [...groups].sort((left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: 'base' })),
+    [groups]
+  )
+  const currentGroup = useMemo(
+    () => sortedGroups.find((group) => group.id === proxy.groupId),
+    [sortedGroups, proxy.groupId]
+  )
 
   const address = formatProxyAddress(proxy)
   const proxyUrl = useMemo(() => buildProxyUrl(proxy), [proxy])
@@ -258,6 +276,7 @@ function ProxyCard({
 
   const closeContextMenu = (): void => {
     setContextMenu(null)
+    setGroupMenuAnchor(null)
   }
 
   const handleContextMenu = (event: React.MouseEvent): void => {
@@ -829,6 +848,51 @@ function ProxyCard({
           <ListItemText>{t('proxyList.actions.changeIcon')}</ListItemText>
         </MenuItem>
 
+        {onGroupChange ? (
+          <>
+            <Divider />
+            {proxy.groupId ? (
+              <MenuItem
+                onClick={() => runContextAction(() => onGroupChange(undefined))}
+                disabled={isCheckingAll}
+              >
+                <ListItemIcon>
+                  <FolderOffOutlinedIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t('proxyList.actions.removeFromGroup')}</ListItemText>
+              </MenuItem>
+            ) : null}
+            <MenuItem
+              onClick={(event) => {
+                event.stopPropagation()
+                setGroupMenuAnchor(event.currentTarget)
+              }}
+              disabled={isCheckingAll || sortedGroups.length === 0}
+              aria-haspopup="true"
+            >
+              <ListItemIcon>
+                <FolderOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText
+                primary={t('proxyList.actions.moveToGroup')}
+                secondary={
+                  currentGroup
+                    ? t('proxyList.actions.currentGroup', { name: currentGroup.name })
+                    : sortedGroups.length === 0
+                      ? t('proxyList.actions.noGroups')
+                      : undefined
+                }
+                slotProps={{
+                  secondary: { noWrap: true }
+                }}
+              />
+              {sortedGroups.length > 0 ? (
+                <ChevronRightIcon fontSize="small" sx={{ ml: 1, color: 'text.secondary' }} />
+              ) : null}
+            </MenuItem>
+          </>
+        ) : null}
+
         <Divider />
 
         <MenuItem onClick={() => runContextCopy(address)}>
@@ -865,6 +929,45 @@ function ProxyCard({
             </MenuItem>
           </>
         )}
+      </Menu>
+
+      <Menu
+        anchorEl={groupMenuAnchor}
+        open={Boolean(groupMenuAnchor)}
+        onClose={() => setGroupMenuAnchor(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        slotProps={{
+          paper: {
+            sx: {
+              minWidth: 200,
+              maxWidth: 280,
+              borderRadius: 2
+            }
+          }
+        }}
+      >
+        <MenuItem
+          onClick={() => runContextAction(() => onGroupChange?.(undefined))}
+          selected={!proxy.groupId}
+        >
+          <ListItemIcon sx={{ minWidth: 32 }}>
+            {!proxy.groupId ? <CheckIcon fontSize="small" /> : null}
+          </ListItemIcon>
+          <ListItemText>{t('proxyList.actions.noGroup')}</ListItemText>
+        </MenuItem>
+        {sortedGroups.map((group) => (
+          <MenuItem
+            key={group.id}
+            onClick={() => runContextAction(() => onGroupChange?.(group.id))}
+            selected={proxy.groupId === group.id}
+          >
+            <ListItemIcon sx={{ minWidth: 32 }}>
+              {proxy.groupId === group.id ? <CheckIcon fontSize="small" /> : null}
+            </ListItemIcon>
+            <ListItemText>{group.name}</ListItemText>
+          </MenuItem>
+        ))}
       </Menu>
     </Box>
   )
