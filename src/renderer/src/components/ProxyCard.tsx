@@ -14,7 +14,7 @@ import type { Proxy } from '../../../shared/types/proxy'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
-import { elevationShadow, getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
+import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
 import ProxyDomainResults from './ProxyDomainResults'
@@ -141,15 +141,8 @@ function ProxyCard({
       sx={{
         borderRadius: 3,
         bgcolor: 'background.paper',
-        border: `1px solid ${withThemeAlpha(theme, palette.divider, 0.5)}`,
         boxShadow: elevationShadow(theme, 1),
-        overflow: 'hidden',
-        transition: `box-shadow ${MD3_DURATION.medium1}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.medium1}ms ${MD3_EASING.standard}, border-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
-        '&:hover': {
-          boxShadow: elevationShadow(theme, 3),
-          transform: 'translateY(-2px)',
-          borderColor: withThemeAlpha(theme, palette.primary.main, 0.3)
-        }
+        overflow: 'hidden'
       }}
     >
       <Box sx={{ p: { xs: 2.5, sm: 3 } }}>

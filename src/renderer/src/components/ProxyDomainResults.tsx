@@ -22,33 +22,29 @@ const domainEnter = keyframes`
 function getDomainStyles(
   status: ProxyDomainCheckResult['status'],
   theme: Theme
-): { bgcolor: string; borderColor: string } {
+): { bgcolor: string } {
   const palette = getPalette(theme)
 
   if (status === 'alive') {
     return {
-      bgcolor: withThemeAlpha(theme, palette.success.main, 0.14),
-      borderColor: withThemeAlpha(theme, palette.success.main, 0.28)
+      bgcolor: withThemeAlpha(theme, palette.success.main, 0.14)
     }
   }
 
   if (status === 'dead') {
     return {
-      bgcolor: withThemeAlpha(theme, palette.error.main, 0.14),
-      borderColor: withThemeAlpha(theme, palette.error.main, 0.28)
+      bgcolor: withThemeAlpha(theme, palette.error.main, 0.14)
     }
   }
 
   if (status === 'checking') {
     return {
-      bgcolor: withThemeAlpha(theme, palette.info.main, 0.16),
-      borderColor: withThemeAlpha(theme, palette.info.main, 0.32)
+      bgcolor: withThemeAlpha(theme, palette.info.main, 0.16)
     }
   }
 
   return {
-    bgcolor: withThemeAlpha(theme, palette.text.primary, 0.06),
-    borderColor: withThemeAlpha(theme, palette.divider, 0.7)
+    bgcolor: withThemeAlpha(theme, palette.text.primary, 0.06)
   }
 }
 
@@ -78,8 +74,6 @@ function ProxyDomainResults({ domainChecks }: ProxyDomainResultsProps): React.JS
               p: 1.5,
               borderRadius: 2.5,
               bgcolor: styles.bgcolor,
-              border: 1,
-              borderColor: styles.borderColor,
               animation: `${domainEnter} 0.32s ${MD3_EASING.emphasizedDecelerate} both`,
               animationDelay: staggerDelay(index),
               ...(isChecking

@@ -51,7 +51,6 @@ function ContentSection({
         p: nested ? 2 : { xs: 2.5, sm: 3 },
         borderRadius: nested ? 2.5 : 3,
         bgcolor: surfaceContainer(theme, nested ? 'default' : 'low'),
-        border: `1px solid ${surfaceTint(theme, 'primary', 0.14)}`,
         boxShadow: nested ? 'none' : elevationShadow(theme, 1),
         transition: `box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
         '&:hover': nested

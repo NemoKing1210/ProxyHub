@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-07-10
+
+### Changed
+
+- Removed borders from all card surfaces (proxy cards, sections, domain results, copyable fields, settings list items, and popovers)
+
 ## [1.6.0] - 2026-07-10
 
 ### Added
@@ -125,6 +131,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
 
+[1.6.1]: https://github.com/your-username/proxy-checker/releases/tag/v1.6.1
 [1.6.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.6.0
 [1.5.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.5.0
 [1.4.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.4.0

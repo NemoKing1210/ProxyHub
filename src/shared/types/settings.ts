@@ -20,17 +20,17 @@ export const DEFAULT_SETTINGS: AppSettings = {
   checkTimeoutMs: CHECK_TIMEOUT_DEFAULT_MS
 }
 
-export const SUPPORTED_LANGUAGES: { code: AppLanguage; label: string }[] = [
-  { code: 'en', label: 'English' },
-  { code: 'zh', label: '中文' },
-  { code: 'hi', label: 'हिन्दी' },
-  { code: 'es', label: 'Español' },
-  { code: 'fr', label: 'Français' },
-  { code: 'ar', label: 'العربية' },
-  { code: 'pt', label: 'Português' },
-  { code: 'ru', label: 'Русский' },
-  { code: 'ja', label: '日本語' },
-  { code: 'de', label: 'Deutsch' }
+export const SUPPORTED_LANGUAGES: { code: AppLanguage; label: string; countryCode: string }[] = [
+  { code: 'en', label: 'English', countryCode: 'US' },
+  { code: 'zh', label: '中文', countryCode: 'CN' },
+  { code: 'hi', label: 'हिन्दी', countryCode: 'IN' },
+  { code: 'es', label: 'Español', countryCode: 'ES' },
+  { code: 'fr', label: 'Français', countryCode: 'FR' },
+  { code: 'ar', label: 'العربية', countryCode: 'SA' },
+  { code: 'pt', label: 'Português', countryCode: 'PT' },
+  { code: 'ru', label: 'Русский', countryCode: 'RU' },
+  { code: 'ja', label: '日本語', countryCode: 'JP' },
+  { code: 'de', label: 'Deutsch', countryCode: 'DE' }
 ]
 
 export const RTL_LANGUAGES: AppLanguage[] = ['ar']

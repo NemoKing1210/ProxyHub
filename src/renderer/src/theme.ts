@@ -72,8 +72,7 @@ function buildComponentOverrides(): Theme['components'] {
           },
           body: {
             userSelect: 'none',
-            scrollbarColor: `${thumb} ${track}`,
-            backgroundImage: `radial-gradient(ellipse 80% 60% at 50% -20%, ${withAlpha(theme, palette.primary.main, 0.14)}, transparent)`
+            scrollbarColor: `${thumb} ${track}`
           },
           '*': {
             scrollbarWidth: 'thin'
@@ -175,13 +174,10 @@ function buildComponentOverrides(): Theme['components'] {
         elevation: 0
       },
       styleOverrides: {
-        root: ({ theme }) => {
-          const palette = getPalette(theme)
-          return {
-            backgroundImage: 'none',
-            border: `1px solid ${withAlpha(theme, palette.divider, 0.45)}`
-          }
-        },
+        root: () => ({
+          backgroundImage: 'none',
+          border: 'none'
+        }),
         rounded: {
           borderRadius: 16
         }

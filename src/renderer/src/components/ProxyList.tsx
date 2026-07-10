@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
 import { useProxyStore } from '../store/proxyStore'
-import { elevationShadow, staggerDelay, surfaceContainer, surfaceTint } from '../theme'
+import { elevationShadow, surfaceContainer, surfaceTint } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
 import ProxyFormDialog from './ProxyFormDialog'
@@ -182,36 +182,16 @@ function ProxyList(): React.JSX.Element {
         </Paper>
       ) : (
         <Stack spacing={2}>
-          {proxies.map((proxy, index) => (
-            <Box
+          {proxies.map((proxy) => (
+            <ProxyCard
               key={proxy.id}
-              sx={{
-                animation: 'cardEnter 0.4s cubic-bezier(0.05, 0.7, 0.1, 1) both',
-                animationDelay: staggerDelay(index),
-                '@media (prefers-reduced-motion: reduce)': {
-                  animation: 'none'
-                },
-                '@keyframes cardEnter': {
-                  from: {
-                    opacity: 0,
-                    transform: 'translateY(16px) scale(0.98)'
-                  },
-                  to: {
-                    opacity: 1,
-                    transform: 'translateY(0) scale(1)'
-                  }
-                }
-              }}
-            >
-              <ProxyCard
-                proxy={proxy}
-                isChecking={checkingIds.has(proxy.id)}
-                isCheckingAll={isCheckingAll}
-                onCheck={() => void checkProxy(proxy.id)}
-                onEdit={() => openEditDialog(proxy)}
-                onDelete={() => void removeProxy(proxy.id)}
-              />
-            </Box>
+              proxy={proxy}
+              isChecking={checkingIds.has(proxy.id)}
+              isCheckingAll={isCheckingAll}
+              onCheck={() => void checkProxy(proxy.id)}
+              onEdit={() => openEditDialog(proxy)}
+              onDelete={() => void removeProxy(proxy.id)}
+            />
           ))}
         </Stack>
       )}

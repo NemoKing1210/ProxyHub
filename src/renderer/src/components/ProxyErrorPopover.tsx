@@ -101,8 +101,7 @@ function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): Rea
               maxWidth: 380,
               mt: 0.5,
               borderRadius: 3,
-              boxShadow: elevationShadow(theme, 3),
-              border: `1px solid ${withThemeAlpha(theme, palette.divider, 0.5)}`
+              boxShadow: elevationShadow(theme, 3)
             }
           }
         }}

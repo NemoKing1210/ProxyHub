@@ -2,7 +2,7 @@ import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { Box, Button, Container, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useMatch } from 'react-router-dom'
 import { useProxyStore } from '../store/proxyStore'
@@ -29,24 +29,45 @@ function AppLayout(): React.JSX.Element {
   }, [loadProxies])
 
   const palette = getPalette(theme)
+  const headerRef = useRef<HTMLElement>(null)
+  const [headerHeight, setHeaderHeight] = useState(0)
+
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header) return
+
+    const updateHeight = (): void => {
+      setHeaderHeight(header.offsetHeight)
+    }
+
+    updateHeight()
+
+    const observer = new ResizeObserver(updateHeight)
+    observer.observe(header)
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Box
+        ref={headerRef}
         component="header"
         sx={{
-          position: 'sticky',
+          position: 'fixed',
           top: 0,
-          zIndex: theme.zIndex.appBar,
+          left: 0,
+          right: 0,
+          zIndex: theme.zIndex.modal,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           pt: 2.5,
           pb: 2,
           px: 2,
-          bgcolor: withThemeAlpha(theme, palette.background.default, 0.88),
+          bgcolor: withThemeAlpha(theme, palette.background.default, 0.72),
           backdropFilter: 'blur(20px) saturate(1.4)',
-          borderBottom: `1px solid ${withThemeAlpha(theme, palette.divider, 0.4)}`
+          WebkitBackdropFilter: 'blur(20px) saturate(1.4)'
         }}
       >
         <Typography
@@ -138,12 +159,16 @@ function AppLayout(): React.JSX.Element {
         </Box>
       </Box>
 
+      <Box aria-hidden sx={{ height: headerHeight, flexShrink: 0 }} />
+
       <Container
         component="main"
         maxWidth="lg"
-        sx={{ flexGrow: 1, py: 2, pt: 1, overflowX: 'hidden' }}
+        sx={{ flexGrow: 1, py: 2, pt: 1, position: 'relative', zIndex: 0 }}
       >
-        <PageTransition />
+        <Box sx={{ overflow: 'hidden', width: '100%', maxWidth: '100%' }}>
+          <PageTransition />
+        </Box>
       </Container>
     </Box>
   )

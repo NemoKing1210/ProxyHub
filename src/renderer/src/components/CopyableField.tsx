@@ -73,9 +73,8 @@ function CopyableField({
           bgcolor: copied
             ? withThemeAlpha(theme, palette.success.main, 0.14)
             : surfaceContainer(theme, 'low'),
-          border: `1px solid ${copied ? withThemeAlpha(theme, palette.success.main, 0.4) : withThemeAlpha(theme, palette.divider, 0.5)}`,
           cursor: 'pointer',
-          transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, border-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
+          transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
           '&:hover': {
             bgcolor: copied
               ? withThemeAlpha(theme, palette.success.main, 0.18)

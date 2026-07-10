@@ -31,8 +31,9 @@ import {
   type ThemeMode
 } from '../../../shared/types/settings'
 import ContentSection from '../components/ContentSection'
+import LanguageFlag from '../components/LanguageFlag'
 import { useSettingsStore } from '../store/settingsStore'
-import { getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../theme'
+import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
 import { normalizeDomainInput, validateDomain } from '../validation/proxySchema'
 
 const TIMEOUT_MARKS = [
@@ -52,7 +53,6 @@ function clampTimeoutSeconds(seconds: number): number {
 function SettingsPage(): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const palette = getPalette(theme)
   const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs } = useSettingsStore()
   const [domainInput, setDomainInput] = useState('')
   const [domainError, setDomainError] = useState<string | null>(null)
@@ -174,10 +174,28 @@ function SettingsPage(): React.JSX.Element {
               value={settings.language}
               onChange={(event) => void handleLanguageChange(event.target.value as AppLanguage)}
               fullWidth
+              slotProps={{
+                select: {
+                  renderValue: (selected) => {
+                    const language = SUPPORTED_LANGUAGES.find((item) => item.code === selected)
+                    if (!language) return null
+
+                    return (
+                      <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                        <LanguageFlag language={language.code} />
+                        <span>{language.label}</span>
+                      </Stack>
+                    )
+                  }
+                }
+              }}
             >
               {SUPPORTED_LANGUAGES.map((language) => (
                 <MenuItem key={language.code} value={language.code}>
-                  {language.label}
+                  <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                    <LanguageFlag language={language.code} />
+                    <span>{language.label}</span>
+                  </Stack>
                 </MenuItem>
               ))}
             </TextField>
@@ -285,7 +303,6 @@ function SettingsPage(): React.JSX.Element {
                       py: 1.1,
                       borderRadius: 2,
                       bgcolor: surfaceContainer(theme, 'low'),
-                      border: `1px solid ${withThemeAlpha(theme, palette.divider, 0.4)}`,
                       transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
                       '&:hover': {
                         bgcolor: surfaceContainer(theme, 'default'),
