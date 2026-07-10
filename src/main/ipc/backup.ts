@@ -3,6 +3,7 @@ import { basename, join } from 'path'
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import type {
   BackupExportKind,
+  BackupExportRequest,
   BackupExportResponse,
   BackupImportRequest,
   BackupImportResponse,
@@ -14,7 +15,8 @@ import {
   applyBackupImport,
   buildBackupFile,
   buildBackupPreview,
-  parseBackupFile
+  parseBackupFile,
+  resolveBackupExportProxies
 } from '../../shared/utils/backup'
 import {
   getGroups,
@@ -92,7 +94,8 @@ export function serializeBackupError(error: unknown): {
 export function registerBackupIpc(): void {
   ipcMain.handle(
     'backup:export',
-    async (_event, kind: BackupExportKind): Promise<BackupExportResponse> => {
+    async (_event, request: BackupExportRequest): Promise<BackupExportResponse> => {
+      const kind = request.kind
       const window = getActiveWindow()
       const dialogOptions = {
         title: 'Export ProxyChecker backup',
@@ -114,10 +117,12 @@ export function registerBackupIpc(): void {
         readAppVersion()
       ])
 
+      const exportData = resolveBackupExportProxies(proxies, groups, request.proxyIds)
+
       const content = buildBackupFile({
         kind,
-        proxies,
-        groups,
+        proxies: exportData.proxies,
+        groups: exportData.groups,
         settings,
         appVersion
       })
@@ -165,7 +170,8 @@ export function registerBackupIpc(): void {
         const { data, result } = applyBackupImport(
           backup,
           { proxies, groups, settings },
-          request.mode
+          request.mode,
+          request.proxyIds
         )
 
         const includesProxies = result.kind === 'full' || result.kind === 'proxies'

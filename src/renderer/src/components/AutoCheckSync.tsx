@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { resolveAutoCheckProxyIds } from '../../../shared/utils/auto-check-scope'
+import { useAutoCheckStore } from '../store/autoCheckStore'
 import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
@@ -24,12 +25,18 @@ function AutoCheckSync(): null {
     }
 
     if (!autoCheckEnabled) {
+      useAutoCheckStore.getState().setNextCheckAt(null)
       return
     }
 
     const intervalMs = autoCheckIntervalMinutes * 60 * 1000
+    const scheduleNextCheck = (): void => {
+      useAutoCheckStore.getState().setNextCheckAt(Date.now() + intervalMs)
+    }
 
     const runAutoCheck = (): void => {
+      scheduleNextCheck()
+
       const settings = useSettingsStore.getState().settings
       if (!settings.autoCheckEnabled) {
         return
@@ -53,6 +60,7 @@ function AutoCheckSync(): null {
       void proxyState.checkAll(proxyIds, { source: 'auto' })
     }
 
+    scheduleNextCheck()
     timerRef.current = setInterval(runAutoCheck, intervalMs)
 
     return () => {
@@ -60,6 +68,8 @@ function AutoCheckSync(): null {
         clearInterval(timerRef.current)
         timerRef.current = null
       }
+
+      useAutoCheckStore.getState().setNextCheckAt(null)
     }
   }, [autoCheckEnabled, autoCheckIntervalMinutes, autoCheckScope, autoCheckGroupIds])
 

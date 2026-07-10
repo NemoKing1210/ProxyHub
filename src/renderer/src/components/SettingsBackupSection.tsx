@@ -16,11 +16,16 @@ import { useTheme } from '@mui/material/styles'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BackupExportKind, BackupImportMode, BackupPreview } from '../../../shared/types/backup'
+import type { Proxy } from '../../../shared/types/proxy'
+import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import BackupExportProxiesDialog from './BackupExportProxiesDialog'
 import BackupImportPreviewDialog from './BackupImportPreviewDialog'
 import ContentSection from './ContentSection'
 import { outlineVariant, surfaceContainer } from '../theme'
 
 interface SettingsBackupSectionProps {
+  proxies: Proxy[]
+  groups: ProxyGroup[]
   onExportSuccess: () => void
   onImportSuccess: (summary: {
     proxiesAdded: number
@@ -29,6 +34,10 @@ interface SettingsBackupSectionProps {
   }) => void
   onError: (message: string) => void
   onReloadData: () => Promise<void>
+}
+
+function includesProxiesInExport(kind: BackupExportKind): boolean {
+  return kind === 'full' || kind === 'proxies'
 }
 
 function resolveBackupError(
@@ -47,6 +56,8 @@ function resolveBackupError(
 }
 
 function SettingsBackupSection({
+  proxies,
+  groups,
   onExportSuccess,
   onImportSuccess,
   onError,
@@ -59,25 +70,47 @@ function SettingsBackupSection({
   const [isSelectingFile, setIsSelectingFile] = useState(false)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [preview, setPreview] = useState<BackupPreview | null>(null)
+  const [exportSelectOpen, setExportSelectOpen] = useState(false)
 
-  const handleExport = async (): Promise<void> => {
-    if (isExporting || isSelectingFile) return
-
+  const runExport = async (proxyIds?: string[]): Promise<void> => {
     setIsExporting(true)
 
     try {
-      const response = await window.api.exportBackup(exportKind)
+      const response = await window.api.exportBackup({ kind: exportKind, proxyIds })
 
       if (response.canceled) {
         return
       }
 
+      setExportSelectOpen(false)
       onExportSuccess()
     } catch {
       onError(t('settings.backup.exportError'))
     } finally {
       setIsExporting(false)
     }
+  }
+
+  const handleExport = (): void => {
+    if (isExporting || isSelectingFile) {
+      return
+    }
+
+    if (!includesProxiesInExport(exportKind)) {
+      void runExport()
+      return
+    }
+
+    if (proxies.length === 0) {
+      onError(t('settings.backup.exportNoProxies'))
+      return
+    }
+
+    setExportSelectOpen(true)
+  }
+
+  const handleConfirmExport = async (proxyIds: string[]): Promise<void> => {
+    await runExport(proxyIds)
   }
 
   const handleSelectFile = async (): Promise<void> => {
@@ -106,14 +139,15 @@ function SettingsBackupSection({
     }
   }
 
-  const handleConfirmImport = async (mode: BackupImportMode): Promise<void> => {
+  const handleConfirmImport = async (mode: BackupImportMode, proxyIds?: string[]): Promise<void> => {
     if (!preview) {
       return
     }
 
     const response = await window.api.importBackup({
       filePath: preview.filePath,
-      mode
+      mode,
+      proxyIds
     })
 
     if ('error' in response) {
@@ -132,6 +166,14 @@ function SettingsBackupSection({
   const handleClosePreview = (): void => {
     setPreviewOpen(false)
     setPreview(null)
+  }
+
+  const handleCloseExportSelect = (): void => {
+    if (isExporting) {
+      return
+    }
+
+    setExportSelectOpen(false)
   }
 
   const isBusy = isExporting || isSelectingFile
@@ -190,7 +232,7 @@ function SettingsBackupSection({
               startIcon={
                 isExporting ? <CircularProgress size={18} color="inherit" /> : <FileDownloadOutlinedIcon />
               }
-              onClick={() => void handleExport()}
+              onClick={handleExport}
               disabled={isBusy}
               fullWidth
             >
@@ -235,6 +277,16 @@ function SettingsBackupSection({
           </Typography>
         </Stack>
       </ContentSection>
+
+      <BackupExportProxiesDialog
+        open={exportSelectOpen}
+        exportKind={exportKind}
+        proxies={proxies}
+        groups={groups}
+        isExporting={isExporting}
+        onClose={handleCloseExportSelect}
+        onConfirm={handleConfirmExport}
+      />
 
       <BackupImportPreviewDialog
         open={previewOpen}

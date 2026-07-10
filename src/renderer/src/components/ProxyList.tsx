@@ -47,6 +47,7 @@ import ProxyGroupSection from './ProxyGroupSection'
 import ProxyListFilters from './ProxyListFilters'
 import ProxyListSearch from './ProxyListSearch'
 import ProxyListSort from './ProxyListSort'
+import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'
 
 function toProxyInput(values: ProxyFormValues): ProxyInput {
   return {
@@ -107,6 +108,7 @@ function ProxyList(): React.JSX.Element {
     removeGroup
   } = useGroupStore()
   const proxyCardView = useSettingsStore((state) => state.settings.proxyCardView)
+  const autoCheckEnabled = useSettingsStore((state) => state.settings.autoCheckEnabled)
 
   const [addMenuAnchor, setAddMenuAnchor] = useState<HTMLElement | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -463,6 +465,11 @@ function ProxyList(): React.JSX.Element {
           <Button
             variant="outlined"
             startIcon={isCheckingAll ? <CircularProgress size={18} /> : <PlaylistPlayIcon />}
+            endIcon={
+              autoCheckEnabled ? (
+                <AutoCheckCountdownBadge enabled={autoCheckEnabled} embedded />
+              ) : undefined
+            }
             onClick={() => void checkAll(checkableProxyIds)}
             disabled={checkableProxyIds.length === 0 || isCheckingAll}
           >

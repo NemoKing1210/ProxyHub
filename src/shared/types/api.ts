@@ -1,5 +1,5 @@
 import type {
-  BackupExportKind,
+  BackupExportRequest,
   BackupExportResponse,
   BackupImportRequest,
   BackupImportResponse,
@@ -35,7 +35,7 @@ export interface AppAPI {
   onTrayProxiesUpdated: (callback: () => void) => () => void
   onOpenProxyFromTray: (callback: (proxyId: string) => void) => () => void
   onCheckAllState: (callback: (active: boolean) => void) => () => void
-  exportBackup: (kind: BackupExportKind) => Promise<BackupExportResponse>
+  exportBackup: (request: BackupExportRequest) => Promise<BackupExportResponse>
   previewBackup: () => Promise<BackupPreviewResponse>
   importBackup: (request: BackupImportRequest) => Promise<BackupImportResponse>
 }

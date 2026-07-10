@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,17 +13,22 @@ import {
   Typography
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BackupImportMode, BackupPreview } from '../../../shared/types/backup'
+import {
+  mapBackupRecordsToGroups,
+  mapBackupRecordsToProxies
+} from '../../../shared/utils/backup'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { outlineVariant, surfaceContainer } from '../theme'
+import BackupProxySelectionList from './BackupProxySelectionList'
 
 interface BackupImportPreviewDialogProps {
   open: boolean
   preview: BackupPreview | null
   onClose: () => void
-  onConfirm: (mode: BackupImportMode) => Promise<void>
+  onConfirm: (mode: BackupImportMode, proxyIds?: string[]) => Promise<void>
 }
 
 interface PreviewRowProps {
@@ -60,13 +66,27 @@ function BackupImportPreviewDialog({
   const theme = useTheme()
   const [importMode, setImportMode] = useState<BackupImportMode>('merge')
   const [isImporting, setIsImporting] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
+
+  const backupProxies = useMemo(
+    () => (preview ? mapBackupRecordsToProxies(preview.backupProxies) : []),
+    [preview]
+  )
+
+  const backupGroups = useMemo(
+    () => (preview ? mapBackupRecordsToGroups(preview.backupGroups) : []),
+    [preview]
+  )
 
   useEffect(() => {
-    if (open) {
-      setImportMode('merge')
-      setIsImporting(false)
+    if (!open || !preview) {
+      return
     }
-  }, [open, preview?.filePath])
+
+    setImportMode('merge')
+    setIsImporting(false)
+    setSelectedIds(new Set(preview.backupProxies.map((proxy) => proxy.id)))
+  }, [open, preview?.filePath, preview])
 
   const handleClose = (): void => {
     if (isImporting) {
@@ -81,10 +101,19 @@ function BackupImportPreviewDialog({
       return
     }
 
+    const includesProxies = preview.kind === 'full' || preview.kind === 'proxies'
+
+    if (includesProxies && selectedIds.size === 0) {
+      return
+    }
+
     setIsImporting(true)
 
     try {
-      await onConfirm(importMode)
+      await onConfirm(
+        importMode,
+        includesProxies ? [...selectedIds] : undefined
+      )
       onClose()
     } finally {
       setIsImporting(false)
@@ -93,13 +122,14 @@ function BackupImportPreviewDialog({
 
   const includesProxies = preview?.kind === 'full' || preview?.kind === 'proxies'
   const includesSettings = preview?.hasSettings
+  const canImport = !includesProxies || selectedIds.size > 0
 
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       slotProps={{
         backdrop: {
           sx: { backdropFilter: 'blur(4px)' }
@@ -207,6 +237,24 @@ function BackupImportPreviewDialog({
               </Box>
             )}
 
+            {includesProxies && backupProxies.length > 0 && (
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                  {t('settings.backup.importSelectProxies')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                  {t('settings.backup.importSelectProxiesHint')}
+                </Typography>
+                <BackupProxySelectionList
+                  proxies={backupProxies}
+                  groups={backupGroups}
+                  selectedIds={selectedIds}
+                  onSelectedIdsChange={setSelectedIds}
+                  disabled={isImporting}
+                />
+              </Box>
+            )}
+
             <Box>
               <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
                 {t('settings.backup.importMode')}
@@ -244,7 +292,12 @@ function BackupImportPreviewDialog({
         <Button onClick={handleClose} disabled={isImporting}>
           {t('common.cancel')}
         </Button>
-        <Button variant="contained" onClick={() => void handleConfirm()} disabled={!preview || isImporting}>
+        <Button
+          variant="contained"
+          onClick={() => void handleConfirm()}
+          disabled={!preview || isImporting || !canImport}
+          startIcon={isImporting ? <CircularProgress size={18} color="inherit" /> : undefined}
+        >
           {t('settings.backup.previewConfirm')}
         </Button>
       </DialogActions>

@@ -91,6 +91,7 @@ function SettingsPage(): React.JSX.Element {
   const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs, updateSettings } =
     useSettingsStore()
   const groups = useGroupStore((state) => state.groups)
+  const proxies = useProxyStore((state) => state.proxies)
   const loadGroups = useGroupStore((state) => state.loadGroups)
   const loadSettings = useSettingsStore((state) => state.loadSettings)
   const favoriteCount = useProxyStore(
@@ -687,6 +688,8 @@ function SettingsPage(): React.JSX.Element {
         </ContentSection>
 
         <SettingsBackupSection
+          proxies={proxies}
+          groups={groups}
           onExportSuccess={() => notifyFeedback(t('settings.backup.exportSuccess'))}
           onImportSuccess={({ proxiesAdded, groupsAdded, settingsImported }) =>
             notifyFeedback(

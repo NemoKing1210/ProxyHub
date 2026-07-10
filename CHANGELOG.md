@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.26.0] - 2026-07-10
+
+### Added
+
+- Auto-check countdown badge: live timer in the auto-check settings section header and inside the **Check all** button on the proxy list (shown only when auto-check is enabled)
+- Backup export proxy picker: when exporting proxies or a full backup, choose which proxies to include via a searchable checklist grouped by folders
+- Backup import proxy picker: review backup file info and select which proxies to import before confirming, with the same selection UI as export
+
+### Changed
+
+- Auto-check translations added for all supported languages
+
 ## [1.25.0] - 2026-07-10
 
 ### Added

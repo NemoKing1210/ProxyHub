@@ -120,6 +120,8 @@ export interface BackupPreview {
   hasSettings: boolean
   checkDomainCount: number
   autoCheckEnabled: boolean
+  backupProxies: BackupProxyRecord[]
+  backupGroups: BackupGroupRecord[]
 }
 
 export interface BackupPreviewCanceled {
@@ -144,7 +146,13 @@ export type BackupPreviewResponse =
   | BackupPreviewSuccess
   | BackupPreviewFailed
 
+export interface BackupExportRequest {
+  kind: BackupExportKind
+  proxyIds?: string[]
+}
+
 export interface BackupImportRequest {
   filePath: string
   mode: BackupImportMode
+  proxyIds?: string[]
 }

@@ -24,6 +24,7 @@ import {
   type AutoCheckScope
 } from '../../../shared/types/settings'
 import ContentSection from './ContentSection'
+import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'
 import ProxyGroupAvatar from './ProxyGroupAvatar'
 import SettingsSwitchCard from './SettingsSwitchCard'
 import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../theme'
@@ -120,7 +121,17 @@ function SettingsAutoCheckSection({
   return (
     <ContentSection
       icon={<AutorenewOutlinedIcon fontSize="small" />}
-      title={t('settings.sections.autoCheck')}
+      title={
+        <Stack
+          direction="row"
+          spacing={1}
+          useFlexGap
+          sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+        >
+          <span>{t('settings.sections.autoCheck')}</span>
+          <AutoCheckCountdownBadge enabled={enabled} />
+        </Stack>
+      }
       description={t('settings.sections.autoCheckDescription')}
       collapsible
       defaultExpanded={false}

@@ -409,7 +409,9 @@ export function buildBackupPreview(
     enabledProxyCount: proxies.filter((proxy) => proxy.isEnabled !== false).length,
     hasSettings,
     checkDomainCount: settings?.checkDomains.length ?? 0,
-    autoCheckEnabled: settings?.autoCheckEnabled === true
+    autoCheckEnabled: settings?.autoCheckEnabled === true,
+    backupProxies: proxies,
+    backupGroups: groups
   }
 }
 
@@ -539,7 +541,8 @@ function replaceProxiesPayload(
 export function applyBackupImport(
   backup: BackupFileV1,
   current: StoreSnapshot,
-  mode: BackupImportMode
+  mode: BackupImportMode,
+  proxyIds?: string[]
 ): { data: StoreSnapshot; result: BackupImportResult } {
   const { payload } = backup
   let proxies = current.proxies
@@ -556,20 +559,22 @@ export function applyBackupImport(
   const includesSettings = payload.kind === 'full' || payload.kind === 'settings'
 
   if (includesProxies && payload.proxies) {
+    const proxiesPayload = resolveBackupImportProxies(payload.proxies, proxyIds)
+
     if (mode === 'replace') {
-      const replaced = replaceProxiesPayload(payload.proxies)
+      const replaced = replaceProxiesPayload(proxiesPayload)
       groups = replaced.groups
       proxies = replaced.proxies
       groupsAdded = replaced.groupsAdded
       proxiesAdded = replaced.proxiesAdded
     } else {
-      const mergedGroups = mergeGroups(groups, payload.proxies.groups)
+      const mergedGroups = mergeGroups(groups, proxiesPayload.groups)
       groups = mergedGroups.groups
       groupsAdded = mergedGroups.added
       groupsSkipped = mergedGroups.skipped
 
       const validGroupIds = new Set(groups.map((group) => group.id))
-      const mergedProxies = mergeProxies(proxies, payload.proxies.items, validGroupIds)
+      const mergedProxies = mergeProxies(proxies, proxiesPayload.items, validGroupIds)
       proxies = mergedProxies.proxies
       proxiesAdded = mergedProxies.added
       proxiesSkipped = mergedProxies.skipped
@@ -604,4 +609,57 @@ export function applyBackupImport(
       settingsImported
     }
   }
+}
+
+export function resolveBackupExportProxies(
+  proxies: Proxy[],
+  groups: ProxyGroup[],
+  proxyIds?: string[]
+): { proxies: Proxy[]; groups: ProxyGroup[] } {
+  if (!proxyIds) {
+    return { proxies, groups }
+  }
+
+  const selectedIds = new Set(proxyIds)
+  const selectedProxies = proxies.filter((proxy) => selectedIds.has(proxy.id))
+  const groupIds = new Set(
+    selectedProxies
+      .map((proxy) => proxy.groupId)
+      .filter((groupId): groupId is string => typeof groupId === 'string' && groupId.length > 0)
+  )
+
+  return {
+    proxies: selectedProxies,
+    groups: groups.filter((group) => groupIds.has(group.id))
+  }
+}
+
+export function resolveBackupImportProxies(
+  payload: BackupProxiesPayload,
+  proxyIds?: string[]
+): BackupProxiesPayload {
+  if (!proxyIds) {
+    return payload
+  }
+
+  const selectedIds = new Set(proxyIds)
+  const items = payload.items.filter((item) => selectedIds.has(item.id))
+  const groupIds = new Set(
+    items
+      .map((item) => item.groupId)
+      .filter((groupId): groupId is string => typeof groupId === 'string' && groupId.length > 0)
+  )
+
+  return {
+    items,
+    groups: payload.groups.filter((group) => groupIds.has(group.id))
+  }
+}
+
+export function mapBackupRecordsToProxies(records: BackupProxyRecord[]): Proxy[] {
+  return records.map((record) => backupRecordToProxy(record))
+}
+
+export function mapBackupRecordsToGroups(records: BackupGroupRecord[]): ProxyGroup[] {
+  return records.map((record) => backupRecordToGroup(record))
 }
