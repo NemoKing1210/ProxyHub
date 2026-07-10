@@ -27,9 +27,11 @@
   },
   "proxyStatus": { "unknown": "لم يُفحص", "checking": "جارٍ الفحص", "alive": "نشط", "dead": "غير نشط" },
   "settings": {
-    "title": "الإعدادات", "description": "خصص المظهر واللغة ونطاقات فحص البروكسي.",
+    "title": "الإعدادات", "description": "اضبط المظهر وإعدادات فحص البروكسي.",
+    "sections": { "appearance": "المظهر", "appearanceDescription": "السمة واللغة.", "checking": "فحص البروكسي", "checkingDescription": "المهلة ونطاقات الاختبار." },
     "theme": "السمة", "themeLight": "فاتح", "themeDark": "داكن", "themeSystem": "النظام",
-    "language": "اللغة", "checkDomains": "نطاقات الفحص",
+    "language": "اللغة", "checkTimeout": "مهلة الاتصال", "checkTimeoutHint": "أقصى وقت انتظار لكل فحص.", "checkTimeoutValue": "{{value}} ث",
+    "checkDomains": "نطاقات الفحص",
     "checkDomainsHint": "يتم اختبار البروكسيات على هذه النطاقات. يُعتبر البروكسي نشطاً إذا استجاب نطاق واحد على الأقل.",
     "domainPlaceholder": "example.com", "addDomain": "إضافة نطاق",
     "domainRequired": "مطلوب نطاق فحص واحد على الأقل", "invalidDomain": "أدخل اسم نطاق صالح",

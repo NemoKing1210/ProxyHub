@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-07-10
+
+### Added
+
+- Configurable proxy check connection timeout (1–120 s) in Settings
+- `SettingsSection` component for grouped settings blocks
+- i18n strings for settings sections and timeout controls
+
+### Changed
+
+- Redesigned Settings page: appearance and checking sections with toggle theme picker and slider UI
+- Proxy checker respects user-defined timeout from app settings
+
 ## [1.1.0] - 2026-07-10
 
 ### Added
@@ -42,5 +55,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
 
+[1.2.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.2.0
 [1.1.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.1.0
 [1.0.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.0.0

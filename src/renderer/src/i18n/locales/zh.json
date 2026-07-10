@@ -28,9 +28,11 @@
   },
   "proxyStatus": { "unknown": "未检测", "checking": "检测中", "alive": "可用", "dead": "不可用" },
   "settings": {
-    "title": "设置", "description": "自定义外观、语言和代理检测目标。",
+    "title": "设置", "description": "配置外观和代理检测参数。",
+    "sections": { "appearance": "外观", "appearanceDescription": "主题和界面语言。", "checking": "代理检测", "checkingDescription": "超时和检测域名。" },
     "theme": "主题", "themeLight": "浅色", "themeDark": "深色", "themeSystem": "跟随系统",
-    "language": "语言", "checkDomains": "检测域名",
+    "language": "语言", "checkTimeout": "连接超时", "checkTimeoutHint": "每次检测的最大等待时间。", "checkTimeoutValue": "{{value}} 秒",
+    "checkDomains": "检测域名",
     "checkDomainsHint": "代理将针对这些域名进行检测。只要有一个域名响应，即视为可用。",
     "domainPlaceholder": "example.com", "addDomain": "添加域名",
     "domainRequired": "至少需要一个检测域名", "invalidDomain": "请输入有效的域名",

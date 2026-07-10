@@ -26,9 +26,11 @@
   },
   "proxyStatus": { "unknown": "Sin comprobar", "checking": "Comprobando", "alive": "Activo", "dead": "Inactivo" },
   "settings": {
-    "title": "Ajustes", "description": "Personaliza la apariencia, el idioma y los dominios de comprobación.",
+    "title": "Ajustes", "description": "Configura la apariencia y la comprobación de proxies.",
+    "sections": { "appearance": "Apariencia", "appearanceDescription": "Tema e idioma.", "checking": "Comprobación", "checkingDescription": "Tiempo de espera y dominios." },
     "theme": "Tema", "themeLight": "Claro", "themeDark": "Oscuro", "themeSystem": "Sistema",
-    "language": "Idioma", "checkDomains": "Dominios de comprobación",
+    "language": "Idioma", "checkTimeout": "Tiempo de espera", "checkTimeoutHint": "Tiempo máximo de espera por comprobación.", "checkTimeoutValue": "{{value}} s",
+    "checkDomains": "Dominios de comprobación",
     "checkDomainsHint": "Los proxies se prueban contra estos dominios. Se considera activo si al menos uno responde.",
     "domainPlaceholder": "example.com", "addDomain": "Añadir dominio",
     "domainRequired": "Se requiere al menos un dominio", "invalidDomain": "Introduce un dominio válido",

@@ -27,9 +27,11 @@
   },
   "proxyStatus": { "unknown": "जांच नहीं", "checking": "जांच हो रही है", "alive": "सक्रिय", "dead": "निष्क्रिय" },
   "settings": {
-    "title": "सेटिंग्स", "description": "दिखावट, भाषा और प्रॉक्सी जांच लक्ष्य कस्टमाइज़ करें।",
+    "title": "सेटिंग्स", "description": "दिखावट और प्रॉक्सी जांच सेट करें।",
+    "sections": { "appearance": "दिखावट", "appearanceDescription": "थीम और भाषा।", "checking": "प्रॉक्सी जांच", "checkingDescription": "टाइमआउट और जांच डोमेन।" },
     "theme": "थीम", "themeLight": "हल्की", "themeDark": "गहरी", "themeSystem": "सिस्टम",
-    "language": "भाषा", "checkDomains": "जांच डोमेन",
+    "language": "भाषा", "checkTimeout": "कनेक्शन टाइमआउट", "checkTimeoutHint": "प्रत्येक जांच के लिए अधिकतम प्रतीक्षा समय।", "checkTimeoutValue": "{{value}} से.",
+    "checkDomains": "जांच डोमेन",
     "checkDomainsHint": "प्रॉक्सी इन डोमेन के विरुद्ध जांचे जाते हैं। कम से कम एक डोमेन प्रतिक्रिया दे तो प्रॉक्सी सक्रिय माना जाता है।",
     "domainPlaceholder": "example.com", "addDomain": "डोमेन जोड़ें",
     "domainRequired": "कम से कम एक जांच डोमेन आवश्यक है", "invalidDomain": "मान्य डोमेन नाम दर्ज करें",

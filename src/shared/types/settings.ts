@@ -6,12 +6,18 @@ export interface AppSettings {
   theme: ThemeMode
   language: AppLanguage
   checkDomains: string[]
+  checkTimeoutMs: number
 }
+
+export const CHECK_TIMEOUT_MIN_MS = 1_000
+export const CHECK_TIMEOUT_MAX_MS = 120_000
+export const CHECK_TIMEOUT_DEFAULT_MS = 10_000
 
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: 'dark',
   language: 'en',
-  checkDomains: ['google.com']
+  checkDomains: ['google.com'],
+  checkTimeoutMs: CHECK_TIMEOUT_DEFAULT_MS
 }
 
 export const SUPPORTED_LANGUAGES: { code: AppLanguage; label: string }[] = [

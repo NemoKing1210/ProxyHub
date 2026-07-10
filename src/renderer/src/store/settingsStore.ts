@@ -16,6 +16,7 @@ interface SettingsState {
   setTheme: (theme: ThemeMode) => Promise<void>
   setLanguage: (language: AppLanguage) => Promise<void>
   setCheckDomains: (checkDomains: string[]) => Promise<void>
+  setCheckTimeoutMs: (checkTimeoutMs: number) => Promise<void>
   updateSettings: (partial: Partial<AppSettings>) => Promise<void>
 }
 
@@ -56,6 +57,10 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   setCheckDomains: async (checkDomains) => {
     await get().updateSettings({ checkDomains })
+  },
+
+  setCheckTimeoutMs: async (checkTimeoutMs) => {
+    await get().updateSettings({ checkTimeoutMs })
   },
 
   updateSettings: async (partial) => {

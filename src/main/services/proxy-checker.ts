@@ -6,7 +6,6 @@ import { SocksProxyAgent } from 'socks-proxy-agent'
 import type { Proxy, ProxyCheckErrorDetail, ProxyCheckResult } from '../../shared/types/proxy'
 import { buildProxyUrl } from '../../shared/utils/proxy-format'
 
-const CHECK_TIMEOUT_MS = 10_000
 const DEFAULT_CONCURRENCY = 20
 
 function createAgent(proxy: Proxy): http.Agent {
@@ -54,7 +53,8 @@ function createErrorDetail(
 
 function requestThroughProxy(
   agent: http.Agent,
-  checkUrl: string
+  checkUrl: string,
+  timeoutMs: number
 ): Promise<{ latencyMs: number }> {
   return new Promise((resolve, reject) => {
     const start = Date.now()
@@ -63,7 +63,7 @@ function requestThroughProxy(
       checkUrl,
       {
         agent,
-        timeout: CHECK_TIMEOUT_MS
+        timeout: timeoutMs
       },
       (response) => {
         response.resume()
@@ -100,7 +100,11 @@ function buildSummaryError(failures: ProxyCheckErrorDetail[]): string {
   return `All ${failures.length} check domains failed`
 }
 
-export async function checkProxy(proxy: Proxy, domains: string[]): Promise<ProxyCheckResult> {
+export async function checkProxy(
+  proxy: Proxy,
+  domains: string[],
+  timeoutMs: number
+): Promise<ProxyCheckResult> {
   const checkedAt = new Date().toISOString()
   const targets = domains.length > 0 ? domains : ['google.com']
 
@@ -112,7 +116,7 @@ export async function checkProxy(proxy: Proxy, domains: string[]): Promise<Proxy
       const checkUrl = normalizeDomain(domain)
 
       try {
-        const result = await requestThroughProxy(agent, checkUrl)
+        const result = await requestThroughProxy(agent, checkUrl, timeoutMs)
 
         return {
           id: proxy.id,
@@ -157,6 +161,7 @@ export async function checkAllProxies(
   proxies: Proxy[],
   domains: string[],
   onProgress: (result: ProxyCheckResult) => void,
+  timeoutMs: number,
   concurrency = DEFAULT_CONCURRENCY
 ): Promise<void> {
   let index = 0
@@ -167,7 +172,7 @@ export async function checkAllProxies(
       index += 1
 
       const proxy = proxies[currentIndex]
-      const result = await checkProxy(proxy, domains)
+      const result = await checkProxy(proxy, domains, timeoutMs)
       onProgress(result)
     }
   }

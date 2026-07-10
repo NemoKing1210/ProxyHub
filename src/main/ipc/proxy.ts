@@ -16,13 +16,16 @@ export function registerProxyIpc(): void {
 
   ipcMain.handle('proxy:check', async (_event, proxy: Proxy) => {
     const settings = await getSettings()
-    return checkProxy(proxy, settings.checkDomains)
+    return checkProxy(proxy, settings.checkDomains, settings.checkTimeoutMs)
   })
 
   ipcMain.handle('proxy:check-all', async (event, proxies: Proxy[]) => {
     const settings = await getSettings()
-    await checkAllProxies(proxies, settings.checkDomains, (result) =>
-      sendProgress(event.sender, result)
+    await checkAllProxies(
+      proxies,
+      settings.checkDomains,
+      (result) => sendProgress(event.sender, result),
+      settings.checkTimeoutMs
     )
   })
 }

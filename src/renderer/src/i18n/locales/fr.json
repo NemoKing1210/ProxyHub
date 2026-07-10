@@ -26,9 +26,11 @@
   },
   "proxyStatus": { "unknown": "Non vérifié", "checking": "Vérification", "alive": "Actif", "dead": "Inactif" },
   "settings": {
-    "title": "Paramètres", "description": "Personnalisez l'apparence, la langue et les domaines de vérification.",
+    "title": "Paramètres", "description": "Configurez l'apparence et la vérification des proxies.",
+    "sections": { "appearance": "Apparence", "appearanceDescription": "Thème et langue.", "checking": "Vérification", "checkingDescription": "Délai et domaines de test." },
     "theme": "Thème", "themeLight": "Clair", "themeDark": "Sombre", "themeSystem": "Système",
-    "language": "Langue", "checkDomains": "Domaines de vérification",
+    "language": "Langue", "checkTimeout": "Délai de connexion", "checkTimeoutHint": "Temps d'attente maximum par vérification.", "checkTimeoutValue": "{{value}} s",
+    "checkDomains": "Domaines de vérification",
     "checkDomainsHint": "Les proxies sont testés sur ces domaines. Un proxy est actif si au moins un domaine répond.",
     "domainPlaceholder": "example.com", "addDomain": "Ajouter un domaine",
     "domainRequired": "Au moins un domaine est requis", "invalidDomain": "Entrez un nom de domaine valide",

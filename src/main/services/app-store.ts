@@ -41,7 +41,7 @@ export async function saveProxies(proxies: Proxy[]): Promise<void> {
 
 export async function getSettings(): Promise<AppSettings> {
   const settings = (await getStore()).get('settings')
-  return settings ?? DEFAULT_SETTINGS
+  return { ...DEFAULT_SETTINGS, ...(settings ?? {}) }
 }
 
 export async function saveSettings(settings: AppSettings): Promise<void> {

@@ -26,9 +26,11 @@
   },
   "proxyStatus": { "unknown": "未確認", "checking": "確認中", "alive": "稼働", "dead": "停止" },
   "settings": {
-    "title": "設定", "description": "外観、言語、プロキシ確認ドメインをカスタマイズします。",
+    "title": "設定", "description": "外観とプロキシ確認の設定を行います。",
+    "sections": { "appearance": "外観", "appearanceDescription": "テーマと言語。", "checking": "プロキシ確認", "checkingDescription": "タイムアウトと確認ドメイン。" },
     "theme": "テーマ", "themeLight": "ライト", "themeDark": "ダーク", "themeSystem": "システム",
-    "language": "言語", "checkDomains": "確認ドメイン",
+    "language": "言語", "checkTimeout": "接続タイムアウト", "checkTimeoutHint": "各確認の最大待機時間。", "checkTimeoutValue": "{{value}} 秒",
+    "checkDomains": "確認ドメイン",
     "checkDomainsHint": "これらのドメインに対してプロキシをテストします。1つでも応答があれば稼働とみなします。",
     "domainPlaceholder": "example.com", "addDomain": "ドメインを追加",
     "domainRequired": "確認ドメインは1つ以上必要です", "invalidDomain": "有効なドメイン名を入力してください",
