@@ -1,0 +1,100 @@
+{
+  "app": {
+    "title": "ProxyChecker"
+  },
+  "nav": {
+    "proxies": "Прокси",
+    "settings": "Настройки"
+  },
+  "common": {
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "add": "Добавить",
+    "delete": "Удалить",
+    "none": "—",
+    "copy": "Копировать",
+    "copied": "Скопировано"
+  },
+  "proxyList": {
+    "title": "Список прокси",
+    "stats": "Всего: {{total}} · Рабочих: {{alive}} · Нерабочих: {{dead}}",
+    "checkAll": "Проверить все",
+    "addProxy": "Добавить прокси",
+    "empty": "Прокси пока нет. Нажмите «Добавить прокси», чтобы начать.",
+    "columns": {
+      "label": "Метка",
+      "protocol": "Протокол",
+      "address": "Адрес",
+      "username": "Логин",
+      "password": "Пароль",
+      "status": "Статус",
+      "latency": "Задержка",
+      "checkTarget": "Цель проверки",
+      "externalIp": "Внешний IP",
+      "checkedAt": "Проверен",
+      "createdAt": "Создан",
+      "proxyUrl": "Ссылка прокси",
+      "actions": "Действия"
+    },
+    "actions": {
+      "check": "Проверить прокси",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "copyLink": "Скопировать как ссылку"
+    },
+    "latencyMs": "{{value}} мс",
+    "authEnabled": "Авторизация",
+    "errorDetailsTitle": "Подробности ошибки",
+    "errorDomain": "Домен",
+    "errorUrl": "URL",
+    "errorMessage": "Сообщение",
+    "errorCode": "Код"
+  },
+  "proxyForm": {
+    "addTitle": "Добавить прокси",
+    "editTitle": "Редактировать прокси",
+    "label": "Метка (необязательно)",
+    "protocol": "Протокол",
+    "host": "Хост",
+    "hostPlaceholder": "192.168.1.1 или proxy.example.com",
+    "port": "Порт",
+    "username": "Логин (необязательно)",
+    "password": "Пароль (необязательно)"
+  },
+  "proxyStatus": {
+    "unknown": "Не проверен",
+    "checking": "Проверка",
+    "alive": "Работает",
+    "dead": "Не работает"
+  },
+  "settings": {
+    "title": "Настройки",
+    "description": "Настройте внешний вид, язык и домены для проверки прокси.",
+    "theme": "Тема",
+    "themeLight": "Светлая",
+    "themeDark": "Тёмная",
+    "themeSystem": "Системная",
+    "language": "Язык",
+    "checkDomains": "Домены для проверки",
+    "checkDomainsHint": "Прокси проверяются по этим доменам. Прокси считается рабочим, если отвечает хотя бы один домен.",
+    "domainPlaceholder": "example.com",
+    "addDomain": "Добавить домен",
+    "domainRequired": "Нужен хотя бы один домен для проверки",
+    "invalidDomain": "Введите корректное имя домена",
+    "domainDuplicate": "Этот домен уже есть в списке",
+    "saved": "Настройки сохранены"
+  },
+  "validation": {
+    "hostRequired": "Укажите хост",
+    "hostTooLong": "Слишком длинный хост",
+    "hostInvalid": "Введите корректный IP или имя хоста",
+    "portNumber": "Порт должен быть числом",
+    "portInteger": "Порт должен быть целым числом",
+    "portMin": "Порт не меньше 1",
+    "portMax": "Порт не больше 65535",
+    "labelMax": "Метка — не более 64 символов",
+    "usernameMax": "Слишком длинный логин",
+    "passwordMax": "Слишком длинный пароль",
+    "authPair": "Логин и пароль нужно указать оба"
+  }
+}

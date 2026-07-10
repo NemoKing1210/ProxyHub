@@ -1,0 +1,57 @@
+export type ProxyProtocol = 'http' | 'https' | 'socks4' | 'socks5'
+
+export type ProxyStatus = 'unknown' | 'checking' | 'alive' | 'dead'
+
+export interface ProxyCheckErrorDetail {
+  domain: string
+  url: string
+  message: string
+  code?: string
+}
+
+export interface Proxy {
+  id: string
+  protocol: ProxyProtocol
+  host: string
+  port: number
+  username?: string
+  password?: string
+  label?: string
+  createdAt: string
+  status: ProxyStatus
+  latencyMs?: number
+  externalIp?: string
+  checkTarget?: string
+  error?: string
+  errorDetails?: ProxyCheckErrorDetail[]
+  checkedAt?: string
+}
+
+export interface ProxyInput {
+  protocol: ProxyProtocol
+  host: string
+  port: number
+  username?: string
+  password?: string
+  label?: string
+}
+
+export interface ProxyCheckResult {
+  id: string
+  status: 'alive' | 'dead'
+  latencyMs?: number
+  externalIp?: string
+  checkTarget?: string
+  error?: string
+  errorDetails?: ProxyCheckErrorDetail[]
+  checkedAt: string
+}
+
+export const PROXY_PROTOCOLS: ProxyProtocol[] = ['http', 'https', 'socks4', 'socks5']
+
+export const DEFAULT_PORTS: Record<ProxyProtocol, number> = {
+  http: 80,
+  https: 443,
+  socks4: 1080,
+  socks5: 1080
+}

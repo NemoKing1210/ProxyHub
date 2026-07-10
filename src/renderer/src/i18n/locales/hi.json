@@ -1,0 +1,45 @@
+{
+  "app": { "title": "ProxyChecker" },
+  "nav": { "proxies": "प्रॉक्सी", "settings": "सेटिंग्स" },
+  "common": { "cancel": "रद्द करें", "save": "सहेजें", "add": "जोड़ें", "delete": "हटाएं", "none": "—", "copy": "कॉपी करें", "copied": "कॉपी हो गया" },
+  "proxyList": {
+    "title": "प्रॉक्सी सूची",
+    "stats": "कुल {{total}} · सक्रिय {{alive}} · निष्क्रिय {{dead}}",
+    "checkAll": "सभी जांचें", "addProxy": "प्रॉक्सी जोड़ें",
+    "empty": "अभी कोई प्रॉक्सी नहीं। शुरू करने के लिए \"प्रॉक्सी जोड़ें\" पर क्लिक करें।",
+    "columns": {
+      "label": "लेबल", "protocol": "प्रोटोकॉल", "address": "पता", "username": "उपयोगकर्ता नाम", "password": "पासवर्ड", "status": "स्थिति",
+      "latency": "विलंबता", "checkTarget": "जांच लक्ष्य", "externalIp": "बाहरी IP", "checkedAt": "जांच समय", "createdAt": "बनाया गया", "proxyUrl": "प्रॉक्सी URL", "actions": "क्रियाएं"
+    },
+    "actions": { "check": "प्रॉक्सी जांचें", "edit": "संपादित करें", "delete": "हटाएं", "copyLink": "लिंक के रूप में कॉपी करें" },
+    "latencyMs": "{{value}} मि.से.",
+    "authEnabled": "प्रमाणीकरण",
+    "errorDetailsTitle": "त्रुटि विवरण",
+    "errorDomain": "डोमेन",
+    "errorUrl": "URL",
+    "errorMessage": "संदेश",
+    "errorCode": "कोड"
+  },
+  "proxyForm": {
+    "addTitle": "प्रॉक्सी जोड़ें", "editTitle": "प्रॉक्सी संपादित करें", "label": "लेबल (वैकल्पिक)",
+    "protocol": "प्रोटोकॉल", "host": "होस्ट", "hostPlaceholder": "192.168.1.1 या proxy.example.com",
+    "port": "पोर्ट", "username": "उपयोगकर्ता नाम (वैकल्पिक)", "password": "पासवर्ड (वैकल्पिक)"
+  },
+  "proxyStatus": { "unknown": "जांच नहीं", "checking": "जांच हो रही है", "alive": "सक्रिय", "dead": "निष्क्रिय" },
+  "settings": {
+    "title": "सेटिंग्स", "description": "दिखावट, भाषा और प्रॉक्सी जांच लक्ष्य कस्टमाइज़ करें।",
+    "theme": "थीम", "themeLight": "हल्की", "themeDark": "गहरी", "themeSystem": "सिस्टम",
+    "language": "भाषा", "checkDomains": "जांच डोमेन",
+    "checkDomainsHint": "प्रॉक्सी इन डोमेन के विरुद्ध जांचे जाते हैं। कम से कम एक डोमेन प्रतिक्रिया दे तो प्रॉक्सी सक्रिय माना जाता है।",
+    "domainPlaceholder": "example.com", "addDomain": "डोमेन जोड़ें",
+    "domainRequired": "कम से कम एक जांच डोमेन आवश्यक है", "invalidDomain": "मान्य डोमेन नाम दर्ज करें",
+    "domainDuplicate": "यह डोमेन पहले से सूची में है", "saved": "सेटिंग्स सहेजी गईं"
+  },
+  "validation": {
+    "hostRequired": "होस्ट आवश्यक है", "hostTooLong": "होस्ट बहुत लंबा है",
+    "hostInvalid": "मान्य IP या होस्टनाम दर्ज करें", "portNumber": "पोर्ट संख्या होनी चाहिए",
+    "portInteger": "पोर्ट पूर्णांक होना चाहिए", "portMin": "पोर्ट कम से कम 1", "portMax": "पोर्ट अधिकतम 65535",
+    "labelMax": "लेबल अधिकतम 64 अक्षर", "usernameMax": "उपयोगकर्ता नाम बहुत लंबा",
+    "passwordMax": "पासवर्ड बहुत लंबा", "authPair": "उपयोगकर्ता नाम और पासवर्ड दोनों आवश्यक हैं"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "app": { "title": "ProxyChecker" },
+  "nav": { "proxies": "代理", "settings": "设置" },
+  "common": { "cancel": "取消", "save": "保存", "add": "添加", "delete": "删除", "none": "—", "copy": "复制", "copied": "已复制" },
+  "proxyList": {
+    "title": "代理列表",
+    "stats": "共 {{total}} 个 · 可用 {{alive}} · 不可用 {{dead}}",
+    "checkAll": "全部检测",
+    "addProxy": "添加代理",
+    "empty": "暂无代理。点击「添加代理」开始。",
+    "columns": {
+      "label": "标签", "protocol": "协议", "address": "地址", "username": "用户名", "password": "密码", "status": "状态",
+      "latency": "延迟", "checkTarget": "检测目标", "externalIp": "外部 IP", "checkedAt": "检测时间", "createdAt": "创建时间", "proxyUrl": "代理链接", "actions": "操作"
+    },
+    "actions": { "check": "检测代理", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接" },
+    "latencyMs": "{{value}} 毫秒",
+    "authEnabled": "认证",
+    "errorDetailsTitle": "错误详情",
+    "errorDomain": "域名",
+    "errorUrl": "URL",
+    "errorMessage": "消息",
+    "errorCode": "代码"
+  },
+  "proxyForm": {
+    "addTitle": "添加代理", "editTitle": "编辑代理", "label": "标签（可选）", "protocol": "协议",
+    "host": "主机", "hostPlaceholder": "192.168.1.1 或 proxy.example.com", "port": "端口",
+    "username": "用户名（可选）", "password": "密码（可选）"
+  },
+  "proxyStatus": { "unknown": "未检测", "checking": "检测中", "alive": "可用", "dead": "不可用" },
+  "settings": {
+    "title": "设置", "description": "自定义外观、语言和代理检测目标。",
+    "theme": "主题", "themeLight": "浅色", "themeDark": "深色", "themeSystem": "跟随系统",
+    "language": "语言", "checkDomains": "检测域名",
+    "checkDomainsHint": "代理将针对这些域名进行检测。只要有一个域名响应，即视为可用。",
+    "domainPlaceholder": "example.com", "addDomain": "添加域名",
+    "domainRequired": "至少需要一个检测域名", "invalidDomain": "请输入有效的域名",
+    "domainDuplicate": "该域名已在列表中", "saved": "设置已保存"
+  },
+  "validation": {
+    "hostRequired": "请输入主机", "hostTooLong": "主机名过长", "hostInvalid": "请输入有效的 IP 或主机名",
+    "portNumber": "端口必须是数字", "portInteger": "端口必须是整数",
+    "portMin": "端口最小为 1", "portMax": "端口最大为 65535",
+    "labelMax": "标签最多 64 个字符", "usernameMax": "用户名过长", "passwordMax": "密码过长",
+    "authPair": "用户名和密码必须同时填写"
+  }
+}

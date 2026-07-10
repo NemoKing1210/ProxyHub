@@ -1,0 +1,44 @@
+{
+  "app": { "title": "ProxyChecker" },
+  "nav": { "proxies": "Proxies", "settings": "Configurações" },
+  "common": { "cancel": "Cancelar", "save": "Salvar", "add": "Adicionar", "delete": "Excluir", "none": "—", "copy": "Copiar", "copied": "Copiado" },
+  "proxyList": {
+    "title": "Lista de proxies",
+    "stats": "{{total}} no total · {{alive}} ativos · {{dead}} inativos",
+    "checkAll": "Verificar todos", "addProxy": "Adicionar proxy",
+    "empty": "Nenhum proxy ainda. Clique em \"Adicionar proxy\" para começar.",
+    "columns": {
+      "label": "Rótulo", "protocol": "Protocolo", "address": "Endereço", "username": "Usuário", "password": "Senha", "status": "Status",
+      "latency": "Latência", "checkTarget": "Alvo", "externalIp": "IP externo", "checkedAt": "Verificado em", "createdAt": "Criado em", "proxyUrl": "URL do proxy", "actions": "Ações"
+    },
+    "actions": { "check": "Verificar proxy", "edit": "Editar", "delete": "Excluir", "copyLink": "Copiar como link" },
+    "latencyMs": "{{value}} ms",
+    "authEnabled": "Auth",
+    "errorDomain": "Domínio",
+    "errorUrl": "URL",
+    "errorMessage": "Mensagem",
+    "errorCode": "Código"
+  },
+  "proxyForm": {
+    "addTitle": "Adicionar proxy", "editTitle": "Editar proxy", "label": "Rótulo (opcional)",
+    "protocol": "Protocolo", "host": "Host", "hostPlaceholder": "192.168.1.1 ou proxy.example.com",
+    "port": "Porta", "username": "Usuário (opcional)", "password": "Senha (opcional)"
+  },
+  "proxyStatus": { "unknown": "Não verificado", "checking": "Verificando", "alive": "Ativo", "dead": "Inativo" },
+  "settings": {
+    "title": "Configurações", "description": "Personalize a aparência, o idioma e os domínios de verificação.",
+    "theme": "Tema", "themeLight": "Claro", "themeDark": "Escuro", "themeSystem": "Sistema",
+    "language": "Idioma", "checkDomains": "Domínios de verificação",
+    "checkDomainsHint": "Os proxies são testados nesses domínios. Um proxy é considerado ativo se pelo menos um responder.",
+    "domainPlaceholder": "example.com", "addDomain": "Adicionar domínio",
+    "domainRequired": "É necessário pelo menos um domínio", "invalidDomain": "Digite um domínio válido",
+    "domainDuplicate": "Este domínio já está na lista", "saved": "Configurações salvas"
+  },
+  "validation": {
+    "hostRequired": "O host é obrigatório", "hostTooLong": "Host muito longo",
+    "hostInvalid": "Digite um IP ou nome de host válido", "portNumber": "A porta deve ser um número",
+    "portInteger": "A porta deve ser um inteiro", "portMin": "A porta mínima é 1", "portMax": "A porta máxima é 65535",
+    "labelMax": "O rótulo deve ter no máximo 64 caracteres", "usernameMax": "Usuário muito longo",
+    "passwordMax": "Senha muito longa", "authPair": "Usuário e senha devem ser informados juntos"
+  }
+}

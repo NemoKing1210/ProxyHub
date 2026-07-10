@@ -1,0 +1,100 @@
+{
+  "app": {
+    "title": "ProxyChecker"
+  },
+  "nav": {
+    "proxies": "Proxies",
+    "settings": "Settings"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "add": "Add",
+    "delete": "Delete",
+    "none": "—",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "proxyList": {
+    "title": "Proxy list",
+    "stats": "{{total}} total · {{alive}} alive · {{dead}} dead",
+    "checkAll": "Check all",
+    "addProxy": "Add proxy",
+    "empty": "No proxies yet. Click \"Add proxy\" to get started.",
+    "columns": {
+      "label": "Label",
+      "protocol": "Protocol",
+      "address": "Address",
+      "username": "Username",
+      "password": "Password",
+      "status": "Status",
+      "latency": "Latency",
+      "checkTarget": "Check target",
+      "externalIp": "External IP",
+      "checkedAt": "Checked at",
+      "createdAt": "Created at",
+      "proxyUrl": "Proxy URL",
+      "actions": "Actions"
+    },
+    "actions": {
+      "check": "Check proxy",
+      "edit": "Edit proxy",
+      "delete": "Delete proxy",
+      "copyLink": "Copy as link"
+    },
+    "latencyMs": "{{value}} ms",
+    "authEnabled": "Auth",
+    "errorDetailsTitle": "Error details",
+    "errorDomain": "Domain",
+    "errorUrl": "URL",
+    "errorMessage": "Message",
+    "errorCode": "Code"
+  },
+  "proxyForm": {
+    "addTitle": "Add proxy",
+    "editTitle": "Edit proxy",
+    "label": "Label (optional)",
+    "protocol": "Protocol",
+    "host": "Host",
+    "hostPlaceholder": "192.168.1.1 or proxy.example.com",
+    "port": "Port",
+    "username": "Username (optional)",
+    "password": "Password (optional)"
+  },
+  "proxyStatus": {
+    "unknown": "Not checked",
+    "checking": "Checking",
+    "alive": "Alive",
+    "dead": "Dead"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Customize appearance, language, and proxy check targets.",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language",
+    "checkDomains": "Check domains",
+    "checkDomainsHint": "Proxies are tested against these domains. A proxy is considered alive if at least one domain responds.",
+    "domainPlaceholder": "example.com",
+    "addDomain": "Add domain",
+    "domainRequired": "At least one check domain is required",
+    "invalidDomain": "Enter a valid domain name",
+    "domainDuplicate": "This domain is already in the list",
+    "saved": "Settings saved"
+  },
+  "validation": {
+    "hostRequired": "Host is required",
+    "hostTooLong": "Host is too long",
+    "hostInvalid": "Enter a valid IP address or hostname",
+    "portNumber": "Port must be a number",
+    "portInteger": "Port must be an integer",
+    "portMin": "Port must be at least 1",
+    "portMax": "Port must be at most 65535",
+    "labelMax": "Label must be 64 characters or less",
+    "usernameMax": "Username is too long",
+    "passwordMax": "Password is too long",
+    "authPair": "Username and password must both be provided"
+  }
+}

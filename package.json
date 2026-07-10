@@ -41,8 +41,19 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.10",
+    "@hookform/resolvers": "^5.4.0",
     "@mui/icons-material": "^9.2.0",
-    "@mui/material": "^9.2.0"
+    "@mui/material": "^9.2.0",
+    "electron-store": "^11.0.2",
+    "http-proxy-agent": "^9.1.0",
+    "https-proxy-agent": "^9.1.0",
+    "i18next": "^26.3.6",
+    "react-hook-form": "^7.81.0",
+    "react-i18next": "^17.0.9",
+    "react-router-dom": "^7.18.1",
+    "socks-proxy-agent": "^10.1.0",
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

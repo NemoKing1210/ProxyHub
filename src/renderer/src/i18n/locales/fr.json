@@ -1,0 +1,44 @@
+{
+  "app": { "title": "ProxyChecker" },
+  "nav": { "proxies": "Proxies", "settings": "Paramètres" },
+  "common": { "cancel": "Annuler", "save": "Enregistrer", "add": "Ajouter", "delete": "Supprimer", "none": "—", "copy": "Copier", "copied": "Copié" },
+  "proxyList": {
+    "title": "Liste des proxies",
+    "stats": "{{total}} au total · {{alive}} actifs · {{dead}} inactifs",
+    "checkAll": "Tout vérifier", "addProxy": "Ajouter un proxy",
+    "empty": "Aucun proxy pour l'instant. Cliquez sur « Ajouter un proxy » pour commencer.",
+    "columns": {
+      "label": "Libellé", "protocol": "Protocole", "address": "Adresse", "username": "Nom d'utilisateur", "password": "Mot de passe", "status": "Statut",
+      "latency": "Latence", "checkTarget": "Cible", "externalIp": "IP externe", "checkedAt": "Vérifié le", "createdAt": "Créé le", "proxyUrl": "URL du proxy", "actions": "Actions"
+    },
+    "actions": { "check": "Vérifier le proxy", "edit": "Modifier", "delete": "Supprimer", "copyLink": "Copier comme lien" },
+    "latencyMs": "{{value}} ms",
+    "authEnabled": "Auth",
+    "errorDomain": "Domaine",
+    "errorUrl": "URL",
+    "errorMessage": "Message",
+    "errorCode": "Code"
+  },
+  "proxyForm": {
+    "addTitle": "Ajouter un proxy", "editTitle": "Modifier le proxy", "label": "Libellé (optionnel)",
+    "protocol": "Protocole", "host": "Hôte", "hostPlaceholder": "192.168.1.1 ou proxy.example.com",
+    "port": "Port", "username": "Nom d'utilisateur (optionnel)", "password": "Mot de passe (optionnel)"
+  },
+  "proxyStatus": { "unknown": "Non vérifié", "checking": "Vérification", "alive": "Actif", "dead": "Inactif" },
+  "settings": {
+    "title": "Paramètres", "description": "Personnalisez l'apparence, la langue et les domaines de vérification.",
+    "theme": "Thème", "themeLight": "Clair", "themeDark": "Sombre", "themeSystem": "Système",
+    "language": "Langue", "checkDomains": "Domaines de vérification",
+    "checkDomainsHint": "Les proxies sont testés sur ces domaines. Un proxy est actif si au moins un domaine répond.",
+    "domainPlaceholder": "example.com", "addDomain": "Ajouter un domaine",
+    "domainRequired": "Au moins un domaine est requis", "invalidDomain": "Entrez un nom de domaine valide",
+    "domainDuplicate": "Ce domaine est déjà dans la liste", "saved": "Paramètres enregistrés"
+  },
+  "validation": {
+    "hostRequired": "L'hôte est requis", "hostTooLong": "Hôte trop long",
+    "hostInvalid": "Entrez une IP ou un nom d'hôte valide", "portNumber": "Le port doit être un nombre",
+    "portInteger": "Le port doit être un entier", "portMin": "Le port minimum est 1", "portMax": "Le port maximum est 65535",
+    "labelMax": "Le libellé doit faire au maximum 64 caractères", "usernameMax": "Nom d'utilisateur trop long",
+    "passwordMax": "Mot de passe trop long", "authPair": "Le nom d'utilisateur et le mot de passe doivent être fournis ensemble"
+  }
+}
