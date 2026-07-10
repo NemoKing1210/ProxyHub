@@ -8,6 +8,12 @@ import { getProxies, getSettings, saveProxies } from './app-store'
 import { checkAllProxies, checkProxy } from './proxy-checker'
 import { refreshTrayContextMenu, refreshTrayTooltip } from './tray'
 
+const checkingProxyIds = new Set<string>()
+
+export function isTrayProxyChecking(proxyId: string): boolean {
+  return checkingProxyIds.has(proxyId)
+}
+
 function broadcastProgress(progress: ProxyCheckProgress): void {
   for (const window of BrowserWindow.getAllWindows()) {
     if (!window.isDestroyed()) {
@@ -82,15 +88,22 @@ async function runTrayCheckAll(proxies: Proxy[]): Promise<void> {
 }
 
 export async function checkTrayProxyById(proxyId: string): Promise<void> {
+  if (checkingProxyIds.has(proxyId)) {
+    return
+  }
+
   const proxies = await getProxies()
   const proxy = proxies.find((item) => item.id === proxyId)
 
-  if (!proxy) {
+  if (!proxy || proxy.isEnabled === false) {
     return
   }
 
   const settings = await getSettings()
   const checkDomains = getEnabledCheckDomains(settings.checkDomains)
+
+  checkingProxyIds.add(proxyId)
+  void refreshTrayContextMenu()
 
   try {
     const result = await checkProxy(proxy, checkDomains, settings.checkTimeoutMs, broadcastProgress)
@@ -99,6 +112,9 @@ export async function checkTrayProxyById(proxyId: string): Promise<void> {
     const failed = finalizeIncompleteProxy(proxy)
     const updated = proxies.map((item) => (item.id === proxyId ? failed : item))
     await saveProxies(updated)
+    notifyTrayDataChanged()
+  } finally {
+    checkingProxyIds.delete(proxyId)
     notifyTrayDataChanged()
   }
 }

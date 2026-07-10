@@ -12,6 +12,7 @@ export function buildProxySearchHaystack(proxy: Proxy): string {
     `${proxy.host}:${proxy.port}`,
     proxy.protocol,
     proxy.username,
+    proxy.secret,
     proxy.countryCode,
     country?.name,
     proxy.city,

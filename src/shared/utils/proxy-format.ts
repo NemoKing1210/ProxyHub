@@ -1,11 +1,16 @@
 import type { Proxy, ProxyInput, ProxyProtocol } from '../types/proxy'
 import { PROXY_PROTOCOLS } from '../types/proxy'
 
-type ProxyLike = Pick<Proxy, 'protocol' | 'host' | 'port' | 'username' | 'password'>
+type ProxyLike = Pick<Proxy, 'protocol' | 'host' | 'port' | 'username' | 'password' | 'secret'>
 
-export type ParsedProxyUrl = Pick<ProxyInput, 'protocol' | 'host' | 'port' | 'username' | 'password'>
+export type ParsedProxyUrl = Pick<
+  ProxyInput,
+  'protocol' | 'host' | 'port' | 'username' | 'password' | 'secret'
+>
 
-const PROTOCOL_PREFIX_PATTERN = /^(https?|socks4|socks5):\/\//i
+const PROTOCOL_PREFIX_PATTERN = /^(https?|socks4|socks5|mtproto):\/\//i
+const TG_PROXY_PATTERN = /^tg:\/\/proxy\b/i
+const TELEGRAM_PROXY_PATTERN = /^https?:\/\/t\.me\/proxy\b/i
 
 function decodeAuthComponent(value: string): string {
   try {
@@ -36,8 +41,100 @@ function parseProtocol(value: string): ProxyProtocol | undefined {
   return PROXY_PROTOCOLS.includes(protocol as ProxyProtocol) ? (protocol as ProxyProtocol) : undefined
 }
 
+export function isValidMtprotoSecret(secret: string): boolean {
+  const trimmed = secret.trim()
+
+  if (!trimmed || !/^[0-9a-fA-F]+$/.test(trimmed)) {
+    return false
+  }
+
+  const lower = trimmed.toLowerCase()
+
+  if (lower.startsWith('ee')) {
+    return lower.length >= 34
+  }
+
+  if (lower.startsWith('dd')) {
+    return lower.length >= 34
+  }
+
+  return lower.length >= 32 && lower.length % 2 === 0
+}
+
+function normalizeMtprotoSecret(secret: string): string {
+  return secret.trim().toLowerCase()
+}
+
+function parseMtprotoLink(input: string): ParsedProxyUrl | null {
+  const trimmed = input.trim()
+
+  if (!trimmed) {
+    return null
+  }
+
+  let server: string | null = null
+  let portValue: string | null = null
+  let secret: string | null = null
+
+  if (TG_PROXY_PATTERN.test(trimmed) || TELEGRAM_PROXY_PATTERN.test(trimmed)) {
+    try {
+      const normalized = TG_PROXY_PATTERN.test(trimmed)
+        ? trimmed.replace(/^tg:\/\//i, 'https://')
+        : trimmed
+      const url = new URL(normalized)
+
+      server = url.searchParams.get('server')
+      portValue = url.searchParams.get('port')
+      secret = url.searchParams.get('secret')
+    } catch {
+      return null
+    }
+  } else if (/^mtproto:\/\//i.test(trimmed)) {
+    try {
+      const url = new URL(trimmed.replace(/^mtproto:\/\//i, 'https://'))
+
+      server = url.searchParams.get('server') ?? url.hostname
+      portValue = url.searchParams.get('port') ?? (url.port || null)
+      secret = url.searchParams.get('secret')
+    } catch {
+      return null
+    }
+  } else {
+    return null
+  }
+
+  if (!server || !portValue || !secret) {
+    return null
+  }
+
+  const host = server.trim()
+  const port = Number(portValue)
+  const normalizedSecret = normalizeMtprotoSecret(secret)
+
+  if (
+    !host ||
+    !Number.isInteger(port) ||
+    port < 1 ||
+    port > 65535 ||
+    !isValidProxyHost(host) ||
+    !isValidMtprotoSecret(normalizedSecret)
+  ) {
+    return null
+  }
+
+  return {
+    protocol: 'mtproto',
+    host,
+    port,
+    secret: normalizedSecret
+  }
+}
+
 /**
  * Parses a proxy URL or address string:
+ * - tg://proxy?server=host&port=443&secret=...
+ * - https://t.me/proxy?server=host&port=443&secret=...
+ * - mtproto://host:443?secret=...
  * - socks5://user:pass@host:1080
  * - user:pass@host:1080
  * - http://host:8080
@@ -48,6 +145,12 @@ export function parseProxyUrl(input: string): ParsedProxyUrl | null {
 
   if (!trimmed) {
     return null
+  }
+
+  const mtprotoParsed = parseMtprotoLink(trimmed)
+
+  if (mtprotoParsed) {
+    return mtprotoParsed
   }
 
   let protocol: ProxyProtocol = 'http'
@@ -64,6 +167,41 @@ export function parseProxyUrl(input: string): ParsedProxyUrl | null {
 
     protocol = parsedProtocol
     remainder = remainder.slice(protocolMatch[0].length)
+
+    if (protocol === 'mtproto') {
+      try {
+        const url = new URL(`https://${remainder}`)
+        const host = url.searchParams.get('server') ?? url.hostname
+        const portValue = url.searchParams.get('port') ?? url.port
+        const secret = url.searchParams.get('secret')
+
+        if (!host || !portValue || !secret) {
+          return null
+        }
+
+        const port = Number(portValue)
+        const normalizedSecret = normalizeMtprotoSecret(secret)
+
+        if (
+          !Number.isInteger(port) ||
+          port < 1 ||
+          port > 65535 ||
+          !isValidProxyHost(host.trim()) ||
+          !isValidMtprotoSecret(normalizedSecret)
+        ) {
+          return null
+        }
+
+        return {
+          protocol: 'mtproto',
+          host: host.trim(),
+          port,
+          secret: normalizedSecret
+        }
+      } catch {
+        return null
+      }
+    }
   }
 
   remainder = remainder.split(/[/?#]/, 1)[0]?.trim() ?? ''
@@ -112,7 +250,25 @@ export function parseProxyUrl(input: string): ParsedProxyUrl | null {
   }
 }
 
+export function buildMtprotoProxyUrl(proxy: Pick<Proxy, 'host' | 'port' | 'secret'>): string {
+  if (!proxy.secret) {
+    return `mtproto://${proxy.host}:${proxy.port}`
+  }
+
+  const params = new URLSearchParams({
+    server: proxy.host,
+    port: String(proxy.port),
+    secret: proxy.secret
+  })
+
+  return `tg://proxy?${params.toString()}`
+}
+
 export function buildProxyUrl(proxy: ProxyLike): string {
+  if (proxy.protocol === 'mtproto') {
+    return buildMtprotoProxyUrl(proxy)
+  }
+
   const auth =
     proxy.username && proxy.password
       ? `${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password)}@`
@@ -123,4 +279,8 @@ export function buildProxyUrl(proxy: ProxyLike): string {
 
 export function formatProxyAddress(proxy: Pick<Proxy, 'host' | 'port'>): string {
   return `${proxy.host}:${proxy.port}`
+}
+
+export function skipsDomainChecks(protocol: ProxyProtocol): boolean {
+  return protocol === 'mtproto'
 }

@@ -3,6 +3,7 @@ import {
   MAX_LATENCY_FILTER_MIN_MS
 } from './proxy-list-view.constants'
 import type { ProxyAnonymityLevel, ProxyProtocol } from './proxy'
+import { PROXY_PROTOCOLS } from './proxy'
 
 export type ProxyFavoriteFilter = 'all' | 'favorites' | 'nonFavorites'
 
@@ -62,7 +63,7 @@ export const DEFAULT_PROXY_LIST_VIEW: ProxyListViewState = {
 
 const FAVORITE_FILTERS: ProxyFavoriteFilter[] = ['all', 'favorites', 'nonFavorites']
 const STATUS_FILTERS: ProxyStatusFilter[] = ['all', 'alive', 'dead']
-const PROTOCOLS: ProxyProtocol[] = ['http', 'https', 'socks4', 'socks5']
+const PROTOCOLS: ProxyProtocol[] = PROXY_PROTOCOLS
 const ANONYMITY_LEVELS: ProxyAnonymityLevel[] = ['elite', 'anonymous', 'transparent']
 
 function normalizeFavoriteFilter(value: unknown): ProxyFavoriteFilter {

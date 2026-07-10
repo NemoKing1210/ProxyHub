@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.21.0] - 2026-07-10
+
+### Added
+
+- MTProto proxy support: `tg://proxy` and `t.me/proxy` link parsing, secret field in the form, and TCP-only availability checks (domain checks are skipped for this protocol)
+- Per-proxy check action in the tray menu favorites list
+
 ## [1.20.0] - 2026-07-10
 
 ### Added

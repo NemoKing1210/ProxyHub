@@ -5,12 +5,13 @@ import { getCheckDomainNames } from '../../../shared/types/settings'
 import type { Proxy } from '../../../shared/types/proxy'
 import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_FORM_VALUES } from '../../../shared/types/proxy'
 import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
+import { isValidMtprotoSecret } from '../../../shared/utils/proxy-format'
 
 const countryCodePattern = /^[A-Za-z]{2}$/
 
 export interface ProxyFormSchemaContext {
   existingProxies: Array<
-    Pick<Proxy, 'id' | 'protocol' | 'host' | 'port' | 'username' | 'password'>
+    Pick<Proxy, 'id' | 'protocol' | 'host' | 'port' | 'username' | 'password' | 'secret'>
   >
   editingProxyId?: string
 }
@@ -24,7 +25,7 @@ export function createProxyFormSchema(
       label: z.string().trim().max(64, t('validation.labelMax')).optional(),
       icon: z.enum(PROXY_ICON_FORM_VALUES),
       color: z.enum(PROXY_COLOR_IDS),
-      protocol: z.enum(['http', 'https', 'socks4', 'socks5']),
+      protocol: z.enum(['http', 'https', 'socks4', 'socks5', 'mtproto']),
       host: z
         .string()
         .trim()
@@ -49,6 +50,7 @@ export function createProxyFormSchema(
         .max(65535, t('validation.portMax')),
       username: z.string().trim().max(128, t('validation.usernameMax')).optional(),
       password: z.string().max(128, t('validation.passwordMax')).optional(),
+      secret: z.string().trim().max(512, t('validation.secretMax')).optional(),
       countryCode: z
         .string()
         .trim()
@@ -60,15 +62,49 @@ export function createProxyFormSchema(
         .optional()
     })
     .superRefine((data, ctx) => {
+      const isMtproto = data.protocol === 'mtproto'
       const hasUsername = Boolean(data.username)
       const hasPassword = Boolean(data.password)
+      const hasSecret = Boolean(data.secret)
 
-      if (hasUsername !== hasPassword) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: t('validation.authPair'),
-          path: hasUsername ? ['password'] : ['username']
-        })
+      if (isMtproto) {
+        if (!hasSecret) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('validation.secretRequired'),
+            path: ['secret']
+          })
+        } else if (!isValidMtprotoSecret(data.secret ?? '')) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('validation.secretInvalid'),
+            path: ['secret']
+          })
+        }
+
+        if (hasUsername || hasPassword) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('validation.mtprotoNoAuth'),
+            path: ['username']
+          })
+        }
+      } else {
+        if (hasSecret) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('validation.secretNotAllowed'),
+            path: ['secret']
+          })
+        }
+
+        if (hasUsername !== hasPassword) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t('validation.authPair'),
+            path: hasUsername ? ['password'] : ['username']
+          })
+        }
       }
 
       const { existingProxies, editingProxyId } = getContext()
@@ -83,7 +119,8 @@ export function createProxyFormSchema(
           host: data.host.trim(),
           port: data.port,
           username: data.username?.trim() || undefined,
-          password: data.password || undefined
+          password: data.password || undefined,
+          secret: data.secret?.trim() || undefined
         },
         existingProxies,
         editingProxyId

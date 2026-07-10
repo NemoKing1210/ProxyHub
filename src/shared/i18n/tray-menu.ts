@@ -5,6 +5,7 @@ export interface TrayMenuStrings {
   openApp: string
   checkAll: string
   checkAllFavorites: string
+  checkProxy: string
   quit: string
   noFavorites: string
   statusAlive: string
@@ -34,6 +35,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'Open ProxyChecker',
     checkAll: 'Check all',
     checkAllFavorites: 'Check all favorites',
+    checkProxy: 'Check',
     quit: 'Quit',
     noFavorites: 'No favorite proxies',
     statusAlive: 'alive',
@@ -49,6 +51,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'Открыть ProxyChecker',
     checkAll: 'Проверить все',
     checkAllFavorites: 'Проверить все избранные',
+    checkProxy: 'Проверить',
     quit: 'Закрыть приложение',
     noFavorites: 'Нет избранных прокси',
     statusAlive: 'рабочий',
@@ -64,6 +67,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'Відкрити ProxyChecker',
     checkAll: 'Перевірити всі',
     checkAllFavorites: 'Перевірити всі обрані',
+    checkProxy: 'Перевірити',
     quit: 'Закрити програму',
     noFavorites: 'Немає обраних проксі',
     statusAlive: 'робочий',
@@ -79,6 +83,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'ProxyChecker öffnen',
     checkAll: 'Alle prüfen',
     checkAllFavorites: 'Alle Favoriten prüfen',
+    checkProxy: 'Prüfen',
     quit: 'Beenden',
     noFavorites: 'Keine Favoriten',
     statusAlive: 'aktiv',
@@ -94,6 +99,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'Ouvrir ProxyChecker',
     checkAll: 'Tout vérifier',
     checkAllFavorites: 'Vérifier tous les favoris',
+    checkProxy: 'Vérifier',
     quit: 'Quitter',
     noFavorites: 'Aucun favori',
     statusAlive: 'actif',
@@ -113,6 +119,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'Abrir ProxyChecker',
     checkAll: 'Comprobar todos',
     checkAllFavorites: 'Comprobar todos los favoritos',
+    checkProxy: 'Comprobar',
     quit: 'Salir',
     noFavorites: 'Sin favoritos',
     statusAlive: 'activo',
@@ -132,6 +139,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'Abrir ProxyChecker',
     checkAll: 'Verificar todos',
     checkAllFavorites: 'Verificar todos os favoritos',
+    checkProxy: 'Verificar',
     quit: 'Sair',
     noFavorites: 'Sem favoritos',
     statusAlive: 'ativo',
@@ -151,6 +159,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: '打开 ProxyChecker',
     checkAll: '全部检测',
     checkAllFavorites: '检查所有收藏',
+    checkProxy: '检查',
     quit: '退出',
     noFavorites: '没有收藏的代理',
     statusAlive: '可用',
@@ -166,6 +175,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'ProxyChecker を開く',
     checkAll: 'すべて確認',
     checkAllFavorites: 'お気に入りをすべて確認',
+    checkProxy: '確認',
     quit: '終了',
     noFavorites: 'お気に入りなし',
     statusAlive: '稼働',
@@ -181,6 +191,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'ProxyChecker खोलें',
     checkAll: 'सभी जांचें',
     checkAllFavorites: 'सभी पसंदीदा जांचें',
+    checkProxy: 'जांचें',
     quit: 'बंद करें',
     noFavorites: 'कोई पसंदीदा नहीं',
     statusAlive: 'सक्रिय',
@@ -196,6 +207,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     openApp: 'فتح ProxyChecker',
     checkAll: 'فحص الكل',
     checkAllFavorites: 'فحص جميع المفضلة',
+    checkProxy: 'فحص',
     quit: 'إغلاق التطبيق',
     noFavorites: 'لا توجد بروكسيات مفضلة',
     statusAlive: 'نشط',

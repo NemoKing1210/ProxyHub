@@ -1,4 +1,4 @@
-export type ProxyProtocol = 'http' | 'https' | 'socks4' | 'socks5'
+export type ProxyProtocol = 'http' | 'https' | 'socks4' | 'socks5' | 'mtproto'
 
 export type ProxyAnonymityLevel = 'elite' | 'anonymous' | 'transparent'
 
@@ -83,6 +83,7 @@ export interface Proxy {
   port: number
   username?: string
   password?: string
+  secret?: string
   label?: string
   icon?: ProxyIconId
   color?: ProxyColorId
@@ -109,6 +110,7 @@ export interface ProxyInput {
   port: number
   username?: string
   password?: string
+  secret?: string
   label?: string
   icon?: ProxyIconId
   color?: ProxyColorId
@@ -141,7 +143,7 @@ export type ProxyCheckProgress =
   | { phase: 'domain'; proxyId: string; domainCheck: ProxyDomainCheckResult }
   | { phase: 'complete'; result: ProxyCheckResult }
 
-export const PROXY_PROTOCOLS: ProxyProtocol[] = ['http', 'https', 'socks4', 'socks5']
+export const PROXY_PROTOCOLS: ProxyProtocol[] = ['http', 'https', 'socks4', 'socks5', 'mtproto']
 
 export const PROXY_ANONYMITY_LEVELS: ProxyAnonymityLevel[] = ['elite', 'anonymous', 'transparent']
 
@@ -149,5 +151,6 @@ export const DEFAULT_PORTS: Record<ProxyProtocol, number> = {
   http: 80,
   https: 443,
   socks4: 1080,
-  socks5: 1080
+  socks5: 1080,
+  mtproto: 443
 }

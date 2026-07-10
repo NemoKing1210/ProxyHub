@@ -21,7 +21,8 @@ const PROTOCOL_ORDER: Record<ProxyProtocol, number> = {
   http: 0,
   https: 1,
   socks4: 2,
-  socks5: 3
+  socks5: 3,
+  mtproto: 4
 }
 
 function applyDirection(result: number, direction: ProxySortDirection): number {

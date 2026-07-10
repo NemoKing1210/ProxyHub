@@ -16,7 +16,12 @@ import { alpha, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
 
-const QUICK_FILL_EXAMPLES = ['host:port', 'user:pass@host:port', 'socks5://host:port'] as const
+const QUICK_FILL_EXAMPLES = [
+  'host:port',
+  'user:pass@host:port',
+  'socks5://host:port',
+  'tg://proxy?server=host&port=443&secret=...'
+] as const
 
 interface ProxyQuickFillPanelProps {
   value: string

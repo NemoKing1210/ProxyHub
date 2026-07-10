@@ -2,7 +2,7 @@ import type { Proxy, ProxyInput } from '../types/proxy'
 
 export type ProxyConnectionIdentity = Pick<
   ProxyInput,
-  'protocol' | 'host' | 'port' | 'username' | 'password'
+  'protocol' | 'host' | 'port' | 'username' | 'password' | 'secret'
 >
 
 export function normalizeProxyConnection(input: ProxyConnectionIdentity): {
@@ -11,13 +11,15 @@ export function normalizeProxyConnection(input: ProxyConnectionIdentity): {
   port: number
   username: string
   password: string
+  secret: string
 } {
   return {
     protocol: input.protocol,
     host: input.host.trim().toLowerCase(),
     port: input.port,
     username: (input.username ?? '').trim(),
-    password: input.password ?? ''
+    password: input.password ?? '',
+    secret: (input.secret ?? '').trim().toLowerCase()
   }
 }
 
@@ -33,7 +35,8 @@ export function isSameProxyConnection(
     normalizedLeft.host === normalizedRight.host &&
     normalizedLeft.port === normalizedRight.port &&
     normalizedLeft.username === normalizedRight.username &&
-    normalizedLeft.password === normalizedRight.password
+    normalizedLeft.password === normalizedRight.password &&
+    normalizedLeft.secret === normalizedRight.secret
   )
 }
 

@@ -12,6 +12,7 @@ ProxyChecker helps you validate proxy servers quickly from a single desktop inte
 - **HTTPS** — encrypted HTTP proxies
 - **SOCKS4** — SOCKS version 4
 - **SOCKS5** — SOCKS version 5 with optional authentication
+- **MTProto** — Telegram MTProto proxies (server, port, secret)
 
 ### Key capabilities (planned)
 

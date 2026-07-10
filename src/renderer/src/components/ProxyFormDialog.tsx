@@ -83,6 +83,7 @@ function ProxyFormDialog({
     port: DEFAULT_PORTS.http,
     username: '',
     password: '',
+    secret: '',
     countryCode: '',
     city: '',
     anonymityLevel: ''
@@ -102,6 +103,7 @@ function ProxyFormDialog({
   })
 
   const protocol = watch('protocol')
+  const isMtproto = protocol === 'mtproto'
   const previewIcon = watch('icon')
   const previewColor = watch('color')
   const previewLabel = watch('label')
@@ -142,7 +144,7 @@ function ProxyFormDialog({
       setConnectionExpanded(true)
     }
 
-    if (errors.username || errors.password) {
+    if (errors.username || errors.password || errors.secret) {
       setAuthExpanded(true)
     }
 
@@ -158,6 +160,7 @@ function ProxyFormDialog({
     errors.port,
     errors.username,
     errors.password,
+    errors.secret,
     errors.countryCode,
     errors.city,
     errors.anonymityLevel
@@ -176,6 +179,7 @@ function ProxyFormDialog({
         port: initialProxy.port,
         username: initialProxy.username ?? '',
         password: initialProxy.password ?? '',
+        secret: initialProxy.secret ?? '',
         countryCode: initialProxy.countryCode ?? '',
         city: initialProxy.city ?? '',
         anonymityLevel: initialProxy.anonymityLevel ?? ''
@@ -197,6 +201,18 @@ function ProxyFormDialog({
     }
   }, [protocol, mode, open, setValue])
 
+  useEffect(() => {
+    if (!open) return
+
+    if (isMtproto) {
+      setValue('username', '')
+      setValue('password', '')
+      return
+    }
+
+    setValue('secret', '')
+  }, [isMtproto, open, setValue])
+
   const applyQuickFill = useCallback(() => {
     const parsed = parseProxyUrl(quickFillValue)
 
@@ -211,8 +227,11 @@ function ProxyFormDialog({
     setValue('port', parsed.port)
     setValue('username', parsed.username ?? '')
     setValue('password', parsed.password ?? '')
+    setValue('secret', parsed.secret ?? '')
 
-    if (parsed.username || parsed.password) {
+    if (parsed.secret) {
+      setAuthExpanded(true)
+    } else if (parsed.username || parsed.password) {
       setAuthExpanded(true)
     }
 
@@ -281,6 +300,7 @@ function ProxyFormDialog({
                   <MenuItem value="https">HTTPS</MenuItem>
                   <MenuItem value="socks4">SOCKS4</MenuItem>
                   <MenuItem value="socks5">SOCKS5</MenuItem>
+                  <MenuItem value="mtproto">MTProto</MenuItem>
                 </TextField>
               )}
             />
@@ -327,44 +347,73 @@ function ProxyFormDialog({
 
           <ProxyFormSection
             icon={<LockOutlinedIcon sx={{ fontSize: 18 }} />}
-            title={t('proxyForm.sections.authentication')}
-            description={t('proxyForm.sections.authenticationDescription')}
+            title={
+              isMtproto ? t('proxyForm.sections.mtprotoAuthentication') : t('proxyForm.sections.authentication')
+            }
+            description={
+              isMtproto
+                ? t('proxyForm.sections.mtprotoAuthenticationDescription')
+                : t('proxyForm.sections.authenticationDescription')
+            }
             collapsible
             expanded={authExpanded}
             onExpandedChange={setAuthExpanded}
           >
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            {isMtproto ? (
               <Controller
-                name="username"
+                name="secret"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label={t('proxyForm.username')}
+                    label={t('proxyForm.secret')}
+                    placeholder={t('proxyForm.secretPlaceholder')}
                     fullWidth
-                    sx={{ flex: 1 }}
-                    error={Boolean(errors.username)}
-                    helperText={errors.username?.message}
+                    required
+                    error={Boolean(errors.secret)}
+                    helperText={errors.secret?.message ?? t('proxyForm.secretHint')}
+                    slotProps={{
+                      input: {
+                        sx: { fontFamily: 'monospace', fontSize: '0.84rem' }
+                      }
+                    }}
                   />
                 )}
               />
+            ) : (
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <Controller
+                  name="username"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label={t('proxyForm.username')}
+                      fullWidth
+                      sx={{ flex: 1 }}
+                      error={Boolean(errors.username)}
+                      helperText={errors.username?.message}
+                    />
+                  )}
+                />
 
-              <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label={t('proxyForm.password')}
-                    type="password"
-                    fullWidth
-                    sx={{ flex: 1 }}
-                    error={Boolean(errors.password)}
-                    helperText={errors.password?.message}
-                  />
-                )}
-              />
-            </Stack>
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label={t('proxyForm.password')}
+                      type="password"
+                      fullWidth
+                      sx={{ flex: 1 }}
+                      error={Boolean(errors.password)}
+                      helperText={errors.password?.message}
+                    />
+                  )}
+                />
+              </Stack>
+            )}
           </ProxyFormSection>
 
           <ProxyFormSection

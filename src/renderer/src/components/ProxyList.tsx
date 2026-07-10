@@ -53,6 +53,7 @@ function toProxyInput(values: ProxyFormValues): ProxyInput {
     })(),
     username: values.username?.trim() || undefined,
     password: values.password || undefined,
+    secret: values.secret?.trim() || undefined,
     countryCode: normalizeCountryCode(values.countryCode),
     city: values.city?.trim() || undefined,
     anonymityLevel: normalizeAnonymityLevel(values.anonymityLevel)

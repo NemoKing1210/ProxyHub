@@ -6,7 +6,8 @@ const PROTOCOL_COLORS: Record<ProxyProtocol, string> = {
   http: PROXY_COLOR_VALUES.blue,
   https: PROXY_COLOR_VALUES.green,
   socks4: PROXY_COLOR_VALUES.orange,
-  socks5: PROXY_COLOR_VALUES.purple
+  socks5: PROXY_COLOR_VALUES.purple,
+  mtproto: PROXY_COLOR_VALUES.cyan
 }
 
 export interface ProxyProtocolStyles {

@@ -11,7 +11,7 @@ import type {
   ProxyConnectivityResult,
   ProxyDomainCheckResult
 } from '../../shared/types/proxy'
-import { buildProxyUrl, formatProxyAddress } from '../../shared/utils/proxy-format'
+import { buildProxyUrl, formatProxyAddress, skipsDomainChecks } from '../../shared/utils/proxy-format'
 import {
   createCheckingConnectivity,
   createPendingDomainChecks
@@ -321,7 +321,7 @@ export async function checkProxy(
   timeoutMs: number,
   onProgress?: (progress: ProxyCheckProgress) => void
 ): Promise<ProxyCheckResult> {
-  const targets = domains
+  const targets = skipsDomainChecks(proxy.protocol) ? [] : domains
   const checkedAt = new Date().toISOString()
   const pendingChecks = createPendingDomainChecks(targets)
   const initialConnectivity = createCheckingConnectivity(proxy)
@@ -334,6 +334,22 @@ export async function checkProxy(
   })
 
   let connectivity = await checkProxyConnectivity(proxy, timeoutMs, onProgress)
+
+  if (skipsDomainChecks(proxy.protocol)) {
+    const connectivityAlive = connectivity.status === 'alive'
+    const finalResult: ProxyCheckResult = {
+      id: proxy.id,
+      status: connectivityAlive ? 'alive' : 'dead',
+      latencyMs: connectivity.latencyMs,
+      error: connectivityAlive ? undefined : connectivity.error,
+      domainChecks: [],
+      connectivity,
+      checkedAt
+    }
+
+    onProgress?.({ phase: 'complete', result: finalResult })
+    return finalResult
+  }
 
   try {
     const agent = createAgent(proxy)

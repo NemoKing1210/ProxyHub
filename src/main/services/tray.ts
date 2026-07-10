@@ -5,7 +5,7 @@ import { getTrayMenuStrings } from '../../shared/i18n/tray-menu'
 import { getFavoriteProxies } from '../../shared/utils/favorite-proxies'
 import { getProxies, getSettings } from './app-store'
 import { openProxyFromTray, showMainWindow } from './main-window'
-import { checkAllTrayFavorites, checkAllTrayProxies } from './tray-actions'
+import { checkAllTrayFavorites, checkAllTrayProxies, checkTrayProxyById, isTrayProxyChecking } from './tray-actions'
 
 let tray: Tray | null = null
 
@@ -25,6 +25,8 @@ async function buildTrayContextMenu(): Promise<Menu> {
     template.push({ label: strings.noFavorites, enabled: false })
   } else {
     for (const proxy of favorites) {
+      const isChecking = isTrayProxyChecking(proxy.id) || proxy.status === 'checking'
+
       template.push({
         label: formatTrayProxyMenuPrimary(proxy, strings),
         click: () => {
@@ -34,6 +36,13 @@ async function buildTrayContextMenu(): Promise<Menu> {
       template.push({
         label: `    ${formatTrayProxyMenuSecondary(proxy, strings)}`,
         enabled: false
+      })
+      template.push({
+        label: `    ${strings.checkProxy}`,
+        enabled: proxy.isEnabled !== false && !isChecking,
+        click: () => {
+          void checkTrayProxyById(proxy.id)
+        }
       })
     }
   }

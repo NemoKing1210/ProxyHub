@@ -82,6 +82,15 @@ function ProxyDetailsDialog({
     { label: t('proxyForm.port'), value: String(proxy.port), monospace: true }
   ]
 
+  if (proxy.secret) {
+    connectionFields.push({
+      label: t('proxyList.columns.secret'),
+      value: proxy.secret,
+      monospace: true,
+      secret: true
+    })
+  }
+
   if (proxy.username) {
     connectionFields.push({
       label: t('proxyList.columns.username'),

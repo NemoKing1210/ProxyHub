@@ -15,6 +15,7 @@ import {
   upsertDomainCheck
 } from '../../../shared/utils/proxy-check-results'
 import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
+import { skipsDomainChecks } from '../../../shared/utils/proxy-format'
 import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { useSettingsStore } from './settingsStore'
 import { getEnabledCheckDomains } from '../../../shared/types/settings'
@@ -58,7 +59,8 @@ function hasConnectionChanges(proxy: Proxy, input: ProxyInput): boolean {
     proxy.host !== input.host.trim() ||
     proxy.port !== input.port ||
     (proxy.username ?? '') !== (input.username?.trim() ?? '') ||
-    (proxy.password ?? '') !== (input.password ?? '')
+    (proxy.password ?? '') !== (input.password ?? '') ||
+    (proxy.secret ?? '') !== (input.secret ?? '')
   )
 }
 
@@ -216,12 +218,14 @@ async function checkAllParallel(
 }
 
 function beginProxyCheck(proxy: Proxy, domains: string[]): Proxy {
+  const checkDomains = skipsDomainChecks(proxy.protocol) ? [] : domains
+
   return {
     ...proxy,
     status: 'checking',
     error: undefined,
     errorDetails: undefined,
-    domainChecks: createPendingDomainChecks(domains),
+    domainChecks: createPendingDomainChecks(checkDomains),
     connectivity: createCheckingConnectivity(proxy),
     latencyMs: undefined,
     externalIp: undefined,

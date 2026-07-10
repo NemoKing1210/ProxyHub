@@ -158,6 +158,15 @@ function ProxyCard({
       }
     ]
 
+    if (proxy.secret) {
+      fields.push({
+        label: t('proxyList.columns.secret'),
+        value: proxy.secret,
+        monospace: true,
+        secret: true
+      })
+    }
+
     if (proxy.username) {
       fields.push({
         label: t('proxyList.columns.username'),
