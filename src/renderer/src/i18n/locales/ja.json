@@ -47,6 +47,25 @@
       "title": "プロキシを削除しますか？",
       "message": "{{name}} を削除してもよろしいですか？この操作は元に戻せません。"
     },
+    "shareDialog": {
+      "title": "共有",
+      "qrHint": "スマートフォンでQRコードをスキャン",
+      "channelsTitle": "送信方法",
+      "channels": {
+        "email": "メール",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "その他"
+      }
+    },
     "columns": {
       "label": "ラベル",
       "protocol": "プロトコル",
@@ -70,6 +89,7 @@
       "edit": "編集",
       "delete": "削除",
       "copyLink": "リンクとしてコピー",
+      "share": "共有",
       "changeIcon": "アイコンを変更",
       "addToFavorites": "お気に入りに追加",
       "removeFromFavorites": "お気に入りから削除",

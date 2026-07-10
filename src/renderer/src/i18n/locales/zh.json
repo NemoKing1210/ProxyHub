@@ -47,6 +47,25 @@
       "title": "删除代理？",
       "message": "确定要删除 {{name}} 吗？此操作无法撤销。"
     },
+    "shareDialog": {
+      "title": "分享",
+      "qrHint": "用手机扫描二维码",
+      "channelsTitle": "发送方式",
+      "channels": {
+        "email": "邮件",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "更多"
+      }
+    },
     "columns": {
       "label": "标签",
       "protocol": "协议",
@@ -65,7 +84,7 @@
       "anonymityLevel": "匿名级别",
       "actions": "操作"
     },
-    "actions": { "check": "检测代理", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除", "enableProxy": "启用代理", "disableProxy": "禁用代理" },
+    "actions": { "check": "检测代理", "edit": "编辑", "delete": "删除", "copyLink": "复制为链接", "share": "分享", "changeIcon": "更改图标", "addToFavorites": "添加到收藏", "removeFromFavorites": "从收藏中移除", "enableProxy": "启用代理", "disableProxy": "禁用代理" },
     "disabled": "已禁用",
     "sections": {
       "connection": "连接",

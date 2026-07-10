@@ -52,6 +52,25 @@
       "title": "Видалити проксі?",
       "message": "Ви впевнені, що хочете видалити {{name}}? Цю дію не можна скасувати."
     },
+    "shareDialog": {
+      "title": "Поділитися",
+      "qrHint": "Відскануйте QR-код телефоном",
+      "channelsTitle": "Надіслати через",
+      "channels": {
+        "email": "Пошта",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "ВКонтакте",
+        "ok": "Одноклассники",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "Ще"
+      }
+    },
     "columns": {
       "label": "Мітка",
       "protocol": "Протокол",
@@ -75,6 +94,7 @@
       "edit": "Редагувати",
       "delete": "Видалити",
       "copyLink": "Копіювати як посилання",
+      "share": "Поділитися",
       "changeIcon": "Змінити іконку",
       "addToFavorites": "Додати до обраного",
       "removeFromFavorites": "Прибрати з обраного",

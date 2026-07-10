@@ -1,10 +1,9 @@
-import CheckIcon from '@mui/icons-material/Check'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import LinkIcon from '@mui/icons-material/Link'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
@@ -20,7 +19,7 @@ import type { Proxy, ProxyAnonymityLevel, ProxyIconId } from '../../../shared/ty
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
-import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
+import { formatProxyAddress } from '../../../shared/utils/proxy-format'
 import { elevationShadow, surfaceContainer } from '../theme'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import ProxyCardAvatar from './ProxyCardAvatar'
@@ -32,6 +31,7 @@ import ProxyConnectivityResultCard from './ProxyConnectivityResult'
 import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
 import ProxyIconPickerPopover from './ProxyIconPickerPopover'
+import ProxyShareDialog from './ProxyShareDialog'
 import ProxyStatusChip from './ProxyStatusChip'
 
 interface ProxyCardProps {
@@ -90,13 +90,12 @@ function ProxyCard({
 }: ProxyCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
-  const [linkCopied, setLinkCopied] = useState(false)
   const [copyToastOpen, setCopyToastOpen] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
   const [iconPickerAnchor, setIconPickerAnchor] = useState<HTMLElement | null>(null)
   const enabled = isProxyEnabled(proxy)
 
-  const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)
   const domainChecks = useMemo(() => getProxyDomainChecks(proxy), [proxy])
   const colorStyles = useMemo(() => getProxyColorStyles(theme, proxy.color), [theme, proxy.color])
@@ -178,12 +177,6 @@ function ProxyCard({
   }, [proxy.checkedAt, proxy.connectivity?.latencyMs, t, i18n.language])
 
   const showResults = isChecking || Boolean(proxy.checkedAt)
-
-  const handleCopyLink = async (): Promise<void> => {
-    await navigator.clipboard.writeText(proxyUrl)
-    setLinkCopied(true)
-    window.setTimeout(() => setLinkCopied(false), 1500)
-  }
 
   const handleCopy = async (text: string): Promise<void> => {
     await navigator.clipboard.writeText(text)
@@ -481,11 +474,10 @@ function ProxyCard({
         <Button
           size="small"
           variant="outlined"
-          color="primary"
-          startIcon={linkCopied ? <CheckIcon /> : <LinkIcon />}
-          onClick={() => void handleCopyLink()}
+          startIcon={<ShareOutlinedIcon />}
+          onClick={() => setShareOpen(true)}
         >
-          {linkCopied ? t('common.copied') : t('proxyList.actions.copyLink')}
+          {t('proxyList.actions.share')}
         </Button>
         <Button
           size="small"
@@ -530,6 +522,8 @@ function ProxyCard({
           {t('common.copied')}
         </Alert>
       </Snackbar>
+
+      <ProxyShareDialog open={shareOpen} proxy={proxy} onClose={() => setShareOpen(false)} />
     </Box>
   )
 }

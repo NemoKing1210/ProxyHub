@@ -47,6 +47,25 @@
       "title": "حذف البروكسي؟",
       "message": "هل أنت متأكد أنك تريد حذف {{name}}؟ لا يمكن التراجع عن هذا الإجراء."
     },
+    "shareDialog": {
+      "title": "مشاركة",
+      "qrHint": "امسح رمز QR بهاتفك",
+      "channelsTitle": "إرسال عبر",
+      "channels": {
+        "email": "البريد",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "المزيد"
+      }
+    },
     "columns": {
       "label": "التسمية",
       "protocol": "البروتوكول",
@@ -70,6 +89,7 @@
       "edit": "تعديل",
       "delete": "حذف",
       "copyLink": "نسخ كرابط",
+      "share": "مشاركة",
       "changeIcon": "تغيير الأيقونة",
       "addToFavorites": "إضافة إلى المفضلة",
       "removeFromFavorites": "إزالة من المفضلة",

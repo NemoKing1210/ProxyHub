@@ -47,6 +47,25 @@
       "title": "Excluir proxy?",
       "message": "Tem certeza de que deseja excluir {{name}}? Esta ação não pode ser desfeita."
     },
+    "shareDialog": {
+      "title": "Compartilhar",
+      "qrHint": "Escaneie o código QR com o telefone",
+      "channelsTitle": "Enviar por",
+      "channels": {
+        "email": "E-mail",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "Mais"
+      }
+    },
     "columns": {
       "label": "Rótulo",
       "protocol": "Protocolo",
@@ -70,6 +89,7 @@
       "edit": "Editar",
       "delete": "Excluir",
       "copyLink": "Copiar como link",
+      "share": "Compartilhar",
       "changeIcon": "Alterar ícone",
       "addToFavorites": "Adicionar aos favoritos",
       "removeFromFavorites": "Remover dos favoritos",

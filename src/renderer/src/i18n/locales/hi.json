@@ -47,6 +47,25 @@
       "title": "प्रॉक्सी हटाएं?",
       "message": "क्या आप वाकई {{name}} हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।"
     },
+    "shareDialog": {
+      "title": "साझा करें",
+      "qrHint": "अपने फ़ोन से QR कोड स्कैन करें",
+      "channelsTitle": "भेजें",
+      "channels": {
+        "email": "ईमेल",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "और"
+      }
+    },
     "columns": {
       "label": "लेबल",
       "protocol": "प्रोटोकॉल",
@@ -70,6 +89,7 @@
       "edit": "संपादित करें",
       "delete": "हटाएं",
       "copyLink": "लिंक के रूप में कॉपी करें",
+      "share": "साझा करें",
       "changeIcon": "आइकन बदलें",
       "addToFavorites": "पसंदीदा में जोड़ें",
       "removeFromFavorites": "पसंदीदा से हटाएं",

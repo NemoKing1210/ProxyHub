@@ -47,6 +47,25 @@
       "title": "¿Eliminar proxy?",
       "message": "¿Seguro que quieres eliminar {{name}}? Esta acción no se puede deshacer."
     },
+    "shareDialog": {
+      "title": "Compartir",
+      "qrHint": "Escanea el código QR con tu teléfono",
+      "channelsTitle": "Enviar por",
+      "channels": {
+        "email": "Correo",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "Más"
+      }
+    },
     "columns": {
       "label": "Etiqueta",
       "protocol": "Protocolo",
@@ -70,6 +89,7 @@
       "edit": "Editar",
       "delete": "Eliminar",
       "copyLink": "Copiar como enlace",
+      "share": "Compartir",
       "changeIcon": "Cambiar icono",
       "addToFavorites": "Añadir a favoritos",
       "removeFromFavorites": "Quitar de favoritos",

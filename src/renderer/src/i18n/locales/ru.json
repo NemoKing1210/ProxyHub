@@ -52,6 +52,25 @@
       "title": "Удалить прокси?",
       "message": "Вы уверены, что хотите удалить {{name}}? Это действие нельзя отменить."
     },
+    "shareDialog": {
+      "title": "Поделиться",
+      "qrHint": "Отсканируйте QR-код телефоном",
+      "channelsTitle": "Отправить через",
+      "channels": {
+        "email": "Почта",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "ВКонтакте",
+        "ok": "Одноклассники",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "Ещё"
+      }
+    },
     "columns": {
       "label": "Метка",
       "protocol": "Протокол",
@@ -75,6 +94,7 @@
       "edit": "Редактировать",
       "delete": "Удалить",
       "copyLink": "Скопировать как ссылку",
+      "share": "Поделиться",
       "changeIcon": "Сменить иконку",
       "addToFavorites": "Добавить в избранное",
       "removeFromFavorites": "Убрать из избранного",

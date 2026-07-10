@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.14.0] - 2026-07-10
+
+### Added
+
+- Share button on proxy cards opens a dialog with a copyable proxy URL, QR code, and send options
+- Share channels: Telegram, WhatsApp, Viber, VK, OK, Facebook, X, LinkedIn, Reddit, LINE, email, and system share when available
+- Social network icons via `react-icons` (Simple Icons)
+
+### Changed
+
+- Removed “Copy as link” button from proxy cards (copying is available in the share dialog)
+
 ## [1.13.0] - 2026-07-10
 
 ### Added

@@ -52,6 +52,25 @@
       "title": "Delete proxy?",
       "message": "Are you sure you want to delete {{name}}? This action cannot be undone."
     },
+    "shareDialog": {
+      "title": "Share",
+      "qrHint": "Scan the QR code with your phone",
+      "channelsTitle": "Send via",
+      "channels": {
+        "email": "Email",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "More"
+      }
+    },
     "columns": {
       "label": "Label",
       "protocol": "Protocol",
@@ -75,6 +94,7 @@
       "edit": "Edit proxy",
       "delete": "Delete proxy",
       "copyLink": "Copy as link",
+      "share": "Share",
       "changeIcon": "Change icon",
       "addToFavorites": "Add to favorites",
       "removeFromFavorites": "Remove from favorites",

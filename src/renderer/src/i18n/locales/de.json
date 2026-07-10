@@ -47,6 +47,25 @@
       "title": "Proxy löschen?",
       "message": "Möchten Sie {{name}} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
     },
+    "shareDialog": {
+      "title": "Teilen",
+      "qrHint": "QR-Code mit dem Telefon scannen",
+      "channelsTitle": "Senden über",
+      "channels": {
+        "email": "E-Mail",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "Mehr"
+      }
+    },
     "columns": {
       "label": "Bezeichnung",
       "protocol": "Protokoll",
@@ -70,6 +89,7 @@
       "edit": "Bearbeiten",
       "delete": "Löschen",
       "copyLink": "Als Link kopieren",
+      "share": "Teilen",
       "changeIcon": "Symbol ändern",
       "addToFavorites": "Zu Favoriten hinzufügen",
       "removeFromFavorites": "Aus Favoriten entfernen",

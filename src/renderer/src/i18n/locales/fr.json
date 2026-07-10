@@ -47,6 +47,25 @@
       "title": "Supprimer le proxy ?",
       "message": "Voulez-vous vraiment supprimer {{name}} ? Cette action est irréversible."
     },
+    "shareDialog": {
+      "title": "Partager",
+      "qrHint": "Scannez le code QR avec votre téléphone",
+      "channelsTitle": "Envoyer via",
+      "channels": {
+        "email": "E-mail",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "viber": "Viber",
+        "vk": "VK",
+        "ok": "OK",
+        "facebook": "Facebook",
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "reddit": "Reddit",
+        "line": "LINE",
+        "system": "Plus"
+      }
+    },
     "columns": {
       "label": "Libellé",
       "protocol": "Protocole",
@@ -70,6 +89,7 @@
       "edit": "Modifier",
       "delete": "Supprimer",
       "copyLink": "Copier comme lien",
+      "share": "Partager",
       "changeIcon": "Changer l'icône",
       "addToFavorites": "Ajouter aux favoris",
       "removeFromFavorites": "Retirer des favoris",
