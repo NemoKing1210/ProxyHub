@@ -300,6 +300,8 @@
     "proxyCardView": "カード表示",
     "proxyCardViewStandard": "標準",
     "proxyCardViewCompact": "ミニ",
+    "proxyDragEnabled": "Drag proxy cards",
+    "proxyDragEnabledHint": "Allow moving proxies between groups by dragging cards in the list.",
     "autoCheckEnabled": "自動確認を有効にする",
     "autoCheckEnabledHint": "手動操作なしで、スケジュールに従ってプロキシを自動的に再確認します。",
     "autoCheckInterval": "確認間隔",

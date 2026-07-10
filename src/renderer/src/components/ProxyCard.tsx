@@ -42,7 +42,7 @@ import {
   Typography
 } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
-import { useMemo, useRef, useState } from 'react'
+import { memo, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
 import type { Proxy, ProxyAnonymityLevel, ProxyIconId } from '../../../shared/types/proxy'
@@ -64,6 +64,7 @@ import LatencyText from './LatencyText'
 import ProxyConnectivityResultCard from './ProxyConnectivityResult'
 import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
+import ProxyGroupAvatar from './ProxyGroupAvatar'
 import ProxyIconPickerPopover from './ProxyIconPickerPopover'
 import ProxyShareDialog from './ProxyShareDialog'
 import ProxyStatusChip from './ProxyStatusChip'
@@ -100,6 +101,10 @@ const metadataChipSx = {
     py: 0.375
   }
 } as const
+
+const GROUP_MENU_AVATAR_SIZE = 24
+const GROUP_MENU_ICON_SIZE = 14
+const groupMenuListItemIconSx = { minWidth: 36, mr: 0.5 } as const
 
 interface ContextMenuPosition {
   top: number
@@ -895,8 +900,16 @@ function ProxyCard({
               disabled={isCheckingAll || sortedGroups.length === 0}
               aria-haspopup="true"
             >
-              <ListItemIcon>
-                <FolderOutlinedIcon fontSize="small" />
+              <ListItemIcon sx={groupMenuListItemIconSx}>
+                {currentGroup ? (
+                  <ProxyGroupAvatar
+                    group={currentGroup}
+                    size={GROUP_MENU_AVATAR_SIZE}
+                    iconSize={GROUP_MENU_ICON_SIZE}
+                  />
+                ) : (
+                  <FolderOutlinedIcon fontSize="small" />
+                )}
               </ListItemIcon>
               <ListItemText
                 primary={t('proxyList.actions.moveToGroup')}
@@ -976,10 +989,27 @@ function ProxyCard({
           onClick={() => runContextAction(() => onGroupChange?.(undefined))}
           selected={!proxy.groupId}
         >
-          <ListItemIcon sx={{ minWidth: 32 }}>
-            {!proxy.groupId ? <CheckIcon fontSize="small" /> : null}
+          <ListItemIcon sx={groupMenuListItemIconSx}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: GROUP_MENU_AVATAR_SIZE,
+                height: GROUP_MENU_AVATAR_SIZE,
+                borderRadius: 1.5,
+                bgcolor: 'action.hover',
+                color: 'text.secondary',
+                boxShadow: (theme) => `inset 0 0 0 1px ${alpha(theme.palette.divider, 0.8)}`
+              }}
+            >
+              <FolderOffOutlinedIcon sx={{ fontSize: GROUP_MENU_ICON_SIZE }} />
+            </Box>
           </ListItemIcon>
           <ListItemText>{t('proxyList.actions.noGroup')}</ListItemText>
+          {!proxy.groupId ? (
+            <CheckIcon fontSize="small" sx={{ ml: 1, color: 'primary.main' }} />
+          ) : null}
         </MenuItem>
         {sortedGroups.map((group) => (
           <MenuItem
@@ -987,10 +1017,17 @@ function ProxyCard({
             onClick={() => runContextAction(() => onGroupChange?.(group.id))}
             selected={proxy.groupId === group.id}
           >
-            <ListItemIcon sx={{ minWidth: 32 }}>
-              {proxy.groupId === group.id ? <CheckIcon fontSize="small" /> : null}
+            <ListItemIcon sx={groupMenuListItemIconSx}>
+              <ProxyGroupAvatar
+                group={group}
+                size={GROUP_MENU_AVATAR_SIZE}
+                iconSize={GROUP_MENU_ICON_SIZE}
+              />
             </ListItemIcon>
             <ListItemText>{group.name}</ListItemText>
+            {proxy.groupId === group.id ? (
+              <CheckIcon fontSize="small" sx={{ ml: 1, color: 'primary.main' }} />
+            ) : null}
           </MenuItem>
         ))}
       </Menu>
@@ -998,4 +1035,4 @@ function ProxyCard({
   )
 }
 
-export default ProxyCard
+export default memo(ProxyCard)

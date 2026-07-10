@@ -12,6 +12,7 @@ import type {
   ProxyDomainCheckResult
 } from '../../shared/types/proxy'
 import { buildProxyUrl, formatProxyAddress, skipsDomainChecks } from '../../shared/utils/proxy-format'
+import { runWithConcurrency } from '../../shared/utils/run-with-concurrency'
 import {
   createCheckingConnectivity,
   createPendingDomainChecks
@@ -360,9 +361,10 @@ async function resolveExternalIp(
   timeoutMs: number,
   connectivity: ProxyConnectivityResult,
   hasAliveDomain: boolean,
+  fetchExternalIpEnabled: boolean,
   signal?: AbortSignal
 ): Promise<ProxyConnectivityResult> {
-  if (connectivity.status !== 'alive' && !hasAliveDomain) {
+  if (!fetchExternalIpEnabled || (connectivity.status !== 'alive' && !hasAliveDomain)) {
     return connectivity
   }
 
@@ -383,7 +385,9 @@ export async function checkProxy(
   domains: string[],
   timeoutMs: number,
   onProgress?: (progress: ProxyCheckProgress) => void,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  domainCheckConcurrency = 1,
+  fetchExternalIpEnabled = true
 ): Promise<ProxyCheckResult> {
   throwIfCancelled(signal)
 
@@ -419,51 +423,60 @@ export async function checkProxy(
 
   try {
     const agent = createAgent(proxy)
-    const domainChecks: ProxyDomainCheckResult[] = []
+    const domainChecks: ProxyDomainCheckResult[] = new Array(targets.length)
+    const domainConcurrency = Math.max(1, Math.min(domainCheckConcurrency, targets.length))
 
-    for (const domain of targets) {
-      throwIfCancelled(signal)
+    await runWithConcurrency(
+      targets,
+      domainConcurrency,
+      async (domain, domainIndex) => {
+        throwIfCancelled(signal)
 
-      const checkUrl = normalizeDomain(domain)
+        const checkUrl = normalizeDomain(domain)
 
-      emitDomainProgress(onProgress, proxy.id, {
-        domain,
-        url: checkUrl,
-        status: 'checking'
-      })
-
-      try {
-        const result = await requestThroughProxy(agent, checkUrl, timeoutMs, signal)
-        const completed: ProxyDomainCheckResult = {
+        emitDomainProgress(onProgress, proxy.id, {
           domain,
           url: checkUrl,
-          status: 'alive',
-          latencyMs: result.latencyMs
+          status: 'checking'
+        })
+
+        try {
+          const result = await requestThroughProxy(agent, checkUrl, timeoutMs, signal)
+          const completed: ProxyDomainCheckResult = {
+            domain,
+            url: checkUrl,
+            status: 'alive',
+            latencyMs: result.latencyMs
+          }
+
+          domainChecks[domainIndex] = completed
+          emitDomainProgress(onProgress, proxy.id, completed)
+        } catch (error) {
+          if (isCheckCancelledError(error)) {
+            throw error
+          }
+
+          const detail = createErrorDetail(error, domain, checkUrl)
+          const completed: ProxyDomainCheckResult = {
+            domain,
+            url: checkUrl,
+            status: 'dead',
+            error: detail.message,
+            code: detail.code
+          }
+
+          domainChecks[domainIndex] = completed
+          emitDomainProgress(onProgress, proxy.id, completed)
         }
+      },
+      () => Boolean(signal?.aborted)
+    )
 
-        domainChecks.push(completed)
-        emitDomainProgress(onProgress, proxy.id, completed)
-      } catch (error) {
-        if (isCheckCancelledError(error)) {
-          throw error
-        }
-
-        const detail = createErrorDetail(error, domain, checkUrl)
-        const completed: ProxyDomainCheckResult = {
-          domain,
-          url: checkUrl,
-          status: 'dead',
-          error: detail.message,
-          code: detail.code
-        }
-
-        domainChecks.push(completed)
-        emitDomainProgress(onProgress, proxy.id, completed)
-      }
-    }
-
-    const aliveChecks = domainChecks.filter((check) => check.status === 'alive')
-    const failures = toErrorDetails(domainChecks)
+    const completedDomainChecks = domainChecks.filter(
+      (check): check is ProxyDomainCheckResult => check !== undefined
+    )
+    const aliveChecks = completedDomainChecks.filter((check) => check.status === 'alive')
+    const failures = toErrorDetails(completedDomainChecks)
     const hasAliveDomain = aliveChecks.length > 0
     const hasDomains = targets.length > 0
     const connectivityAlive = connectivity.status === 'alive'
@@ -473,6 +486,7 @@ export async function checkProxy(
       timeoutMs,
       connectivity,
       hasAliveDomain || (!hasDomains && connectivityAlive),
+      fetchExternalIpEnabled,
       signal
     )
 
@@ -495,7 +509,7 @@ export async function checkProxy(
             latencyMs: bestCheck.latencyMs,
             externalIp: connectivity.externalIp,
             checkTarget: bestCheck.domain,
-            domainChecks,
+            domainChecks: completedDomainChecks,
             connectivity,
             errorDetails: failures.length > 0 ? failures : undefined,
             checkedAt
@@ -508,7 +522,7 @@ export async function checkProxy(
             latencyMs: connectivity.latencyMs,
             externalIp: connectivity.externalIp,
             error: connectivityAlive ? undefined : connectivity.error,
-            domainChecks,
+            domainChecks: completedDomainChecks,
             connectivity,
             checkedAt
           }
@@ -518,7 +532,7 @@ export async function checkProxy(
             externalIp: connectivity.externalIp,
             error: buildSummaryError(failures),
             errorDetails: failures,
-            domainChecks,
+            domainChecks: completedDomainChecks,
             connectivity,
             checkedAt
           }
@@ -560,7 +574,9 @@ export async function checkAllProxies(
   onProgress: (progress: ProxyCheckProgress) => void,
   timeoutMs: number,
   concurrency = DEFAULT_CONCURRENCY,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  domainCheckConcurrency = 1,
+  fetchExternalIpEnabled = true
 ): Promise<void> {
   let index = 0
 
@@ -574,7 +590,15 @@ export async function checkAllProxies(
       const proxy = proxies[currentIndex]
 
       try {
-        await checkProxy(proxy, domains, timeoutMs, onProgress, signal)
+        await checkProxy(
+          proxy,
+          domains,
+          timeoutMs,
+          onProgress,
+          signal,
+          domainCheckConcurrency,
+          fetchExternalIpEnabled
+        )
       } catch (error) {
         if (isCheckCancelledError(error)) {
           return

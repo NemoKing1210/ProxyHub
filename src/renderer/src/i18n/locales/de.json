@@ -300,6 +300,8 @@
     "proxyCardView": "Kartenansicht",
     "proxyCardViewStandard": "Standard",
     "proxyCardViewCompact": "Kompakt",
+    "proxyDragEnabled": "Drag proxy cards",
+    "proxyDragEnabledHint": "Allow moving proxies between groups by dragging cards in the list.",
     "autoCheckEnabled": "Auto-Prüfung aktivieren",
     "autoCheckEnabledHint": "Proxys automatisch nach Zeitplan erneut prüfen, ohne manuellen Start.",
     "autoCheckInterval": "Prüfintervall",

@@ -302,6 +302,8 @@
     "proxyCardView": "Вигляд карток",
     "proxyCardViewStandard": "Стандартний",
     "proxyCardViewCompact": "Мініатюрний",
+    "proxyDragEnabled": "Перетягування карток",
+    "proxyDragEnabledHint": "Дозволяє перетягувати картки проксі між групами в списку.",
     "autoCheckEnabled": "Увімкнути автоперевірку",
     "autoCheckEnabledHint": "Автоматично перепроверяти проксі за розкладом без ручного запуску.",
     "autoCheckInterval": "Інтервал перевірки",

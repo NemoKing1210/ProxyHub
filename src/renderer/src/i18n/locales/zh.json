@@ -301,6 +301,8 @@
     "proxyCardView": "卡片视图",
     "proxyCardViewStandard": "标准",
     "proxyCardViewCompact": "迷你",
+    "proxyDragEnabled": "Drag proxy cards",
+    "proxyDragEnabledHint": "Allow moving proxies between groups by dragging cards in the list.",
     "autoCheckEnabled": "启用自动检测",
     "autoCheckEnabledHint": "按计划自动重新检测代理，无需手动操作。",
     "autoCheckInterval": "检测间隔",

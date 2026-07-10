@@ -301,6 +301,8 @@
     "proxyCardView": "कार्ड दृश्य",
     "proxyCardViewStandard": "मानक",
     "proxyCardViewCompact": "लघु",
+    "proxyDragEnabled": "Drag proxy cards",
+    "proxyDragEnabledHint": "Allow moving proxies between groups by dragging cards in the list.",
     "autoCheckEnabled": "ऑटो-जाँच सक्षम करें",
     "autoCheckEnabledHint": "बिना मैन्युअल कार्रवाई के, अनुसूची पर प्रॉक्सी की स्वचालित पुनः जाँच करें।",
     "autoCheckInterval": "जाँच अंतराल",

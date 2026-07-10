@@ -301,6 +301,8 @@
     "proxyCardView": "عرض البطاقات",
     "proxyCardViewStandard": "قياسي",
     "proxyCardViewCompact": "مصغر",
+    "proxyDragEnabled": "Drag proxy cards",
+    "proxyDragEnabledHint": "Allow moving proxies between groups by dragging cards in the list.",
     "autoCheckEnabled": "تفعيل الفحص التلقائي",
     "autoCheckEnabledHint": "إعادة فحص البروكسيات تلقائياً وفق جدول دون إجراء يدوي.",
     "autoCheckInterval": "فاصل الفحص",

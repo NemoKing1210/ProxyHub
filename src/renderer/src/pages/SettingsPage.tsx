@@ -37,6 +37,8 @@ import {
   CHECK_ALL_CONCURRENCY_MIN,
   CHECK_TIMEOUT_MAX_MS,
   CHECK_TIMEOUT_MIN_MS,
+  DOMAIN_CHECK_CONCURRENCY_MAX,
+  DOMAIN_CHECK_CONCURRENCY_MIN,
   SUPPORTED_LANGUAGES,
   type AppLanguage,
   type AutoCheckScope,
@@ -73,10 +75,24 @@ const CONCURRENCY_MARKS = [
   { value: 20, label: '20' }
 ]
 
+const DOMAIN_CONCURRENCY_MARKS = [
+  { value: 1, label: '1' },
+  { value: 2, label: '2' },
+  { value: 3, label: '3' },
+  { value: 5, label: '5' }
+]
+
 function clampConcurrency(value: number): number {
   return Math.min(
     CHECK_ALL_CONCURRENCY_MAX,
     Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value))
+  )
+}
+
+function clampDomainConcurrency(value: number): number {
+  return Math.min(
+    DOMAIN_CHECK_CONCURRENCY_MAX,
+    Math.max(DOMAIN_CHECK_CONCURRENCY_MIN, Math.round(value))
   )
 }
 
@@ -111,6 +127,8 @@ function SettingsPage(): React.JSX.Element {
   const [isDraggingTimeout, setIsDraggingTimeout] = useState(false)
   const [concurrencyDraft, setConcurrencyDraft] = useState(settings.checkAllConcurrency)
   const [isDraggingConcurrency, setIsDraggingConcurrency] = useState(false)
+  const [domainConcurrencyDraft, setDomainConcurrencyDraft] = useState(settings.domainCheckConcurrency)
+  const [isDraggingDomainConcurrency, setIsDraggingDomainConcurrency] = useState(false)
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
   const [appInfoError, setAppInfoError] = useState(false)
   const [isAppInfoLoading, setIsAppInfoLoading] = useState(true)
@@ -152,6 +170,9 @@ function SettingsPage(): React.JSX.Element {
   const timeoutSeconds = settings.checkTimeoutMs / 1000
   const displayedTimeout = isDraggingTimeout ? timeoutDraft : timeoutSeconds
   const displayedConcurrency = isDraggingConcurrency ? concurrencyDraft : settings.checkAllConcurrency
+  const displayedDomainConcurrency = isDraggingDomainConcurrency
+    ? domainConcurrencyDraft
+    : settings.domainCheckConcurrency
 
   const notifySaved = (): void => {
     setSavedOpen(true)
@@ -190,6 +211,11 @@ function SettingsPage(): React.JSX.Element {
     if (!view || view === settings.proxyCardView) return
 
     await updateSettings({ proxyCardView: view })
+    notifySaved()
+  }
+
+  const handleProxyDragEnabledChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ proxyDragEnabled: enabled })
     notifySaved()
   }
 
@@ -234,6 +260,25 @@ function SettingsPage(): React.JSX.Element {
     if (concurrencyDraft === settings.checkAllConcurrency) return
 
     await updateSettings({ checkAllConcurrency: concurrencyDraft })
+    notifySaved()
+  }
+
+  const handleDomainConcurrencyChange = (_event: Event, value: number | number[]): void => {
+    const nextValue = Array.isArray(value) ? value[0] : value
+    setIsDraggingDomainConcurrency(true)
+    setDomainConcurrencyDraft(clampDomainConcurrency(nextValue))
+  }
+
+  const handleDomainConcurrencyCommit = async (): Promise<void> => {
+    setIsDraggingDomainConcurrency(false)
+    if (domainConcurrencyDraft === settings.domainCheckConcurrency) return
+
+    await updateSettings({ domainCheckConcurrency: domainConcurrencyDraft })
+    notifySaved()
+  }
+
+  const handleFetchExternalIpChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ fetchExternalIp: enabled })
     notifySaved()
   }
 
@@ -333,6 +378,7 @@ function SettingsPage(): React.JSX.Element {
     const nextSettings = useSettingsStore.getState().settings
     setTimeoutDraft(nextSettings.checkTimeoutMs / 1000)
     setConcurrencyDraft(nextSettings.checkAllConcurrency)
+    setDomainConcurrencyDraft(nextSettings.domainCheckConcurrency)
     setDomainInput('')
     setDomainError(null)
 
@@ -415,6 +461,21 @@ function SettingsPage(): React.JSX.Element {
                   {t('settings.proxyCardViewCompact')}
                 </ToggleButton>
               </ToggleButtonGroup>
+            </Box>
+
+            <Box>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={settings.proxyDragEnabled}
+                    onChange={(event) => void handleProxyDragEnabledChange(event.target.checked)}
+                  />
+                }
+                label={t('settings.proxyDragEnabled')}
+              />
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75, ml: 4.5 }}>
+                {t('settings.proxyDragEnabledHint')}
+              </Typography>
             </Box>
 
             <TextField
@@ -599,6 +660,64 @@ function SettingsPage(): React.JSX.Element {
                   />
                 </Box>
               )}
+            </Box>
+
+            <Box>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{ mb: 1.25, alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                <Typography variant="subtitle2">{t('settings.domainCheckConcurrency')}</Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: 700,
+                    fontFamily: 'monospace',
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 2,
+                    bgcolor: surfaceContainer(theme, 'high'),
+                    color: 'primary.main'
+                  }}
+                >
+                  {t('settings.domainCheckConcurrencyValue', {
+                    value: displayedDomainConcurrency
+                  })}
+                </Typography>
+              </Stack>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                {t('settings.domainCheckConcurrencyHint')}
+              </Typography>
+              <Slider
+                value={displayedDomainConcurrency}
+                onChange={handleDomainConcurrencyChange}
+                onChangeCommitted={() => void handleDomainConcurrencyCommit()}
+                min={DOMAIN_CHECK_CONCURRENCY_MIN}
+                max={DOMAIN_CHECK_CONCURRENCY_MAX}
+                step={1}
+                marks={DOMAIN_CONCURRENCY_MARKS}
+                valueLabelDisplay="auto"
+                valueLabelFormat={(value) =>
+                  t('settings.domainCheckConcurrencyValue', { value })
+                }
+                sx={{ px: 0.5 }}
+              />
+            </Box>
+
+            <Box>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={settings.fetchExternalIp}
+                    onChange={(event) => void handleFetchExternalIpChange(event.target.checked)}
+                  />
+                }
+                label={t('settings.fetchExternalIp')}
+              />
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75, ml: 4.5 }}>
+                {t('settings.fetchExternalIpHint')}
+              </Typography>
             </Box>
 
             <Box>

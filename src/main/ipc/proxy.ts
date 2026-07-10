@@ -2,6 +2,7 @@ import { BrowserWindow, ipcMain, type WebContents } from 'electron'
 import type { Proxy, ProxyCheckProgress } from '../../shared/types/proxy'
 import type { ProxyCheckOptions } from '../../shared/types/settings'
 import type { ProxyGroup } from '../../shared/types/proxy-group'
+import { createThrottledProgressEmitter } from '../../shared/utils/proxy-progress-throttle'
 import { getGroups, getProxies, saveGroups, saveProxies } from '../services/app-store'
 import {
   beginCancellableCheck,
@@ -46,7 +47,9 @@ export function registerProxyIpc(): void {
         options.checkDomains,
         options.checkTimeoutMs,
         (progress) => sendProgress(event.sender, progress),
-        signal
+        signal,
+        options.domainCheckConcurrency,
+        options.fetchExternalIp
       )
     } finally {
       clearCancellableCheck(signal)
@@ -58,17 +61,23 @@ export function registerProxyIpc(): void {
     async (event, proxies: Proxy[], options: ProxyCheckOptions) => {
       const signal = beginCancellableCheck()
       broadcastCheckAllState(true)
+      const throttledProgress = createThrottledProgressEmitter((progress) =>
+        sendProgress(event.sender, progress)
+      )
 
       try {
         await checkAllProxies(
           proxies,
           options.checkDomains,
-          (progress) => sendProgress(event.sender, progress),
+          throttledProgress.emit,
           options.checkTimeoutMs,
           options.checkAllConcurrency,
-          signal
+          signal,
+          options.domainCheckConcurrency,
+          options.fetchExternalIp
         )
       } finally {
+        throttledProgress.flush()
         clearCancellableCheck(signal)
         broadcastCheckAllState(false)
       }

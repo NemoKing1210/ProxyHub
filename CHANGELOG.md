@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.32.0] - 2026-07-11
+
+### Added
+
+- Performance optimizations for proxy checks and large lists: unified check-all IPC, debounced batch persistence, throttled check progress events, optional parallel domain checks, and optional external IP lookup skip
+- Virtualized proxy list for 80+ visible cards via `@tanstack/react-virtual`
+- Search haystack cache for faster proxy list filtering
+- Settings: domain check concurrency (1–5), resolve external IP toggle, and drag proxy cards toggle in Appearance (disabled by default)
+- Group icon and color in the proxy card group selection submenu
+- `npm run benchmark:perf` script for in-memory list operation benchmarks
+
+### Changed
+
+- Sequential **Check all** uses a single main-process batch instead of one IPC call per proxy
+- Tray batch checks persist results once at the end instead of read-modify-write after each proxy
+- Proxy list rows use selective store subscriptions and memoized cards to reduce re-renders during checks
+
+### Fixed
+
+- Restored Framer Motion list animations when drag-and-drop is enabled on proxy cards
+
 ## [1.31.1] - 2026-07-11
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "ProxyChecker",
-  "version": "1.31.1",
+  "version": "1.32.0",
   "description": "Cross-platform desktop app for testing HTTP, HTTPS, SOCKS4, SOCKS5, and MTProto proxy availability and performance",
   "main": "./out/main/index.js",
   "license": "MIT",
@@ -45,7 +45,8 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "benchmark:perf": "node scripts/benchmark-list-ops.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -60,6 +61,7 @@
     "@hookform/resolvers": "^5.4.0",
     "@mui/icons-material": "^9.2.0",
     "@mui/material": "^9.2.0",
+    "@tanstack/react-virtual": "^3.14.5",
     "country-flag-icons": "^1.6.20",
     "electron-store": "^11.0.2",
     "framer-motion": "^12.42.2",

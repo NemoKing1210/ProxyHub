@@ -1,6 +1,7 @@
 import { BrowserWindow } from 'electron'
 import type { Proxy, ProxyCheckProgress } from '../../shared/types/proxy'
 import { getEnabledCheckDomains } from '../../shared/types/settings'
+import { createThrottledProgressEmitter } from '../../shared/utils/proxy-progress-throttle'
 import { applyCheckResult } from '../../shared/utils/proxy-check-apply'
 import { filterEnabledProxies } from '../../shared/utils/proxy-enabled'
 import { finalizeIncompleteProxy } from '../../shared/utils/proxy-check-results'
@@ -47,15 +48,15 @@ function notifyTrayDataChanged(): void {
 
 async function persistProxyCheckResult(
   proxyId: string,
-  result: Parameters<typeof applyCheckResult>[1]
-): Promise<void> {
-  const proxies = await getProxies()
+  result: Parameters<typeof applyCheckResult>[1],
+  proxies: Proxy[]
+): Promise<Proxy[]> {
   const updated = proxies.map((proxy) =>
     proxy.id === proxyId ? applyCheckResult(proxy, result) : proxy
   )
 
   await saveProxies(updated)
-  notifyTrayDataChanged()
+  return updated
 }
 
 async function runTrayCheckAll(proxies: Proxy[]): Promise<void> {
@@ -72,23 +73,32 @@ async function runTrayCheckAll(proxies: Proxy[]): Promise<void> {
   broadcastCheckAllState(true)
 
   const signal = beginCancellableCheck()
+  let workingProxies = await getProxies()
+  const throttledProgress = createThrottledProgressEmitter(broadcastProgress)
 
   try {
     await checkAllProxies(
       targets,
       checkDomains,
       (progress) => {
-        broadcastProgress(progress)
+        throttledProgress.emit(progress)
 
         if (progress.phase === 'complete') {
-          void persistProxyCheckResult(progress.result.id, progress.result)
+          workingProxies = workingProxies.map((proxy) =>
+            proxy.id === progress.result.id ? applyCheckResult(proxy, progress.result) : proxy
+          )
         }
       },
       settings.checkTimeoutMs,
       concurrency,
-      signal
+      signal,
+      settings.domainCheckConcurrency,
+      settings.fetchExternalIp
     )
+
+    await saveProxies(workingProxies)
   } finally {
+    throttledProgress.flush()
     clearCancellableCheck(signal)
     broadcastCheckAllState(false)
     notifyTrayDataChanged()
@@ -121,9 +131,11 @@ export async function checkTrayProxyById(proxyId: string): Promise<void> {
       checkDomains,
       settings.checkTimeoutMs,
       broadcastProgress,
-      signal
+      signal,
+      settings.domainCheckConcurrency,
+      settings.fetchExternalIp
     )
-    await persistProxyCheckResult(proxyId, result)
+    await persistProxyCheckResult(proxyId, result, proxies)
   } catch {
     const failed = finalizeIncompleteProxy(proxy)
     const updated = proxies.map((item) => (item.id === proxyId ? failed : item))

@@ -23,6 +23,8 @@ export interface AppSettings {
   checkTimeoutMs: number
   checkAllMode: CheckAllMode
   checkAllConcurrency: number
+  domainCheckConcurrency: number
+  fetchExternalIp: boolean
   trayEnabled: boolean
   startMinimized: boolean
   backgroundCheckNotifications: boolean
@@ -32,6 +34,7 @@ export interface AppSettings {
   autoCheckScope: AutoCheckScope
   autoCheckGroupIds: string[]
   proxyCardView: ProxyCardViewMode
+  proxyDragEnabled: boolean
   proxyListView: ProxyListViewState
 }
 
@@ -42,6 +45,10 @@ export const CHECK_TIMEOUT_DEFAULT_MS = 10_000
 export const CHECK_ALL_CONCURRENCY_MIN = 2
 export const CHECK_ALL_CONCURRENCY_MAX = 20
 export const CHECK_ALL_CONCURRENCY_DEFAULT = 5
+
+export const DOMAIN_CHECK_CONCURRENCY_MIN = 1
+export const DOMAIN_CHECK_CONCURRENCY_MAX = 5
+export const DOMAIN_CHECK_CONCURRENCY_DEFAULT = 1
 
 export const AUTO_CHECK_INTERVAL_MIN = 1
 export const AUTO_CHECK_INTERVAL_MAX = 1_440
@@ -54,6 +61,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   checkTimeoutMs: CHECK_TIMEOUT_DEFAULT_MS,
   checkAllMode: 'sequential',
   checkAllConcurrency: CHECK_ALL_CONCURRENCY_DEFAULT,
+  domainCheckConcurrency: DOMAIN_CHECK_CONCURRENCY_DEFAULT,
+  fetchExternalIp: true,
   trayEnabled: false,
   startMinimized: false,
   backgroundCheckNotifications: true,
@@ -63,6 +72,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   autoCheckScope: 'all',
   autoCheckGroupIds: [],
   proxyCardView: 'standard',
+  proxyDragEnabled: false,
   proxyListView: DEFAULT_PROXY_LIST_VIEW
 }
 
@@ -70,12 +80,21 @@ export interface ProxyCheckOptions {
   checkDomains: string[]
   checkTimeoutMs: number
   checkAllConcurrency: number
+  domainCheckConcurrency: number
+  fetchExternalIp: boolean
 }
 
 function clampCheckAllConcurrency(value: number): number {
   return Math.min(
     CHECK_ALL_CONCURRENCY_MAX,
     Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value))
+  )
+}
+
+function clampDomainCheckConcurrency(value: number): number {
+  return Math.min(
+    DOMAIN_CHECK_CONCURRENCY_MAX,
+    Math.max(DOMAIN_CHECK_CONCURRENCY_MIN, Math.round(value))
   )
 }
 
@@ -183,6 +202,8 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     checkDomains: normalizeCheckDomains(merged.checkDomains),
     checkAllMode: merged.checkAllMode === 'parallel' ? 'parallel' : 'sequential',
     checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency),
+    domainCheckConcurrency: clampDomainCheckConcurrency(merged.domainCheckConcurrency),
+    fetchExternalIp: merged.fetchExternalIp !== false,
     trayEnabled,
     startMinimized: trayEnabled && merged.startMinimized === true,
     backgroundCheckNotifications: merged.backgroundCheckNotifications !== false,
@@ -195,6 +216,7 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
         ? normalizeAutoCheckGroupIds(merged.autoCheckGroupIds)
         : [],
     proxyCardView: merged.proxyCardView === 'compact' ? 'compact' : 'standard',
+    proxyDragEnabled: merged.proxyDragEnabled === true,
     proxyListView: normalizeProxyListView(merged.proxyListView)
   }
 }
