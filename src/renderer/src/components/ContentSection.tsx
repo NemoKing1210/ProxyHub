@@ -1,7 +1,8 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Collapse, IconButton, Stack, Typography } from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
-import { type ReactNode, useEffect, useState } from 'react'
+import { useTheme } from '@mui/material/styles'
+import { type ReactNode, useState } from 'react'
+import { elevationShadow, MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint } from '../theme'
 
 interface ContentSectionProps {
   icon: ReactNode
@@ -31,12 +32,6 @@ function ContentSection({
   const isControlled = expanded !== undefined
   const isExpanded = isControlled ? expanded : internalExpanded
 
-  useEffect(() => {
-    if (!isControlled) {
-      setInternalExpanded(defaultExpanded)
-    }
-  }, [defaultExpanded, isControlled])
-
   const setExpanded = (value: boolean): void => {
     if (!isControlled) {
       setInternalExpanded(value)
@@ -54,17 +49,16 @@ function ContentSection({
     <Box
       sx={{
         p: nested ? 2 : { xs: 2.5, sm: 3 },
-        borderRadius: 2.5,
-        bgcolor: alpha(
-          theme.palette.primary.main,
-          nested
-            ? theme.palette.mode === 'dark'
-              ? 0.1
-              : 0.07
-            : theme.palette.mode === 'dark'
-              ? 0.06
-              : 0.04
-        )
+        borderRadius: nested ? 2.5 : 3,
+        bgcolor: surfaceContainer(theme, nested ? 'default' : 'low'),
+        border: `1px solid ${surfaceTint(theme, 'primary', 0.14)}`,
+        boxShadow: nested ? 'none' : elevationShadow(theme, 1),
+        transition: `box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
+        '&:hover': nested
+          ? undefined
+          : {
+              boxShadow: elevationShadow(theme, 2)
+            }
       }}
     >
       <Stack
@@ -83,12 +77,13 @@ function ContentSection({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: nested ? 36 : 40,
-            height: nested ? 36 : 40,
-            borderRadius: 2,
+            width: nested ? 36 : 44,
+            height: nested ? 36 : 44,
+            borderRadius: 2.5,
             flexShrink: 0,
-            bgcolor: alpha(theme.palette.primary.main, 0.14),
-            color: 'primary.main'
+            bgcolor: surfaceTint(theme),
+            color: 'primary.main',
+            transition: `transform ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
           }}
         >
           {icon}
@@ -121,7 +116,7 @@ function ContentSection({
             sx={{
               mt: 0.25,
               transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.2s ease'
+              transition: `transform ${MD3_DURATION.medium1}ms ${MD3_EASING.emphasizedDecelerate}`
             }}
           >
             <ExpandMoreIcon fontSize="small" />

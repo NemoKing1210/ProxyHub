@@ -20,8 +20,8 @@ import {
   ToggleButtonGroup,
   Typography
 } from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
-import { useEffect, useState } from 'react'
+import { useTheme } from '@mui/material/styles'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   CHECK_TIMEOUT_MAX_MS,
@@ -32,6 +32,7 @@ import {
 } from '../../../shared/types/settings'
 import ContentSection from '../components/ContentSection'
 import { useSettingsStore } from '../store/settingsStore'
+import { getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../theme'
 import { normalizeDomainInput, validateDomain } from '../validation/proxySchema'
 
 const TIMEOUT_MARKS = [
@@ -51,23 +52,25 @@ function clampTimeoutSeconds(seconds: number): number {
 function SettingsPage(): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
+  const palette = getPalette(theme)
   const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs } = useSettingsStore()
   const [domainInput, setDomainInput] = useState('')
   const [domainError, setDomainError] = useState<string | null>(null)
   const [savedOpen, setSavedOpen] = useState(false)
   const [timeoutDraft, setTimeoutDraft] = useState(settings.checkTimeoutMs / 1000)
+  const [isDraggingTimeout, setIsDraggingTimeout] = useState(false)
 
   const timeoutSeconds = settings.checkTimeoutMs / 1000
-
-  useEffect(() => {
-    setTimeoutDraft(timeoutSeconds)
-  }, [timeoutSeconds])
+  const displayedTimeout = isDraggingTimeout ? timeoutDraft : timeoutSeconds
 
   const notifySaved = (): void => {
     setSavedOpen(true)
   }
 
-  const handleThemeChange = async (_event: React.MouseEvent<HTMLElement>, theme: ThemeMode | null): Promise<void> => {
+  const handleThemeChange = async (
+    _event: React.MouseEvent<HTMLElement>,
+    theme: ThemeMode | null
+  ): Promise<void> => {
     if (!theme) return
     await setTheme(theme)
     notifySaved()
@@ -80,10 +83,12 @@ function SettingsPage(): React.JSX.Element {
 
   const handleTimeoutChange = (_event: Event, value: number | number[]): void => {
     const seconds = Array.isArray(value) ? value[0] : value
+    setIsDraggingTimeout(true)
     setTimeoutDraft(clampTimeoutSeconds(seconds))
   }
 
   const handleTimeoutCommit = async (): Promise<void> => {
+    setIsDraggingTimeout(false)
     const nextTimeoutMs = timeoutDraft * 1000
     if (nextTimeoutMs === settings.checkTimeoutMs) return
 
@@ -118,7 +123,7 @@ function SettingsPage(): React.JSX.Element {
 
   return (
     <Box sx={{ maxWidth: 760, mx: 'auto' }}>
-      <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
+      <Typography variant="h5" gutterBottom>
         {t('settings.title')}
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3.5 }}>
@@ -133,7 +138,7 @@ function SettingsPage(): React.JSX.Element {
         >
           <Stack spacing={3}>
             <Box>
-              <Typography variant="subtitle2" sx={{ mb: 1.25, fontWeight: 600 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
                 {t('settings.theme')}
               </Typography>
               <ToggleButtonGroup
@@ -143,9 +148,7 @@ function SettingsPage(): React.JSX.Element {
                 fullWidth
                 sx={{
                   '& .MuiToggleButton-root': {
-                    py: 1.25,
-                    textTransform: 'none',
-                    fontWeight: 500,
+                    py: 1.35,
                     gap: 0.75
                   }
                 }}
@@ -195,30 +198,28 @@ function SettingsPage(): React.JSX.Element {
               >
                 <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                   <TimerOutlinedIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                    {t('settings.checkTimeout')}
-                  </Typography>
+                  <Typography variant="subtitle2">{t('settings.checkTimeout')}</Typography>
                 </Stack>
                 <Typography
                   variant="body2"
                   sx={{
                     fontWeight: 700,
                     fontFamily: 'monospace',
-                    px: 1.25,
-                    py: 0.35,
-                    borderRadius: 1,
-                    bgcolor: alpha(theme.palette.primary.main, 0.12),
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 2,
+                    bgcolor: surfaceContainer(theme, 'high'),
                     color: 'primary.main'
                   }}
                 >
-                  {t('settings.checkTimeoutValue', { value: timeoutDraft })}
+                  {t('settings.checkTimeoutValue', { value: displayedTimeout })}
                 </Typography>
               </Stack>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 {t('settings.checkTimeoutHint')}
               </Typography>
               <Slider
-                value={timeoutDraft}
+                value={displayedTimeout}
                 onChange={handleTimeoutChange}
                 onChangeCommitted={() => void handleTimeoutCommit()}
                 min={CHECK_TIMEOUT_MIN_MS / 1000}
@@ -232,7 +233,7 @@ function SettingsPage(): React.JSX.Element {
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" sx={{ mb: 0.75, fontWeight: 600 }}>
+              <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
                 {t('settings.checkDomains')}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -262,7 +263,11 @@ function SettingsPage(): React.JSX.Element {
                   variant="contained"
                   startIcon={<AddIcon />}
                   onClick={() => void handleAddDomain()}
-                  sx={{ minWidth: { sm: 140 }, alignSelf: { xs: 'stretch', sm: 'flex-start' }, mt: { sm: 0.25 } }}
+                  sx={{
+                    minWidth: { sm: 140 },
+                    alignSelf: { xs: 'stretch', sm: 'flex-start' },
+                    mt: { sm: 0.25 }
+                  }}
                 >
                   {t('common.add')}
                 </Button>
@@ -277,18 +282,25 @@ function SettingsPage(): React.JSX.Element {
                       alignItems: 'center',
                       gap: 1,
                       px: 1.5,
-                      py: 1,
-                      borderRadius: 1.5,
-                      bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.08 : 0.05),
-                      transition: 'background-color 0.2s ease',
+                      py: 1.1,
+                      borderRadius: 2,
+                      bgcolor: surfaceContainer(theme, 'low'),
+                      border: `1px solid ${withThemeAlpha(theme, palette.divider, 0.4)}`,
+                      transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
                       '&:hover': {
-                        bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.14 : 0.09)
+                        bgcolor: surfaceContainer(theme, 'default'),
+                        transform: 'translateX(2px)'
                       }
                     }}
                   >
                     <Typography
                       variant="body2"
-                      sx={{ flex: 1, fontFamily: 'monospace', fontWeight: 500, wordBreak: 'break-all' }}
+                      sx={{
+                        flex: 1,
+                        fontFamily: 'monospace',
+                        fontWeight: 500,
+                        wordBreak: 'break-all'
+                      }}
                     >
                       {domain}
                     </Typography>

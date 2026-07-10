@@ -1,18 +1,50 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "البروكسيات", "settings": "الإعدادات" },
-  "common": { "cancel": "إلغاء", "save": "حفظ", "add": "إضافة", "delete": "حذف", "none": "—", "copy": "نسخ", "copied": "تم النسخ", "showPassword": "إظهار كلمة المرور", "hidePassword": "إخفاء كلمة المرور" },
+  "common": {
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "add": "إضافة",
+    "delete": "حذف",
+    "none": "—",
+    "copy": "نسخ",
+    "copied": "تم النسخ",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور"
+  },
   "proxyList": {
     "title": "قائمة البروكسيات",
     "stats": "{{total}} إجمالي · {{alive}} نشط · {{dead}} غير نشط",
-    "checkAll": "فحص الكل", "addProxy": "إضافة بروكسي",
+    "checkAll": "فحص الكل",
+    "addProxy": "إضافة بروكسي",
     "empty": "لا توجد بروكسيات بعد. انقر \"إضافة بروكسي\" للبدء.",
     "columns": {
-      "label": "التسمية", "protocol": "البروتوكول", "address": "العنوان", "username": "اسم المستخدم", "password": "كلمة المرور", "status": "الحالة",
-      "latency": "الزمن", "checkTarget": "هدف الفحص", "externalIp": "IP خارجي", "checkedAt": "تاريخ الفحص", "createdAt": "تاريخ الإنشاء", "proxyUrl": "رابط البروكسي", "actions": "الإجراءات"
+      "label": "التسمية",
+      "protocol": "البروتوكول",
+      "address": "العنوان",
+      "username": "اسم المستخدم",
+      "password": "كلمة المرور",
+      "status": "الحالة",
+      "latency": "الزمن",
+      "checkTarget": "هدف الفحص",
+      "externalIp": "IP خارجي",
+      "checkedAt": "تاريخ الفحص",
+      "createdAt": "تاريخ الإنشاء",
+      "proxyUrl": "رابط البروكسي",
+      "actions": "الإجراءات"
     },
-    "actions": { "check": "فحص البروكسي", "edit": "تعديل", "delete": "حذف", "copyLink": "نسخ كرابط" },
-    "sections": { "connection": "الاتصال", "connectionDescription": "المضيف والمنفذ وبيانات الاعتماد.", "results": "نتائج الفحص", "resultsDescription": "بيانات آخر اختبار توفر." },
+    "actions": {
+      "check": "فحص البروكسي",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "copyLink": "نسخ كرابط"
+    },
+    "sections": {
+      "connection": "الاتصال",
+      "connectionDescription": "المضيف والمنفذ وبيانات الاعتماد.",
+      "results": "نتائج الفحص",
+      "resultsDescription": "بيانات آخر اختبار توفر."
+    },
     "latencyMs": "{{value}} مللي ث",
     "authEnabled": "مصادقة",
     "errorDetailsTitle": "تفاصيل الخطأ",
@@ -22,27 +54,59 @@
     "errorCode": "الرمز"
   },
   "proxyForm": {
-    "addTitle": "إضافة بروكسي", "editTitle": "تعديل البروكسي", "label": "التسمية (اختياري)",
-    "protocol": "البروتوكول", "host": "المضيف", "hostPlaceholder": "192.168.1.1 أو proxy.example.com",
-    "port": "المنفذ", "username": "اسم المستخدم (اختياري)", "password": "كلمة المرور (اختياري)"
+    "addTitle": "إضافة بروكسي",
+    "editTitle": "تعديل البروكسي",
+    "label": "التسمية (اختياري)",
+    "protocol": "البروتوكول",
+    "host": "المضيف",
+    "hostPlaceholder": "192.168.1.1 أو proxy.example.com",
+    "port": "المنفذ",
+    "username": "اسم المستخدم (اختياري)",
+    "password": "كلمة المرور (اختياري)"
   },
-  "proxyStatus": { "unknown": "لم يُفحص", "checking": "جارٍ الفحص", "alive": "نشط", "dead": "غير نشط" },
+  "proxyStatus": {
+    "unknown": "لم يُفحص",
+    "checking": "جارٍ الفحص",
+    "alive": "نشط",
+    "dead": "غير نشط"
+  },
   "settings": {
-    "title": "الإعدادات", "description": "اضبط المظهر وإعدادات فحص البروكسي.",
-    "sections": { "appearance": "المظهر", "appearanceDescription": "السمة واللغة.", "checking": "فحص البروكسي", "checkingDescription": "المهلة ونطاقات الاختبار." },
-    "theme": "السمة", "themeLight": "فاتح", "themeDark": "داكن", "themeSystem": "النظام",
-    "language": "اللغة", "checkTimeout": "مهلة الاتصال", "checkTimeoutHint": "أقصى وقت انتظار لكل فحص.", "checkTimeoutValue": "{{value}} ث",
+    "title": "الإعدادات",
+    "description": "اضبط المظهر وإعدادات فحص البروكسي.",
+    "sections": {
+      "appearance": "المظهر",
+      "appearanceDescription": "السمة واللغة.",
+      "checking": "فحص البروكسي",
+      "checkingDescription": "المهلة ونطاقات الاختبار."
+    },
+    "theme": "السمة",
+    "themeLight": "فاتح",
+    "themeDark": "داكن",
+    "themeSystem": "النظام",
+    "language": "اللغة",
+    "checkTimeout": "مهلة الاتصال",
+    "checkTimeoutHint": "أقصى وقت انتظار لكل فحص.",
+    "checkTimeoutValue": "{{value}} ث",
     "checkDomains": "نطاقات الفحص",
     "checkDomainsHint": "يتم اختبار البروكسيات على هذه النطاقات. يُعتبر البروكسي نشطاً إذا استجاب نطاق واحد على الأقل.",
-    "domainPlaceholder": "example.com", "addDomain": "إضافة نطاق",
-    "domainRequired": "مطلوب نطاق فحص واحد على الأقل", "invalidDomain": "أدخل اسم نطاق صالح",
-    "domainDuplicate": "هذا النطاق موجود بالفعل", "saved": "تم حفظ الإعدادات"
+    "domainPlaceholder": "example.com",
+    "addDomain": "إضافة نطاق",
+    "domainRequired": "مطلوب نطاق فحص واحد على الأقل",
+    "invalidDomain": "أدخل اسم نطاق صالح",
+    "domainDuplicate": "هذا النطاق موجود بالفعل",
+    "saved": "تم حفظ الإعدادات"
   },
   "validation": {
-    "hostRequired": "المضيف مطلوب", "hostTooLong": "اسم المضيف طويل جداً",
-    "hostInvalid": "أدخل عنوان IP أو اسم مضيف صالح", "portNumber": "يجب أن يكون المنفذ رقماً",
-    "portInteger": "يجب أن يكون المنفذ عدداً صحيحاً", "portMin": "الحد الأدنى للمنفذ هو 1", "portMax": "الحد الأقصى للمنفذ هو 65535",
-    "labelMax": "التسمية بحد أقصى 64 حرفاً", "usernameMax": "اسم المستخدم طويل جداً",
-    "passwordMax": "كلمة المرور طويلة جداً", "authPair": "يجب إدخال اسم المستخدم وكلمة المرور معاً"
+    "hostRequired": "المضيف مطلوب",
+    "hostTooLong": "اسم المضيف طويل جداً",
+    "hostInvalid": "أدخل عنوان IP أو اسم مضيف صالح",
+    "portNumber": "يجب أن يكون المنفذ رقماً",
+    "portInteger": "يجب أن يكون المنفذ عدداً صحيحاً",
+    "portMin": "الحد الأدنى للمنفذ هو 1",
+    "portMax": "الحد الأقصى للمنفذ هو 65535",
+    "labelMax": "التسمية بحد أقصى 64 حرفاً",
+    "usernameMax": "اسم المستخدم طويل جداً",
+    "passwordMax": "كلمة المرور طويلة جداً",
+    "authPair": "يجب إدخال اسم المستخدم وكلمة المرور معاً"
   }
 }

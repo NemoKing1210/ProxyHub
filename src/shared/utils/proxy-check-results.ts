@@ -1,7 +1,10 @@
 import type { Proxy, ProxyDomainCheckResult, ProxyStatus } from '../types/proxy'
 
 export function normalizeCheckDomain(domain: string): string {
-  const trimmed = domain.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+  const trimmed = domain
+    .trim()
+    .replace(/^https?:\/\//, '')
+    .replace(/\/.*$/, '')
   return `https://${trimmed}`
 }
 
@@ -78,7 +81,7 @@ export function finalizeIncompleteProxy(proxy: Proxy): Proxy {
       ? proxy.error
       : deadChecks.length === 1
         ? deadChecks[0].error
-        : proxy.error ?? `All ${deadChecks.length} check domains failed`,
+        : (proxy.error ?? `All ${deadChecks.length} check domains failed`),
     checkedAt: proxy.checkedAt ?? new Date().toISOString()
   }
 }

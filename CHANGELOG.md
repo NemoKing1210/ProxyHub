@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-07-10
+
+### Added
+
+- Material Design 3 / Material You redesign across the application
+- MD3 theme system with CSS variables, tonal surfaces, and motion tokens
+- Roboto Flex variable font
+- Page, card, and domain result animations with `prefers-reduced-motion` support
+- `getPalette` / `withThemeAlpha` helpers for correct colors with `cssVariables`
+
+### Changed
+
+- Navigation header, proxy cards, settings, and form dialogs updated to MD3 style
+- ToggleButtonGroup segmented control for theme selection
+- Improved empty state and list stagger animations on the proxies page
+
+### Fixed
+
+- Header and component backgrounds invisible in dark theme with CSS variables
+- Theme toggle text unreadable (dark text on dark background) in dark mode
+
 ## [1.5.0] - 2026-07-10
 
 ### Added
@@ -104,6 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced default electron-vite template UI with Material UI components
 - Updated application identity to **ProxyChecker** (`com.proxychecker`)
 
+[1.6.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.6.0
 [1.5.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.5.0
 [1.4.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.4.0
 [1.3.0]: https://github.com/your-username/proxy-checker/releases/tag/v1.3.0

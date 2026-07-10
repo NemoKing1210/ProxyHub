@@ -1,6 +1,6 @@
 {
   "name": "proxy-checker",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Cross-platform desktop app for testing HTTP, HTTPS, SOCKS4, and SOCKS5 proxy availability and performance",
   "main": "./out/main/index.js",
   "license": "MIT",
@@ -40,6 +40,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource/roboto": "^5.2.10",
     "@hookform/resolvers": "^5.4.0",
     "@mui/icons-material": "^9.2.0",

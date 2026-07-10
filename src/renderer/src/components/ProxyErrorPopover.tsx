@@ -1,7 +1,9 @@
 import { Box, Divider, Popover, Stack, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ProxyCheckErrorDetail } from '../../../shared/types/proxy'
+import { elevationShadow, getPalette, withThemeAlpha } from '../theme'
 
 interface ProxyErrorPopoverProps {
   error: string
@@ -12,6 +14,8 @@ const CLOSE_DELAY_MS = 250
 
 function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): React.JSX.Element {
   const { t } = useTranslation()
+  const theme = useTheme()
+  const palette = getPalette(theme)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const details = errorDetails && errorDetails.length > 0 ? errorDetails : null
@@ -38,7 +42,17 @@ function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): Rea
 
   if (!details) {
     return (
-      <Typography variant="caption" color="error">
+      <Typography
+        variant="caption"
+        color="error"
+        sx={{
+          display: 'inline-block',
+          px: 1.25,
+          py: 0.5,
+          borderRadius: 1.5,
+          bgcolor: withThemeAlpha(theme, palette.error.main, 0.14)
+        }}
+      >
         {error}
       </Typography>
     )
@@ -55,7 +69,13 @@ function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): Rea
         <Typography
           variant="caption"
           color="error"
-          sx={{ textDecoration: 'underline dotted' }}
+          sx={{
+            textDecoration: 'underline dotted',
+            px: 1.25,
+            py: 0.5,
+            borderRadius: 1.5,
+            bgcolor: withThemeAlpha(theme, palette.error.main, 0.14)
+          }}
         >
           {error}
         </Typography>
@@ -78,13 +98,16 @@ function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): Rea
             sx: {
               pointerEvents: 'auto',
               p: 2,
-              maxWidth: 360,
-              mt: 0.5
+              maxWidth: 380,
+              mt: 0.5,
+              borderRadius: 3,
+              boxShadow: elevationShadow(theme, 3),
+              border: `1px solid ${withThemeAlpha(theme, palette.divider, 0.5)}`
             }
           }
         }}
       >
-        <Typography variant="subtitle2" gutterBottom>
+        <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 700 }}>
           {t('proxyList.errorDetailsTitle')}
         </Typography>
 

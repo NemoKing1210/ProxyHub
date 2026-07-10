@@ -1,5 +1,10 @@
 import { create } from 'zustand'
-import type { Proxy, ProxyCheckProgress, ProxyCheckResult, ProxyInput } from '../../../shared/types/proxy'
+import type {
+  Proxy,
+  ProxyCheckProgress,
+  ProxyCheckResult,
+  ProxyInput
+} from '../../../shared/types/proxy'
 import {
   createPendingDomainChecks,
   finalizeIncompleteProxy,

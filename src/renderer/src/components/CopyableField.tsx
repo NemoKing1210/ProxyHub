@@ -3,9 +3,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { Box, IconButton, Tooltip, Typography } from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../theme'
 
 interface CopyableFieldProps {
   label: string
@@ -24,14 +25,14 @@ function CopyableField({
 }: CopyableFieldProps): React.JSX.Element | null {
   const { t } = useTranslation()
   const theme = useTheme()
+  const palette = getPalette(theme)
   const [copied, setCopied] = useState(false)
   const [visible, setVisible] = useState(false)
   const hasValue = Boolean(value)
 
   if (!hasValue) return null
 
-  const shownValue =
-    secret && !visible ? '••••••••' : (displayValue ?? value ?? t('common.none'))
+  const shownValue = secret && !visible ? '••••••••' : (displayValue ?? value ?? t('common.none'))
 
   const handleCopy = async (): Promise<void> => {
     if (!value) return
@@ -68,23 +69,30 @@ function CopyableField({
           width: '100%',
           px: 1.75,
           py: 1.25,
-          borderRadius: 2,
+          borderRadius: 2.5,
           bgcolor: copied
-            ? alpha(theme.palette.success.main, theme.palette.mode === 'dark' ? 0.14 : 0.08)
-            : alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.06 : 0.03),
+            ? withThemeAlpha(theme, palette.success.main, 0.14)
+            : surfaceContainer(theme, 'low'),
+          border: `1px solid ${copied ? withThemeAlpha(theme, palette.success.main, 0.4) : withThemeAlpha(theme, palette.divider, 0.5)}`,
           cursor: 'pointer',
-          transition: 'background-color 0.2s ease, box-shadow 0.2s ease',
+          transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, border-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}`,
           '&:hover': {
-            bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.12 : 0.07),
-            boxShadow: `inset 3px 0 0 ${theme.palette.primary.main}`,
+            bgcolor: copied
+              ? withThemeAlpha(theme, palette.success.main, 0.18)
+              : surfaceContainer(theme, 'default'),
+            boxShadow: `inset 3px 0 0 ${copied ? palette.success.main : palette.primary.main}`,
+            transform: 'translateX(2px)',
             '& .copyable-field-icon': {
-              color: 'primary.main',
+              color: copied ? 'success.main' : 'primary.main',
               opacity: 1
             }
           },
           '&:focus-visible': {
-            outline: `2px solid ${theme.palette.primary.main}`,
+            outline: `2px solid ${palette.primary.main}`,
             outlineOffset: 2
+          },
+          '&:active': {
+            transform: 'scale(0.995)'
           }
         }}
       >
@@ -95,10 +103,10 @@ function CopyableField({
             sx={{
               display: 'block',
               mb: 0.35,
-              fontWeight: 600,
-              letterSpacing: 0.4,
+              fontWeight: 700,
+              letterSpacing: 0.6,
               textTransform: 'uppercase',
-              fontSize: '0.68rem',
+              fontSize: '0.65rem',
               lineHeight: 1.2
             }}
           >
@@ -111,7 +119,7 @@ function CopyableField({
               lineHeight: 1.45,
               wordBreak: 'break-all',
               color: copied ? 'success.main' : 'text.primary',
-              transition: 'color 0.2s ease',
+              transition: `color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
               ...(monospace ? { fontFamily: 'monospace', fontSize: '0.9rem' } : {})
             }}
           >
@@ -126,15 +134,15 @@ function CopyableField({
               onClick={toggleVisibility}
               sx={{
                 flexShrink: 0,
-                color: 'text.secondary',
-                '&:hover': {
-                  color: 'primary.main',
-                  bgcolor: alpha(theme.palette.primary.main, 0.1)
-                }
+                color: 'text.secondary'
               }}
               aria-label={visible ? t('common.hidePassword') : t('common.showPassword')}
             >
-              {visible ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+              {visible ? (
+                <VisibilityOffIcon fontSize="small" />
+              ) : (
+                <VisibilityIcon fontSize="small" />
+              )}
             </IconButton>
           </Tooltip>
         )}
@@ -146,22 +154,18 @@ function CopyableField({
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            width: 32,
-            height: 32,
-            borderRadius: 1.5,
+            width: 34,
+            height: 34,
+            borderRadius: 2,
             color: copied ? 'success.main' : 'text.disabled',
             bgcolor: copied
-              ? alpha(theme.palette.success.main, 0.12)
-              : alpha(theme.palette.action.active, 0.06),
-            opacity: 0.75,
-            transition: 'color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease'
+              ? withThemeAlpha(theme, palette.success.main, 0.16)
+              : surfaceContainer(theme, 'default'),
+            opacity: 0.85,
+            transition: `color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, opacity ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
           }}
         >
-          {copied ? (
-            <CheckIcon sx={{ fontSize: 18 }} />
-          ) : (
-            <ContentCopyIcon sx={{ fontSize: 17 }} />
-          )}
+          {copied ? <CheckIcon sx={{ fontSize: 18 }} /> : <ContentCopyIcon sx={{ fontSize: 17 }} />}
         </Box>
       </Box>
     </Tooltip>

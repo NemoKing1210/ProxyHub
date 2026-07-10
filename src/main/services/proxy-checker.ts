@@ -30,7 +30,10 @@ function createAgent(proxy: Proxy): http.Agent {
 }
 
 function normalizeDomain(domain: string): string {
-  const trimmed = domain.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+  const trimmed = domain
+    .trim()
+    .replace(/^https?:\/\//, '')
+    .replace(/\/.*$/, '')
   return `https://${trimmed}`
 }
 

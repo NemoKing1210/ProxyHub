@@ -88,11 +88,23 @@ function ProxyFormDialog({
   })
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>{mode === 'add' ? t('proxyForm.addTitle') : t('proxyForm.editTitle')}</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      slotProps={{
+        backdrop: {
+          sx: { backdropFilter: 'blur(4px)' }
+        }
+      }}
+    >
+      <DialogTitle>
+        {mode === 'add' ? t('proxyForm.addTitle') : t('proxyForm.editTitle')}
+      </DialogTitle>
 
       <DialogContent>
-        <Stack spacing={2} sx={{ mt: 1 }}>
+        <Stack spacing={2.5} sx={{ mt: 1 }}>
           <Controller
             name="label"
             control={control}
@@ -194,8 +206,8 @@ function ProxyFormDialog({
         </Stack>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={onClose} disabled={isSubmitting}>
+      <DialogActions sx={{ px: 3, pb: 3, pt: 1, gap: 1 }}>
+        <Button onClick={onClose} disabled={isSubmitting} variant="text">
           {t('common.cancel')}
         </Button>
         <Button variant="contained" onClick={() => void submit()} disabled={isSubmitting}>

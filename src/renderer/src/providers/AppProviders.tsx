@@ -1,51 +1,56 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { CssBaseline, ThemeProvider } from '@mui/material'
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript'
+import { useColorScheme } from '@mui/material/styles'
 import { I18nextProvider } from 'react-i18next'
 import { HashRouter } from 'react-router-dom'
 import i18n from '../i18n'
 import App from '../App'
 import { useSettingsStore } from '../store/settingsStore'
-import { createAppTheme, resolveThemeMode } from '../theme'
+import { createAppTheme } from '../theme'
 import { RTL_LANGUAGES } from '../../../shared/types/settings'
+
+function ThemeModeSync(): null {
+  const themeMode = useSettingsStore((state) => state.settings.theme)
+  const { setMode } = useColorScheme()
+
+  useEffect(() => {
+    setMode(themeMode)
+  }, [themeMode, setMode])
+
+  return null
+}
 
 function AppProviders(): React.JSX.Element {
   const { settings, isReady, loadSettings } = useSettingsStore()
-  const [resolvedMode, setResolvedMode] = useState<'light' | 'dark'>(() =>
-    resolveThemeMode(settings.theme)
-  )
+  const direction = RTL_LANGUAGES.includes(settings.language) ? 'rtl' : 'ltr'
+  const theme = useMemo(() => createAppTheme(direction), [direction])
 
   useEffect(() => {
     void loadSettings()
   }, [loadSettings])
 
-  useEffect(() => {
-    setResolvedMode(resolveThemeMode(settings.theme))
-
-    if (settings.theme !== 'system') return
-
-    const media = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (): void => setResolvedMode(resolveThemeMode('system'))
-
-    media.addEventListener('change', handler)
-    return () => media.removeEventListener('change', handler)
-  }, [settings.theme])
-
-  const direction = RTL_LANGUAGES.includes(settings.language) ? 'rtl' : 'ltr'
-  const theme = useMemo(() => createAppTheme(resolvedMode, direction), [resolvedMode, direction])
-
   if (!isReady) {
-    return <></>
+    return (
+      <>
+        <InitColorSchemeScript attribute="data" defaultMode="dark" />
+      </>
+    )
   }
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <HashRouter>
-          <App />
-        </HashRouter>
-      </ThemeProvider>
-    </I18nextProvider>
+    <>
+      <InitColorSchemeScript attribute="data" defaultMode={settings.theme} />
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={theme} defaultMode={settings.theme} disableTransitionOnChange>
+          <CssBaseline />
+          <ThemeModeSync />
+          <HashRouter>
+            <App />
+          </HashRouter>
+        </ThemeProvider>
+      </I18nextProvider>
+    </>
   )
 }
 

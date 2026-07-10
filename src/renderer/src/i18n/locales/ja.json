@@ -1,18 +1,50 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "プロキシ", "settings": "設定" },
-  "common": { "cancel": "キャンセル", "save": "保存", "add": "追加", "delete": "削除", "none": "—", "copy": "コピー", "copied": "コピーしました", "showPassword": "パスワードを表示", "hidePassword": "パスワードを非表示" },
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "add": "追加",
+    "delete": "削除",
+    "none": "—",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "showPassword": "パスワードを表示",
+    "hidePassword": "パスワードを非表示"
+  },
   "proxyList": {
     "title": "プロキシ一覧",
     "stats": "合計 {{total}} · 稼働 {{alive}} · 停止 {{dead}}",
-    "checkAll": "すべて確認", "addProxy": "プロキシを追加",
+    "checkAll": "すべて確認",
+    "addProxy": "プロキシを追加",
     "empty": "プロキシがありません。「プロキシを追加」をクリックして開始してください。",
     "columns": {
-      "label": "ラベル", "protocol": "プロトコル", "address": "アドレス", "username": "ユーザー名", "password": "パスワード", "status": "状態",
-      "latency": "遅延", "checkTarget": "確認先", "externalIp": "外部IP", "checkedAt": "確認日時", "createdAt": "作成日時", "proxyUrl": "プロキシURL", "actions": "操作"
+      "label": "ラベル",
+      "protocol": "プロトコル",
+      "address": "アドレス",
+      "username": "ユーザー名",
+      "password": "パスワード",
+      "status": "状態",
+      "latency": "遅延",
+      "checkTarget": "確認先",
+      "externalIp": "外部IP",
+      "checkedAt": "確認日時",
+      "createdAt": "作成日時",
+      "proxyUrl": "プロキシURL",
+      "actions": "操作"
     },
-    "actions": { "check": "プロキシを確認", "edit": "編集", "delete": "削除", "copyLink": "リンクとしてコピー" },
-    "sections": { "connection": "接続", "connectionDescription": "ホスト、ポート、認証情報。", "results": "確認結果", "resultsDescription": "最新の可用性テストのデータ。" },
+    "actions": {
+      "check": "プロキシを確認",
+      "edit": "編集",
+      "delete": "削除",
+      "copyLink": "リンクとしてコピー"
+    },
+    "sections": {
+      "connection": "接続",
+      "connectionDescription": "ホスト、ポート、認証情報。",
+      "results": "確認結果",
+      "resultsDescription": "最新の可用性テストのデータ。"
+    },
     "latencyMs": "{{value}} ms",
     "authEnabled": "認証",
     "errorDomain": "ドメイン",
@@ -21,27 +53,54 @@
     "errorCode": "コード"
   },
   "proxyForm": {
-    "addTitle": "プロキシを追加", "editTitle": "プロキシを編集", "label": "ラベル（任意）",
-    "protocol": "プロトコル", "host": "ホスト", "hostPlaceholder": "192.168.1.1 または proxy.example.com",
-    "port": "ポート", "username": "ユーザー名（任意）", "password": "パスワード（任意）"
+    "addTitle": "プロキシを追加",
+    "editTitle": "プロキシを編集",
+    "label": "ラベル（任意）",
+    "protocol": "プロトコル",
+    "host": "ホスト",
+    "hostPlaceholder": "192.168.1.1 または proxy.example.com",
+    "port": "ポート",
+    "username": "ユーザー名（任意）",
+    "password": "パスワード（任意）"
   },
   "proxyStatus": { "unknown": "未確認", "checking": "確認中", "alive": "稼働", "dead": "停止" },
   "settings": {
-    "title": "設定", "description": "外観とプロキシ確認の設定を行います。",
-    "sections": { "appearance": "外観", "appearanceDescription": "テーマと言語。", "checking": "プロキシ確認", "checkingDescription": "タイムアウトと確認ドメイン。" },
-    "theme": "テーマ", "themeLight": "ライト", "themeDark": "ダーク", "themeSystem": "システム",
-    "language": "言語", "checkTimeout": "接続タイムアウト", "checkTimeoutHint": "各確認の最大待機時間。", "checkTimeoutValue": "{{value}} 秒",
+    "title": "設定",
+    "description": "外観とプロキシ確認の設定を行います。",
+    "sections": {
+      "appearance": "外観",
+      "appearanceDescription": "テーマと言語。",
+      "checking": "プロキシ確認",
+      "checkingDescription": "タイムアウトと確認ドメイン。"
+    },
+    "theme": "テーマ",
+    "themeLight": "ライト",
+    "themeDark": "ダーク",
+    "themeSystem": "システム",
+    "language": "言語",
+    "checkTimeout": "接続タイムアウト",
+    "checkTimeoutHint": "各確認の最大待機時間。",
+    "checkTimeoutValue": "{{value}} 秒",
     "checkDomains": "確認ドメイン",
     "checkDomainsHint": "これらのドメインに対してプロキシをテストします。1つでも応答があれば稼働とみなします。",
-    "domainPlaceholder": "example.com", "addDomain": "ドメインを追加",
-    "domainRequired": "確認ドメインは1つ以上必要です", "invalidDomain": "有効なドメイン名を入力してください",
-    "domainDuplicate": "このドメインは既にリストにあります", "saved": "設定を保存しました"
+    "domainPlaceholder": "example.com",
+    "addDomain": "ドメインを追加",
+    "domainRequired": "確認ドメインは1つ以上必要です",
+    "invalidDomain": "有効なドメイン名を入力してください",
+    "domainDuplicate": "このドメインは既にリストにあります",
+    "saved": "設定を保存しました"
   },
   "validation": {
-    "hostRequired": "ホストは必須です", "hostTooLong": "ホスト名が長すぎます",
-    "hostInvalid": "有効なIPまたはホスト名を入力してください", "portNumber": "ポートは数値である必要があります",
-    "portInteger": "ポートは整数である必要があります", "portMin": "ポートは1以上", "portMax": "ポートは65535以下",
-    "labelMax": "ラベルは64文字以内", "usernameMax": "ユーザー名が長すぎます",
-    "passwordMax": "パスワードが長すぎます", "authPair": "ユーザー名とパスワードは両方入力してください"
+    "hostRequired": "ホストは必須です",
+    "hostTooLong": "ホスト名が長すぎます",
+    "hostInvalid": "有効なIPまたはホスト名を入力してください",
+    "portNumber": "ポートは数値である必要があります",
+    "portInteger": "ポートは整数である必要があります",
+    "portMin": "ポートは1以上",
+    "portMax": "ポートは65535以下",
+    "labelMax": "ラベルは64文字以内",
+    "usernameMax": "ユーザー名が長すぎます",
+    "passwordMax": "パスワードが長すぎます",
+    "authPair": "ユーザー名とパスワードは両方入力してください"
   }
 }

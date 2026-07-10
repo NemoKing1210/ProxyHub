@@ -1,18 +1,50 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "Proxies", "settings": "Ajustes" },
-  "common": { "cancel": "Cancelar", "save": "Guardar", "add": "Añadir", "delete": "Eliminar", "none": "—", "copy": "Copiar", "copied": "Copiado", "showPassword": "Mostrar contraseña", "hidePassword": "Ocultar contraseña" },
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "add": "Añadir",
+    "delete": "Eliminar",
+    "none": "—",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
+  },
   "proxyList": {
     "title": "Lista de proxies",
     "stats": "{{total}} en total · {{alive}} activos · {{dead}} inactivos",
-    "checkAll": "Comprobar todos", "addProxy": "Añadir proxy",
+    "checkAll": "Comprobar todos",
+    "addProxy": "Añadir proxy",
     "empty": "Aún no hay proxies. Haz clic en \"Añadir proxy\" para empezar.",
     "columns": {
-      "label": "Etiqueta", "protocol": "Protocolo", "address": "Dirección", "username": "Usuario", "password": "Contraseña", "status": "Estado",
-      "latency": "Latencia", "checkTarget": "Objetivo", "externalIp": "IP externa", "checkedAt": "Comprobado", "createdAt": "Creado", "proxyUrl": "URL del proxy", "actions": "Acciones"
+      "label": "Etiqueta",
+      "protocol": "Protocolo",
+      "address": "Dirección",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "status": "Estado",
+      "latency": "Latencia",
+      "checkTarget": "Objetivo",
+      "externalIp": "IP externa",
+      "checkedAt": "Comprobado",
+      "createdAt": "Creado",
+      "proxyUrl": "URL del proxy",
+      "actions": "Acciones"
     },
-    "actions": { "check": "Comprobar proxy", "edit": "Editar", "delete": "Eliminar", "copyLink": "Copiar como enlace" },
-    "sections": { "connection": "Conexión", "connectionDescription": "Host, puerto y credenciales.", "results": "Resultados", "resultsDescription": "Datos de la última prueba de disponibilidad." },
+    "actions": {
+      "check": "Comprobar proxy",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "copyLink": "Copiar como enlace"
+    },
+    "sections": {
+      "connection": "Conexión",
+      "connectionDescription": "Host, puerto y credenciales.",
+      "results": "Resultados",
+      "resultsDescription": "Datos de la última prueba de disponibilidad."
+    },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
     "errorDomain": "Dominio",
@@ -21,27 +53,59 @@
     "errorCode": "Código"
   },
   "proxyForm": {
-    "addTitle": "Añadir proxy", "editTitle": "Editar proxy", "label": "Etiqueta (opcional)",
-    "protocol": "Protocolo", "host": "Host", "hostPlaceholder": "192.168.1.1 o proxy.example.com",
-    "port": "Puerto", "username": "Usuario (opcional)", "password": "Contraseña (opcional)"
+    "addTitle": "Añadir proxy",
+    "editTitle": "Editar proxy",
+    "label": "Etiqueta (opcional)",
+    "protocol": "Protocolo",
+    "host": "Host",
+    "hostPlaceholder": "192.168.1.1 o proxy.example.com",
+    "port": "Puerto",
+    "username": "Usuario (opcional)",
+    "password": "Contraseña (opcional)"
   },
-  "proxyStatus": { "unknown": "Sin comprobar", "checking": "Comprobando", "alive": "Activo", "dead": "Inactivo" },
+  "proxyStatus": {
+    "unknown": "Sin comprobar",
+    "checking": "Comprobando",
+    "alive": "Activo",
+    "dead": "Inactivo"
+  },
   "settings": {
-    "title": "Ajustes", "description": "Configura la apariencia y la comprobación de proxies.",
-    "sections": { "appearance": "Apariencia", "appearanceDescription": "Tema e idioma.", "checking": "Comprobación", "checkingDescription": "Tiempo de espera y dominios." },
-    "theme": "Tema", "themeLight": "Claro", "themeDark": "Oscuro", "themeSystem": "Sistema",
-    "language": "Idioma", "checkTimeout": "Tiempo de espera", "checkTimeoutHint": "Tiempo máximo de espera por comprobación.", "checkTimeoutValue": "{{value}} s",
+    "title": "Ajustes",
+    "description": "Configura la apariencia y la comprobación de proxies.",
+    "sections": {
+      "appearance": "Apariencia",
+      "appearanceDescription": "Tema e idioma.",
+      "checking": "Comprobación",
+      "checkingDescription": "Tiempo de espera y dominios."
+    },
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "language": "Idioma",
+    "checkTimeout": "Tiempo de espera",
+    "checkTimeoutHint": "Tiempo máximo de espera por comprobación.",
+    "checkTimeoutValue": "{{value}} s",
     "checkDomains": "Dominios de comprobación",
     "checkDomainsHint": "Los proxies se prueban contra estos dominios. Se considera activo si al menos uno responde.",
-    "domainPlaceholder": "example.com", "addDomain": "Añadir dominio",
-    "domainRequired": "Se requiere al menos un dominio", "invalidDomain": "Introduce un dominio válido",
-    "domainDuplicate": "Este dominio ya está en la lista", "saved": "Ajustes guardados"
+    "domainPlaceholder": "example.com",
+    "addDomain": "Añadir dominio",
+    "domainRequired": "Se requiere al menos un dominio",
+    "invalidDomain": "Introduce un dominio válido",
+    "domainDuplicate": "Este dominio ya está en la lista",
+    "saved": "Ajustes guardados"
   },
   "validation": {
-    "hostRequired": "El host es obligatorio", "hostTooLong": "Host demasiado largo",
-    "hostInvalid": "Introduce una IP o nombre de host válido", "portNumber": "El puerto debe ser un número",
-    "portInteger": "El puerto debe ser entero", "portMin": "El puerto mínimo es 1", "portMax": "El puerto máximo es 65535",
-    "labelMax": "La etiqueta debe tener máximo 64 caracteres", "usernameMax": "Usuario demasiado largo",
-    "passwordMax": "Contraseña demasiado larga", "authPair": "Usuario y contraseña deben proporcionarse juntos"
+    "hostRequired": "El host es obligatorio",
+    "hostTooLong": "Host demasiado largo",
+    "hostInvalid": "Introduce una IP o nombre de host válido",
+    "portNumber": "El puerto debe ser un número",
+    "portInteger": "El puerto debe ser entero",
+    "portMin": "El puerto mínimo es 1",
+    "portMax": "El puerto máximo es 65535",
+    "labelMax": "La etiqueta debe tener máximo 64 caracteres",
+    "usernameMax": "Usuario demasiado largo",
+    "passwordMax": "Contraseña demasiado larga",
+    "authPair": "Usuario y contraseña deben proporcionarse juntos"
   }
 }

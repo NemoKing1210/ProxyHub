@@ -6,21 +6,15 @@ import LinkIcon from '@mui/icons-material/Link'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import RouterOutlinedIcon from '@mui/icons-material/RouterOutlined'
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
-import {
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  Stack,
-  Typography
-} from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
-import { useEffect, useMemo, useState } from 'react'
+import { Box, Button, Chip, CircularProgress, Stack, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
+import { elevationShadow, getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
 import ContentSection from './ContentSection'
 import CopyableField from './CopyableField'
 import ProxyDomainResults from './ProxyDomainResults'
@@ -54,8 +48,10 @@ function ProxyCard({
 }: ProxyCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
+  const palette = getPalette(theme)
   const [linkCopied, setLinkCopied] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
+  const effectiveResultsExpanded = isChecking || resultsExpanded
 
   const proxyUrl = buildProxyUrl(proxy)
   const address = formatProxyAddress(proxy)
@@ -119,12 +115,6 @@ function ProxyCard({
   const hasResults = domainChecks.length > 0 || resultFields.length > 0
   const showResults = isChecking || hasResults
 
-  useEffect(() => {
-    if (isChecking) {
-      setResultsExpanded(true)
-    }
-  }, [isChecking])
-
   const handleCopyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(proxyUrl)
     setLinkCopied(true)
@@ -149,15 +139,16 @@ function ProxyCard({
   return (
     <Box
       sx={{
-        borderRadius: 2.5,
-        bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.06 : 0.04),
-        transition: 'box-shadow 0.2s ease, background-color 0.2s ease',
+        borderRadius: 3,
+        bgcolor: 'background.paper',
+        border: `1px solid ${withThemeAlpha(theme, palette.divider, 0.5)}`,
+        boxShadow: elevationShadow(theme, 1),
+        overflow: 'hidden',
+        transition: `box-shadow ${MD3_DURATION.medium1}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.medium1}ms ${MD3_EASING.standard}, border-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
         '&:hover': {
-          bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.09 : 0.06),
-          boxShadow:
-            theme.palette.mode === 'dark'
-              ? `0 10px 24px ${alpha(theme.palette.common.black, 0.35)}`
-              : `0 10px 24px ${alpha(theme.palette.primary.main, 0.1)}`
+          boxShadow: elevationShadow(theme, 3),
+          transform: 'translateY(-2px)',
+          borderColor: withThemeAlpha(theme, palette.primary.main, 0.3)
         }
       }}
     >
@@ -168,12 +159,23 @@ function ProxyCard({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 40,
-              height: 40,
-              borderRadius: 2,
+              width: 44,
+              height: 44,
+              borderRadius: 2.5,
               flexShrink: 0,
-              bgcolor: alpha(theme.palette.primary.main, 0.14),
-              color: 'primary.main'
+              bgcolor: surfaceTint(theme),
+              color: 'primary.main',
+              ...(isChecking
+                ? {
+                    animation: 'iconPulse 1.6s ease-in-out infinite',
+                    '@keyframes iconPulse': {
+                      '0%, 100%': {
+                        boxShadow: `0 0 0 0 ${withThemeAlpha(theme, palette.primary.main, 0.3)}`
+                      },
+                      '50%': { boxShadow: `0 0 0 8px ${withThemeAlpha(theme, palette.primary.main, 0)}` }
+                    }
+                  }
+                : {})
             }}
           >
             <RouterOutlinedIcon fontSize="small" />
@@ -201,9 +203,10 @@ function ProxyCard({
                 size="small"
                 sx={{
                   fontWeight: 700,
-                  letterSpacing: 0.4,
-                  bgcolor: alpha(theme.palette.primary.main, 0.12),
-                  color: 'primary.main'
+                  letterSpacing: 0.5,
+                  bgcolor: surfaceContainer(theme, 'high'),
+                  color: 'primary.main',
+                  border: 'none'
                 }}
               />
               <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
@@ -229,7 +232,7 @@ function ProxyCard({
             <ContentSection
               nested
               collapsible
-              expanded={resultsExpanded}
+              expanded={effectiveResultsExpanded}
               onExpandedChange={setResultsExpanded}
               icon={<SpeedOutlinedIcon fontSize="small" />}
               title={t('proxyList.sections.results')}

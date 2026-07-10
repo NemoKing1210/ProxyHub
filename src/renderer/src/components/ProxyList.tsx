@@ -1,22 +1,25 @@
 import AddIcon from '@mui/icons-material/Add'
+import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Paper,
-  Stack,
-  Typography
-} from '@mui/material'
+import { Box, Button, Chip, CircularProgress, Paper, Stack, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '../../../shared/types/proxy'
 import { useProxyStore } from '../store/proxyStore'
+import { elevationShadow, staggerDelay, surfaceContainer, surfaceTint } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCard from './ProxyCard'
 import ProxyFormDialog from './ProxyFormDialog'
 
-function toProxyInput(values: ProxyFormValues) {
+function toProxyInput(values: ProxyFormValues): {
+  protocol: ProxyFormValues['protocol']
+  host: string
+  port: number
+  label?: string
+  username?: string
+  password?: string
+} {
   return {
     protocol: values.protocol,
     host: values.host.trim(),
@@ -29,6 +32,7 @@ function toProxyInput(values: ProxyFormValues) {
 
 function ProxyList(): React.JSX.Element {
   const { t } = useTranslation()
+  const theme = useTheme()
   const {
     proxies,
     isLoading,
@@ -89,9 +93,21 @@ function ProxyList(): React.JSX.Element {
           <Typography variant="h5" gutterBottom>
             {t('proxyList.title')}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {t('proxyList.stats', { total: proxies.length, alive: aliveCount, dead: deadCount })}
-          </Typography>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', mt: 0.5 }}>
+            <Chip
+              label={t('proxyList.stats', {
+                total: proxies.length,
+                alive: aliveCount,
+                dead: deadCount
+              })}
+              size="small"
+              sx={{
+                bgcolor: surfaceContainer(theme, 'default'),
+                fontWeight: 600,
+                border: 'none'
+              }}
+            />
+          </Stack>
         </Box>
 
         <Stack direction="row" spacing={1}>
@@ -111,42 +127,91 @@ function ProxyList(): React.JSX.Element {
 
       {isLoading ? (
         <Paper
-          elevation={0}
           sx={{
-            py: 8,
-            border: 1,
-            borderColor: 'divider',
+            py: 10,
             display: 'flex',
-            justifyContent: 'center'
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+            borderRadius: 3,
+            boxShadow: elevationShadow(theme, 1)
           }}
         >
-          <CircularProgress size={32} />
+          <CircularProgress size={36} thickness={4} />
+          <Typography variant="body2" color="text.secondary">
+            {t('proxyList.title')}
+          </Typography>
         </Paper>
       ) : proxies.length === 0 ? (
         <Paper
-          elevation={0}
           sx={{
-            py: 8,
+            py: 10,
             px: 3,
-            border: 1,
-            borderColor: 'divider',
-            textAlign: 'center'
+            textAlign: 'center',
+            borderRadius: 3,
+            boxShadow: elevationShadow(theme, 1),
+            bgcolor: surfaceContainer(theme, 'low')
           }}
         >
-          <Typography color="text.secondary">{t('proxyList.empty')}</Typography>
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 64,
+              height: 64,
+              borderRadius: 4,
+              mb: 2,
+              bgcolor: surfaceTint(theme),
+              color: 'primary.main'
+            }}
+          >
+            <DnsOutlinedIcon sx={{ fontSize: 32 }} />
+          </Box>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+            {t('proxyList.empty')}
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={openAddDialog}
+            sx={{ mt: 1 }}
+          >
+            {t('proxyList.addProxy')}
+          </Button>
         </Paper>
       ) : (
         <Stack spacing={2}>
-          {proxies.map((proxy) => (
-            <ProxyCard
+          {proxies.map((proxy, index) => (
+            <Box
               key={proxy.id}
-              proxy={proxy}
-              isChecking={checkingIds.has(proxy.id)}
-              isCheckingAll={isCheckingAll}
-              onCheck={() => void checkProxy(proxy.id)}
-              onEdit={() => openEditDialog(proxy)}
-              onDelete={() => void removeProxy(proxy.id)}
-            />
+              sx={{
+                animation: 'cardEnter 0.4s cubic-bezier(0.05, 0.7, 0.1, 1) both',
+                animationDelay: staggerDelay(index),
+                '@media (prefers-reduced-motion: reduce)': {
+                  animation: 'none'
+                },
+                '@keyframes cardEnter': {
+                  from: {
+                    opacity: 0,
+                    transform: 'translateY(16px) scale(0.98)'
+                  },
+                  to: {
+                    opacity: 1,
+                    transform: 'translateY(0) scale(1)'
+                  }
+                }
+              }}
+            >
+              <ProxyCard
+                proxy={proxy}
+                isChecking={checkingIds.has(proxy.id)}
+                isCheckingAll={isCheckingAll}
+                onCheck={() => void checkProxy(proxy.id)}
+                onEdit={() => openEditDialog(proxy)}
+                onDelete={() => void removeProxy(proxy.id)}
+              />
+            </Box>
           ))}
         </Stack>
       )}

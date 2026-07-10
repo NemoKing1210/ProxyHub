@@ -22,14 +22,14 @@ ProxyChecker helps you validate proxy servers quickly from a single desktop inte
 
 ## Tech stack
 
-| Layer | Technology |
-|-------|------------|
-| Desktop runtime | [Electron](https://www.electronjs.org/) |
-| Build tool | [electron-vite](https://electron-vite.org/) |
-| UI framework | [React 19](https://react.dev/) |
-| Language | [TypeScript](https://www.typescriptlang.org/) |
-| Component library | [Material UI (MUI)](https://mui.com/) |
-| Packaging | [electron-builder](https://www.electron.build/) |
+| Layer                | Technology                                                       |
+| -------------------- | ---------------------------------------------------------------- |
+| Desktop runtime      | [Electron](https://www.electronjs.org/)                          |
+| Build tool           | [electron-vite](https://electron-vite.org/)                      |
+| UI framework         | [React 19](https://react.dev/)                                   |
+| Language             | [TypeScript](https://www.typescriptlang.org/)                    |
+| Component library    | [Material UI (MUI)](https://mui.com/)                            |
+| Packaging            | [electron-builder](https://www.electron.build/)                  |
 | Linting / formatting | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) |
 
 ## Prerequisites
@@ -64,18 +64,18 @@ npm start
 
 ## Available scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start the app in development mode |
-| `npm start` | Preview the built app |
-| `npm run build` | Type-check and build for production |
-| `npm run build:win` | Build a Windows installer |
-| `npm run build:mac` | Build a macOS installer |
-| `npm run build:linux` | Build a Linux installer |
+| Command                | Description                         |
+| ---------------------- | ----------------------------------- |
+| `npm run dev`          | Start the app in development mode   |
+| `npm start`            | Preview the built app               |
+| `npm run build`        | Type-check and build for production |
+| `npm run build:win`    | Build a Windows installer           |
+| `npm run build:mac`    | Build a macOS installer             |
+| `npm run build:linux`  | Build a Linux installer             |
 | `npm run build:unpack` | Build without creating an installer |
-| `npm run typecheck` | Run TypeScript checks |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Format code with Prettier |
+| `npm run typecheck`    | Run TypeScript checks               |
+| `npm run lint`         | Run ESLint                          |
+| `npm run format`       | Format code with Prettier           |
 
 ## Building installers
 

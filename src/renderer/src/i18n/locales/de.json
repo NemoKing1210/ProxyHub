@@ -1,18 +1,50 @@
 {
   "app": { "title": "ProxyChecker" },
   "nav": { "proxies": "Proxies", "settings": "Einstellungen" },
-  "common": { "cancel": "Abbrechen", "save": "Speichern", "add": "Hinzufügen", "delete": "Löschen", "none": "—", "copy": "Kopieren", "copied": "Kopiert", "showPassword": "Passwort anzeigen", "hidePassword": "Passwort verbergen" },
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "add": "Hinzufügen",
+    "delete": "Löschen",
+    "none": "—",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen"
+  },
   "proxyList": {
     "title": "Proxy-Liste",
     "stats": "{{total}} gesamt · {{alive}} aktiv · {{dead}} inaktiv",
-    "checkAll": "Alle prüfen", "addProxy": "Proxy hinzufügen",
+    "checkAll": "Alle prüfen",
+    "addProxy": "Proxy hinzufügen",
     "empty": "Noch keine Proxies. Klicken Sie auf „Proxy hinzufügen“, um zu starten.",
     "columns": {
-      "label": "Bezeichnung", "protocol": "Protokoll", "address": "Adresse", "username": "Benutzername", "password": "Passwort", "status": "Status",
-      "latency": "Latenz", "checkTarget": "Prüfziel", "externalIp": "Externe IP", "checkedAt": "Geprüft am", "createdAt": "Erstellt am", "proxyUrl": "Proxy-URL", "actions": "Aktionen"
+      "label": "Bezeichnung",
+      "protocol": "Protokoll",
+      "address": "Adresse",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "status": "Status",
+      "latency": "Latenz",
+      "checkTarget": "Prüfziel",
+      "externalIp": "Externe IP",
+      "checkedAt": "Geprüft am",
+      "createdAt": "Erstellt am",
+      "proxyUrl": "Proxy-URL",
+      "actions": "Aktionen"
     },
-    "actions": { "check": "Proxy prüfen", "edit": "Bearbeiten", "delete": "Löschen", "copyLink": "Als Link kopieren" },
-    "sections": { "connection": "Verbindung", "connectionDescription": "Host, Port und Anmeldedaten.", "results": "Prüfergebnisse", "resultsDescription": "Daten des letzten Verfügbarkeitstests." },
+    "actions": {
+      "check": "Proxy prüfen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "copyLink": "Als Link kopieren"
+    },
+    "sections": {
+      "connection": "Verbindung",
+      "connectionDescription": "Host, Port und Anmeldedaten.",
+      "results": "Prüfergebnisse",
+      "resultsDescription": "Daten des letzten Verfügbarkeitstests."
+    },
     "latencyMs": "{{value}} ms",
     "authEnabled": "Auth",
     "errorDomain": "Domain",
@@ -21,27 +53,59 @@
     "errorCode": "Code"
   },
   "proxyForm": {
-    "addTitle": "Proxy hinzufügen", "editTitle": "Proxy bearbeiten", "label": "Bezeichnung (optional)",
-    "protocol": "Protokoll", "host": "Host", "hostPlaceholder": "192.168.1.1 oder proxy.example.com",
-    "port": "Port", "username": "Benutzername (optional)", "password": "Passwort (optional)"
+    "addTitle": "Proxy hinzufügen",
+    "editTitle": "Proxy bearbeiten",
+    "label": "Bezeichnung (optional)",
+    "protocol": "Protokoll",
+    "host": "Host",
+    "hostPlaceholder": "192.168.1.1 oder proxy.example.com",
+    "port": "Port",
+    "username": "Benutzername (optional)",
+    "password": "Passwort (optional)"
   },
-  "proxyStatus": { "unknown": "Nicht geprüft", "checking": "Prüfung läuft", "alive": "Aktiv", "dead": "Inaktiv" },
+  "proxyStatus": {
+    "unknown": "Nicht geprüft",
+    "checking": "Prüfung läuft",
+    "alive": "Aktiv",
+    "dead": "Inaktiv"
+  },
   "settings": {
-    "title": "Einstellungen", "description": "Erscheinungsbild und Proxy-Prüfung konfigurieren.",
-    "sections": { "appearance": "Erscheinungsbild", "appearanceDescription": "Design und Sprache.", "checking": "Proxy-Prüfung", "checkingDescription": "Timeout und Zieldomains." },
-    "theme": "Design", "themeLight": "Hell", "themeDark": "Dunkel", "themeSystem": "System",
-    "language": "Sprache", "checkTimeout": "Verbindungs-Timeout", "checkTimeoutHint": "Maximale Wartezeit pro Prüfung.", "checkTimeoutValue": "{{value}} s",
+    "title": "Einstellungen",
+    "description": "Erscheinungsbild und Proxy-Prüfung konfigurieren.",
+    "sections": {
+      "appearance": "Erscheinungsbild",
+      "appearanceDescription": "Design und Sprache.",
+      "checking": "Proxy-Prüfung",
+      "checkingDescription": "Timeout und Zieldomains."
+    },
+    "theme": "Design",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "themeSystem": "System",
+    "language": "Sprache",
+    "checkTimeout": "Verbindungs-Timeout",
+    "checkTimeoutHint": "Maximale Wartezeit pro Prüfung.",
+    "checkTimeoutValue": "{{value}} s",
     "checkDomains": "Prüfdomains",
     "checkDomainsHint": "Proxies werden gegen diese Domains geprüft. Ein Proxy gilt als aktiv, wenn mindestens eine Domain antwortet.",
-    "domainPlaceholder": "example.com", "addDomain": "Domain hinzufügen",
-    "domainRequired": "Mindestens eine Prüfdomain erforderlich", "invalidDomain": "Geben Sie einen gültigen Domainnamen ein",
-    "domainDuplicate": "Diese Domain ist bereits in der Liste", "saved": "Einstellungen gespeichert"
+    "domainPlaceholder": "example.com",
+    "addDomain": "Domain hinzufügen",
+    "domainRequired": "Mindestens eine Prüfdomain erforderlich",
+    "invalidDomain": "Geben Sie einen gültigen Domainnamen ein",
+    "domainDuplicate": "Diese Domain ist bereits in der Liste",
+    "saved": "Einstellungen gespeichert"
   },
   "validation": {
-    "hostRequired": "Host ist erforderlich", "hostTooLong": "Host ist zu lang",
-    "hostInvalid": "Geben Sie eine gültige IP oder einen Hostnamen ein", "portNumber": "Port muss eine Zahl sein",
-    "portInteger": "Port muss eine ganze Zahl sein", "portMin": "Port mindestens 1", "portMax": "Port höchstens 65535",
-    "labelMax": "Bezeichnung maximal 64 Zeichen", "usernameMax": "Benutzername zu lang",
-    "passwordMax": "Passwort zu lang", "authPair": "Benutzername und Passwort müssen beide angegeben werden"
+    "hostRequired": "Host ist erforderlich",
+    "hostTooLong": "Host ist zu lang",
+    "hostInvalid": "Geben Sie eine gültige IP oder einen Hostnamen ein",
+    "portNumber": "Port muss eine Zahl sein",
+    "portInteger": "Port muss eine ganze Zahl sein",
+    "portMin": "Port mindestens 1",
+    "portMax": "Port höchstens 65535",
+    "labelMax": "Bezeichnung maximal 64 Zeichen",
+    "usernameMax": "Benutzername zu lang",
+    "passwordMax": "Passwort zu lang",
+    "authPair": "Benutzername und Passwort müssen beide angegeben werden"
   }
 }

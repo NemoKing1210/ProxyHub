@@ -1,7 +1,8 @@
 import { Box, Chip, CircularProgress, Stack, Typography } from '@mui/material'
-import { alpha, keyframes, useTheme, type Theme } from '@mui/material/styles'
+import { keyframes, useTheme, type Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ProxyDomainCheckResult } from '../../../shared/types/proxy'
+import { getPalette, MD3_EASING, staggerDelay, withThemeAlpha } from '../theme'
 
 interface ProxyDomainResultsProps {
   domainChecks: ProxyDomainCheckResult[]
@@ -10,61 +11,51 @@ interface ProxyDomainResultsProps {
 const domainEnter = keyframes`
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-`
-
-const checkingPulse = keyframes`
-  0%, 100% {
-    box-shadow: 0 0 0 0 transparent;
-  }
-  50% {
-    box-shadow: 0 0 0 4px rgba(92, 138, 255, 0.12);
+    transform: translateY(0) scale(1);
   }
 `
 
 function getDomainStyles(
   status: ProxyDomainCheckResult['status'],
   theme: Theme
-): { bgcolor: string; borderColor: string; accent: string } {
+): { bgcolor: string; borderColor: string } {
+  const palette = getPalette(theme)
+
   if (status === 'alive') {
     return {
-      bgcolor: alpha(theme.palette.success.main, theme.palette.mode === 'dark' ? 0.12 : 0.08),
-      borderColor: alpha(theme.palette.success.main, 0.18),
-      accent: theme.palette.success.main
+      bgcolor: withThemeAlpha(theme, palette.success.main, 0.14),
+      borderColor: withThemeAlpha(theme, palette.success.main, 0.28)
     }
   }
 
   if (status === 'dead') {
     return {
-      bgcolor: alpha(theme.palette.error.main, theme.palette.mode === 'dark' ? 0.12 : 0.08),
-      borderColor: alpha(theme.palette.error.main, 0.18),
-      accent: theme.palette.error.main
+      bgcolor: withThemeAlpha(theme, palette.error.main, 0.14),
+      borderColor: withThemeAlpha(theme, palette.error.main, 0.28)
     }
   }
 
   if (status === 'checking') {
     return {
-      bgcolor: alpha(theme.palette.info.main, theme.palette.mode === 'dark' ? 0.14 : 0.1),
-      borderColor: alpha(theme.palette.info.main, 0.28),
-      accent: theme.palette.info.main
+      bgcolor: withThemeAlpha(theme, palette.info.main, 0.16),
+      borderColor: withThemeAlpha(theme, palette.info.main, 0.32)
     }
   }
 
   return {
-    bgcolor: alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.06 : 0.04),
-    borderColor: alpha(theme.palette.divider, 0.8),
-    accent: theme.palette.text.secondary
+    bgcolor: withThemeAlpha(theme, palette.text.primary, 0.06),
+    borderColor: withThemeAlpha(theme, palette.divider, 0.7)
   }
 }
 
 function ProxyDomainResults({ domainChecks }: ProxyDomainResultsProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
+  const palette = getPalette(theme)
 
   return (
     <Stack spacing={1}>
@@ -85,18 +76,26 @@ function ProxyDomainResults({ domainChecks }: ProxyDomainResultsProps): React.JS
             key={`${check.domain}-${check.url}`}
             sx={{
               p: 1.5,
-              borderRadius: 2,
+              borderRadius: 2.5,
               bgcolor: styles.bgcolor,
               border: 1,
               borderColor: styles.borderColor,
-              animation: `${domainEnter} 0.28s cubic-bezier(0.22, 1, 0.36, 1) both`,
-              animationDelay: `${index * 40}ms`,
+              animation: `${domainEnter} 0.32s ${MD3_EASING.emphasizedDecelerate} both`,
+              animationDelay: staggerDelay(index),
               ...(isChecking
                 ? {
-                    animation: `${domainEnter} 0.28s cubic-bezier(0.22, 1, 0.36, 1) both, ${checkingPulse} 1.6s ease-in-out infinite`,
-                    animationDelay: `${index * 40}ms, 0ms`
+                    boxShadow: `0 0 0 0 ${withThemeAlpha(theme, palette.info.main, 0.2)}`,
+                    animation: `${domainEnter} 0.32s ${MD3_EASING.emphasizedDecelerate} both, domainPulse 1.8s ease-in-out infinite`,
+                    animationDelay: `${staggerDelay(index)}, 0ms`,
+                    '@keyframes domainPulse': {
+                      '0%, 100%': { boxShadow: `0 0 0 0 ${withThemeAlpha(theme, palette.info.main, 0)}` },
+                      '50%': { boxShadow: `0 0 0 6px ${withThemeAlpha(theme, palette.info.main, 0.12)}` }
+                    }
                   }
-                : {})
+                : {}),
+              '@media (prefers-reduced-motion: reduce)': {
+                animation: 'none'
+              }
             }}
           >
             <Stack
@@ -120,9 +119,8 @@ function ProxyDomainResults({ domainChecks }: ProxyDomainResultsProps): React.JS
                 label={statusLabel}
                 color={isAlive ? 'success' : isDead ? 'error' : isChecking ? 'info' : 'default'}
                 size="small"
-                variant="outlined"
                 icon={isChecking ? <CircularProgress size={12} color="inherit" /> : undefined}
-                sx={{ flexShrink: 0 }}
+                sx={{ flexShrink: 0, fontWeight: 700, border: 'none' }}
               />
             </Stack>
 

@@ -1,11 +1,12 @@
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
-import { Box, Button, Container } from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
+import { Box, Button, Container, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useMatch } from 'react-router-dom'
 import { useProxyStore } from '../store/proxyStore'
+import { elevationShadow, getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../theme'
 import PageTransition from './PageTransition'
 
 const NAV_ITEMS = [
@@ -27,6 +28,8 @@ function AppLayout(): React.JSX.Element {
     void loadProxies()
   }, [loadProxies])
 
+  const palette = getPalette(theme)
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Box
@@ -36,23 +39,40 @@ function AppLayout(): React.JSX.Element {
           top: 0,
           zIndex: theme.zIndex.appBar,
           display: 'flex',
-          justifyContent: 'center',
-          pt: 3,
+          flexDirection: 'column',
+          alignItems: 'center',
+          pt: 2.5,
           pb: 2,
           px: 2,
-          bgcolor: alpha(theme.palette.background.default, 0.88),
-          backdropFilter: 'blur(12px)'
+          bgcolor: withThemeAlpha(theme, palette.background.default, 0.88),
+          backdropFilter: 'blur(20px) saturate(1.4)',
+          borderBottom: `1px solid ${withThemeAlpha(theme, palette.divider, 0.4)}`
         }}
       >
+        <Typography
+          variant="subtitle2"
+          sx={{
+            mb: 1.5,
+            fontWeight: 700,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            fontSize: '0.68rem',
+            color: 'primary.main',
+            opacity: 0.9
+          }}
+        >
+          ProxyChecker
+        </Typography>
+
         <Box
           sx={{
             display: 'inline-flex',
             gap: 0.5,
             p: 0.5,
-            borderRadius: 3,
-            bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.08 : 0.05),
-            border: 1,
-            borderColor: alpha(theme.palette.primary.main, 0.12)
+            borderRadius: 4,
+            bgcolor: surfaceContainer(theme, 'low'),
+            border: `1px solid ${withThemeAlpha(theme, palette.primary.main, 0.14)}`,
+            boxShadow: elevationShadow(theme, 1)
           }}
         >
           {NAV_ITEMS.map(({ path, labelKey, icon: Icon }) => {
@@ -66,24 +86,23 @@ function AppLayout(): React.JSX.Element {
                 startIcon={<Icon sx={{ fontSize: 18 }} />}
                 disableElevation
                 sx={{
+                  position: 'relative',
                   px: 2.5,
-                  py: 1,
+                  py: 1.1,
                   minWidth: 0,
-                  borderRadius: 2.5,
+                  borderRadius: 3,
                   textTransform: 'none',
                   fontWeight: 600,
                   fontSize: '0.875rem',
                   color: isActive ? 'primary.main' : 'text.secondary',
-                  bgcolor: isActive
-                    ? alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.18 : 0.12)
-                    : 'transparent',
-                  boxShadow: isActive
-                    ? `0 1px 3px ${alpha(theme.palette.primary.main, 0.2)}`
-                    : 'none',
+                  bgcolor: isActive ? surfaceContainer(theme, 'high') : 'transparent',
+                  boxShadow: isActive ? elevationShadow(theme, 1) : 'none',
+                  transition: `all ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
                   '&:hover': {
                     bgcolor: isActive
-                      ? alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.22 : 0.16)
-                      : alpha(theme.palette.primary.main, 0.08)
+                      ? surfaceContainer(theme, 'highest')
+                      : surfaceContainer(theme, 'low'),
+                    transform: 'translateY(-1px)'
                   },
                   '& .MuiButton-startIcon': {
                     mr: 0.75,
@@ -97,18 +116,17 @@ function AppLayout(): React.JSX.Element {
                     component="span"
                     sx={{
                       ml: 1,
-                      px: 0.75,
-                      py: 0.125,
-                      minWidth: 20,
-                      borderRadius: 1.25,
+                      px: 0.85,
+                      py: 0.15,
+                      minWidth: 22,
+                      borderRadius: 2,
                       fontSize: '0.7rem',
                       fontWeight: 700,
                       lineHeight: 1.4,
                       textAlign: 'center',
-                      bgcolor: isActive
-                        ? 'primary.main'
-                        : alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.14),
-                      color: isActive ? 'primary.contrastText' : 'primary.main'
+                      bgcolor: isActive ? 'primary.main' : surfaceContainer(theme, 'high'),
+                      color: isActive ? 'primary.contrastText' : 'primary.main',
+                      transition: `all ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
                     }}
                   >
                     {proxyCount}
@@ -123,7 +141,7 @@ function AppLayout(): React.JSX.Element {
       <Container
         component="main"
         maxWidth="lg"
-        sx={{ flexGrow: 1, py: 2, pt: 0, overflowX: 'hidden' }}
+        sx={{ flexGrow: 1, py: 2, pt: 1, overflowX: 'hidden' }}
       >
         <PageTransition />
       </Container>

@@ -21,12 +21,12 @@ ProxyChecker is a cross-platform desktop application that helps users quickly va
 
 ## 2. Supported proxy types
 
-| Protocol | Default port | Authentication | Notes |
-|----------|-------------|----------------|-------|
-| HTTP | 80 | Optional (Basic) | Standard web proxy |
-| HTTPS | 443 | Optional (Basic) | TLS tunnel to proxy |
-| SOCKS4 | 1080 | No | IPv4 only |
-| SOCKS5 | 1080 | Optional (user/pass) | Full TCP/UDP support planned later |
+| Protocol | Default port | Authentication       | Notes                              |
+| -------- | ------------ | -------------------- | ---------------------------------- |
+| HTTP     | 80           | Optional (Basic)     | Standard web proxy                 |
+| HTTPS    | 443          | Optional (Basic)     | TLS tunnel to proxy                |
+| SOCKS4   | 1080         | No                   | IPv4 only                          |
+| SOCKS5   | 1080         | Optional (user/pass) | Full TCP/UDP support planned later |
 
 ### Proxy input formats
 
@@ -67,11 +67,11 @@ protocol://user:pass@host:port
 
 ### Process responsibilities
 
-| Process | Responsibility |
-|---------|----------------|
-| **Renderer** | UI rendering, user input, result display, progress feedback |
-| **Preload** | Secure IPC bridge via `contextBridge` — no direct Node.js access in renderer |
-| **Main** | Proxy validation, concurrency control, file read/write, system dialogs |
+| Process      | Responsibility                                                               |
+| ------------ | ---------------------------------------------------------------------------- |
+| **Renderer** | UI rendering, user input, result display, progress feedback                  |
+| **Preload**  | Secure IPC bridge via `contextBridge` — no direct Node.js access in renderer |
+| **Main**     | Proxy validation, concurrency control, file read/write, system dialogs       |
 
 Proxy checks run in the **main process** to avoid browser sandbox restrictions and to use native Node.js networking libraries.
 
@@ -93,7 +93,7 @@ Proxy checks run in the **main process** to avoid browser sandbox restrictions a
 ```typescript
 interface ProxyEntry {
   id: string
-  raw: string           // original input line
+  raw: string // original input line
   protocol: ProxyProtocol
   host: string
   port: number
@@ -111,10 +111,10 @@ interface ProxyResult {
   id: string
   proxy: ProxyEntry
   status: ProxyStatus
-  latencyMs?: number    // round-trip time
-  externalIp?: string   // IP seen by target server
-  error?: string        // human-readable failure reason
-  checkedAt?: string    // ISO timestamp
+  latencyMs?: number // round-trip time
+  externalIp?: string // IP seen by target server
+  error?: string // human-readable failure reason
+  checkedAt?: string // ISO timestamp
 }
 ```
 
@@ -122,9 +122,9 @@ interface ProxyResult {
 
 ```typescript
 interface CheckSettings {
-  targetUrl: string       // default: https://api.ipify.org?format=json
-  timeoutMs: number     // default: 10000
-  concurrency: number   // default: 50
+  targetUrl: string // default: https://api.ipify.org?format=json
+  timeoutMs: number // default: 10000
+  concurrency: number // default: 50
   protocols: ProxyProtocol[]
 }
 ```
@@ -133,14 +133,14 @@ interface CheckSettings {
 
 Exposed via `window.api` in the preload script.
 
-| Channel | Direction | Payload | Description |
-|---------|-----------|---------|-------------|
-| `proxy:check` | renderer → main | `{ proxies, settings }` | Start a batch check |
-| `proxy:cancel` | renderer → main | — | Cancel running check |
-| `proxy:progress` | main → renderer | `ProxyResult` | Stream single result update |
-| `proxy:complete` | main → renderer | `{ total, alive, dead }` | Batch finished |
-| `file:import` | renderer → main | — | Open file dialog, return parsed proxies |
-| `file:export` | renderer → main | `{ results, format }` | Save results to file |
+| Channel          | Direction       | Payload                  | Description                             |
+| ---------------- | --------------- | ------------------------ | --------------------------------------- |
+| `proxy:check`    | renderer → main | `{ proxies, settings }`  | Start a batch check                     |
+| `proxy:cancel`   | renderer → main | —                        | Cancel running check                    |
+| `proxy:progress` | main → renderer | `ProxyResult`            | Stream single result update             |
+| `proxy:complete` | main → renderer | `{ total, alive, dead }` | Batch finished                          |
+| `file:import`    | renderer → main | —                        | Open file dialog, return parsed proxies |
+| `file:export`    | renderer → main | `{ results, format }`    | Save results to file                    |
 
 ### Event streaming
 
@@ -178,22 +178,22 @@ Results should be pushed to the renderer as each proxy is checked (not batched a
 
 ### Screen states
 
-| State | UI behavior |
-|-------|-------------|
-| **Idle** | Input enabled, Start button active |
+| State        | UI behavior                                                       |
+| ------------ | ----------------------------------------------------------------- |
+| **Idle**     | Input enabled, Start button active                                |
 | **Checking** | Progress in stats bar, table rows update live, Stop button active |
-| **Complete** | Export and filter controls enabled |
-| **Error** | Snackbar with error message, return to idle |
+| **Complete** | Export and filter controls enabled                                |
+| **Error**    | Snackbar with error message, return to idle                       |
 
 ### Status indicators
 
-| Status | Color | Icon |
-|--------|-------|------|
-| Alive | `success` (green) | `CheckCircle` |
-| Dead | `error` (red) | `Cancel` |
-| Checking | `info` (blue) | `HourglassEmpty` |
-| Pending | `text.disabled` (grey) | `RadioButtonUnchecked` |
-| Error | `warning` (amber) | `Warning` |
+| Status   | Color                  | Icon                   |
+| -------- | ---------------------- | ---------------------- |
+| Alive    | `success` (green)      | `CheckCircle`          |
+| Dead     | `error` (red)          | `Cancel`               |
+| Checking | `info` (blue)          | `HourglassEmpty`       |
+| Pending  | `text.disabled` (grey) | `RadioButtonUnchecked` |
+| Error    | `warning` (amber)      | `Warning`              |
 
 ## 8. Visual design system
 
@@ -201,13 +201,13 @@ Based on the MUI theme defined in `src/renderer/src/theme.ts`.
 
 ### Color palette
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `primary.main` | `#5c8aff` | Buttons, active elements, links |
-| `secondary.main` | `#7c93ee` | Accents, secondary actions |
-| `background.default` | `#0f1117` | App background |
-| `background.paper` | `#1a1d27` | Cards, panels, table rows |
-| Mode | `dark` | Default theme |
+| Token                | Value     | Usage                           |
+| -------------------- | --------- | ------------------------------- |
+| `primary.main`       | `#5c8aff` | Buttons, active elements, links |
+| `secondary.main`     | `#7c93ee` | Accents, secondary actions      |
+| `background.default` | `#0f1117` | App background                  |
+| `background.paper`   | `#1a1d27` | Cards, panels, table rows       |
+| Mode                 | `dark`    | Default theme                   |
 
 ### Typography
 
@@ -226,25 +226,25 @@ Based on the MUI theme defined in `src/renderer/src/theme.ts`.
 
 Prefer standard MUI components:
 
-| UI element | MUI component |
-|------------|---------------|
-| Navigation | `AppBar` + `Toolbar` |
-| Content panels | `Paper` |
+| UI element       | MUI component                                 |
+| ---------------- | --------------------------------------------- |
+| Navigation       | `AppBar` + `Toolbar`                          |
+| Content panels   | `Paper`                                       |
 | Proxy list input | `TextField` (multiline) or `TextareaAutosize` |
-| Results | `DataGrid` or `Table` + `TableContainer` |
-| Actions | `Button` (contained / outlined) |
-| Status badges | `Chip` |
-| Notifications | `Snackbar` + `Alert` |
-| Settings | `Dialog` or dedicated `Drawer` |
-| Loading | `LinearProgress` or `CircularProgress` |
+| Results          | `DataGrid` or `Table` + `TableContainer`      |
+| Actions          | `Button` (contained / outlined)               |
+| Status badges    | `Chip`                                        |
+| Notifications    | `Snackbar` + `Alert`                          |
+| Settings         | `Dialog` or dedicated `Drawer`                |
+| Loading          | `LinearProgress` or `CircularProgress`        |
 
 ## 9. Concurrency and performance
 
-| Parameter | Default | Range |
-|-----------|---------|-------|
-| Concurrent checks | 50 | 1–200 |
-| Timeout per proxy | 10 000 ms | 1 000–60 000 ms |
-| Max list size | 10 000 | Soft limit with warning |
+| Parameter         | Default   | Range                   |
+| ----------------- | --------- | ----------------------- |
+| Concurrent checks | 50        | 1–200                   |
+| Timeout per proxy | 10 000 ms | 1 000–60 000 ms         |
+| Max list size     | 10 000    | Soft limit with warning |
 
 ### Guidelines
 
@@ -296,21 +296,21 @@ src/
 
 ## 12. Error handling
 
-| Scenario | User-facing message | Recovery |
-|----------|--------------------|---------|
-| Invalid proxy format | Highlight line in input | Skip invalid, continue with valid |
-| Network unreachable | "Connection refused" / "Timeout" | Mark as dead |
-| DNS failure | "Host not found" | Mark as dead |
-| Auth failure | "Authentication failed" | Mark as dead with reason |
-| File read error | Snackbar: "Could not read file" | Stay on current input |
+| Scenario             | User-facing message              | Recovery                          |
+| -------------------- | -------------------------------- | --------------------------------- |
+| Invalid proxy format | Highlight line in input          | Skip invalid, continue with valid |
+| Network unreachable  | "Connection refused" / "Timeout" | Mark as dead                      |
+| DNS failure          | "Host not found"                 | Mark as dead                      |
+| Auth failure         | "Authentication failed"          | Mark as dead with reason          |
+| File read error      | Snackbar: "Could not read file"  | Stay on current input             |
 
 ## 13. Export formats
 
-| Format | Extension | Content |
-|--------|-----------|---------|
-| Plain text | `.txt` | One proxy per line (alive only) |
-| CSV | `.csv` | All results with status, latency, IP |
-| JSON | `.json` | Full `ProxyResult[]` array |
+| Format     | Extension | Content                              |
+| ---------- | --------- | ------------------------------------ |
+| Plain text | `.txt`    | One proxy per line (alive only)      |
+| CSV        | `.csv`    | All results with status, latency, IP |
+| JSON       | `.json`   | Full `ProxyResult[]` array           |
 
 ## 14. Future considerations
 
@@ -324,18 +324,18 @@ src/
 
 ## 15. Current implementation status
 
-| Area | Status |
-|------|--------|
-| Electron + React + MUI scaffold | Done |
-| Dark theme | Done |
-| Base layout (AppBar, footer) | Done |
-| IPC bridge (preload) | Scaffold only (`ping` test) |
-| Proxy parsing | Not started |
-| Proxy checking service | Not started |
-| Results table | Not started |
-| Import / export | Not started |
-| Settings dialog | Not started |
+| Area                            | Status                      |
+| ------------------------------- | --------------------------- |
+| Electron + React + MUI scaffold | Done                        |
+| Dark theme                      | Done                        |
+| Base layout (AppBar, footer)    | Done                        |
+| IPC bridge (preload)            | Scaffold only (`ping` test) |
+| Proxy parsing                   | Not started                 |
+| Proxy checking service          | Not started                 |
+| Results table                   | Not started                 |
+| Import / export                 | Not started                 |
+| Settings dialog                 | Not started                 |
 
 ---
 
-*Last updated: 2026-07-10*
+_Last updated: 2026-07-10_
