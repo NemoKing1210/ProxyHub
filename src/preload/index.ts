@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import type { AppAPI } from '../shared/types/api'
+import type { AppUpdateState } from '../shared/types/updater'
 import type { ProxyCheckProgress } from '../shared/types/proxy'
 
 const api: AppAPI = {
@@ -82,7 +83,21 @@ const api: AppAPI = {
   unlockSyncPullPreview: (sessionId, password) =>
     ipcRenderer.invoke('sync:unlock-pull-preview', sessionId, password),
   applySyncPull: (request) => ipcRenderer.invoke('sync:pull-apply', request),
-  startupSyncPull: () => ipcRenderer.invoke('sync:startup-pull')
+  startupSyncPull: () => ipcRenderer.invoke('sync:startup-pull'),
+  getUpdateState: () => ipcRenderer.invoke('updater:get-state'),
+  checkForUpdates: () => ipcRenderer.invoke('updater:check'),
+  downloadUpdate: () => ipcRenderer.invoke('updater:download'),
+  installUpdate: () => ipcRenderer.invoke('updater:install'),
+  onUpdateStateChange: (callback) => {
+    const handler = (_event: Electron.IpcRendererEvent, state: AppUpdateState): void => {
+      callback(state)
+    }
+
+    ipcRenderer.on('updater:state-changed', handler)
+    return () => {
+      ipcRenderer.removeListener('updater:state-changed', handler)
+    }
+  }
 }
 
 if (process.contextIsolated) {

@@ -1,6 +1,6 @@
 {
   "name": "ProxyChecker",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "description": "Cross-platform desktop app for testing HTTP, HTTPS, SOCKS4, SOCKS5, and MTProto proxy availability and performance",
   "main": "./out/main/index.js",
   "license": "MIT",
@@ -68,6 +68,7 @@
     "@tanstack/react-virtual": "^3.14.5",
     "country-flag-icons": "^1.6.20",
     "electron-store": "^11.0.2",
+    "electron-updater": "^6.8.9",
     "framer-motion": "^12.42.2",
     "https-proxy-agent": "^9.1.0",
     "i18next": "^26.3.6",

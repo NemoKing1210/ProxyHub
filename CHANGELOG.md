@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.36.0] - 2026-07-11
+## [1.37.0] - 2026-07-11
+
+### Added
+
+- Auto-update via GitHub Releases: check, download, and install new versions from Settings → About
+- Startup update check with a system notification when a newer release is available
+- GitHub Actions workflows for CI (typecheck, lint, Linux build) and multi-platform Release publishing
+
+### Changed
+
+- Application identity for installers and updates: `ProxyChecker` product name and `com.nemoking1210.proxychecker` app ID
+- macOS release builds now include a `zip` artifact required for in-app auto-update (alongside DMG)
+- README redesigned with badges, download table, and release instructions
+
 
 ### Added
 

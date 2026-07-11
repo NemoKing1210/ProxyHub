@@ -753,6 +753,21 @@
       "resetSettingsSuccess": "Settings were reset to defaults"
     },
     "currentVersion": "Current version",
+    "updates": {
+      "title": "Updates",
+      "description": "Check GitHub Releases for new ProxyChecker versions.",
+      "disabledHint": "Auto-update is available only in installed release builds.",
+      "checking": "Checking for updates…",
+      "upToDate": "You are on the latest version (v{{version}}).",
+      "available": "Version {{version}} is available.",
+      "ready": "Version {{version}} has been downloaded and is ready to install.",
+      "error": "Update check failed: {{message}}",
+      "downloading": "Downloading update…",
+      "downloadProgress": "{{percent}}% downloaded ({{transferred}} / {{total}} MB)",
+      "checkButton": "Check for updates",
+      "downloadButton": "Download v{{version}}",
+      "installButton": "Restart and install"
+    },
     "developer": "Developer",
     "repository": "Repository",
     "latestRelease": "Current",

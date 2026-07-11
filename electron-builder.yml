@@ -35,6 +35,9 @@ nsis:
 
 mac:
   category: public.app-category.utilities
+  target:
+    - dmg
+    - zip
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
     NSDocumentsFolderUsageDescription: ProxyChecker needs access to open and save proxy list files.

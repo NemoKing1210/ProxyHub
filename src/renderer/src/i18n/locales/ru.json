@@ -763,6 +763,21 @@
       "resetSettingsSuccess": "Настройки сброшены к значениям по умолчанию"
     },
     "currentVersion": "Текущая версия",
+    "updates": {
+      "title": "Обновления",
+      "description": "Проверка новых версий ProxyChecker на GitHub Releases.",
+      "disabledHint": "Автообновление доступно только в установленной release-сборке.",
+      "checking": "Проверка обновлений…",
+      "upToDate": "У вас установлена последняя версия (v{{version}}).",
+      "available": "Доступна версия {{version}}.",
+      "ready": "Версия {{version}} загружена и готова к установке.",
+      "error": "Не удалось проверить обновления: {{message}}",
+      "downloading": "Загрузка обновления…",
+      "downloadProgress": "Загружено {{percent}}% ({{transferred}} / {{total}} МБ)",
+      "checkButton": "Проверить обновления",
+      "downloadButton": "Скачать v{{version}}",
+      "installButton": "Перезапустить и установить"
+    },
     "developer": "Разработчик",
     "repository": "Репозиторий",
     "latestRelease": "Текущая",

@@ -10,6 +10,11 @@ import { registerProxyIpc } from './ipc/proxy'
 import { registerSettingsIpc } from './ipc/settings'
 import { registerSyncIpc, runStartupSyncPull } from './ipc/sync'
 import { registerTrayIpc, syncTrayEnabled } from './ipc/tray'
+import { registerUpdaterIpc } from './ipc/updater'
+import {
+  initializeAutoUpdater,
+  scheduleStartupUpdateCheck
+} from './services/auto-updater'
 import { getSettings } from './services/app-store'
 import { getMainWindow, setMainWindow, showMainWindow } from './services/main-window'
 import { isTrayEnabled } from './services/tray-state'
@@ -79,7 +84,7 @@ async function createWindow(): Promise<void> {
 }
 
 app.whenReady().then(async () => {
-  electronApp.setAppUserModelId('com.proxychecker')
+  electronApp.setAppUserModelId('com.nemoking1210.proxychecker')
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
@@ -91,6 +96,7 @@ app.whenReady().then(async () => {
   registerProxyImportIpc()
   registerSyncIpc()
   registerAppIpc()
+  registerUpdaterIpc()
   registerTrayIpc()
   initializeNativeThemeListener(() => getMainWindow() ?? undefined)
 
@@ -98,6 +104,8 @@ app.whenReady().then(async () => {
   await syncTrayEnabled(settings.trayEnabled)
   await runStartupSyncPull()
   await createWindow()
+  initializeAutoUpdater()
+  scheduleStartupUpdateCheck()
 
   app.on('activate', function () {
     if (getMainWindow()) {

@@ -1,132 +1,172 @@
+<div align="center">
+
+<img src="resources/icon.png" alt="ProxyChecker" width="96" />
+
 # ProxyChecker
 
-A cross-platform desktop application for testing the availability and performance of different proxy types. Built with **Electron**, **React 19**, **TypeScript**, and **Material UI**.
+**Cross-platform desktop app for testing proxy availability and performance**
 
-## Overview
+[Download](#-download) · [Features](#-features) · [Development](#-development) · [Releases](https://github.com/NemoKing1210/ProxyChecker/releases) · [Changelog](./CHANGELOG.md) · [Report Bug](https://github.com/NemoKing1210/ProxyChecker/issues)
 
-ProxyChecker helps you validate proxy servers quickly from a single desktop interface. It is designed to support multiple proxy protocols and provide clear, actionable results for each endpoint you test.
+<br />
 
-### Supported proxy types (planned)
+[![GitHub release](https://img.shields.io/github/v/release/NemoKing1210/ProxyChecker?label=release&sort=semver)](https://github.com/NemoKing1210/ProxyChecker/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](#-license)
+[![CI](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/ci.yml/badge.svg)](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/ci.yml)
+[![Release](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/release.yml/badge.svg)](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/release.yml)
 
-- **HTTP** — standard web proxies
-- **HTTPS** — encrypted HTTP proxies
-- **SOCKS4** — SOCKS version 4
-- **SOCKS5** — SOCKS version 5 with optional authentication
-- **MTProto** — Telegram MTProto proxies (server, port, secret)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#-download)
+[![Electron](https://img.shields.io/badge/Electron-39-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MUI](https://img.shields.io/badge/MUI-9-007FFF?logo=mui&logoColor=white)](https://mui.com/)
 
-### Key capabilities (planned)
+</div>
 
-- Bulk import of proxy lists (paste or file upload)
-- Connectivity checks with response time measurement
-- Export of working and failed proxies
-- Clean, responsive UI powered by Material UI
+---
 
-## Tech stack
+ProxyChecker helps you validate proxy servers quickly from a single desktop interface. Check connectivity, measure latency, organize lists into groups, sync settings across devices, and export results — all without leaving the app.
 
-| Layer                | Technology                                                       |
-| -------------------- | ---------------------------------------------------------------- |
-| Desktop runtime      | [Electron](https://www.electronjs.org/)                          |
-| Build tool           | [electron-vite](https://electron-vite.org/)                      |
-| UI framework         | [React 19](https://react.dev/)                                   |
-| Language             | [TypeScript](https://www.typescriptlang.org/)                    |
-| Component library    | [Material UI (MUI)](https://mui.com/)                            |
-| Packaging            | [electron-builder](https://www.electron.build/)                  |
-| Linting / formatting | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) |
+## ✨ Features
 
-## Prerequisites
+### Proxy checking
 
-- **Node.js** 18 or later (20+ recommended)
-- **npm** 9 or later
+| | |
+|---|---|
+| **Protocols** | HTTP, HTTPS, SOCKS4, SOCKS5, [MTProto](https://core.telegram.org/mtproto) |
+| **Bulk import** | Paste, file upload, quick-fill parser |
+| **Metrics** | Response time, external IP, geo hints, country flags |
+| **Batch checks** | Check all, per-group checks, tray quick actions |
+| **Export** | Working / failed proxies, backup files |
 
-## Getting started
+### Organization & UI
 
-### Install dependencies
+- **Groups** — folders with custom icons and colors
+- **Favorites** — pin proxies for tray menu access
+- **Virtualized list** — smooth scrolling for large lists (80+ cards)
+- **Themes** — light, dark, and system mode
+- **i18n** — English, Russian, Ukrainian, German, French, Spanish, Portuguese, Japanese, Chinese, Arabic, Hindi
+- **Tray** — background mode, notifications, favorite proxies from the tray
 
-```bash
-npm install
-```
+### Sync & backup
 
-### Run in development mode
+- **GitHub Gist** — encrypted cloud sync with auto-sync and startup pull
+- **Google Drive** — OAuth sign-in, hidden app data folder storage
+- **Local backup** — import / export with optional encryption
+- **Scopes** — sync full data, proxies only, or settings only
 
-Starts the app with hot module replacement (HMR) for the renderer process:
+## 📥 Download
 
-```bash
-npm run dev
-```
+Pre-built installers are available on **[GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases)**.
 
-Press `F12` to open DevTools while the app is running.
+| Platform | File |
+| -------- | ---- |
+| **Windows** | `ProxyChecker-{version}-setup.exe` |
+| **macOS** | `ProxyChecker-{version}-x64.dmg`, `ProxyChecker-{version}-arm64.dmg` |
+| **Linux** | `ProxyChecker-{version}-x64.AppImage`, `ProxyChecker-{version}-amd64.deb` |
 
-### Preview a production build locally
+> **Note:** Builds are unsigned by default. Windows may show a SmartScreen prompt; macOS may require allowing the app in System Settings.
 
-```bash
-npm run build
-npm start
-```
+## 🛠 Tech stack
 
-## Available scripts
+| Layer | Technology |
+| ----- | ---------- |
+| Desktop runtime | [Electron](https://www.electronjs.org/) |
+| Build tool | [electron-vite](https://electron-vite.org/) |
+| UI | [React 19](https://react.dev/) + [Material UI](https://mui.com/) |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
+| State | [Zustand](https://github.com/pmndrs/zustand) |
+| Packaging | [electron-builder](https://www.electron.build/) |
+| i18n | [i18next](https://www.i18next.com/) |
+| Lint / format | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) |
 
-| Command                | Description                         |
-| ---------------------- | ----------------------------------- |
-| `npm run dev`          | Start the app in development mode   |
-| `npm start`            | Preview the built app               |
-| `npm run build`        | Type-check and build for production |
-| `npm run build:win`    | Build a Windows installer           |
-| `npm run build:mac`    | Build a macOS installer             |
-| `npm run build:linux`  | Build a Linux installer             |
-| `npm run build:unpack` | Build without creating an installer |
-| `npm run release:win`  | Build and publish Windows release to GitHub |
-| `npm run release:mac`  | Build and publish macOS release to GitHub |
-| `npm run release:linux`| Build and publish Linux release to GitHub |
-| `npm run typecheck`    | Run TypeScript checks               |
-| `npm run lint`         | Run ESLint                          |
-| `npm run format`       | Format code with Prettier           |
-
-## Building installers
-
-```bash
-# Windows
-npm run build:win
-
-# macOS
-npm run build:mac
-
-# Linux
-npm run build:linux
-```
-
-Output artifacts are placed in the `dist/` directory.
-
-## Releasing
-
-Releases are published to [GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases) via GitHub Actions when you push a version tag.
+## 🚀 Development
 
 ### Prerequisites
 
-1. **Google OAuth secret** — in the GitHub repository, add `GOOGLE_OAUTH_CLIENT_ID` under **Settings → Secrets and variables → Actions**. Use the same Desktop app Client ID as in local `.env`.
-2. **Version sync** — update `version` in `package.json` and add a section to `CHANGELOG.md` before tagging.
+- [Node.js](https://nodejs.org/) **18+** (20+ recommended)
+- [npm](https://www.npmjs.com/) **9+**
+
+### Setup
+
+```bash
+git clone https://github.com/NemoKing1210/ProxyChecker.git
+cd ProxyChecker
+npm install
+```
+
+For **Google Drive sync** in dev builds, copy [`.env.example`](./.env.example) to `.env` and set `GOOGLE_OAUTH_CLIENT_ID`. See [Google Drive setup](#-google-drive-sync-developer-setup) below.
+
+### Scripts
+
+| Command | Description |
+| ------- | ----------- |
+| `npm run dev` | Start with HMR (`F12` — DevTools) |
+| `npm start` | Preview production build |
+| `npm run build` | Type-check + production build |
+| `npm run build:win` | Windows installer → `dist/` |
+| `npm run build:mac` | macOS installer → `dist/` |
+| `npm run build:linux` | Linux AppImage + deb → `dist/` |
+| `npm run build:unpack` | Unpacked build (no installer) |
+| `npm run typecheck` | TypeScript checks |
+| `npm run lint` | ESLint |
+| `npm run format` | Prettier |
+
+### Project structure
+
+```
+src/
+├── main/           # Electron main process (IPC, proxy checks, sync, tray)
+├── preload/        # Secure bridge between main and renderer
+└── renderer/       # React UI
+    └── src/
+        ├── components/
+        ├── pages/
+        ├── store/
+        └── i18n/
+```
+
+### Architecture
+
+```
+┌─────────────────────────────────────────┐
+│           Renderer (React + MUI)         │
+│      UI, settings, proxy list, sync      │
+└──────────────────┬──────────────────────┘
+                   │ IPC (preload bridge)
+┌──────────────────▼──────────────────────┐
+│          Main process (Electron)         │
+│  Proxy checks · file I/O · sync · tray  │
+└─────────────────────────────────────────┘
+```
+
+Proxy validation runs in the main process to avoid browser sandbox limits and use native networking libraries.
+
+## 📦 Releasing
+
+Releases are published to [GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases) automatically via the [**Release** workflow](.github/workflows/release.yml) when a version tag is pushed.
+
+### Prerequisites
+
+1. Add **`GOOGLE_OAUTH_CLIENT_ID`** in GitHub → **Settings → Secrets and variables → Actions**
+2. Update `version` in [`package.json`](./package.json) and add a section to [`CHANGELOG.md`](./CHANGELOG.md)
 
 ### Automated release (recommended)
 
 ```bash
-# 1. Bump version in package.json and CHANGELOG.md, then commit
+# 1. Commit version bump
 git add package.json CHANGELOG.md
 git commit -m "chore: release v1.36.0"
 
-# 2. Create and push a tag (must match package.json version)
+# 2. Tag (must match package.json version, with v prefix)
 git tag v1.36.0
+
+# 3. Push
 git push origin main
 git push origin v1.36.0
 ```
 
-The **Release** workflow builds Windows, macOS, and Linux installers in parallel and uploads them to a GitHub Release.
-
-Artifacts produced:
-
-| Platform | Files |
-| -------- | ----- |
-| Windows  | `ProxyChecker-{version}-setup.exe` |
-| macOS    | `ProxyChecker-{version}-x64.dmg`, `ProxyChecker-{version}-arm64.dmg` |
-| Linux    | `ProxyChecker-{version}-x64.AppImage`, `ProxyChecker-{version}-amd64.deb` |
+The workflow builds **Windows**, **macOS**, and **Linux** in parallel and uploads installers to GitHub Releases.
 
 ### Local release (single platform)
 
@@ -138,66 +178,50 @@ $env:GOOGLE_OAUTH_CLIENT_ID = "your-client-id.apps.googleusercontent.com"
 npm run release:win
 ```
 
-Without `GH_TOKEN`, use `npm run build:win` to create a local installer only (no upload).
+Without `GH_TOKEN`, use `npm run build:win` to build locally without uploading.
 
 ### Code signing (optional)
 
 | Platform | Without signing | With signing |
 | -------- | --------------- | ------------ |
-| Windows  | SmartScreen warning for unknown publisher | Set `WIN_CSC_LINK` and `WIN_CSC_KEY_PASSWORD` secrets |
-| macOS    | Gatekeeper blocks by default | Apple Developer account + `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID` |
-| Linux    | No signing required | — |
+| Windows | SmartScreen warning | `WIN_CSC_LINK` + `WIN_CSC_KEY_PASSWORD` secrets |
+| macOS | Gatekeeper block | Apple Developer + `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID` |
+| Linux | Not required | — |
 
-Unsigned builds are fine for GitHub Releases; users may need to confirm the install prompt once.
+## ☁ Google Drive sync (developer setup)
 
-## Project structure
+Google Drive sign-in uses an OAuth **Desktop app** Client ID embedded at **build time**. End users only click **Sign in with Google**.
 
-```
-src/
-├── main/           # Electron main process (window management, IPC)
-├── preload/        # Preload scripts (secure bridge between main and renderer)
-└── renderer/       # React UI (Material UI components)
-    └── src/
-        ├── App.tsx
-        ├── main.tsx
-        ├── theme.ts
-        └── components/
-```
-
-## Architecture
-
-```
-┌─────────────────────────────────────────┐
-│              Renderer (React + MUI)      │
-│         User interface & proxy input     │
-└──────────────────┬──────────────────────┘
-                   │ IPC (preload bridge)
-┌──────────────────▼──────────────────────┐
-│            Main process (Electron)       │
-│    Proxy checks, file I/O, system APIs   │
-└─────────────────────────────────────────┘
-```
-
-Proxy validation logic runs in the main process to avoid browser sandbox restrictions and to support native networking libraries.
-
-## Google Drive sync (developer setup)
-
-Google Drive sign-in uses an OAuth **Desktop app** Client ID embedded at **build time**. End users only click **Sign in with Google** — they do not enter a Client ID.
-
-1. Create a project in [Google Cloud Console](https://console.cloud.google.com/).
-2. Enable **Google Drive API**.
-3. Configure the **OAuth consent screen**.
-4. Create **Credentials → OAuth client ID → Desktop app** and copy the Client ID.
-5. Copy `.env.example` to `.env` and set:
+1. Open [Google Cloud Console](https://console.cloud.google.com/)
+2. Enable **Google Drive API**
+3. Configure the **OAuth consent screen**
+4. Create **Credentials → OAuth client ID → Desktop app**
+5. Copy [`.env.example`](./.env.example) → `.env`:
 
 ```env
 GOOGLE_OAUTH_CLIENT_ID=your-client-id.apps.googleusercontent.com
 ```
 
-6. Run or build the app (`npm run dev`, `npm run build:win`, etc.). The value is injected into the main process bundle.
+6. Run or build: `npm run dev`, `npm run build:win`, etc.
 
-For CI/release builds, set `GOOGLE_OAUTH_CLIENT_ID` as a secret environment variable in the pipeline instead of committing `.env`.
+For CI/release builds, set `GOOGLE_OAUTH_CLIENT_ID` as a repository secret instead of committing `.env`.
 
-## License
+## 🤝 Contributing
 
-MIT
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-change`
+3. Commit your changes and open a Pull Request
+
+Bug reports and feature requests are welcome in [Issues](https://github.com/NemoKing1210/ProxyChecker/issues).
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see [`package.json`](./package.json).
+
+---
+
+<div align="center">
+
+Made with ❤️ by [NemoKing1210](https://github.com/NemoKing1210)
+
+</div>

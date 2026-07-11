@@ -49,6 +49,7 @@ import {
 } from '../../../shared/types/settings'
 import ContentSection from '../components/ContentSection'
 import ChangelogView from '../components/ChangelogView'
+import AppUpdateSection from '../components/AppUpdateSection'
 import LanguageFlag from '../components/LanguageFlag'
 import SettingsAutoCheckSection from '../components/SettingsAutoCheckSection'
 import SettingsBackupSection from '../components/SettingsBackupSection'
@@ -894,6 +895,7 @@ function SettingsPage(): React.JSX.Element {
           collapsible
           defaultExpanded={false}
         >
+          <AppUpdateSection />
           {isAppInfoLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
               <CircularProgress size={28} />

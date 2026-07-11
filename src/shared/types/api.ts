@@ -35,6 +35,7 @@ import type {
   SyncStartupPullResult,
   SyncTestResult
 } from './sync'
+import type { AppUpdateState } from './updater'
 
 export interface AppNotificationPayload {
   title: string
@@ -84,4 +85,9 @@ export interface AppAPI {
   unlockSyncPullPreview: (sessionId: string, password: string) => Promise<SyncPullPreviewResult>
   applySyncPull: (request: SyncPullApplyRequest) => Promise<SyncPullApplyResult>
   startupSyncPull: () => Promise<SyncStartupPullResult>
+  getUpdateState: () => Promise<AppUpdateState>
+  checkForUpdates: () => Promise<AppUpdateState>
+  downloadUpdate: () => Promise<AppUpdateState>
+  installUpdate: () => Promise<void>
+  onUpdateStateChange: (callback: (state: AppUpdateState) => void) => () => void
 }
