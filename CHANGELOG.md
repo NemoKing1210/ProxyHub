@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.36.0] - 2026-07-11
+
+### Added
+
+- Custom app icon (network nodes with success checkmark) for window, taskbar, tray, and notifications
+
+### Changed
+
+- Windows and Linux windows use the custom icon instead of the default Electron icon
+- Icon assets: transparent outer background and trimmed padding for sharper display at small sizes
+
 ## [1.35.0] - 2026-07-11
 
 ### Added
