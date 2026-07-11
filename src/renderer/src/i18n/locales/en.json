@@ -763,7 +763,10 @@
       "upToDate": "You are on the latest version (v{{version}}).",
       "available": "Version {{version}} is available.",
       "ready": "Version {{version}} has been downloaded and is ready to install.",
-      "error": "Update check failed: {{message}}",
+      "errors": {
+        "unavailable": "Updates are currently unavailable. Try again later or download the latest version from GitHub Releases.",
+        "network": "Could not reach the update server. Check your internet connection and try again."
+      },
       "downloading": "Downloading update…",
       "downloadProgress": "{{percent}}% downloaded ({{transferred}} / {{total}} MB)",
       "checkButton": "Check for updates",

@@ -15,7 +15,7 @@ import { initializeAutoUpdater, scheduleStartupUpdateCheck } from './services/au
 import { syncLaunchAtLoginFromSettings } from './services/auto-launch'
 import { getSettings } from './services/app-store'
 import { getMainWindow, setMainWindow, showMainWindow } from './services/main-window'
-import { isTrayEnabled } from './services/tray-state'
+import { isAppQuitting, isTrayEnabled, setAppQuitting } from './services/tray-state'
 import {
   applyTitleBarThemeFromSettings,
   initializeNativeThemeListener,
@@ -61,7 +61,7 @@ async function createWindow(): Promise<void> {
   })
 
   mainWindow.on('close', (event) => {
-    if (!isTrayEnabled()) {
+    if (!isTrayEnabled() || isAppQuitting()) {
       return
     }
 
@@ -80,6 +80,10 @@ async function createWindow(): Promise<void> {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
+
+app.on('before-quit', () => {
+  setAppQuitting(true)
+})
 
 app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.nemoking1210.proxychecker')

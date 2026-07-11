@@ -1,3 +1,5 @@
+import type { AppUpdateErrorCode } from '../utils/update-error'
+
 export type AppUpdateStatus =
   | 'disabled'
   | 'idle'
@@ -18,4 +20,5 @@ export interface AppUpdateState {
   totalBytes?: number
   bytesPerSecond?: number
   error?: string
+  errorCode?: AppUpdateErrorCode
 }

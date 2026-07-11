@@ -2,6 +2,7 @@ import { app } from 'electron'
 import { autoUpdater, type UpdateInfo } from 'electron-updater'
 import { is } from '@electron-toolkit/utils'
 import type { AppUpdateState } from '../../shared/types/updater'
+import { resolveUpdateErrorCode } from '../../shared/utils/update-error'
 import { getMainWindow } from './main-window'
 import { showNativeNotification } from './notifications'
 
@@ -66,7 +67,16 @@ function applyAvailableUpdate(info: UpdateInfo): void {
     status: 'available',
     availableVersion: info.version,
     releaseNotes: formatReleaseNotes(info.releaseNotes),
-    error: undefined
+    error: undefined,
+    errorCode: undefined
+  })
+}
+
+function applyUpdateError(error: Error): void {
+  patchState({
+    status: 'error',
+    error: error.message,
+    errorCode: resolveUpdateErrorCode(error.message)
   })
 }
 
@@ -92,7 +102,7 @@ export function initializeAutoUpdater(): void {
   autoUpdater.allowDowngrade = false
 
   autoUpdater.on('checking-for-update', () => {
-    patchState({ status: 'checking', error: undefined })
+    patchState({ status: 'checking', error: undefined, errorCode: undefined })
   })
 
   autoUpdater.on('update-available', (info) => {
@@ -104,7 +114,8 @@ export function initializeAutoUpdater(): void {
       status: 'not-available',
       availableVersion: undefined,
       releaseNotes: undefined,
-      error: undefined
+      error: undefined,
+      errorCode: undefined
     })
     resetProgress()
   })
@@ -125,15 +136,13 @@ export function initializeAutoUpdater(): void {
       availableVersion: info.version,
       releaseNotes: formatReleaseNotes(info.releaseNotes),
       downloadPercent: 100,
-      error: undefined
+      error: undefined,
+      errorCode: undefined
     })
   })
 
   autoUpdater.on('error', (error) => {
-    patchState({
-      status: 'error',
-      error: error.message
-    })
+    applyUpdateError(error)
   })
 }
 
@@ -165,7 +174,7 @@ export async function checkForUpdates(options?: {
     return state
   }
 
-  patchState({ status: 'checking', error: undefined })
+  patchState({ status: 'checking', error: undefined, errorCode: undefined })
 
   checkInFlight = autoUpdater
     .checkForUpdates()
@@ -179,10 +188,7 @@ export async function checkForUpdates(options?: {
       }
     })
     .catch((error: Error) => {
-      patchState({
-        status: 'error',
-        error: error.message
-      })
+      applyUpdateError(error)
     })
     .finally(() => {
       checkInFlight = null
@@ -206,16 +212,13 @@ export async function downloadUpdate(): Promise<AppUpdateState> {
     return state
   }
 
-  patchState({ status: 'downloading', error: undefined })
+  patchState({ status: 'downloading', error: undefined, errorCode: undefined })
 
   downloadInFlight = autoUpdater
     .downloadUpdate()
     .then(() => undefined)
     .catch((error: Error) => {
-      patchState({
-        status: 'error',
-        error: error.message
-      })
+      applyUpdateError(error)
     })
     .finally(() => {
       downloadInFlight = null

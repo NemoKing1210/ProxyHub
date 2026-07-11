@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.37.2] - 2026-07-11
+
+### Fixed
+
+- Tray menu "Quit" now closes the app when system tray is enabled (window close no longer blocks exit)
+
+### Changed
+
+- Auto-update errors show short user-friendly messages instead of raw HTTP response details
+
 ## [1.37.1] - 2026-07-11
 
 ### Fixed

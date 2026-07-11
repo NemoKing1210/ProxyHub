@@ -133,9 +133,9 @@ function AppUpdateSection(): React.JSX.Element {
           </Alert>
         )}
 
-        {state.status === 'error' && state.error && (
-          <Alert severity="error" variant="outlined">
-            {t('settings.updates.error', { message: state.error })}
+        {state.status === 'error' && (
+          <Alert severity="warning" variant="outlined">
+            {t(`settings.updates.errors.${state.errorCode ?? 'unavailable'}`)}
           </Alert>
         )}
 
