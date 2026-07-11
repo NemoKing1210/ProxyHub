@@ -2,7 +2,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Collapse, IconButton, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { type ReactNode, useState } from 'react'
-import { elevationShadow, MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint } from '../theme'
+import { elevationShadow, MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
+
+type ContentSectionAccent = 'primary' | 'error' | 'warning' | 'info'
 
 interface ContentSectionProps {
   icon: ReactNode
@@ -14,6 +16,7 @@ interface ContentSectionProps {
   defaultExpanded?: boolean
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
+  accent?: ContentSectionAccent
 }
 
 function ContentSection({
@@ -25,7 +28,8 @@ function ContentSection({
   collapsible = false,
   defaultExpanded = true,
   expanded,
-  onExpandedChange
+  onExpandedChange,
+  accent = 'primary'
 }: ContentSectionProps): React.JSX.Element {
   const theme = useTheme()
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -45,18 +49,39 @@ function ContentSection({
     setExpanded(!isExpanded)
   }
 
+  const accentColor = theme.palette[accent].main
+  const accentSurfaceOpacity =
+    accent === 'primary'
+      ? undefined
+      : theme.palette.mode === 'dark'
+        ? 0.14
+        : 0.08
+
   return (
     <Box
       sx={{
         p: nested ? 2 : { xs: 2.5, sm: 3 },
         borderRadius: nested ? 2.5 : 3,
-        bgcolor: surfaceContainer(theme, nested ? 'default' : 'low'),
-        boxShadow: nested ? 'none' : elevationShadow(theme, 1),
+        bgcolor:
+          accent === 'primary'
+            ? surfaceContainer(theme, nested ? 'default' : 'low')
+            : surfaceTint(theme, accent, accentSurfaceOpacity),
+        backgroundImage:
+          accent === 'primary'
+            ? undefined
+            : `linear-gradient(135deg, ${withThemeAlpha(theme, accentColor, theme.palette.mode === 'dark' ? 0.16 : 0.1)} 0%, transparent 58%)`,
+        boxShadow:
+          accent === 'primary'
+            ? elevationShadow(theme, 1)
+            : `${elevationShadow(theme, 1)}, inset 0 0 0 1px ${withThemeAlpha(theme, accentColor, 0.28)}`,
         transition: `box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
         '&:hover': nested
           ? undefined
           : {
-              boxShadow: elevationShadow(theme, 2)
+              boxShadow:
+                accent === 'primary'
+                  ? elevationShadow(theme, 2)
+                  : `${elevationShadow(theme, 2)}, inset 0 0 0 1px ${withThemeAlpha(theme, accentColor, 0.36)}`
             }
       }}
     >
@@ -80,8 +105,8 @@ function ContentSection({
             height: nested ? 36 : 44,
             borderRadius: 2.5,
             flexShrink: 0,
-            bgcolor: surfaceTint(theme),
-            color: 'primary.main',
+            bgcolor: surfaceTint(theme, accent, nested ? 0.14 : 0.18),
+            color: `${accent}.main`,
             transition: `transform ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
           }}
         >
@@ -93,7 +118,8 @@ function ContentSection({
             sx={{
               fontSize: nested ? '0.98rem' : '1.05rem',
               fontWeight: 600,
-              lineHeight: 1.3
+              lineHeight: 1.3,
+              color: accent === 'primary' ? 'text.primary' : `${accent}.main`
             }}
           >
             {title}

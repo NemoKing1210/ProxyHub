@@ -9,6 +9,7 @@ import {
   type ThemeMode
 } from '../../../shared/types/settings'
 import { setAppLanguage } from '../i18n'
+import { notifySyncDataChange } from '../utils/sync-on-change'
 
 interface SettingsState {
   settings: AppSettings
@@ -25,6 +26,7 @@ interface SettingsState {
 
 async function persist(settings: AppSettings): Promise<void> {
   await window.api.saveSettings(settings)
+  notifySyncDataChange('settings')
 }
 
 function applyLanguage(language: AppLanguage): void {

@@ -23,6 +23,16 @@ import type { AppInfo } from './app'
 import type { ProxyGroup } from './proxy-group'
 import type { Proxy, ProxyCheckProgress, ProxyCheckResult } from './proxy'
 import type { AppSettings, ProxyCheckOptions } from './settings'
+import type {
+  SyncPublicState,
+  SyncPullApplyRequest,
+  SyncPullApplyResult,
+  SyncPullPreviewResult,
+  SyncPushResult,
+  SyncSaveConfigRequest,
+  SyncStartupPullResult,
+  SyncTestResult
+} from './sync'
 
 export interface AppNotificationPayload {
   title: string
@@ -62,4 +72,12 @@ export interface AppAPI {
   previewTxtImport: () => Promise<ProxyListImportPreviewResponse>
   importTxt: (request: ProxyListImportRequest) => Promise<ProxyListImportResponse>
   exportTxt: (request: ProxyListExportRequest) => Promise<ProxyListExportResponse>
+  getSyncConfig: () => Promise<SyncPublicState>
+  saveSyncConfig: (request: SyncSaveConfigRequest) => Promise<SyncPublicState>
+  testSyncConnection: (githubToken?: string) => Promise<SyncTestResult>
+  pushSync: () => Promise<SyncPushResult>
+  pullSyncPreview: (password?: string) => Promise<SyncPullPreviewResult>
+  unlockSyncPullPreview: (sessionId: string, password: string) => Promise<SyncPullPreviewResult>
+  applySyncPull: (request: SyncPullApplyRequest) => Promise<SyncPullApplyResult>
+  startupSyncPull: () => Promise<SyncStartupPullResult>
 }

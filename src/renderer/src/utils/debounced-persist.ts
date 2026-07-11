@@ -1,4 +1,5 @@
 import type { Proxy } from '../../../shared/types/proxy'
+import { notifySyncDataChange } from './sync-on-change'
 
 const DEFAULT_DELAY_MS = 500
 
@@ -39,6 +40,7 @@ export async function flushDebouncedPersist(): Promise<void> {
   latestProxies = null
 
   inFlight = window.api.saveProxies(toSave).finally(() => {
+    notifySyncDataChange('proxies')
     inFlight = null
   })
 

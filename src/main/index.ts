@@ -8,6 +8,7 @@ import { registerBackupIpc } from './ipc/backup'
 import { registerProxyImportIpc } from './ipc/proxy-import'
 import { registerProxyIpc } from './ipc/proxy'
 import { registerSettingsIpc } from './ipc/settings'
+import { registerSyncIpc, runStartupSyncPull } from './ipc/sync'
 import { registerTrayIpc, syncTrayEnabled } from './ipc/tray'
 import { getSettings } from './services/app-store'
 import { getMainWindow, setMainWindow, showMainWindow } from './services/main-window'
@@ -88,12 +89,14 @@ app.whenReady().then(async () => {
   registerSettingsIpc()
   registerBackupIpc()
   registerProxyImportIpc()
+  registerSyncIpc()
   registerAppIpc()
   registerTrayIpc()
   initializeNativeThemeListener(() => getMainWindow() ?? undefined)
 
   const settings = await getSettings()
   await syncTrayEnabled(settings.trayEnabled)
+  await runStartupSyncPull()
   await createWindow()
 
   app.on('activate', function () {

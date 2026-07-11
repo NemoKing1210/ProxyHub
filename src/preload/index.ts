@@ -71,7 +71,16 @@ const api: AppAPI = {
   exportJson: (request) => ipcRenderer.invoke('json:export', request),
   previewTxtImport: () => ipcRenderer.invoke('txt:preview'),
   importTxt: (request) => ipcRenderer.invoke('txt:import', request),
-  exportTxt: (request) => ipcRenderer.invoke('txt:export', request)
+  exportTxt: (request) => ipcRenderer.invoke('txt:export', request),
+  getSyncConfig: () => ipcRenderer.invoke('sync:get-config'),
+  saveSyncConfig: (request) => ipcRenderer.invoke('sync:save-config', request),
+  testSyncConnection: (githubToken) => ipcRenderer.invoke('sync:test-connection', githubToken),
+  pushSync: () => ipcRenderer.invoke('sync:push'),
+  pullSyncPreview: (password) => ipcRenderer.invoke('sync:pull-preview', password),
+  unlockSyncPullPreview: (sessionId, password) =>
+    ipcRenderer.invoke('sync:unlock-pull-preview', sessionId, password),
+  applySyncPull: (request) => ipcRenderer.invoke('sync:pull-apply', request),
+  startupSyncPull: () => ipcRenderer.invoke('sync:startup-pull')
 }
 
 if (process.contextIsolated) {

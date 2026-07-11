@@ -12,6 +12,8 @@ import CheckNotificationSync from '../components/CheckNotificationSync'
 import CheckToastHost from '../components/CheckToastHost'
 import NativeTitleBarSync from '../components/NativeTitleBarSync'
 import ProxyDataSync from '../components/ProxyDataSync'
+import SyncBackgroundSync from '../components/SyncBackgroundSync'
+import SyncOnChangeSync from '../components/SyncOnChangeSync'
 import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
@@ -87,6 +89,8 @@ function AppProviders(): React.JSX.Element {
           <ProxyDataSync />
           <CheckNotificationSync />
           <AutoCheckSync />
+          <SyncBackgroundSync />
+          <SyncOnChangeSync />
           <CheckToastHost />
           <HashRouter>
             <App />

@@ -25,6 +25,7 @@ import {
   flushDebouncedPersist,
   scheduleDebouncedPersist
 } from '../utils/debounced-persist'
+import { notifySyncDataChange } from '../utils/sync-on-change'
 import {
   clearProxySearchHaystackCache,
   invalidateProxySearchHaystack,
@@ -168,6 +169,7 @@ function isCheckInProgress(state: Pick<ProxyState, 'checkingIds' | 'isCheckingAl
 
 async function persist(proxies: Proxy[]): Promise<void> {
   await window.api.saveProxies(proxies)
+  notifySyncDataChange('proxies')
 }
 
 function getCheckOptions(): ProxyCheckOptions {

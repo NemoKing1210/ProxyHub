@@ -10,6 +10,7 @@ import { elevationShadow, getPalette, MD3_DURATION, MD3_EASING, surfaceContainer
 import { TITLE_BAR_HEIGHT } from '../../../shared/theme/title-bar'
 import { isWindows } from '../utils/platform'
 import PageTransition from './PageTransition'
+import SyncActivityIndicator from './SyncActivityIndicator'
 import TrayNavigationSync from './TrayNavigationSync'
 
 const NAV_ITEMS = [
@@ -55,6 +56,7 @@ function AppLayout(): React.JSX.Element {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <SyncActivityIndicator />
       <TrayNavigationSync onOpenProxy={setDetailsProxyId} />
       <Box
         ref={headerRef}

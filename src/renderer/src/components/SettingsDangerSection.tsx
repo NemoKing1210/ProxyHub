@@ -1,6 +1,6 @@
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined'
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined'
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import {
   Alert,
   Box,
@@ -17,7 +17,7 @@ import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContentSection from './ContentSection'
-import { outlineVariant, surfaceContainer } from '../theme'
+import { getPalette, withThemeAlpha } from '../theme'
 
 interface SettingsDangerSectionProps {
   proxyCount: number
@@ -87,28 +87,50 @@ function SettingsDangerSection({
       ? t('settings.dangerZone.deleteAllConfirmMessage', { proxies: proxyCount, groups: groupCount })
       : t('settings.dangerZone.resetSettingsConfirmMessage')
 
+  const palette = getPalette(theme)
+  const isDark = theme.palette.mode === 'dark'
+
+  const dangerSubCardSx = {
+    p: 2,
+    borderRadius: 2.5,
+    bgcolor: withThemeAlpha(theme, palette.background.paper, isDark ? 0.14 : 0.68),
+    backgroundImage: isDark
+      ? `linear-gradient(180deg, ${withThemeAlpha(theme, palette.common.white, 0.05)} 0%, transparent 100%)`
+      : undefined,
+    boxShadow: [
+      `inset 0 0 0 1px ${withThemeAlpha(theme, palette.error.main, isDark ? 0.26 : 0.18)}`,
+      isDark ? `inset 0 1px 0 ${withThemeAlpha(theme, palette.common.white, 0.05)}` : 'none'
+    ]
+      .filter(Boolean)
+      .join(', ')
+  } as const
+
+  const dangerAlertSx = {
+    bgcolor: withThemeAlpha(theme, palette.background.paper, isDark ? 0.1 : 0.58),
+    borderColor: withThemeAlpha(theme, palette.error.main, isDark ? 0.28 : 0.22)
+  } as const
+
   return (
     <>
       <ContentSection
-        icon={<WarningAmberOutlinedIcon fontSize="small" />}
+        icon={<ErrorOutlineOutlinedIcon fontSize="small" />}
         title={t('settings.sections.dangerZone')}
         description={t('settings.sections.dangerZoneDescription')}
         collapsible
         defaultExpanded={false}
+        accent="error"
       >
         <Stack spacing={2.5}>
-          <Alert severity="warning" variant="outlined" icon={<WarningAmberOutlinedIcon />}>
+          <Alert
+            severity="error"
+            variant="outlined"
+            icon={<ErrorOutlineOutlinedIcon />}
+            sx={dangerAlertSx}
+          >
             {t('settings.dangerZone.warning')}
           </Alert>
 
-          <Box
-            sx={{
-              p: 2,
-              borderRadius: 2.5,
-              bgcolor: surfaceContainer(theme, 'low'),
-              boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-            }}
-          >
+          <Box sx={dangerSubCardSx}>
             <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
               {t('settings.dangerZone.deleteAllTitle')}
             </Typography>
@@ -127,14 +149,7 @@ function SettingsDangerSection({
             </Button>
           </Box>
 
-          <Box
-            sx={{
-              p: 2,
-              borderRadius: 2.5,
-              bgcolor: surfaceContainer(theme, 'low'),
-              boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-            }}
-          >
+          <Box sx={dangerSubCardSx}>
             <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
               {t('settings.dangerZone.resetSettingsTitle')}
             </Typography>

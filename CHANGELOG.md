@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.33.0] - 2026-07-11
+
+### Added
+
+- Cloud sync in Settings: GitHub Gist provider with scope (full / proxies / settings), manual push and pull, optional payload encryption, and connection test
+- Auto-sync on a schedule, pull on startup, and push on local data changes (settings, proxies, groups)
+- Sync status panel: collapsible details, full error report with copy, connection and activity summary
+- Subtle cloud sync activity indicator in the top-left corner while push is in progress
+- Collapsible sync provider block in Settings
+
+### Changed
+
+- Danger zone settings section uses a red accent with softer nested card backgrounds for better contrast in dark and light themes
+
+### Fixed
+
+- Push on change now triggers reliably after proxy, group, and settings updates
+- GitHub Gist sync: create remote with real backup content to avoid API 422 errors; improved gist ID normalization and error handling
+
 ## [1.32.0] - 2026-07-11
 
 ### Added

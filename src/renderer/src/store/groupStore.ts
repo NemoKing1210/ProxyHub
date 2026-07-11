@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { ProxyGroup, ProxyGroupInput } from '../../../shared/types/proxy-group'
 import { findDuplicateGroupName } from '../../../shared/utils/proxy-group-identity'
 import { fetchGroups, persistGroups } from '../utils/groups-api'
+import { notifySyncDataChange } from '../utils/sync-on-change'
 import { useProxyStore } from './proxyStore'
 
 interface GroupState {
@@ -19,6 +20,7 @@ interface GroupState {
 
 async function persist(groups: ProxyGroup[]): Promise<void> {
   await persistGroups(groups)
+  notifySyncDataChange('proxies')
 }
 
 function createGroup(input: ProxyGroupInput): ProxyGroup {
@@ -106,5 +108,6 @@ export const useGroupStore = create<GroupState>((set, get) => ({
 
     useProxyStore.setState({ proxies })
     await window.api.saveProxies(proxies)
+    notifySyncDataChange('proxies')
   }
 }))

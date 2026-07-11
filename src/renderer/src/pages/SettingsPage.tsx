@@ -52,8 +52,10 @@ import ChangelogView from '../components/ChangelogView'
 import LanguageFlag from '../components/LanguageFlag'
 import SettingsAutoCheckSection from '../components/SettingsAutoCheckSection'
 import SettingsBackupSection from '../components/SettingsBackupSection'
+import SettingsSyncSection from '../components/SettingsSyncSection'
 import SettingsDangerSection from '../components/SettingsDangerSection'
 import SettingsSystemSection from '../components/SettingsSystemSection'
+import { notifySyncDataChange, suppressSyncOnChange } from '../utils/sync-on-change'
 import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
@@ -185,6 +187,8 @@ function SettingsPage(): React.JSX.Element {
   }
 
   const handleReloadBackupData = async (): Promise<void> => {
+    suppressSyncOnChange()
+
     const [proxies, groups] = await Promise.all([
       window.api.getProxies(),
       window.api.getGroups()
@@ -359,6 +363,7 @@ function SettingsPage(): React.JSX.Element {
 
   const handleDeleteAllProxiesAndGroups = async (): Promise<void> => {
     await Promise.all([window.api.saveProxies([]), window.api.saveGroups([])])
+    notifySyncDataChange('proxies')
 
     useProxyStore.setState({
       proxies: [],
@@ -865,6 +870,12 @@ function SettingsPage(): React.JSX.Element {
             )
           }
           onError={(message) => notifyFeedback(message, 'error')}
+          onReloadData={handleReloadBackupData}
+        />
+
+        <SettingsSyncSection
+          onSaved={notifySaved}
+          onFeedback={notifyFeedback}
           onReloadData={handleReloadBackupData}
         />
 
