@@ -1,43 +1,68 @@
-appId: com.electron.app
-productName: react-ts
+appId: com.nemoking1210.proxychecker
+productName: ProxyChecker
+copyright: Copyright © 2026 NemoKing1210
+
 directories:
   buildResources: build
+  output: dist
+
 files:
+  - out/**
+  - CHANGELOG.md
   - '!**/.vscode/*'
   - '!src/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
-  - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,README.md}'
+  - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,README.md,DESIGN.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+
 asarUnpack:
   - resources/**
+
 win:
-  executableName: react-ts
+  executableName: ProxyChecker
+  target:
+    - nsis
+  artifactName: ${productName}-${version}-setup.${ext}
+
 nsis:
-  artifactName: ${name}-${version}-setup.${ext}
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+
 mac:
+  category: public.app-category.utilities
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
-    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
-    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+    NSDocumentsFolderUsageDescription: ProxyChecker needs access to open and save proxy list files.
+    NSDownloadsFolderUsageDescription: ProxyChecker needs access to import proxy lists from Downloads.
   notarize: false
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
 dmg:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
 linux:
   target:
     - AppImage
-    - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: NemoKing1210 <nemoking1210@gmail.com>
   category: Utility
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
 appImage:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
+deb:
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
 npmRebuild: false
+
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: github
+  owner: NemoKing1210
+  repo: ProxyChecker
+  releaseType: release

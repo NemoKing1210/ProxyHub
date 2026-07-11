@@ -74,6 +74,9 @@ npm start
 | `npm run build:mac`    | Build a macOS installer             |
 | `npm run build:linux`  | Build a Linux installer             |
 | `npm run build:unpack` | Build without creating an installer |
+| `npm run release:win`  | Build and publish Windows release to GitHub |
+| `npm run release:mac`  | Build and publish macOS release to GitHub |
+| `npm run release:linux`| Build and publish Linux release to GitHub |
 | `npm run typecheck`    | Run TypeScript checks               |
 | `npm run lint`         | Run ESLint                          |
 | `npm run format`       | Format code with Prettier           |
@@ -92,6 +95,60 @@ npm run build:linux
 ```
 
 Output artifacts are placed in the `dist/` directory.
+
+## Releasing
+
+Releases are published to [GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases) via GitHub Actions when you push a version tag.
+
+### Prerequisites
+
+1. **Google OAuth secret** — in the GitHub repository, add `GOOGLE_OAUTH_CLIENT_ID` under **Settings → Secrets and variables → Actions**. Use the same Desktop app Client ID as in local `.env`.
+2. **Version sync** — update `version` in `package.json` and add a section to `CHANGELOG.md` before tagging.
+
+### Automated release (recommended)
+
+```bash
+# 1. Bump version in package.json and CHANGELOG.md, then commit
+git add package.json CHANGELOG.md
+git commit -m "chore: release v1.36.0"
+
+# 2. Create and push a tag (must match package.json version)
+git tag v1.36.0
+git push origin main
+git push origin v1.36.0
+```
+
+The **Release** workflow builds Windows, macOS, and Linux installers in parallel and uploads them to a GitHub Release.
+
+Artifacts produced:
+
+| Platform | Files |
+| -------- | ----- |
+| Windows  | `ProxyChecker-{version}-setup.exe` |
+| macOS    | `ProxyChecker-{version}-x64.dmg`, `ProxyChecker-{version}-arm64.dmg` |
+| Linux    | `ProxyChecker-{version}-x64.AppImage`, `ProxyChecker-{version}-amd64.deb` |
+
+### Local release (single platform)
+
+Requires a [GitHub personal access token](https://github.com/settings/tokens) with `repo` scope:
+
+```powershell
+$env:GH_TOKEN = "ghp_..."
+$env:GOOGLE_OAUTH_CLIENT_ID = "your-client-id.apps.googleusercontent.com"
+npm run release:win
+```
+
+Without `GH_TOKEN`, use `npm run build:win` to create a local installer only (no upload).
+
+### Code signing (optional)
+
+| Platform | Without signing | With signing |
+| -------- | --------------- | ------------ |
+| Windows  | SmartScreen warning for unknown publisher | Set `WIN_CSC_LINK` and `WIN_CSC_KEY_PASSWORD` secrets |
+| macOS    | Gatekeeper blocks by default | Apple Developer account + `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID` |
+| Linux    | No signing required | — |
+
+Unsigned builds are fine for GitHub Releases; users may need to confirm the install prompt once.
 
 ## Project structure
 
