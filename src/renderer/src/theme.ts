@@ -14,7 +14,11 @@ export {
 export { getPalette, withThemeAlpha } from './theme/palette'
 export { MD3_DURATION, MD3_EASING, staggerDelay } from './theme/motion'
 
-function withAlpha(theme: { vars?: Theme['vars']; palette: Theme['palette'] }, color: string, value: number | string): string {
+function withAlpha(
+  theme: { vars?: Theme['vars']; palette: Theme['palette'] },
+  color: string,
+  value: number | string
+): string {
   return withThemeAlpha(theme, color, value)
 }
 

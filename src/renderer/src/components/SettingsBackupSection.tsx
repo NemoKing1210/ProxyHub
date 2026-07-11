@@ -22,8 +22,15 @@ import { useTheme } from '@mui/material/styles'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { BackupExportKind, BackupImportMode, BackupPreview } from '../../../shared/types/backup'
-import type { ProxyListImportFormat, ProxyListImportPreview } from '../../../shared/types/proxy-import'
+import type {
+  BackupExportKind,
+  BackupImportMode,
+  BackupPreview
+} from '../../../shared/types/backup'
+import type {
+  ProxyListImportFormat,
+  ProxyListImportPreview
+} from '../../../shared/types/proxy-import'
 import type { Proxy } from '../../../shared/types/proxy'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import BackupExportProxiesDialog from './BackupExportProxiesDialog'
@@ -204,7 +211,11 @@ function ProxyListFormatCard({
           disabled={disabled || cardBusy}
           onClick={onExport}
           startIcon={
-            isExporting ? <CircularProgress size={18} color="inherit" /> : <FileDownloadOutlinedIcon />
+            isExporting ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : (
+              <FileDownloadOutlinedIcon />
+            )
           }
         >
           {t(`settings.backup.${format}.export`)}
@@ -215,7 +226,11 @@ function ProxyListFormatCard({
           disabled={disabled || cardBusy}
           onClick={onImport}
           startIcon={
-            isImporting ? <CircularProgress size={18} color="inherit" /> : <FileUploadOutlinedIcon />
+            isImporting ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : (
+              <FileUploadOutlinedIcon />
+            )
           }
         >
           {t(`settings.backup.${format}.selectFile`)}
@@ -247,7 +262,9 @@ function SettingsBackupSection({
   const [listPreview, setListPreview] = useState<ProxyListImportPreview | null>(null)
   const [listPreviewFormat, setListPreviewFormat] = useState<ProxyListImportFormat>('csv')
   const [exportSelectOpen, setExportSelectOpen] = useState(false)
-  const [exportSelectMode, setExportSelectMode] = useState<'backup' | ProxyListImportFormat>('backup')
+  const [exportSelectMode, setExportSelectMode] = useState<'backup' | ProxyListImportFormat>(
+    'backup'
+  )
   const [protectWithPassword, setProtectWithPassword] = useState(false)
   const [exportPassword, setExportPassword] = useState('')
   const [exportPasswordConfirm, setExportPasswordConfirm] = useState('')
@@ -308,7 +325,10 @@ function SettingsBackupSection({
     }
   }
 
-  const runListExport = async (format: ProxyListImportFormat, proxyIds: string[]): Promise<void> => {
+  const runListExport = async (
+    format: ProxyListImportFormat,
+    proxyIds: string[]
+  ): Promise<void> => {
     setIsExporting(true)
 
     try {
@@ -561,7 +581,11 @@ function SettingsBackupSection({
                 <ArchiveOutlinedIcon />
               </Box>
               <Box sx={{ minWidth: 0, flex: 1 }}>
-                <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                <Stack
+                  direction="row"
+                  spacing={0.75}
+                  sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+                >
                   <Typography variant="subtitle1">{t('settings.backup.nativeTitle')}</Typography>
                   <Typography
                     variant="caption"
@@ -584,7 +608,12 @@ function SettingsBackupSection({
               </Box>
             </Stack>
 
-            <Alert severity="warning" variant="outlined" icon={<WarningAmberOutlinedIcon />} sx={{ mb: 2 }}>
+            <Alert
+              severity="warning"
+              variant="outlined"
+              icon={<WarningAmberOutlinedIcon />}
+              sx={{ mb: 2 }}
+            >
               {t('settings.backup.securityWarning')}
             </Alert>
 
@@ -612,7 +641,9 @@ function SettingsBackupSection({
             >
               <ToggleButton value="full">{t('settings.backup.exportKindFull')}</ToggleButton>
               <ToggleButton value="proxies">{t('settings.backup.exportKindProxies')}</ToggleButton>
-              <ToggleButton value="settings">{t('settings.backup.exportKindSettings')}</ToggleButton>
+              <ToggleButton value="settings">
+                {t('settings.backup.exportKindSettings')}
+              </ToggleButton>
             </ToggleButtonGroup>
 
             <Box sx={{ mb: 2 }}>

@@ -154,7 +154,12 @@ function BackupProxySelectionList({
             handleToggleProxy(proxy.id, event.target.checked)
           }}
         />
-        <ProxyCardAvatar icon={proxy.icon} countryCode={proxy.countryCode} flagSize={20} fontSize="small" />
+        <ProxyCardAvatar
+          icon={proxy.icon}
+          countryCode={proxy.countryCode}
+          flagSize={20}
+          fontSize="small"
+        />
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', minWidth: 0 }}>
             <Typography
@@ -177,7 +182,12 @@ function BackupProxySelectionList({
             <Typography
               variant="caption"
               color="text.secondary"
-              sx={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+              sx={{
+                display: 'block',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
             >
               {subtitle}
             </Typography>
@@ -320,7 +330,12 @@ function BackupProxySelectionList({
               ),
               endAdornment: searchQuery ? (
                 <InputAdornment position="end">
-                  <IconButton size="small" onClick={() => setSearchQuery('')} edge="end" disabled={disabled}>
+                  <IconButton
+                    size="small"
+                    onClick={() => setSearchQuery('')}
+                    edge="end"
+                    disabled={disabled}
+                  >
                     <CloseIcon fontSize="small" />
                   </IconButton>
                 </InputAdornment>
@@ -356,7 +371,16 @@ function BackupProxySelectionList({
 
             {organized.ungrouped.length > 0 && (
               <Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 0.5, py: 0.75, mb: 0.75 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    px: 0.5,
+                    py: 0.75,
+                    mb: 0.75
+                  }}
+                >
                   <Typography variant="subtitle2" sx={{ flex: 1 }}>
                     {t('settings.backup.exportSelectUngrouped')}
                   </Typography>

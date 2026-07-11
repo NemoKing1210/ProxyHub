@@ -82,7 +82,11 @@ function ProxyFormSection({
             {title}
           </Typography>
           {description ? (
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.25 }}>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ display: 'block', mt: 0.25 }}
+            >
               {description}
             </Typography>
           ) : null}

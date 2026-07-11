@@ -1,5 +1,10 @@
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
-import type { Proxy, ProxyAnonymityLevel, ProxyProtocol, ProxyStatus } from '../../../shared/types/proxy'
+import type {
+  Proxy,
+  ProxyAnonymityLevel,
+  ProxyProtocol,
+  ProxyStatus
+} from '../../../shared/types/proxy'
 import type { ProxySortDirection, ProxySortField } from '../../../shared/types/proxy-list-view'
 import { getProxyDisplayName } from '../../../shared/utils/favorite-proxies'
 import { getProxyDisplayLatency } from './filter-proxies'
@@ -82,7 +87,8 @@ function compareText(
   return compareEmptyLast(
     left,
     right,
-    (leftValue, rightValue) => leftValue.localeCompare(rightValue, undefined, { sensitivity: 'base' }),
+    (leftValue, rightValue) =>
+      leftValue.localeCompare(rightValue, undefined, { sensitivity: 'base' }),
     direction
   )
 }
@@ -116,7 +122,10 @@ function compareProxyField(
     case 'label':
       return compareText(getProxyDisplayName(left), getProxyDisplayName(right), direction)
     case 'protocol':
-      return applyDirection(PROTOCOL_ORDER[left.protocol] - PROTOCOL_ORDER[right.protocol], direction)
+      return applyDirection(
+        PROTOCOL_ORDER[left.protocol] - PROTOCOL_ORDER[right.protocol],
+        direction
+      )
     case 'host':
       return compareText(left.host, right.host, direction)
     case 'port':
@@ -142,5 +151,7 @@ export function sortProxies(
 }
 
 export function sortProxiesByFavorite(proxies: Proxy[]): Proxy[] {
-  return [...proxies].sort((left, right) => Number(Boolean(right.isFavorite)) - Number(Boolean(left.isFavorite)))
+  return [...proxies].sort(
+    (left, right) => Number(Boolean(right.isFavorite)) - Number(Boolean(left.isFavorite))
+  )
 }

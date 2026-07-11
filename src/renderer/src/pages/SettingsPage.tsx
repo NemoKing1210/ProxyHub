@@ -86,10 +86,7 @@ const DOMAIN_CONCURRENCY_MARKS = [
 ]
 
 function clampConcurrency(value: number): number {
-  return Math.min(
-    CHECK_ALL_CONCURRENCY_MAX,
-    Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value))
-  )
+  return Math.min(CHECK_ALL_CONCURRENCY_MAX, Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value)))
 }
 
 function clampDomainConcurrency(value: number): number {
@@ -108,8 +105,15 @@ function clampTimeoutSeconds(seconds: number): number {
 function SettingsPage(): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
-  const { settings, setTheme, setLanguage, setCheckDomains, setCheckTimeoutMs, updateSettings, resetSettings } =
-    useSettingsStore()
+  const {
+    settings,
+    setTheme,
+    setLanguage,
+    setCheckDomains,
+    setCheckTimeoutMs,
+    updateSettings,
+    resetSettings
+  } = useSettingsStore()
   const groups = useGroupStore((state) => state.groups)
   const proxies = useProxyStore((state) => state.proxies)
   const isCheckingAll = useProxyStore((state) => state.isCheckingAll)
@@ -130,7 +134,9 @@ function SettingsPage(): React.JSX.Element {
   const [isDraggingTimeout, setIsDraggingTimeout] = useState(false)
   const [concurrencyDraft, setConcurrencyDraft] = useState(settings.checkAllConcurrency)
   const [isDraggingConcurrency, setIsDraggingConcurrency] = useState(false)
-  const [domainConcurrencyDraft, setDomainConcurrencyDraft] = useState(settings.domainCheckConcurrency)
+  const [domainConcurrencyDraft, setDomainConcurrencyDraft] = useState(
+    settings.domainCheckConcurrency
+  )
   const [isDraggingDomainConcurrency, setIsDraggingDomainConcurrency] = useState(false)
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
   const [appInfoError, setAppInfoError] = useState(false)
@@ -172,7 +178,9 @@ function SettingsPage(): React.JSX.Element {
 
   const timeoutSeconds = settings.checkTimeoutMs / 1000
   const displayedTimeout = isDraggingTimeout ? timeoutDraft : timeoutSeconds
-  const displayedConcurrency = isDraggingConcurrency ? concurrencyDraft : settings.checkAllConcurrency
+  const displayedConcurrency = isDraggingConcurrency
+    ? concurrencyDraft
+    : settings.checkAllConcurrency
   const displayedDomainConcurrency = isDraggingDomainConcurrency
     ? domainConcurrencyDraft
     : settings.domainCheckConcurrency
@@ -190,10 +198,7 @@ function SettingsPage(): React.JSX.Element {
   const handleReloadBackupData = async (): Promise<void> => {
     suppressSyncOnChange()
 
-    const [proxies, groups] = await Promise.all([
-      window.api.getProxies(),
-      window.api.getGroups()
-    ])
+    const [proxies, groups] = await Promise.all([window.api.getProxies(), window.api.getGroups()])
 
     useProxyStore.setState({ proxies })
     useGroupStore.setState({ groups })
@@ -309,9 +314,7 @@ function SettingsPage(): React.JSX.Element {
 
   const handleToggleDomain = async (domain: string, enabled: boolean): Promise<void> => {
     await setCheckDomains(
-      settings.checkDomains.map((item) =>
-        item.domain === domain ? { ...item, enabled } : item
-      )
+      settings.checkDomains.map((item) => (item.domain === domain ? { ...item, enabled } : item))
     )
     notifySaved()
   }
@@ -659,9 +662,7 @@ function SettingsPage(): React.JSX.Element {
                     step={1}
                     marks={CONCURRENCY_MARKS}
                     valueLabelDisplay="auto"
-                    valueLabelFormat={(value) =>
-                      t('settings.checkAllConcurrencyValue', { value })
-                    }
+                    valueLabelFormat={(value) => t('settings.checkAllConcurrencyValue', { value })}
                     sx={{ px: 0.5 }}
                   />
                 </Box>
@@ -704,9 +705,7 @@ function SettingsPage(): React.JSX.Element {
                 step={1}
                 marks={DOMAIN_CONCURRENCY_MARKS}
                 valueLabelDisplay="auto"
-                valueLabelFormat={(value) =>
-                  t('settings.domainCheckConcurrencyValue', { value })
-                }
+                valueLabelFormat={(value) => t('settings.domainCheckConcurrencyValue', { value })}
                 sx={{ px: 0.5 }}
               />
             </Box>
@@ -849,7 +848,9 @@ function SettingsPage(): React.JSX.Element {
           proxies={proxies}
           groups={groups}
           onExportSuccess={() => notifyFeedback(t('settings.backup.exportSuccess'))}
-          onListExportSuccess={(format) => notifyFeedback(t(`settings.backup.${format}.exportSuccess`))}
+          onListExportSuccess={(format) =>
+            notifyFeedback(t(`settings.backup.${format}.exportSuccess`))
+          }
           onImportSuccess={({ proxiesAdded, groupsAdded, settingsImported }) =>
             notifyFeedback(
               t('settings.backup.importSuccess', {
@@ -865,7 +866,9 @@ function SettingsPage(): React.JSX.Element {
                 proxies: proxiesAdded,
                 skipped:
                   skippedDuplicates > 0
-                    ? t(`settings.backup.${format}.importSuccessSkipped`, { skipped: skippedDuplicates })
+                    ? t(`settings.backup.${format}.importSuccessSkipped`, {
+                        skipped: skippedDuplicates
+                      })
                     : ''
               })
             )
@@ -937,11 +940,7 @@ function SettingsPage(): React.JSX.Element {
         onClose={() => setFeedbackOpen(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert
-          severity={feedbackSeverity}
-          variant="filled"
-          onClose={() => setFeedbackOpen(false)}
-        >
+        <Alert severity={feedbackSeverity} variant="filled" onClose={() => setFeedbackOpen(false)}>
           {feedbackMessage}
         </Alert>
       </Snackbar>

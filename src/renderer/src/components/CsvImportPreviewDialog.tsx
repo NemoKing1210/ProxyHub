@@ -22,7 +22,11 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ProxyListImportFormat, ProxyListImportPreview, ProxyListImportPreviewEntry } from '../../../shared/types/proxy-import'
+import type {
+  ProxyListImportFormat,
+  ProxyListImportPreview,
+  ProxyListImportPreviewEntry
+} from '../../../shared/types/proxy-import'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import { formatProxyAddress } from '../../../shared/utils/proxy-format'
 import { outlineVariant, surfaceContainer } from '../theme'
@@ -238,7 +242,9 @@ function CsvImportPreviewDialog({
       await onConfirm([...selectedIds], groupId || undefined)
       onClose()
     } catch {
-      onError(t(`${translationPrefix}.importError`, { message: t(`${translationPrefix}.errors.unknown`) }))
+      onError(
+        t(`${translationPrefix}.importError`, { message: t(`${translationPrefix}.errors.unknown`) })
+      )
     } finally {
       setIsImporting(false)
     }
@@ -298,7 +304,9 @@ function CsvImportPreviewDialog({
             </Box>
 
             <FormControl fullWidth size="small">
-              <InputLabel id="csv-import-group-label">{t(`${translationPrefix}.importGroup`)}</InputLabel>
+              <InputLabel id="csv-import-group-label">
+                {t(`${translationPrefix}.importGroup`)}
+              </InputLabel>
               <Select
                 labelId="csv-import-group-label"
                 value={groupId}
@@ -313,7 +321,11 @@ function CsvImportPreviewDialog({
                   </MenuItem>
                 ))}
               </Select>
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mt: 0.75, display: 'block' }}
+              >
                 {t(`${translationPrefix}.importGroupHint`)}
               </Typography>
             </FormControl>
@@ -325,7 +337,9 @@ function CsvImportPreviewDialog({
                   spacing={1}
                   sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.75 }}
                 >
-                  <Typography variant="subtitle2">{t('settings.backup.importLimitLabel')}</Typography>
+                  <Typography variant="subtitle2">
+                    {t('settings.backup.importLimitLabel')}
+                  </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
                     {t('settings.backup.importLimitValue', {
                       count: importLimit,
@@ -356,7 +370,9 @@ function CsvImportPreviewDialog({
                 spacing={1}
                 sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between', mb: 1.25 }}
               >
-                <Typography variant="subtitle2">{t(`${translationPrefix}.importSelectProxies`)}</Typography>
+                <Typography variant="subtitle2">
+                  {t(`${translationPrefix}.importSelectProxies`)}
+                </Typography>
                 <Chip
                   label={t('settings.backup.exportSelectSelected', {
                     selected: selectedIds.size,
@@ -433,7 +449,9 @@ function CsvImportPreviewDialog({
                     return (
                       <Box
                         key={entry.id}
-                        onClick={() => !isImporting && !entry.isDuplicate && handleToggleEntry(entry, !checked)}
+                        onClick={() =>
+                          !isImporting && !entry.isDuplicate && handleToggleEntry(entry, !checked)
+                        }
                         sx={{
                           display: 'flex',
                           alignItems: 'center',
@@ -477,7 +495,11 @@ function CsvImportPreviewDialog({
                             {address}
                           </Typography>
                           {(entry.countryCode || entry.city || entry.anonymityLevel) && (
-                            <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', mt: 0.25 }}>
+                            <Stack
+                              direction="row"
+                              spacing={0.75}
+                              sx={{ alignItems: 'center', mt: 0.25 }}
+                            >
                               {entry.countryCode && (
                                 <CountryFlag countryCode={entry.countryCode} size={14} />
                               )}

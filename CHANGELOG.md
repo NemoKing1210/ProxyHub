@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - macOS release builds now include a `zip` artifact required for in-app auto-update (alongside DMG)
 - README redesigned with badges, download table, and release instructions
 
-
 ### Added
 
 - Custom app icon (network nodes with success checkmark) for window, taskbar, tray, and notifications

@@ -56,33 +56,30 @@ export function registerProxyIpc(): void {
     }
   })
 
-  ipcMain.handle(
-    'proxy:check-all',
-    async (event, proxies: Proxy[], options: ProxyCheckOptions) => {
-      const signal = beginCancellableCheck()
-      broadcastCheckAllState(true)
-      const throttledProgress = createThrottledProgressEmitter((progress) =>
-        sendProgress(event.sender, progress)
-      )
+  ipcMain.handle('proxy:check-all', async (event, proxies: Proxy[], options: ProxyCheckOptions) => {
+    const signal = beginCancellableCheck()
+    broadcastCheckAllState(true)
+    const throttledProgress = createThrottledProgressEmitter((progress) =>
+      sendProgress(event.sender, progress)
+    )
 
-      try {
-        await checkAllProxies(
-          proxies,
-          options.checkDomains,
-          throttledProgress.emit,
-          options.checkTimeoutMs,
-          options.checkAllConcurrency,
-          signal,
-          options.domainCheckConcurrency,
-          options.fetchExternalIp
-        )
-      } finally {
-        throttledProgress.flush()
-        clearCancellableCheck(signal)
-        broadcastCheckAllState(false)
-      }
+    try {
+      await checkAllProxies(
+        proxies,
+        options.checkDomains,
+        throttledProgress.emit,
+        options.checkTimeoutMs,
+        options.checkAllConcurrency,
+        signal,
+        options.domainCheckConcurrency,
+        options.fetchExternalIp
+      )
+    } finally {
+      throttledProgress.flush()
+      clearCancellableCheck(signal)
+      broadcastCheckAllState(false)
     }
-  )
+  })
 
   ipcMain.handle('proxy:cancel-check-all', async () => {
     cancelActiveCheck()

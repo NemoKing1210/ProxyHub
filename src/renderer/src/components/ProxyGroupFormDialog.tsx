@@ -211,7 +211,10 @@ function ProxyGroupFormDialog({
 
                       return (
                         <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
-                          <ProxyIcon iconId={iconValue as (typeof PROXY_ICON_IDS)[number]} fontSize="small" />
+                          <ProxyIcon
+                            iconId={iconValue as (typeof PROXY_ICON_IDS)[number]}
+                            fontSize="small"
+                          />
                           <span>{t(`proxyIcons.${iconValue}`)}</span>
                         </Stack>
                       )
@@ -219,9 +222,7 @@ function ProxyGroupFormDialog({
                   }
                 }}
               >
-                <MenuItem value="">
-                  {t('proxyGroup.defaultIcon')}
-                </MenuItem>
+                <MenuItem value="">{t('proxyGroup.defaultIcon')}</MenuItem>
                 {PROXY_ICON_IDS.map((iconId) => (
                   <MenuItem key={iconId} value={iconId}>
                     <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
@@ -256,7 +257,10 @@ function ProxyGroupFormDialog({
 
                       return (
                         <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
-                          <ProxyColorSwatch colorId={colorValue as (typeof PROXY_COLOR_IDS)[number]} size={20} />
+                          <ProxyColorSwatch
+                            colorId={colorValue as (typeof PROXY_COLOR_IDS)[number]}
+                            size={20}
+                          />
                           <span>{t(`proxyColors.${colorValue}`)}</span>
                         </Stack>
                       )
@@ -264,9 +268,7 @@ function ProxyGroupFormDialog({
                   }
                 }}
               >
-                <MenuItem value="">
-                  {t('proxyGroup.defaultColor')}
-                </MenuItem>
+                <MenuItem value="">{t('proxyGroup.defaultColor')}</MenuItem>
                 {PROXY_COLOR_IDS.map((colorId) => (
                   <MenuItem key={colorId} value={colorId}>
                     <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>

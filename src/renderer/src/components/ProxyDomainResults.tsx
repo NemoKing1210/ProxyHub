@@ -83,8 +83,12 @@ function ProxyDomainResults({ domainChecks }: ProxyDomainResultsProps): React.JS
                     animation: `${domainEnter} 0.32s ${MD3_EASING.emphasizedDecelerate} both, domainPulse 1.8s ease-in-out infinite`,
                     animationDelay: `${staggerDelay(index)}, 0ms`,
                     '@keyframes domainPulse': {
-                      '0%, 100%': { boxShadow: `0 0 0 0 ${withThemeAlpha(theme, palette.info.main, 0)}` },
-                      '50%': { boxShadow: `0 0 0 6px ${withThemeAlpha(theme, palette.info.main, 0.12)}` }
+                      '0%, 100%': {
+                        boxShadow: `0 0 0 0 ${withThemeAlpha(theme, palette.info.main, 0)}`
+                      },
+                      '50%': {
+                        boxShadow: `0 0 0 6px ${withThemeAlpha(theme, palette.info.main, 0.12)}`
+                      }
                     }
                   }
                 : {}),

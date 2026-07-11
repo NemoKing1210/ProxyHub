@@ -7,10 +7,7 @@ let timer: ReturnType<typeof setTimeout> | null = null
 let latestProxies: Proxy[] | null = null
 let inFlight: Promise<void> | null = null
 
-export function scheduleDebouncedPersist(
-  proxies: Proxy[],
-  delayMs = DEFAULT_DELAY_MS
-): void {
+export function scheduleDebouncedPersist(proxies: Proxy[], delayMs = DEFAULT_DELAY_MS): void {
   latestProxies = proxies
 
   if (timer) {

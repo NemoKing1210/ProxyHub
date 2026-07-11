@@ -24,11 +24,7 @@ export interface ProxyListImportPreview {
 }
 
 export type ProxyListImportErrorCode =
-  | 'empty_file'
-  | 'no_valid_entries'
-  | 'read_error'
-  | 'invalid_json'
-  | 'unknown'
+  'empty_file' | 'no_valid_entries' | 'read_error' | 'invalid_json' | 'unknown'
 
 export interface ProxyListImportError {
   code: ProxyListImportErrorCode

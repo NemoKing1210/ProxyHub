@@ -1,8 +1,4 @@
-import {
-  SYNC_INTERVAL_DEFAULT,
-  SYNC_INTERVAL_MAX,
-  SYNC_INTERVAL_MIN
-} from '../constants/sync'
+import { SYNC_INTERVAL_DEFAULT, SYNC_INTERVAL_MAX, SYNC_INTERVAL_MIN } from '../constants/sync'
 import type { BackupImportMode } from '../types/backup'
 import type { SyncConfig, SyncProviderType, SyncScope, SyncStatus } from '../types/sync'
 import { SYNC_PROVIDER_TYPES, SYNC_SCOPES } from '../types/sync'
@@ -52,7 +48,10 @@ function normalizePullMode(value: unknown): BackupImportMode {
   return value === 'replace' ? 'replace' : 'merge'
 }
 
-function normalizeRemoteId(provider: SyncProviderType, source: Partial<SyncConfig>): string | undefined {
+function normalizeRemoteId(
+  provider: SyncProviderType,
+  source: Partial<SyncConfig>
+): string | undefined {
   const legacyGistId = source.gistId
   const remoteId = source.remoteId ?? legacyGistId
 

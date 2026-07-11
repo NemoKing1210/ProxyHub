@@ -40,10 +40,7 @@ const INTERVAL_MARKS = [
 ]
 
 function clampIntervalMinutes(value: number): number {
-  return Math.min(
-    AUTO_CHECK_INTERVAL_MAX,
-    Math.max(AUTO_CHECK_INTERVAL_MIN, Math.round(value))
-  )
+  return Math.min(AUTO_CHECK_INTERVAL_MAX, Math.max(AUTO_CHECK_INTERVAL_MIN, Math.round(value)))
 }
 
 interface SettingsAutoCheckSectionProps {
@@ -251,7 +248,11 @@ function SettingsAutoCheckSection({
                 {scope === 'groups' && (
                   <Box>
                     {showGroupsEmpty ? (
-                      <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontStyle: 'italic' }}
+                      >
                         {t('settings.autoCheckGroupsEmpty')}
                       </Typography>
                     ) : (

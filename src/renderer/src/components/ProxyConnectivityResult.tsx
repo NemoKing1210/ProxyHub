@@ -67,7 +67,7 @@ function ProxyConnectivityResultCard({
   const detailText = isAlive
     ? connectivity.externalIp
     : isDead
-      ? connectivity.error ?? t('proxyList.connectivity.failed')
+      ? (connectivity.error ?? t('proxyList.connectivity.failed'))
       : null
 
   return (
@@ -130,10 +130,7 @@ function ProxyConnectivityResultCard({
           {isAlive ? (
             <>
               {t('proxyList.columns.externalIp')}:{' '}
-              <Box
-                component="span"
-                sx={{ fontFamily: 'monospace', color: 'text.primary' }}
-              >
+              <Box component="span" sx={{ fontFamily: 'monospace', color: 'text.primary' }}>
                 {detailText}
               </Box>
             </>

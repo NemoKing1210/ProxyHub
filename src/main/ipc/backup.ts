@@ -20,11 +20,7 @@ import {
   parseBackupEnvelopeFromContent,
   resolveBackupExportProxies
 } from '../../shared/utils/backup'
-import {
-  createBackupContent,
-  loadBackupFile,
-  readAppVersion
-} from '../services/backup-content'
+import { createBackupContent, loadBackupFile, readAppVersion } from '../services/backup-content'
 import {
   getGroups,
   getProxies,
@@ -51,7 +47,10 @@ const OPEN_DIALOG_OPTIONS = {
   filters: [{ name: 'ProxyChecker Backup', extensions: ['json'] }]
 }
 
-async function persistImportedSettings(previousTrayEnabled: boolean, previousLanguage: string): Promise<void> {
+async function persistImportedSettings(
+  previousTrayEnabled: boolean,
+  previousLanguage: string
+): Promise<void> {
   const settings = await getSettings()
 
   if (previousTrayEnabled !== settings.trayEnabled) {
@@ -64,7 +63,9 @@ async function persistImportedSettings(previousTrayEnabled: boolean, previousLan
   }
 }
 
-async function pickBackupFile(): Promise<{ canceled: true } | { canceled: false; filePath: string }> {
+async function pickBackupFile(): Promise<
+  { canceled: true } | { canceled: false; filePath: string }
+> {
   const window = getActiveWindow()
   const dialogResult = window
     ? await dialog.showOpenDialog(window, OPEN_DIALOG_OPTIONS)

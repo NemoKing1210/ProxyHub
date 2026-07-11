@@ -11,10 +11,7 @@ import { registerSettingsIpc } from './ipc/settings'
 import { registerSyncIpc, runStartupSyncPull } from './ipc/sync'
 import { registerTrayIpc, syncTrayEnabled } from './ipc/tray'
 import { registerUpdaterIpc } from './ipc/updater'
-import {
-  initializeAutoUpdater,
-  scheduleStartupUpdateCheck
-} from './services/auto-updater'
+import { initializeAutoUpdater, scheduleStartupUpdateCheck } from './services/auto-updater'
 import { getSettings } from './services/app-store'
 import { getMainWindow, setMainWindow, showMainWindow } from './services/main-window'
 import { isTrayEnabled } from './services/tray-state'

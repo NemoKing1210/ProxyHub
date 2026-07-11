@@ -21,5 +21,4 @@ export const GOOGLE_OAUTH_REDIRECT_PATH = '/oauth2callback'
 
 export const GOOGLE_OAUTH_TIMEOUT_MS = 5 * 60 * 1000
 
-export const GOOGLE_CLOUD_CONSOLE_URL =
-  'https://console.cloud.google.com/apis/credentials' as const
+export const GOOGLE_CLOUD_CONSOLE_URL = 'https://console.cloud.google.com/apis/credentials' as const

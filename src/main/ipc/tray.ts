@@ -1,5 +1,10 @@
 import { ipcMain } from 'electron'
-import { createTray, destroyTray, refreshTrayContextMenu, refreshTrayTooltip } from '../services/tray'
+import {
+  createTray,
+  destroyTray,
+  refreshTrayContextMenu,
+  refreshTrayTooltip
+} from '../services/tray'
 import { notifyTrayDataChanged } from '../services/tray-actions'
 import { hideMainWindow, showMainWindow } from '../services/main-window'
 import { setTrayEnabledState } from '../services/tray-state'

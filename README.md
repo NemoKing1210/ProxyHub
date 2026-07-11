@@ -31,13 +31,13 @@ ProxyChecker helps you validate proxy servers quickly from a single desktop inte
 
 ### Proxy checking
 
-| | |
-|---|---|
-| **Protocols** | HTTP, HTTPS, SOCKS4, SOCKS5, [MTProto](https://core.telegram.org/mtproto) |
-| **Bulk import** | Paste, file upload, quick-fill parser |
-| **Metrics** | Response time, external IP, geo hints, country flags |
-| **Batch checks** | Check all, per-group checks, tray quick actions |
-| **Export** | Working / failed proxies, backup files |
+|                  |                                                                           |
+| ---------------- | ------------------------------------------------------------------------- |
+| **Protocols**    | HTTP, HTTPS, SOCKS4, SOCKS5, [MTProto](https://core.telegram.org/mtproto) |
+| **Bulk import**  | Paste, file upload, quick-fill parser                                     |
+| **Metrics**      | Response time, external IP, geo hints, country flags                      |
+| **Batch checks** | Check all, per-group checks, tray quick actions                           |
+| **Export**       | Working / failed proxies, backup files                                    |
 
 ### Organization & UI
 
@@ -59,26 +59,26 @@ ProxyChecker helps you validate proxy servers quickly from a single desktop inte
 
 Pre-built installers are available on **[GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases)**.
 
-| Platform | File |
-| -------- | ---- |
-| **Windows** | `ProxyChecker-{version}-setup.exe` |
-| **macOS** | `ProxyChecker-{version}-x64.dmg`, `ProxyChecker-{version}-arm64.dmg` |
-| **Linux** | `ProxyChecker-{version}-x64.AppImage`, `ProxyChecker-{version}-amd64.deb` |
+| Platform    | File                                                                      |
+| ----------- | ------------------------------------------------------------------------- |
+| **Windows** | `ProxyChecker-{version}-setup.exe`                                        |
+| **macOS**   | `ProxyChecker-{version}-x64.dmg`, `ProxyChecker-{version}-arm64.dmg`      |
+| **Linux**   | `ProxyChecker-{version}-x64.AppImage`, `ProxyChecker-{version}-amd64.deb` |
 
 > **Note:** Builds are unsigned by default. Windows may show a SmartScreen prompt; macOS may require allowing the app in System Settings.
 
 ## 🛠 Tech stack
 
-| Layer | Technology |
-| ----- | ---------- |
-| Desktop runtime | [Electron](https://www.electronjs.org/) |
-| Build tool | [electron-vite](https://electron-vite.org/) |
-| UI | [React 19](https://react.dev/) + [Material UI](https://mui.com/) |
-| Language | [TypeScript](https://www.typescriptlang.org/) |
-| State | [Zustand](https://github.com/pmndrs/zustand) |
-| Packaging | [electron-builder](https://www.electron.build/) |
-| i18n | [i18next](https://www.i18next.com/) |
-| Lint / format | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) |
+| Layer           | Technology                                                       |
+| --------------- | ---------------------------------------------------------------- |
+| Desktop runtime | [Electron](https://www.electronjs.org/)                          |
+| Build tool      | [electron-vite](https://electron-vite.org/)                      |
+| UI              | [React 19](https://react.dev/) + [Material UI](https://mui.com/) |
+| Language        | [TypeScript](https://www.typescriptlang.org/)                    |
+| State           | [Zustand](https://github.com/pmndrs/zustand)                     |
+| Packaging       | [electron-builder](https://www.electron.build/)                  |
+| i18n            | [i18next](https://www.i18next.com/)                              |
+| Lint / format   | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) |
 
 ## 🚀 Development
 
@@ -99,18 +99,18 @@ For **Google Drive sync** in dev builds, copy [`.env.example`](./.env.example) t
 
 ### Scripts
 
-| Command | Description |
-| ------- | ----------- |
-| `npm run dev` | Start with HMR (`F12` — DevTools) |
-| `npm start` | Preview production build |
-| `npm run build` | Type-check + production build |
-| `npm run build:win` | Windows installer → `dist/` |
-| `npm run build:mac` | macOS installer → `dist/` |
-| `npm run build:linux` | Linux AppImage + deb → `dist/` |
-| `npm run build:unpack` | Unpacked build (no installer) |
-| `npm run typecheck` | TypeScript checks |
-| `npm run lint` | ESLint |
-| `npm run format` | Prettier |
+| Command                | Description                       |
+| ---------------------- | --------------------------------- |
+| `npm run dev`          | Start with HMR (`F12` — DevTools) |
+| `npm start`            | Preview production build          |
+| `npm run build`        | Type-check + production build     |
+| `npm run build:win`    | Windows installer → `dist/`       |
+| `npm run build:mac`    | macOS installer → `dist/`         |
+| `npm run build:linux`  | Linux AppImage + deb → `dist/`    |
+| `npm run build:unpack` | Unpacked build (no installer)     |
+| `npm run typecheck`    | TypeScript checks                 |
+| `npm run lint`         | ESLint                            |
+| `npm run format`       | Prettier                          |
 
 ### Project structure
 
@@ -182,11 +182,11 @@ Without `GH_TOKEN`, use `npm run build:win` to build locally without uploading.
 
 ### Code signing (optional)
 
-| Platform | Without signing | With signing |
-| -------- | --------------- | ------------ |
-| Windows | SmartScreen warning | `WIN_CSC_LINK` + `WIN_CSC_KEY_PASSWORD` secrets |
-| macOS | Gatekeeper block | Apple Developer + `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID` |
-| Linux | Not required | — |
+| Platform | Without signing     | With signing                                                                 |
+| -------- | ------------------- | ---------------------------------------------------------------------------- |
+| Windows  | SmartScreen warning | `WIN_CSC_LINK` + `WIN_CSC_KEY_PASSWORD` secrets                              |
+| macOS    | Gatekeeper block    | Apple Developer + `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID` |
+| Linux    | Not required        | —                                                                            |
 
 ## ☁ Google Drive sync (developer setup)
 

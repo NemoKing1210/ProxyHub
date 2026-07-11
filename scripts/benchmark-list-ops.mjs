@@ -27,13 +27,7 @@ function createSyntheticProxy(index) {
 }
 
 function buildHaystack(proxy) {
-  return [
-    proxy.label,
-    proxy.host,
-    String(proxy.port),
-    proxy.protocol,
-    proxy.status
-  ]
+  return [proxy.label, proxy.host, String(proxy.port), proxy.protocol, proxy.status]
     .join(' ')
     .toLowerCase()
 }

@@ -45,7 +45,11 @@ function ProxyColorPickerPopover({
         }
       }}
     >
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', px: 0.5, pb: 1 }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', px: 0.5, pb: 1 }}
+      >
         {t('proxyForm.color')}
       </Typography>
 

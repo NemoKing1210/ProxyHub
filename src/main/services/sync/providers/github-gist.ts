@@ -78,11 +78,7 @@ function mapHttpError(status: number, body: string): SyncProviderError {
   return new SyncProviderError('network_error', `GitHub API error (${status})${suffix}`)
 }
 
-async function githubRequest(
-  token: string,
-  path: string,
-  init?: RequestInit
-): Promise<Response> {
+async function githubRequest(token: string, path: string, init?: RequestInit): Promise<Response> {
   try {
     return await fetch(`${GITHUB_GIST_API_BASE}${path}`, {
       ...init,

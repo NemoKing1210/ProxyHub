@@ -163,13 +163,22 @@ function ProxyDetailsDialog({
                 flexShrink: 0
               }}
             >
-              <ProxyCardAvatar icon={proxy.icon} countryCode={proxy.countryCode} flagSize={22} fontSize="small" />
+              <ProxyCardAvatar
+                icon={proxy.icon}
+                countryCode={proxy.countryCode}
+                flagSize={22}
+                fontSize="small"
+              />
             </Box>
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography variant="h6" sx={{ fontWeight: 700, lineHeight: 1.25 }}>
                 {proxy.label?.trim() || proxy.host}
               </Typography>
-              <Stack direction="row" spacing={0.75} sx={{ mt: 0.75, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Stack
+                direction="row"
+                spacing={0.75}
+                sx={{ mt: 0.75, flexWrap: 'wrap', alignItems: 'center' }}
+              >
                 <ProxyStatusChip status={isChecking ? 'checking' : proxy.status} />
                 <Chip
                   label={proxy.protocol.toUpperCase()}
@@ -181,7 +190,11 @@ function ProxyDetailsDialog({
                     color: protocolStyles?.main
                   }}
                 />
-                <Typography variant="caption" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ fontFamily: 'monospace' }}
+                >
                   {address}
                 </Typography>
               </Stack>
@@ -199,7 +212,9 @@ function ProxyDetailsDialog({
                     label={
                       <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                         <CountryFlag countryCode={proxy.countryCode} size={16} />
-                        <span>{findProxyCountry(proxy.countryCode)?.name ?? proxy.countryCode}</span>
+                        <span>
+                          {findProxyCountry(proxy.countryCode)?.name ?? proxy.countryCode}
+                        </span>
                       </Stack>
                     }
                   />
@@ -238,7 +253,9 @@ function ProxyDetailsDialog({
                 description={t('proxyList.sections.resultsDescription')}
               >
                 <Stack spacing={2}>
-                  {proxy.connectivity && <ProxyConnectivityResultCard connectivity={proxy.connectivity} />}
+                  {proxy.connectivity && (
+                    <ProxyConnectivityResultCard connectivity={proxy.connectivity} />
+                  )}
                   {domainChecks.length > 0 && <ProxyDomainResults domainChecks={domainChecks} />}
                 </Stack>
               </ContentSection>
@@ -262,7 +279,9 @@ function ProxyDetailsDialog({
           </Button>
           <Button
             variant="contained"
-            startIcon={isChecking ? <CircularProgress size={16} color="inherit" /> : <PlayArrowIcon />}
+            startIcon={
+              isChecking ? <CircularProgress size={16} color="inherit" /> : <PlayArrowIcon />
+            }
             onClick={onCheck}
             disabled={isChecking}
           >

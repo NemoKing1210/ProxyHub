@@ -76,22 +76,16 @@ function DraggableProxyCard({
   children
 }: DraggableProxyCardProps): React.JSX.Element {
   const { t } = useTranslation()
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    isDragging
-  } = useDraggable({
-    id,
-    disabled,
-    attributes: {
-      role: 'button',
-      roleDescription: t('proxyList.drag.dragProxy'),
-      tabIndex: 0
-    }
-  })
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, isDragging } =
+    useDraggable({
+      id,
+      disabled,
+      attributes: {
+        role: 'button',
+        roleDescription: t('proxyList.drag.dragProxy'),
+        tabIndex: 0
+      }
+    })
 
   const style = {
     transform: isDragging ? undefined : CSS.Translate.toString(transform),

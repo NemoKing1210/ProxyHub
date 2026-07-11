@@ -4,7 +4,11 @@ import type { CheckDomainEntry } from '../../../shared/types/settings'
 import { getCheckDomainNames } from '../../../shared/types/settings'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import type { Proxy } from '../../../shared/types/proxy'
-import { PROXY_ANONYMITY_LEVELS, PROXY_COLOR_IDS, PROXY_ICON_FORM_VALUES } from '../../../shared/types/proxy'
+import {
+  PROXY_ANONYMITY_LEVELS,
+  PROXY_COLOR_IDS,
+  PROXY_ICON_FORM_VALUES
+} from '../../../shared/types/proxy'
 import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
 import { isValidMtprotoSecret } from '../../../shared/utils/proxy-format'
 
@@ -56,12 +60,13 @@ export function createProxyFormSchema(
       countryCode: z
         .string()
         .trim()
-        .refine((value) => value === '' || countryCodePattern.test(value), t('validation.countryCodeInvalid'))
+        .refine(
+          (value) => value === '' || countryCodePattern.test(value),
+          t('validation.countryCodeInvalid')
+        )
         .optional(),
       city: z.string().trim().max(64, t('validation.cityMax')).optional(),
-      anonymityLevel: z
-        .union([z.literal(''), z.enum(PROXY_ANONYMITY_LEVELS)])
-        .optional(),
+      anonymityLevel: z.union([z.literal(''), z.enum(PROXY_ANONYMITY_LEVELS)]).optional(),
       groupId: z.string().optional()
     })
     .superRefine((data, ctx) => {

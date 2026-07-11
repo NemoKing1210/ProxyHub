@@ -136,7 +136,15 @@ function ProxyShareDialog({ open, proxy, onClose }: ProxyShareDialogProps): Reac
       systemColor: theme.palette.secondary.main,
       onSystemShare: () => void handleSystemShare()
     }).filter((channel) => !channel.hidden)
-  }, [handleSystemShare, proxy, proxyUrl, systemShareAvailable, t, theme.palette.secondary.main, title])
+  }, [
+    handleSystemShare,
+    proxy,
+    proxyUrl,
+    systemShareAvailable,
+    t,
+    theme.palette.secondary.main,
+    title
+  ])
 
   return (
     <Dialog
@@ -150,7 +158,9 @@ function ProxyShareDialog({ open, proxy, onClose }: ProxyShareDialogProps): Reac
         }
       }}
     >
-      <DialogTitle sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
+      <DialogTitle
+        sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}
+      >
         <Box sx={{ minWidth: 0 }}>
           <Typography variant="h6" component="span" sx={{ display: 'block', fontWeight: 700 }}>
             {t('proxyList.shareDialog.title')}
@@ -179,7 +189,14 @@ function ProxyShareDialog({ open, proxy, onClose }: ProxyShareDialogProps): Reac
                 boxShadow: `inset 0 0 0 1px ${alpha(theme.palette.common.black, 0.06)}`
               }}
             >
-              <QRCodeCanvas value={proxyUrl} size={196} level="M" includeMargin bgColor="#FFFFFF" fgColor="#000000" />
+              <QRCodeCanvas
+                value={proxyUrl}
+                size={196}
+                level="M"
+                includeMargin
+                bgColor="#FFFFFF"
+                fgColor="#000000"
+              />
             </Box>
             <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
               {t('proxyList.shareDialog.qrHint')}

@@ -28,9 +28,5 @@ export interface SyncProvider {
     secrets: SyncSecrets,
     remoteId: string
   ): Promise<{ updatedAt: string }>
-  pull(
-    config: SyncConfig,
-    secrets: SyncSecrets,
-    remoteId?: string
-  ): Promise<SyncProviderPullResult>
+  pull(config: SyncConfig, secrets: SyncSecrets, remoteId?: string): Promise<SyncProviderPullResult>
 }

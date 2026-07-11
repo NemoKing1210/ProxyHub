@@ -91,10 +91,7 @@ export interface ProxyCheckOptions {
 }
 
 function clampCheckAllConcurrency(value: number): number {
-  return Math.min(
-    CHECK_ALL_CONCURRENCY_MAX,
-    Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value))
-  )
+  return Math.min(CHECK_ALL_CONCURRENCY_MAX, Math.max(CHECK_ALL_CONCURRENCY_MIN, Math.round(value)))
 }
 
 function clampDomainCheckConcurrency(value: number): number {
@@ -105,10 +102,7 @@ function clampDomainCheckConcurrency(value: number): number {
 }
 
 function clampAutoCheckIntervalMinutes(value: number): number {
-  return Math.min(
-    AUTO_CHECK_INTERVAL_MAX,
-    Math.max(AUTO_CHECK_INTERVAL_MIN, Math.round(value))
-  )
+  return Math.min(AUTO_CHECK_INTERVAL_MAX, Math.max(AUTO_CHECK_INTERVAL_MIN, Math.round(value)))
 }
 
 function normalizeAutoCheckScope(value: unknown): AutoCheckScope {

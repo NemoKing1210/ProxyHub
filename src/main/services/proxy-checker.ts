@@ -11,17 +11,17 @@ import type {
   ProxyConnectivityResult,
   ProxyDomainCheckResult
 } from '../../shared/types/proxy'
-import { buildProxyUrl, formatProxyAddress, skipsDomainChecks } from '../../shared/utils/proxy-format'
+import {
+  buildProxyUrl,
+  formatProxyAddress,
+  skipsDomainChecks
+} from '../../shared/utils/proxy-format'
 import { runWithConcurrency } from '../../shared/utils/run-with-concurrency'
 import {
   createCheckingConnectivity,
   createPendingDomainChecks
 } from '../../shared/utils/proxy-check-results'
-import {
-  CheckCancelledError,
-  isCheckCancelledError,
-  throwIfCancelled
-} from './check-cancellation'
+import { CheckCancelledError, isCheckCancelledError, throwIfCancelled } from './check-cancellation'
 
 const DEFAULT_CONCURRENCY = 1
 const EXTERNAL_IP_URL = 'https://api.ipify.org?format=json'
@@ -93,10 +93,9 @@ function createErrorDetail(
   }
 }
 
-function createConnectivityBase(proxy: Proxy): Pick<
-  ProxyConnectivityResult,
-  'address' | 'protocol' | 'proxyUrl'
-> {
+function createConnectivityBase(
+  proxy: Proxy
+): Pick<ProxyConnectivityResult, 'address' | 'protocol' | 'proxyUrl'> {
   return {
     address: formatProxyAddress(proxy),
     protocol: proxy.protocol,

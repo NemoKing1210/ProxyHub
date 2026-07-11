@@ -5,7 +5,13 @@ import { alpha, useTheme } from '@mui/material/styles'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDebouncedValue } from '../hooks/useDebouncedValue'
-import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
+import {
+  MD3_DURATION,
+  MD3_EASING,
+  outlineVariant,
+  surfaceContainer,
+  withThemeAlpha
+} from '../theme'
 
 const SEARCH_DEBOUNCE_MS = 300
 

@@ -99,9 +99,9 @@ export const useGroupStore = create<GroupState>((set, get) => ({
 
   removeGroup: async (id) => {
     const groups = get().groups.filter((group) => group.id !== id)
-    const proxies = useProxyStore.getState().proxies.map((proxy) =>
-      proxy.groupId === id ? { ...proxy, groupId: undefined } : proxy
-    )
+    const proxies = useProxyStore
+      .getState()
+      .proxies.map((proxy) => (proxy.groupId === id ? { ...proxy, groupId: undefined } : proxy))
 
     set({ groups })
     await persist(groups)

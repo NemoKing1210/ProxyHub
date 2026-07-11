@@ -1,9 +1,5 @@
 import { create } from 'zustand'
-import type {
-  Proxy,
-  ProxyCheckProgress,
-  ProxyInput
-} from '../../../shared/types/proxy'
+import type { Proxy, ProxyCheckProgress, ProxyInput } from '../../../shared/types/proxy'
 import type { ProxyCheckOptions } from '../../../shared/types/settings'
 import { applyCheckResult } from '../../../shared/utils/proxy-check-apply'
 import {
@@ -464,9 +460,7 @@ export const useProxyStore = create<ProxyState>((set, get) => ({
   checkAll: async (proxyIds, options) => {
     const { proxies } = get()
     const targetIds = proxyIds ?? proxies.map((proxy) => proxy.id)
-    const targets = filterEnabledProxies(
-      proxies.filter((proxy) => targetIds.includes(proxy.id))
-    )
+    const targets = filterEnabledProxies(proxies.filter((proxy) => targetIds.includes(proxy.id)))
 
     if (targets.length === 0 || get().isCheckingAll) return
 

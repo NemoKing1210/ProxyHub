@@ -84,7 +84,10 @@ function SettingsDangerSection({
 
   const confirmMessage =
     confirmKind === 'deleteAll'
-      ? t('settings.dangerZone.deleteAllConfirmMessage', { proxies: proxyCount, groups: groupCount })
+      ? t('settings.dangerZone.deleteAllConfirmMessage', {
+          proxies: proxyCount,
+          groups: groupCount
+        })
       : t('settings.dangerZone.resetSettingsConfirmMessage')
 
   const palette = getPalette(theme)
@@ -195,7 +198,9 @@ function SettingsDangerSection({
             onClick={() => void handleConfirm()}
             disabled={isProcessing}
           >
-            {confirmKind === 'deleteAll' ? t('common.delete') : t('settings.dangerZone.resetSettingsButton')}
+            {confirmKind === 'deleteAll'
+              ? t('common.delete')
+              : t('settings.dangerZone.resetSettingsButton')}
           </Button>
         </DialogActions>
       </Dialog>

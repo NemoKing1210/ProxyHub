@@ -3,25 +3,14 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined'
-import {
-  Alert,
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Stack,
-  Typography
-} from '@mui/material'
+import { Alert, Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SyncConfig, SyncPublicState } from '../../../shared/types/sync'
 import { resolveSyncRemoteId } from '../../../shared/utils/sync-config'
 import { formatDateTime } from '../../../shared/utils/datetime'
-import {
-  buildSyncStatusErrorReport,
-  resolveLastSyncAt
-} from '../../../shared/utils/sync-status'
+import { buildSyncStatusErrorReport, resolveLastSyncAt } from '../../../shared/utils/sync-status'
 import ProxyFormSection from './ProxyFormSection'
 import { outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
 
@@ -245,9 +234,7 @@ function SyncStatusSection({
                 : t('settings.sync.statusEncryptionOnMissingPassword')
               : t('settings.sync.statusEncryptionOff')
           }
-          valueColor={
-            config.encryptPayload && !hasPayloadPassword ? 'warning.main' : undefined
-          }
+          valueColor={config.encryptPayload && !hasPayloadPassword ? 'warning.main' : undefined}
         />
         <Divider />
         <StatusRow
@@ -266,10 +253,7 @@ function SyncStatusSection({
           value={boolLabel(config.syncOnStartup)}
         />
         <Divider />
-        <StatusRow
-          label={t('settings.sync.pushOnChange')}
-          value={boolLabel(config.pushOnChange)}
-        />
+        <StatusRow label={t('settings.sync.pushOnChange')} value={boolLabel(config.pushOnChange)} />
       </StatusGroup>
 
       <StatusGroup title={t('settings.sync.statusActivity')}>
@@ -306,9 +290,7 @@ function SyncStatusSection({
         <StatusRow
           label={t('settings.sync.statusLastSync')}
           value={
-            lastSyncAt
-              ? formatDateTime(lastSyncAt, i18n.language)
-              : t('settings.sync.statusNotYet')
+            lastSyncAt ? formatDateTime(lastSyncAt, i18n.language) : t('settings.sync.statusNotYet')
           }
           valueColor={lastSyncAt ? undefined : 'text.secondary'}
         />

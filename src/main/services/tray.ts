@@ -1,11 +1,19 @@
 import { app, Menu, nativeImage, Tray, type MenuItemConstructorOptions } from 'electron'
 import icon from '../../../resources/icon.png?asset'
-import { formatTrayProxyMenuPrimary, formatTrayProxyMenuSecondary } from '../../shared/utils/tray-proxy-label'
+import {
+  formatTrayProxyMenuPrimary,
+  formatTrayProxyMenuSecondary
+} from '../../shared/utils/tray-proxy-label'
 import { getTrayMenuStrings } from '../../shared/i18n/tray-menu'
 import { getFavoriteProxies } from '../../shared/utils/favorite-proxies'
 import { getProxies, getSettings } from './app-store'
 import { openProxyFromTray, showMainWindow } from './main-window'
-import { checkAllTrayFavorites, checkAllTrayProxies, checkTrayProxyById, isTrayProxyChecking } from './tray-actions'
+import {
+  checkAllTrayFavorites,
+  checkAllTrayProxies,
+  checkTrayProxyById,
+  isTrayProxyChecking
+} from './tray-actions'
 
 let tray: Tray | null = null
 

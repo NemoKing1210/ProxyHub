@@ -3,7 +3,13 @@ import type { OrganizedProxyList, ProxyGroupSection } from './organize-proxies-b
 
 export type VirtualProxyListItem =
   | { type: 'ungrouped-empty'; key: string }
-  | { type: 'group-header'; key: string; group: ProxyGroup; proxyCount: number; deadProxyCount: number }
+  | {
+      type: 'group-header'
+      key: string
+      group: ProxyGroup
+      proxyCount: number
+      deadProxyCount: number
+    }
   | { type: 'proxy'; key: string; proxyId: string; groupId?: string }
 
 export function buildVirtualProxyListItems(

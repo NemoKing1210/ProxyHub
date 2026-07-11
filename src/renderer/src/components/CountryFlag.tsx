@@ -15,7 +15,9 @@ function CountryFlag({ countryCode, size = 20 }: CountryFlagProps): React.JSX.El
   const code = countryCode.toUpperCase()
   const height = Math.round(size * 0.75)
   const isUnknown = code === UNKNOWN_COUNTRY_CODE || !hasFlag(code)
-  const Flag = !isUnknown ? (Flags[code as keyof typeof Flags] as FlagComponent | undefined) : undefined
+  const Flag = !isUnknown
+    ? (Flags[code as keyof typeof Flags] as FlagComponent | undefined)
+    : undefined
 
   return (
     <Box

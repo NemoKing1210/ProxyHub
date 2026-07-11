@@ -169,9 +169,7 @@ export interface BackupPreviewFailed {
 }
 
 export type BackupPreviewResponse =
-  | BackupPreviewCanceled
-  | BackupPreviewSuccess
-  | BackupPreviewFailed
+  BackupPreviewCanceled | BackupPreviewSuccess | BackupPreviewFailed
 
 export interface BackupExportRequest {
   kind: BackupExportKind

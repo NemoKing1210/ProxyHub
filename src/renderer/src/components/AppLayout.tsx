@@ -6,7 +6,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useMatch } from 'react-router-dom'
 import { useProxyStore } from '../store/proxyStore'
-import { elevationShadow, getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../theme'
+import {
+  elevationShadow,
+  getPalette,
+  MD3_DURATION,
+  MD3_EASING,
+  surfaceContainer,
+  withThemeAlpha
+} from '../theme'
 import { TITLE_BAR_HEIGHT } from '../../../shared/theme/title-bar'
 import { isWindows } from '../utils/platform'
 import PageTransition from './PageTransition'
@@ -98,85 +105,85 @@ function AppLayout(): React.JSX.Element {
             WebkitBackdropFilter: 'blur(20px) saturate(1.4)'
           }}
         >
-        <Box
-          sx={{
-            display: 'inline-flex',
-            gap: 0.5,
-            p: 0.5,
-            borderRadius: 4,
-            bgcolor: surfaceContainer(theme, 'low'),
-            border: `1px solid ${withThemeAlpha(theme, palette.primary.main, 0.14)}`,
-            boxShadow: elevationShadow(theme, 1),
-            WebkitAppRegion: 'no-drag'
-          }}
-        >
-          {NAV_ITEMS.map(({ path, labelKey, icon: Icon }) => {
-            const isActive = activePath === path
+          <Box
+            sx={{
+              display: 'inline-flex',
+              gap: 0.5,
+              p: 0.5,
+              borderRadius: 4,
+              bgcolor: surfaceContainer(theme, 'low'),
+              border: `1px solid ${withThemeAlpha(theme, palette.primary.main, 0.14)}`,
+              boxShadow: elevationShadow(theme, 1),
+              WebkitAppRegion: 'no-drag'
+            }}
+          >
+            {NAV_ITEMS.map(({ path, labelKey, icon: Icon }) => {
+              const isActive = activePath === path
 
-            return (
-              <Button
-                key={path}
-                component={Link}
-                to={path}
-                startIcon={
-                  path === '/' && isCheckingAll ? (
-                    <CircularProgress size={16} color="inherit" />
-                  ) : (
-                    <Icon sx={{ fontSize: 18 }} />
-                  )
-                }
-                disableElevation
-                sx={{
-                  position: 'relative',
-                  px: 2.5,
-                  py: 1.1,
-                  minWidth: 0,
-                  borderRadius: 3,
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  fontSize: '0.875rem',
-                  color: isActive ? 'primary.main' : 'text.secondary',
-                  bgcolor: isActive ? surfaceContainer(theme, 'high') : 'transparent',
-                  boxShadow: isActive ? elevationShadow(theme, 1) : 'none',
-                  transition: `all ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
-                  '&:hover': {
-                    bgcolor: isActive
-                      ? surfaceContainer(theme, 'highest')
-                      : surfaceContainer(theme, 'low'),
-                    transform: 'translateY(-1px)'
-                  },
-                  '& .MuiButton-startIcon': {
-                    mr: 0.75,
-                    ml: 0
+              return (
+                <Button
+                  key={path}
+                  component={Link}
+                  to={path}
+                  startIcon={
+                    path === '/' && isCheckingAll ? (
+                      <CircularProgress size={16} color="inherit" />
+                    ) : (
+                      <Icon sx={{ fontSize: 18 }} />
+                    )
                   }
-                }}
-              >
-                {t(labelKey)}
-                {path === '/' && (
-                  <Box
-                    component="span"
-                    sx={{
-                      ml: 1,
-                      px: 0.85,
-                      py: 0.15,
-                      minWidth: 22,
-                      borderRadius: 2,
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
-                      lineHeight: 1.4,
-                      textAlign: 'center',
-                      bgcolor: isActive ? 'primary.main' : surfaceContainer(theme, 'high'),
-                      color: isActive ? 'primary.contrastText' : 'primary.main',
-                      transition: `all ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
-                    }}
-                  >
-                    {proxyCount}
-                  </Box>
-                )}
-              </Button>
-            )
-          })}
-        </Box>
+                  disableElevation
+                  sx={{
+                    position: 'relative',
+                    px: 2.5,
+                    py: 1.1,
+                    minWidth: 0,
+                    borderRadius: 3,
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    color: isActive ? 'primary.main' : 'text.secondary',
+                    bgcolor: isActive ? surfaceContainer(theme, 'high') : 'transparent',
+                    boxShadow: isActive ? elevationShadow(theme, 1) : 'none',
+                    transition: `all ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
+                    '&:hover': {
+                      bgcolor: isActive
+                        ? surfaceContainer(theme, 'highest')
+                        : surfaceContainer(theme, 'low'),
+                      transform: 'translateY(-1px)'
+                    },
+                    '& .MuiButton-startIcon': {
+                      mr: 0.75,
+                      ml: 0
+                    }
+                  }}
+                >
+                  {t(labelKey)}
+                  {path === '/' && (
+                    <Box
+                      component="span"
+                      sx={{
+                        ml: 1,
+                        px: 0.85,
+                        py: 0.15,
+                        minWidth: 22,
+                        borderRadius: 2,
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        lineHeight: 1.4,
+                        textAlign: 'center',
+                        bgcolor: isActive ? 'primary.main' : surfaceContainer(theme, 'high'),
+                        color: isActive ? 'primary.contrastText' : 'primary.main',
+                        transition: `all ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
+                      }}
+                    >
+                      {proxyCount}
+                    </Box>
+                  )}
+                </Button>
+              )
+            })}
+          </Box>
         </Box>
       </Box>
 

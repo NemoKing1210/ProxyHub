@@ -1,7 +1,4 @@
-import {
-  MAX_LATENCY_FILTER_MAX_MS,
-  MAX_LATENCY_FILTER_MIN_MS
-} from './proxy-list-view.constants'
+import { MAX_LATENCY_FILTER_MAX_MS, MAX_LATENCY_FILTER_MIN_MS } from './proxy-list-view.constants'
 import type { ProxyAnonymityLevel, ProxyProtocol } from './proxy'
 import { PROXY_PROTOCOLS } from './proxy'
 
@@ -78,9 +75,7 @@ function normalizeFavoriteFilter(value: unknown): ProxyFavoriteFilter {
 }
 
 function normalizeStatusFilter(value: unknown): ProxyStatusFilter {
-  return STATUS_FILTERS.includes(value as ProxyStatusFilter)
-    ? (value as ProxyStatusFilter)
-    : 'all'
+  return STATUS_FILTERS.includes(value as ProxyStatusFilter) ? (value as ProxyStatusFilter) : 'all'
 }
 
 function normalizeActivityFilter(value: unknown): ProxyActivityFilter {
@@ -115,7 +110,9 @@ function normalizeMaxLatencyMs(value: unknown): number | null {
   )
 }
 
-export function normalizeProxyListFilters(filters: Partial<ProxyListFilters> | undefined): ProxyListFilters {
+export function normalizeProxyListFilters(
+  filters: Partial<ProxyListFilters> | undefined
+): ProxyListFilters {
   const merged = { ...DEFAULT_PROXY_LIST_FILTERS, ...(filters ?? {}) }
 
   return {
@@ -141,7 +138,9 @@ function normalizeSortDirection(value: unknown): ProxySortDirection {
   return value === 'asc' ? 'asc' : 'desc'
 }
 
-export function normalizeProxyListView(view: Partial<ProxyListViewState> | undefined): ProxyListViewState {
+export function normalizeProxyListView(
+  view: Partial<ProxyListViewState> | undefined
+): ProxyListViewState {
   const merged = { ...DEFAULT_PROXY_LIST_VIEW, ...(view ?? {}) }
 
   return {
@@ -151,10 +150,7 @@ export function normalizeProxyListView(view: Partial<ProxyListViewState> | undef
   }
 }
 
-export function isProxyListViewEqual(
-  left: ProxyListViewState,
-  right: ProxyListViewState
-): boolean {
+export function isProxyListViewEqual(left: ProxyListViewState, right: ProxyListViewState): boolean {
   const normalizedLeft = normalizeProxyListView(left)
   const normalizedRight = normalizeProxyListView(right)
 

@@ -82,7 +82,9 @@ function ProxyCardDragOverlay({ proxy }: ProxyCardDragOverlayProps): React.JSX.E
           >
             {title}
           </Typography>
-          {proxy.isFavorite ? <StarIcon sx={{ fontSize: 16, color: 'warning.main', flexShrink: 0 }} /> : null}
+          {proxy.isFavorite ? (
+            <StarIcon sx={{ fontSize: 16, color: 'warning.main', flexShrink: 0 }} />
+          ) : null}
         </Stack>
 
         <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', minWidth: 0 }}>

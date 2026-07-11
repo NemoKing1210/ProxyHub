@@ -2,14 +2,7 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined'
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined'
 import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined'
 import SystemUpdateAltOutlinedIcon from '@mui/icons-material/SystemUpdateAltOutlined'
-import {
-  Alert,
-  Box,
-  Button,
-  LinearProgress,
-  Stack,
-  Typography
-} from '@mui/material'
+import { Alert, Box, Button, LinearProgress, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -146,21 +139,20 @@ function AppUpdateSection(): React.JSX.Element {
           </Alert>
         )}
 
-        {state.releaseNotes &&
-          (state.status === 'available' || state.status === 'downloaded') && (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                whiteSpace: 'pre-wrap',
-                maxHeight: 160,
-                overflow: 'auto',
-                fontFamily: 'inherit'
-              }}
-            >
-              {state.releaseNotes}
-            </Typography>
-          )}
+        {state.releaseNotes && (state.status === 'available' || state.status === 'downloaded') && (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              whiteSpace: 'pre-wrap',
+              maxHeight: 160,
+              overflow: 'auto',
+              fontFamily: 'inherit'
+            }}
+          >
+            {state.releaseNotes}
+          </Typography>
+        )}
 
         {showProgress && (
           <Box>

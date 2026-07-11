@@ -20,7 +20,13 @@ import {
   BACKUP_FORMAT_ID,
   BACKUP_SCHEMA_VERSION
 } from '../types/backup'
-import type { Proxy, ProxyAnonymityLevel, ProxyColorId, ProxyIconId, ProxyProtocol } from '../types/proxy'
+import type {
+  Proxy,
+  ProxyAnonymityLevel,
+  ProxyColorId,
+  ProxyIconId,
+  ProxyProtocol
+} from '../types/proxy'
 import {
   PROXY_ANONYMITY_LEVELS,
   PROXY_COLOR_IDS,
@@ -214,7 +220,15 @@ function normalizeProxyRecord(value: unknown): BackupProxyRecord | null {
   const port = typeof value.port === 'number' ? value.port : Number(value.port)
   const createdAt = normalizeIsoDate(value.createdAt)
 
-  if (!id || !protocol || !host || !Number.isInteger(port) || port < 1 || port > 65535 || !createdAt) {
+  if (
+    !id ||
+    !protocol ||
+    !host ||
+    !Number.isInteger(port) ||
+    port < 1 ||
+    port > 65535 ||
+    !createdAt
+  ) {
     return null
   }
 
@@ -306,9 +320,7 @@ function parsePayloadV1(value: unknown): BackupPayloadV1 {
   }
 
   const proxies =
-    value.proxies === undefined
-      ? undefined
-      : (normalizeProxiesPayload(value.proxies) ?? undefined)
+    value.proxies === undefined ? undefined : (normalizeProxiesPayload(value.proxies) ?? undefined)
   if (value.proxies !== undefined && !proxies) {
     throw new BackupParseError('invalid_payload', 'Backup proxy section is invalid')
   }
@@ -528,7 +540,12 @@ export function buildBackupPreview(
   backup: BackupFileV1,
   filePath: string,
   fileName: string,
-  options?: { encrypted?: boolean; decrypted?: boolean; envelopeKind?: BackupPayloadKind; schemaVersion?: number }
+  options?: {
+    encrypted?: boolean
+    decrypted?: boolean
+    envelopeKind?: BackupPayloadKind
+    schemaVersion?: number
+  }
 ): BackupPreview {
   const proxies = backup.payload.proxies?.items ?? []
   const groups = backup.payload.proxies?.groups ?? []
@@ -551,7 +568,9 @@ export function buildBackupPreview(
     groupCount: decrypted ? groups.length : 0,
     favoriteCount: decrypted ? proxies.filter((proxy) => proxy.isFavorite).length : 0,
     enabledProxyCount: decrypted ? proxies.filter((proxy) => proxy.isEnabled !== false).length : 0,
-    hasSettings: decrypted ? hasSettings : options?.envelopeKind === 'settings' || options?.envelopeKind === 'full',
+    hasSettings: decrypted
+      ? hasSettings
+      : options?.envelopeKind === 'settings' || options?.envelopeKind === 'full',
     checkDomainCount: decrypted ? (settings?.checkDomains.length ?? 0) : 0,
     autoCheckEnabled: decrypted ? settings?.autoCheckEnabled === true : false,
     backupProxies: decrypted ? proxies : [],
@@ -687,15 +706,15 @@ function mergeProxies(
   return { proxies, added, skipped }
 }
 
-function replaceProxiesPayload(
-  payload: BackupProxiesPayload
-): { groups: ProxyGroup[]; proxies: Proxy[]; groupsAdded: number; proxiesAdded: number } {
+function replaceProxiesPayload(payload: BackupProxiesPayload): {
+  groups: ProxyGroup[]
+  proxies: Proxy[]
+  groupsAdded: number
+  proxiesAdded: number
+} {
   const groups = payload.groups.map(backupRecordToGroup)
   const groupIds = new Set(groups.map((group) => group.id))
-  const proxies = sanitizeProxyGroupIds(
-    payload.items.map(backupRecordToProxy),
-    groupIds
-  )
+  const proxies = sanitizeProxyGroupIds(payload.items.map(backupRecordToProxy), groupIds)
 
   return {
     groups,

@@ -97,7 +97,12 @@ function resolveBatchSeverity(alive: number, dead: number): ToastSeverity {
   return 'warning'
 }
 
-function resolveBatchSummaryMessage(alive: number, dead: number, total: number, t: TFunction): string {
+function resolveBatchSummaryMessage(
+  alive: number,
+  dead: number,
+  total: number,
+  t: TFunction
+): string {
   if (dead === 0) {
     return t('checkToast.batchAllAlive', { total })
   }
@@ -119,9 +124,7 @@ export function buildSingleCheckToast(
 
   return {
     severity: isAlive ? 'success' : 'error',
-    title: isAlive
-      ? t('checkToast.aliveTitle', { name })
-      : t('checkToast.deadTitle', { name }),
+    title: isAlive ? t('checkToast.aliveTitle', { name }) : t('checkToast.deadTitle', { name }),
     message: isAlive ? buildAliveDetails(result, t) : resolveDeadMessage(result, t),
     duration: isAlive ? 4500 : 6000
   }
@@ -144,8 +147,7 @@ export function buildBatchCheckToast(
   }
 
   const severity = resolveBatchSeverity(alive, dead)
-  const useDetailedMessage =
-    entries.length > 0 && entries.length <= CHECK_TOAST_DETAIL_THRESHOLD
+  const useDetailedMessage = entries.length > 0 && entries.length <= CHECK_TOAST_DETAIL_THRESHOLD
 
   return {
     severity,

@@ -16,10 +16,7 @@ import { useTheme } from '@mui/material/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { BackupImportMode, BackupPreview } from '../../../shared/types/backup'
-import {
-  mapBackupRecordsToGroups,
-  mapBackupRecordsToProxies
-} from '../../../shared/utils/backup'
+import { mapBackupRecordsToGroups, mapBackupRecordsToProxies } from '../../../shared/utils/backup'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import { outlineVariant, surfaceContainer } from '../theme'
 import BackupProxySelectionList from './BackupProxySelectionList'
@@ -282,7 +279,10 @@ function SyncPullPreviewDialog({
                       value={preview.proxyCount}
                     />
                     <Divider />
-                    <PreviewRow label={t('settings.backup.previewGroups')} value={preview.groupCount} />
+                    <PreviewRow
+                      label={t('settings.backup.previewGroups')}
+                      value={preview.groupCount}
+                    />
                     <Divider />
                     <PreviewRow
                       label={t('settings.backup.previewFavorites')}
@@ -370,7 +370,9 @@ function SyncPullPreviewDialog({
                       }
                     }}
                   >
-                    <ToggleButton value="merge">{t('settings.backup.importModeMerge')}</ToggleButton>
+                    <ToggleButton value="merge">
+                      {t('settings.backup.importModeMerge')}
+                    </ToggleButton>
                     <ToggleButton value="replace">
                       {t('settings.backup.importModeReplace')}
                     </ToggleButton>

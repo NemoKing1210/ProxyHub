@@ -14,7 +14,7 @@ export function matchesProxySearch(
   const label = proxy.label?.toLowerCase() ?? ''
   const host = proxy.host.toLowerCase()
   const protocol = proxy.protocol.toLowerCase()
-  const groupName = proxy.groupId ? groupNameById.get(proxy.groupId)?.toLowerCase() ?? '' : ''
+  const groupName = proxy.groupId ? (groupNameById.get(proxy.groupId)?.toLowerCase() ?? '') : ''
 
   return (
     label.includes(normalizedQuery) ||

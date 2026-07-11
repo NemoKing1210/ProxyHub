@@ -54,8 +54,7 @@ export function buildProxyShareChannels({
       network: 'telegram',
       label: t('proxyList.shareDialog.channels.telegram'),
       color: '#229ED9',
-      onClick: () =>
-        openExternal(`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`)
+      onClick: () => openExternal(`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`)
     },
     {
       id: 'whatsapp',

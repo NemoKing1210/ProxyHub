@@ -6,10 +6,7 @@ import { applyCheckResult } from '../../shared/utils/proxy-check-apply'
 import { filterEnabledProxies } from '../../shared/utils/proxy-enabled'
 import { finalizeIncompleteProxy } from '../../shared/utils/proxy-check-results'
 import { getProxies, getSettings, saveProxies } from './app-store'
-import {
-  beginCancellableCheck,
-  clearCancellableCheck
-} from './check-cancellation'
+import { beginCancellableCheck, clearCancellableCheck } from './check-cancellation'
 import { checkAllProxies, checkProxy } from './proxy-checker'
 import { refreshTrayContextMenu, refreshTrayTooltip } from './tray'
 

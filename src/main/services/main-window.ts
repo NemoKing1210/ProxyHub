@@ -48,4 +48,3 @@ export function openProxyFromTray(proxyId: string): void {
 
   mainWindow.webContents.send('tray:open-proxy', proxyId)
 }
-

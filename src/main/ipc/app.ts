@@ -45,7 +45,8 @@ async function readAppInfo(): Promise<AppInfo> {
   return {
     version: packageJson.version,
     author,
-    authorEmail: authorEmail ?? (githubUsername ? `${githubUsername}@users.noreply.github.com` : undefined),
+    authorEmail:
+      authorEmail ?? (githubUsername ? `${githubUsername}@users.noreply.github.com` : undefined),
     repositoryUrl,
     changelog: parseChangelog(changelogContent)
   }

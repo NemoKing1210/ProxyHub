@@ -9,10 +9,10 @@ function App(): React.JSX.Element {
     <>
       <RoutePersistenceSync />
       <Routes>
-      <Route element={<AppLayout />}>
-        <Route index element={<ProxyList />} />
-        <Route path="settings" element={<SettingsPage />} />
-      </Route>
+        <Route element={<AppLayout />}>
+          <Route index element={<ProxyList />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Route>
       </Routes>
     </>
   )

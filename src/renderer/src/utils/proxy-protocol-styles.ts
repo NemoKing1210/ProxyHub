@@ -15,10 +15,7 @@ export interface ProxyProtocolStyles {
   background: string
 }
 
-export function getProxyProtocolStyles(
-  theme: Theme,
-  protocol: ProxyProtocol
-): ProxyProtocolStyles {
+export function getProxyProtocolStyles(theme: Theme, protocol: ProxyProtocol): ProxyProtocolStyles {
   const main = PROTOCOL_COLORS[protocol]
   const backgroundOpacity = theme.palette.mode === 'dark' ? 0.28 : 0.14
 

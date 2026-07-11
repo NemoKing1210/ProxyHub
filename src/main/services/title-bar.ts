@@ -1,7 +1,11 @@
 import { nativeTheme, type BrowserWindow } from 'electron'
 import type { ThemeMode } from '../../shared/types/settings'
 import { resolveColorScheme } from '../../shared/theme/resolve-color-scheme'
-import { getTitleBarTheme, TITLE_BAR_HEIGHT, type TitleBarTheme } from '../../shared/theme/title-bar'
+import {
+  getTitleBarTheme,
+  TITLE_BAR_HEIGHT,
+  type TitleBarTheme
+} from '../../shared/theme/title-bar'
 
 let activeThemeMode: ThemeMode = 'dark'
 

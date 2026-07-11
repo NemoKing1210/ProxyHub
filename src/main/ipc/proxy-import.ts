@@ -88,7 +88,10 @@ function formatListExportFileName(format: ProxyListImportFormat): string {
   return `proxy-list-${date}.${extension}`
 }
 
-function serializeListImportError(error: unknown, format: ProxyListImportFormat): ProxyListImportError {
+function serializeListImportError(
+  error: unknown,
+  format: ProxyListImportFormat
+): ProxyListImportError {
   if (error instanceof Error) {
     if (error.message === 'invalid_json' && format === 'json') {
       return { code: 'invalid_json', message: error.message }
@@ -126,7 +129,9 @@ function resolveExportProxies(proxies: Proxy[], proxyIds: string[]): Proxy[] {
   return proxies.filter((proxy) => selectedIds.has(proxy.id))
 }
 
-async function previewListImport(format: ProxyListImportFormat): Promise<ProxyListImportPreviewResponse> {
+async function previewListImport(
+  format: ProxyListImportFormat
+): Promise<ProxyListImportPreviewResponse> {
   const config = LIST_FORMAT_CONFIG[format]
   const picked = await pickListImportFile(format)
 

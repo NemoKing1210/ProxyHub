@@ -25,8 +25,9 @@ function isValidProxyHost(host: string): boolean {
     return true
   }
 
-  const isIpv4 =
-    /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/.test(host)
+  const isIpv4 = /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/.test(
+    host
+  )
   const isHostname =
     /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)*[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/.test(
       host
@@ -38,7 +39,9 @@ function isValidProxyHost(host: string): boolean {
 function parseProtocol(value: string): ProxyProtocol | undefined {
   const protocol = value.trim().toLowerCase()
 
-  return PROXY_PROTOCOLS.includes(protocol as ProxyProtocol) ? (protocol as ProxyProtocol) : undefined
+  return PROXY_PROTOCOLS.includes(protocol as ProxyProtocol)
+    ? (protocol as ProxyProtocol)
+    : undefined
 }
 
 export function isValidMtprotoSecret(secret: string): boolean {

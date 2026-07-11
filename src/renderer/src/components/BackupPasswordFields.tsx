@@ -109,7 +109,9 @@ function BackupPasswordFields({
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label={showPassword ? t('common.hidePassword') : t('common.showPassword')}
+                      aria-label={
+                        showPassword ? t('common.hidePassword') : t('common.showPassword')
+                      }
                       onClick={() => setShowPassword((value) => !value)}
                       edge="end"
                       disabled={disabled}

@@ -101,15 +101,21 @@ export interface GoogleOAuthTokens {
 }
 
 export async function getSyncSecrets(): Promise<SyncSecrets> {
-  const [githubToken, googleAccessToken, googleRefreshToken, googleTokenExpiresAt, googleEmail, payloadPassword] =
-    await Promise.all([
-      readSecret('githubToken'),
-      readSecret('googleAccessToken'),
-      readSecret('googleRefreshToken'),
-      readSecret('googleTokenExpiresAt'),
-      readSecret('googleEmail'),
-      readSecret('payloadPassword')
-    ])
+  const [
+    githubToken,
+    googleAccessToken,
+    googleRefreshToken,
+    googleTokenExpiresAt,
+    googleEmail,
+    payloadPassword
+  ] = await Promise.all([
+    readSecret('githubToken'),
+    readSecret('googleAccessToken'),
+    readSecret('googleRefreshToken'),
+    readSecret('googleTokenExpiresAt'),
+    readSecret('googleEmail'),
+    readSecret('payloadPassword')
+  ])
 
   return {
     githubToken,
@@ -137,7 +143,9 @@ export async function getGoogleEmail(): Promise<string | undefined> {
   return email?.trim() || undefined
 }
 
-export async function hasProviderCredentials(provider: 'github-gist' | 'google-drive'): Promise<boolean> {
+export async function hasProviderCredentials(
+  provider: 'github-gist' | 'google-drive'
+): Promise<boolean> {
   if (provider === 'github-gist') {
     return hasGithubToken()
   }

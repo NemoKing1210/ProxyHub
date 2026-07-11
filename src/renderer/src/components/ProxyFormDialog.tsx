@@ -34,7 +34,11 @@ import {
 import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
 import { parseProxyUrl } from '../../../shared/utils/proxy-format'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
-import { createProxyFormSchema, type ProxyFormSchemaContext, type ProxyFormValues } from '../validation/proxySchema'
+import {
+  createProxyFormSchema,
+  type ProxyFormSchemaContext,
+  type ProxyFormValues
+} from '../validation/proxySchema'
 import CountryFlag from './CountryFlag'
 import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyColorSwatch from './ProxyColorSwatch'
@@ -77,10 +81,7 @@ function ProxyFormDialog({
     groups
   }
 
-  const schema = useMemo(
-    () => createProxyFormSchema(t, () => schemaContextRef.current),
-    [t]
-  )
+  const schema = useMemo(() => createProxyFormSchema(t, () => schemaContextRef.current), [t])
 
   const defaultValues: ProxyFormValues = {
     label: '',
@@ -122,8 +123,7 @@ function ProxyFormDialog({
     () => getProxyColorStyles(theme, previewColor),
     [theme, previewColor]
   )
-  const previewIconValue =
-    previewIcon === PROXY_ICON_AUTO_VALUE ? undefined : previewIcon
+  const previewIconValue = previewIcon === PROXY_ICON_AUTO_VALUE ? undefined : previewIcon
   const [appearanceExpanded, setAppearanceExpanded] = useState(false)
   const [connectionExpanded, setConnectionExpanded] = useState(true)
   const [authExpanded, setAuthExpanded] = useState(false)
@@ -371,7 +371,9 @@ function ProxyFormDialog({
           <ProxyFormSection
             icon={<LockOutlinedIcon sx={{ fontSize: 18 }} />}
             title={
-              isMtproto ? t('proxyForm.sections.mtprotoAuthentication') : t('proxyForm.sections.authentication')
+              isMtproto
+                ? t('proxyForm.sections.mtprotoAuthentication')
+                : t('proxyForm.sections.authentication')
             }
             description={
               isMtproto
@@ -472,9 +474,7 @@ function ProxyFormDialog({
                         return (
                           <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
                             <CountryFlag countryCode={code} />
-                            <span>
-                              {country ? `${country.name} (${country.code})` : code}
-                            </span>
+                            <span>{country ? `${country.name} (${country.code})` : code}</span>
                           </Stack>
                         )
                       }
@@ -627,7 +627,10 @@ function ProxyFormDialog({
 
                           return (
                             <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
-                              <ProxyIcon iconId={iconValue as (typeof PROXY_ICON_IDS)[number]} fontSize="small" />
+                              <ProxyIcon
+                                iconId={iconValue as (typeof PROXY_ICON_IDS)[number]}
+                                fontSize="small"
+                              />
                               <span>{t(`proxyIcons.${iconValue}`)}</span>
                             </Stack>
                           )

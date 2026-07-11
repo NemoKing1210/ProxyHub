@@ -14,7 +14,13 @@ import {
 } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
+import {
+  MD3_DURATION,
+  MD3_EASING,
+  outlineVariant,
+  surfaceContainer,
+  withThemeAlpha
+} from '../theme'
 
 const QUICK_FILL_EXAMPLES = [
   'host:port',
@@ -52,7 +58,11 @@ function ProxyQuickFillPanel({
       sx={{
         p: 2,
         borderRadius: 2.5,
-        bgcolor: withThemeAlpha(theme, theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.1 : 0.06),
+        bgcolor: withThemeAlpha(
+          theme,
+          theme.palette.primary.main,
+          theme.palette.mode === 'dark' ? 0.1 : 0.06
+        ),
         boxShadow: `inset 0 0 0 1px ${alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.28 : 0.16)}`
       }}
     >
@@ -191,7 +201,12 @@ function ProxyQuickFillPanel({
         <Typography
           variant="caption"
           color="text.secondary"
-          sx={{ fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: '0.62rem' }}
+          sx={{
+            fontWeight: 600,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            fontSize: '0.62rem'
+          }}
         >
           {t('proxyForm.quickFillOrManual')}
         </Typography>

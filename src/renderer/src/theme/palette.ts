@@ -1,6 +1,9 @@
 import type { Theme } from '@mui/material/styles'
 
-export function getPalette(theme: { vars?: Theme['vars']; palette: Theme['palette'] }): Theme['palette'] {
+export function getPalette(theme: {
+  vars?: Theme['vars']
+  palette: Theme['palette']
+}): Theme['palette'] {
   return (theme.vars?.palette ?? theme.palette) as Theme['palette']
 }
 

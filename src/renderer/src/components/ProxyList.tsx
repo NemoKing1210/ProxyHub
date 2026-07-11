@@ -8,7 +8,19 @@ import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import StopIcon from '@mui/icons-material/Stop'
 import StarIcon from '@mui/icons-material/Star'
 import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
-import { Box, Button, Chip, CircularProgress, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Stack, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Paper,
+  Stack,
+  Typography
+} from '@mui/material'
 import type { SxProps, Theme } from '@mui/material/styles'
 import { useTheme } from '@mui/material/styles'
 import {
@@ -60,7 +72,13 @@ import {
   isHoveringGroup,
   resolveDropTargetGroupId
 } from '../utils/proxy-dnd'
-import { elevationShadow, getPalette, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
+import {
+  elevationShadow,
+  getPalette,
+  surfaceContainer,
+  surfaceTint,
+  withThemeAlpha
+} from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCardDragOverlay from './ProxyCardDragOverlay'
 import ProxyListRow from './ProxyListRow'
@@ -327,19 +345,25 @@ function ProxyList(): React.JSX.Element {
     [checkProxy]
   )
 
-  const handleEditProxy = useCallback((proxyId: string) => {
-    const proxy = proxies.find((item) => item.id === proxyId)
-    if (proxy) {
-      openEditDialog(proxy)
-    }
-  }, [proxies])
+  const handleEditProxy = useCallback(
+    (proxyId: string) => {
+      const proxy = proxies.find((item) => item.id === proxyId)
+      if (proxy) {
+        openEditDialog(proxy)
+      }
+    },
+    [proxies]
+  )
 
-  const handleDeleteProxy = useCallback((proxyId: string) => {
-    const proxy = proxies.find((item) => item.id === proxyId)
-    if (proxy) {
-      openDeleteDialog(proxy)
-    }
-  }, [proxies])
+  const handleDeleteProxy = useCallback(
+    (proxyId: string) => {
+      const proxy = proxies.find((item) => item.id === proxyId)
+      if (proxy) {
+        openDeleteDialog(proxy)
+      }
+    },
+    [proxies]
+  )
 
   const handleToggleFavoriteProxy = useCallback(
     (proxyId: string) => {
@@ -377,7 +401,8 @@ function ProxyList(): React.JSX.Element {
     () => filterEnabledProxies(visibleProxies).map((proxy) => proxy.id),
     [visibleProxies]
   )
-  const isInitialLoading = (isLoading || isGroupsLoading) && proxies.length === 0 && groups.length === 0
+  const isInitialLoading =
+    (isLoading || isGroupsLoading) && proxies.length === 0 && groups.length === 0
   const isEmpty = proxies.length === 0 && groups.length === 0
   const dragEnabled = proxyDragEnabled && !isCheckingAll
   const draggingProxy = useMemo(
@@ -791,11 +816,7 @@ function ProxyList(): React.JSX.Element {
             onChange={setFilters}
           />
 
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={2}
-            sx={{ alignItems: 'stretch' }}
-          >
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ alignItems: 'stretch' }}>
             <Box sx={{ flex: 1, minWidth: 0, display: 'flex' }}>
               <ProxyListSearch
                 value={filters.searchQuery}
@@ -865,83 +886,83 @@ function ProxyList(): React.JSX.Element {
                 />
               ) : (
                 <AnimatePresence mode="popLayout" initial={false}>
-                {showUngroupedDropZone ? (
-                  <motion.div
-                    key="ungrouped-drop-zone"
-                    layout={!reducedMotion}
-                    initial={reducedMotion ? false : 'initial'}
-                    animate={reducedMotion ? undefined : 'animate'}
-                    exit={reducedMotion ? undefined : 'exit'}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : { layout: listLayoutTransition, ...listItemTransition }
-                    }
-                  >
-                    <ProxyDropZone
-                      id={UNGROUPED_DROP_ZONE_ID}
-                      disabled={!dragEnabled}
-                      isEmpty={organizedList.ungrouped.length === 0}
-                      isDragActive={Boolean(draggingProxyId)}
-                      emptyLabel={t('proxyList.drag.dropToUngrouped')}
+                  {showUngroupedDropZone ? (
+                    <motion.div
+                      key="ungrouped-drop-zone"
+                      layout={!reducedMotion}
+                      initial={reducedMotion ? false : 'initial'}
+                      animate={reducedMotion ? undefined : 'animate'}
+                      exit={reducedMotion ? undefined : 'exit'}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { layout: listLayoutTransition, ...listItemTransition }
+                      }
                     >
-                      <Stack spacing={2}>
-                        {organizedList.ungrouped.map((proxy) => (
+                      <ProxyDropZone
+                        id={UNGROUPED_DROP_ZONE_ID}
+                        disabled={!dragEnabled}
+                        isEmpty={organizedList.ungrouped.length === 0}
+                        isDragActive={Boolean(draggingProxyId)}
+                        emptyLabel={t('proxyList.drag.dropToUngrouped')}
+                      >
+                        <Stack spacing={2}>
+                          {organizedList.ungrouped.map((proxy) => (
+                            <div key={proxy.id}>{renderProxyCard(proxy)}</div>
+                          ))}
+                        </Stack>
+                      </ProxyDropZone>
+                    </motion.div>
+                  ) : null}
+
+                  {visibleGroupSections.map((section) => (
+                    <motion.div
+                      key={section.group.id}
+                      layout={!reducedMotion}
+                      initial={reducedMotion ? false : 'initial'}
+                      animate={reducedMotion ? undefined : 'animate'}
+                      exit={reducedMotion ? undefined : 'exit'}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { layout: listLayoutTransition, ...listItemTransition }
+                      }
+                    >
+                      <ProxyGroupSection
+                        group={section.group}
+                        proxyCount={section.proxies.length}
+                        deadProxyCount={getGroupDeadProxyCount(section.group.id)}
+                        canCheck={filterEnabledProxies(section.proxies).length > 0}
+                        isCheckingAll={isCheckingAll}
+                        dropZoneId={getGroupDropZoneId(section.group.id)}
+                        dropZoneDisabled={!dragEnabled}
+                        isDragActive={Boolean(draggingProxyId)}
+                        forceExpanded={isHoveringGroup(
+                          hoveredDropTargetId,
+                          section.group.id,
+                          section.proxies.map((proxy) => proxy.id)
+                        )}
+                        onEdit={() => openEditGroupDialog(section.group)}
+                        onDelete={() => setDeletingGroup(section.group)}
+                        onDeleteDead={() => setDeletingDeadGroup(section.group)}
+                        onClear={() => setClearingGroup(section.group)}
+                        onIconChange={(iconId) => void handleGroupIconChange(section.group, iconId)}
+                        onColorChange={(colorId) =>
+                          void handleGroupColorChange(section.group, colorId)
+                        }
+                        onAddProxy={() => openAddDialogForGroup(section.group)}
+                        onCheck={() =>
+                          void checkAll(
+                            filterEnabledProxies(section.proxies).map((proxy) => proxy.id)
+                          )
+                        }
+                      >
+                        {section.proxies.map((proxy) => (
                           <div key={proxy.id}>{renderProxyCard(proxy)}</div>
                         ))}
-                      </Stack>
-                    </ProxyDropZone>
-                  </motion.div>
-                ) : null}
-
-                {visibleGroupSections.map((section) => (
-                  <motion.div
-                    key={section.group.id}
-                    layout={!reducedMotion}
-                    initial={reducedMotion ? false : 'initial'}
-                    animate={reducedMotion ? undefined : 'animate'}
-                    exit={reducedMotion ? undefined : 'exit'}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : { layout: listLayoutTransition, ...listItemTransition }
-                    }
-                  >
-                    <ProxyGroupSection
-                      group={section.group}
-                      proxyCount={section.proxies.length}
-                      deadProxyCount={getGroupDeadProxyCount(section.group.id)}
-                      canCheck={filterEnabledProxies(section.proxies).length > 0}
-                      isCheckingAll={isCheckingAll}
-                      dropZoneId={getGroupDropZoneId(section.group.id)}
-                      dropZoneDisabled={!dragEnabled}
-                      isDragActive={Boolean(draggingProxyId)}
-                      forceExpanded={isHoveringGroup(
-                        hoveredDropTargetId,
-                        section.group.id,
-                        section.proxies.map((proxy) => proxy.id)
-                      )}
-                      onEdit={() => openEditGroupDialog(section.group)}
-                      onDelete={() => setDeletingGroup(section.group)}
-                      onDeleteDead={() => setDeletingDeadGroup(section.group)}
-                      onClear={() => setClearingGroup(section.group)}
-                      onIconChange={(iconId) => void handleGroupIconChange(section.group, iconId)}
-                      onColorChange={(colorId) =>
-                        void handleGroupColorChange(section.group, colorId)
-                      }
-                      onAddProxy={() => openAddDialogForGroup(section.group)}
-                      onCheck={() =>
-                        void checkAll(
-                          filterEnabledProxies(section.proxies).map((proxy) => proxy.id)
-                        )
-                      }
-                    >
-                      {section.proxies.map((proxy) => (
-                        <div key={proxy.id}>{renderProxyCard(proxy)}</div>
-                      ))}
-                    </ProxyGroupSection>
-                  </motion.div>
-                ))}
+                      </ProxyGroupSection>
+                    </motion.div>
+                  ))}
                 </AnimatePresence>
               )}
 

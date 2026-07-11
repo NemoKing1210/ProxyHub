@@ -247,7 +247,10 @@ export async function resolveGoogleAccessToken(secrets: {
   return refreshed.accessToken
 }
 
-async function startCallbackServer(): Promise<{ redirectUri: string; waitForCode: () => Promise<string> }> {
+async function startCallbackServer(): Promise<{
+  redirectUri: string
+  waitForCode: () => Promise<string>
+}> {
   return new Promise((resolve, reject) => {
     const server = createServer()
 
@@ -293,7 +296,9 @@ async function startCallbackServer(): Promise<{ redirectUri: string; waitForCode
                   sendHtml(response, 400, buildErrorHtml(description))
                   clearTimeout(timeout)
                   server.close()
-                  rejectCode(new SyncProviderError('auth_cancelled', 'Google sign-in was cancelled'))
+                  rejectCode(
+                    new SyncProviderError('auth_cancelled', 'Google sign-in was cancelled')
+                  )
                   return
                 }
 
@@ -303,7 +308,9 @@ async function startCallbackServer(): Promise<{ redirectUri: string; waitForCode
                   sendHtml(response, 400, buildErrorHtml('Authorization code is missing'))
                   clearTimeout(timeout)
                   server.close()
-                  rejectCode(new SyncProviderError('invalid_request', 'Authorization code is missing'))
+                  rejectCode(
+                    new SyncProviderError('invalid_request', 'Authorization code is missing')
+                  )
                   return
                 }
 

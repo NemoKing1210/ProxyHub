@@ -1,9 +1,4 @@
-import type {
-  SyncConfig,
-  SyncErrorCode,
-  SyncLastErrorInfo,
-  SyncStatus
-} from '../types/sync'
+import type { SyncConfig, SyncErrorCode, SyncLastErrorInfo, SyncStatus } from '../types/sync'
 
 export interface SyncStatusErrorContext {
   config: SyncConfig
@@ -51,9 +46,7 @@ function normalizeErrorCode(value: unknown): SyncErrorCode {
   return 'unknown'
 }
 
-function normalizeErrorOperation(
-  value: unknown
-): SyncLastErrorInfo['operation'] | undefined {
+function normalizeErrorOperation(value: unknown): SyncLastErrorInfo['operation'] | undefined {
   if (
     value === 'push' ||
     value === 'pull' ||
@@ -89,9 +82,7 @@ export function normalizeSyncLastError(value: unknown): SyncLastErrorInfo | unde
   }
 
   const occurredAt =
-    typeof source.occurredAt === 'string' && source.occurredAt.trim()
-      ? source.occurredAt
-      : ''
+    typeof source.occurredAt === 'string' && source.occurredAt.trim() ? source.occurredAt : ''
 
   return {
     code: normalizeErrorCode(source.code),
@@ -102,8 +93,8 @@ export function normalizeSyncLastError(value: unknown): SyncLastErrorInfo | unde
 }
 
 export function resolveLastSyncAt(status: SyncStatus): string | undefined {
-  const timestamps = [status.lastPushAt, status.lastPullAt].filter(
-    (value): value is string => Boolean(value)
+  const timestamps = [status.lastPushAt, status.lastPullAt].filter((value): value is string =>
+    Boolean(value)
   )
 
   if (timestamps.length === 0) {
@@ -125,14 +116,8 @@ export function buildSyncStatusErrorReport(
   error: SyncLastErrorInfo,
   context: SyncStatusErrorContext
 ): string {
-  const {
-    config,
-    status,
-    hasCredentials,
-    hasPayloadPassword,
-    safeStorageAvailable,
-    googleEmail
-  } = context
+  const { config, status, hasCredentials, hasPayloadPassword, safeStorageAvailable, googleEmail } =
+    context
 
   const lines = [
     '=== ProxyChecker Sync Error ===',
@@ -147,7 +132,9 @@ export function buildSyncStatusErrorReport(
     `Pull mode: ${config.pullMode}`,
     `Remote ID: ${resolveRemoteIdLabel(config)}`,
     `Credentials saved: ${hasCredentials ? 'yes' : 'no'}`,
-    ...(config.provider === 'google-drive' && googleEmail ? [`Google account: ${googleEmail}`] : []),
+    ...(config.provider === 'google-drive' && googleEmail
+      ? [`Google account: ${googleEmail}`]
+      : []),
     `Payload password saved: ${hasPayloadPassword ? 'yes' : 'no'}`,
     `Encryption enabled: ${config.encryptPayload ? 'yes' : 'no'}`,
     `Auto sync: ${config.autoSyncEnabled ? `enabled (${config.autoSyncIntervalMinutes} min)` : 'disabled'}`,

@@ -1,4 +1,9 @@
-import type { BackupImportMode, BackupImportResult, BackupParseErrorCode, BackupPreview } from './backup'
+import type {
+  BackupImportMode,
+  BackupImportResult,
+  BackupParseErrorCode,
+  BackupPreview
+} from './backup'
 import type { BackupPayloadKind } from './backup'
 
 export type SyncProviderType = 'none' | 'github-gist' | 'google-drive'

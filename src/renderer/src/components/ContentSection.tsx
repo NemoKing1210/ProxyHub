@@ -2,7 +2,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Collapse, IconButton, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { type ReactNode, useState } from 'react'
-import { elevationShadow, MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint, withThemeAlpha } from '../theme'
+import {
+  elevationShadow,
+  MD3_DURATION,
+  MD3_EASING,
+  surfaceContainer,
+  surfaceTint,
+  withThemeAlpha
+} from '../theme'
 
 type ContentSectionAccent = 'primary' | 'error' | 'warning' | 'info'
 
@@ -51,11 +58,7 @@ function ContentSection({
 
   const accentColor = theme.palette[accent].main
   const accentSurfaceOpacity =
-    accent === 'primary'
-      ? undefined
-      : theme.palette.mode === 'dark'
-        ? 0.14
-        : 0.08
+    accent === 'primary' ? undefined : theme.palette.mode === 'dark' ? 0.14 : 0.08
 
   return (
     <Box

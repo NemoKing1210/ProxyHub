@@ -94,7 +94,10 @@ function deletePullSession(sessionId: string): void {
   pullSessions.delete(sessionId)
 }
 
-async function persistImportedSettings(previousTrayEnabled: boolean, previousLanguage: string): Promise<void> {
+async function persistImportedSettings(
+  previousTrayEnabled: boolean,
+  previousLanguage: string
+): Promise<void> {
   const settings = await getSettings()
 
   if (previousTrayEnabled !== settings.trayEnabled) {
@@ -117,7 +120,11 @@ function serializeBackupError(error: unknown): SyncError {
 
 const SYNC_REMOTE_DISPLAY_NAME = 'proxychecker-sync.pcbackup.json'
 
-function buildRemotePreview(content: string, backup: BackupFileV1, envelopeEncrypted: boolean): BackupPreview {
+function buildRemotePreview(
+  content: string,
+  backup: BackupFileV1,
+  envelopeEncrypted: boolean
+): BackupPreview {
   const remoteLabel = 'remote-sync'
 
   if (envelopeEncrypted) {
@@ -235,7 +242,9 @@ export async function getSyncPublicState(): Promise<SyncPublicState> {
   }
 }
 
-export async function saveSyncConfiguration(request: SyncSaveConfigRequest): Promise<SyncPublicState> {
+export async function saveSyncConfiguration(
+  request: SyncSaveConfigRequest
+): Promise<SyncPublicState> {
   const normalized = request.config
 
   if (
@@ -427,7 +436,11 @@ export async function pushSync(): Promise<SyncPushResult> {
     const remoteId = ensured.remoteId
 
     if (remoteId !== resolveSyncRemoteId(config)) {
-      config = { ...config, remoteId, gistId: config.provider === 'github-gist' ? remoteId : undefined }
+      config = {
+        ...config,
+        remoteId,
+        gistId: config.provider === 'github-gist' ? remoteId : undefined
+      }
       await saveSyncConfig(config)
     }
 

@@ -1,8 +1,5 @@
 import { normalizeCountryCode } from '../constants/proxy-countries'
-import type {
-  ProxyListImportPreviewEntry,
-  ProxyListImportResult
-} from '../types/proxy-import'
+import type { ProxyListImportPreviewEntry, ProxyListImportResult } from '../types/proxy-import'
 import type { Proxy, ProxyAnonymityLevel, ProxyInput, ProxyProtocol } from '../types/proxy'
 import { PROXY_ANONYMITY_LEVELS, PROXY_PROTOCOLS } from '../types/proxy'
 import { buildProxyUrl, formatProxyAddress, parseProxyUrl } from './proxy-format'
@@ -51,7 +48,9 @@ export interface ParseProxyImportListResult {
   totalLineCount: number
 }
 
-export function normalizeAnonymityLevel(value: string | undefined): ProxyAnonymityLevel | undefined {
+export function normalizeAnonymityLevel(
+  value: string | undefined
+): ProxyAnonymityLevel | undefined {
   if (!value?.trim()) {
     return undefined
   }
@@ -63,7 +62,9 @@ export function normalizeAnonymityLevel(value: string | undefined): ProxyAnonymi
 function parseProtocol(value: string): ProxyProtocol | undefined {
   const protocol = value.trim().toLowerCase()
 
-  return PROXY_PROTOCOLS.includes(protocol as ProxyProtocol) ? (protocol as ProxyProtocol) : undefined
+  return PROXY_PROTOCOLS.includes(protocol as ProxyProtocol)
+    ? (protocol as ProxyProtocol)
+    : undefined
 }
 
 function normalizeCity(value: string | undefined): string | undefined {
@@ -205,9 +206,7 @@ export function formatProxyImportCsv(
   return `${lines.join('\n')}\n`
 }
 
-export function formatProxyImportTxt(
-  proxies: Array<Pick<Proxy, 'host' | 'port'>>
-): string {
+export function formatProxyImportTxt(proxies: Array<Pick<Proxy, 'host' | 'port'>>): string {
   const lines = proxies.map((proxy) => formatProxyAddress(proxy))
   return `${lines.join('\n')}\n`
 }

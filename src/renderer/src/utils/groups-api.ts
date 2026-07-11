@@ -1,6 +1,9 @@
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 
-async function invokeGroups<T>(channel: 'groups:get-all' | 'groups:save-all', value?: ProxyGroup[]): Promise<T> {
+async function invokeGroups<T>(
+  channel: 'groups:get-all' | 'groups:save-all',
+  value?: ProxyGroup[]
+): Promise<T> {
   if (channel === 'groups:get-all' && typeof window.api.getGroups === 'function') {
     return window.api.getGroups() as Promise<T>
   }

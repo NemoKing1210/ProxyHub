@@ -28,12 +28,14 @@ import { useTheme } from '@mui/material/styles'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GITHUB_CREATE_TOKEN_URL } from '../../../shared/constants/sync'
-import {
-  SYNC_INTERVAL_MAX,
-  SYNC_INTERVAL_MIN
-} from '../../../shared/constants/sync'
+import { SYNC_INTERVAL_MAX, SYNC_INTERVAL_MIN } from '../../../shared/constants/sync'
 import type { BackupImportMode, BackupPreview } from '../../../shared/types/backup'
-import type { SyncConfig, SyncProviderType, SyncPublicState, SyncScope } from '../../../shared/types/sync'
+import type {
+  SyncConfig,
+  SyncProviderType,
+  SyncPublicState,
+  SyncScope
+} from '../../../shared/types/sync'
 import { DEFAULT_SYNC_CONFIG, resolveSyncRemoteId } from '../../../shared/utils/sync-config'
 import { resolveLastSyncAt } from '../../../shared/utils/sync-status'
 import { formatDateTime } from '../../../shared/utils/datetime'
@@ -178,7 +180,10 @@ function SettingsSyncSection({
       )
 
       if (passwordError === 'too_short') {
-        onFeedback(t('settings.backup.passwordTooShort', { min: BACKUP_MIN_PASSWORD_LENGTH }), 'error')
+        onFeedback(
+          t('settings.backup.passwordTooShort', { min: BACKUP_MIN_PASSWORD_LENGTH }),
+          'error'
+        )
         return false
       }
 
@@ -208,8 +213,7 @@ function SettingsSyncSection({
       onSaved()
       return true
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : t('settings.sync.errors.unknown')
+      const message = error instanceof Error ? error.message : t('settings.sync.errors.unknown')
       onFeedback(message, 'error')
       return false
     } finally {
@@ -270,7 +274,8 @@ function SettingsSyncSection({
   const handleSaveProviderSettings = async (): Promise<void> => {
     const nextConfig: SyncConfig = {
       ...config,
-      remoteId: config.provider === 'github-gist' ? remoteIdDraft.trim() || undefined : config.remoteId,
+      remoteId:
+        config.provider === 'github-gist' ? remoteIdDraft.trim() || undefined : config.remoteId,
       gistId: config.provider === 'github-gist' ? remoteIdDraft.trim() || undefined : undefined,
       encryptPayload
     }
@@ -367,9 +372,7 @@ function SettingsSyncSection({
     setIsTesting(true)
 
     try {
-      const result = await window.api.testSyncConnection(
-        githubTokenDraft.trim() || undefined
-      )
+      const result = await window.api.testSyncConnection(githubTokenDraft.trim() || undefined)
 
       if (!result.ok || result.error) {
         onFeedback(resolveSyncError(t, result.error ?? { code: 'unknown', message: '' }), 'error')
@@ -460,9 +463,7 @@ function SettingsSyncSection({
       t('settings.sync.pullSuccess', {
         proxies: result.result.proxiesAdded,
         groups: result.result.groupsAdded,
-        settings: result.result.settingsImported
-          ? t('settings.backup.importSuccessSettings')
-          : ''
+        settings: result.result.settingsImported ? t('settings.backup.importSuccessSettings') : ''
       })
     )
   }
@@ -491,12 +492,7 @@ function SettingsSyncSection({
 
   const sectionTitle = useMemo(
     () => (
-      <Stack
-        direction="row"
-        spacing={1}
-        useFlexGap
-        sx={{ alignItems: 'center', flexWrap: 'wrap' }}
-      >
+      <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <span>{t('settings.sections.sync')}</span>
         <Chip
           label={t(`settings.sync.providers.${config.provider}`)}
@@ -574,7 +570,9 @@ function SettingsSyncSection({
               value={selectedProviderValue}
               disabled={isBusy}
               helperText={!hasGoogleClientId ? t('settings.sync.googleDriveSelectHint') : undefined}
-              onChange={(event) => void handleProviderChange(event.target.value as SyncProviderType)}
+              onChange={(event) =>
+                void handleProviderChange(event.target.value as SyncProviderType)
+              }
             >
               {PROVIDER_OPTIONS.map((provider) => {
                 const isGoogleDriveOption = provider === 'google-drive'
@@ -644,7 +642,9 @@ function SettingsSyncSection({
                   <>
                     <Box>
                       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
-                        <Typography variant="subtitle2">{t('settings.sync.githubToken')}</Typography>
+                        <Typography variant="subtitle2">
+                          {t('settings.sync.githubToken')}
+                        </Typography>
                         <IconButton
                           size="small"
                           aria-label={t('settings.sync.createToken')}
@@ -676,7 +676,11 @@ function SettingsSyncSection({
                           }
                         }}
                       />
-                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ mt: 0.75, display: 'block' }}
+                      >
                         {t('settings.sync.githubTokenHint')}
                       </Typography>
                     </Box>
@@ -770,8 +774,12 @@ function SettingsSyncSection({
                   }}
                 >
                   <ToggleButton value="full">{t('settings.backup.exportKindFull')}</ToggleButton>
-                  <ToggleButton value="proxies">{t('settings.backup.exportKindProxies')}</ToggleButton>
-                  <ToggleButton value="settings">{t('settings.backup.exportKindSettings')}</ToggleButton>
+                  <ToggleButton value="proxies">
+                    {t('settings.backup.exportKindProxies')}
+                  </ToggleButton>
+                  <ToggleButton value="settings">
+                    {t('settings.backup.exportKindSettings')}
+                  </ToggleButton>
                 </ToggleButtonGroup>
 
                 <Box>
@@ -794,8 +802,12 @@ function SettingsSyncSection({
                       }
                     }}
                   >
-                    <ToggleButton value="merge">{t('settings.backup.importModeMerge')}</ToggleButton>
-                    <ToggleButton value="replace">{t('settings.backup.importModeReplace')}</ToggleButton>
+                    <ToggleButton value="merge">
+                      {t('settings.backup.importModeMerge')}
+                    </ToggleButton>
+                    <ToggleButton value="replace">
+                      {t('settings.backup.importModeReplace')}
+                    </ToggleButton>
                   </ToggleButtonGroup>
                 </Box>
 
@@ -824,7 +836,9 @@ function SettingsSyncSection({
                       (isGoogleProvider && !hasCredentials)
                     }
                     onClick={() => void handleSaveProviderSettings()}
-                    startIcon={isSaving ? <CircularProgress size={18} color="inherit" /> : undefined}
+                    startIcon={
+                      isSaving ? <CircularProgress size={18} color="inherit" /> : undefined
+                    }
                   >
                     {t('settings.sync.saveSettings')}
                   </Button>
@@ -839,7 +853,11 @@ function SettingsSyncSection({
                   }
                   onClick={() => void handleTestConnection()}
                   startIcon={
-                    isTesting ? <CircularProgress size={18} color="inherit" /> : <PlayArrowOutlinedIcon />
+                    isTesting ? (
+                      <CircularProgress size={18} color="inherit" />
+                    ) : (
+                      <PlayArrowOutlinedIcon />
+                    )
                   }
                 >
                   {t('settings.sync.testConnection')}
@@ -869,7 +887,9 @@ function SettingsSyncSection({
               <Collapse in={config.autoSyncEnabled}>
                 <Box sx={{ px: 2.25, pb: 2.25 }}>
                   <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
-                    <Typography variant="subtitle2">{t('settings.sync.autoSyncInterval')}</Typography>
+                    <Typography variant="subtitle2">
+                      {t('settings.sync.autoSyncInterval')}
+                    </Typography>
                     <Typography
                       variant="caption"
                       sx={{
@@ -892,7 +912,9 @@ function SettingsSyncSection({
                     disabled={isBusy}
                     onChange={(_event, value) => {
                       setIsDraggingInterval(true)
-                      setIntervalDraft(clampIntervalMinutes(Array.isArray(value) ? value[0] : value))
+                      setIntervalDraft(
+                        clampIntervalMinutes(Array.isArray(value) ? value[0] : value)
+                      )
                     }}
                     onChangeCommitted={() => void handleIntervalCommit()}
                   />
@@ -940,7 +962,11 @@ function SettingsSyncSection({
                 disabled={isBusy || !canPush}
                 onClick={() => void handlePush()}
                 startIcon={
-                  isPushing ? <CircularProgress size={18} color="inherit" /> : <FileUploadOutlinedIcon />
+                  isPushing ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : (
+                    <FileUploadOutlinedIcon />
+                  )
                 }
               >
                 {t('settings.sync.push')}
@@ -951,7 +977,11 @@ function SettingsSyncSection({
                 disabled={isBusy || !canPull}
                 onClick={() => void handlePull()}
                 startIcon={
-                  isPulling ? <CircularProgress size={18} color="inherit" /> : <FileDownloadOutlinedIcon />
+                  isPulling ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : (
+                    <FileDownloadOutlinedIcon />
+                  )
                 }
               >
                 {t('settings.sync.pull')}

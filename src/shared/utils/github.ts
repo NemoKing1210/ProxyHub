@@ -1,9 +1,6 @@
 const GITHUB_USERNAME_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37})?$/
 
-export function resolveGitHubUsername(
-  repositoryUrl?: string,
-  author?: string
-): string | undefined {
+export function resolveGitHubUsername(repositoryUrl?: string, author?: string): string | undefined {
   if (repositoryUrl) {
     const match = repositoryUrl.match(/github\.com\/([^/?#]+)/i)
     const username = match?.[1]

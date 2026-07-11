@@ -7,7 +7,7 @@ export type SyncOnChangeCategory = 'settings' | 'proxies'
 
 let suppressUntil = 0
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
-let pendingChanges = new Set<SyncOnChangeCategory>()
+const pendingChanges = new Set<SyncOnChangeCategory>()
 let isPushing = false
 
 export function suppressSyncOnChange(durationMs = SYNC_ON_CHANGE_DEBOUNCE_MS + 1_000): void {

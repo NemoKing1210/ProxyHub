@@ -152,7 +152,10 @@ function ProxyCard({
   const iconButtonRef = useRef<HTMLButtonElement>(null)
   const enabled = isProxyEnabled(proxy)
   const sortedGroups = useMemo(
-    () => [...groups].sort((left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: 'base' })),
+    () =>
+      [...groups].sort((left, right) =>
+        left.name.localeCompare(right.name, undefined, { sensitivity: 'base' })
+      ),
     [groups]
   )
   const currentGroup = useMemo(
@@ -557,7 +560,11 @@ function ProxyCard({
               spacing={1}
               sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}
             >
-              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', minWidth: 0, flex: 1 }}>
+              <Stack
+                direction="row"
+                spacing={0.5}
+                sx={{ alignItems: 'center', minWidth: 0, flex: 1 }}
+              >
                 <Box onClick={stopPropagation} onKeyDown={stopPropagation}>
                   <FormControlLabel
                     control={
@@ -669,10 +676,7 @@ function ProxyCard({
                   cursor: 'pointer',
                   transition: 'background-color 150ms ease',
                   '&:hover': {
-                    bgcolor: alpha(
-                      protocolStyles.main,
-                      theme.palette.mode === 'dark' ? 0.36 : 0.2
-                    )
+                    bgcolor: alpha(protocolStyles.main, theme.palette.mode === 'dark' ? 0.36 : 0.2)
                   }
                 }}
               />
@@ -802,16 +806,9 @@ function ProxyCard({
           }
         }}
       >
-        <MenuItem
-          onClick={() => runContextAction(onCheck)}
-          disabled={isChecking || isCheckingAll}
-        >
+        <MenuItem onClick={() => runContextAction(onCheck)} disabled={isChecking || isCheckingAll}>
           <ListItemIcon>
-            {isChecking ? (
-              <CircularProgress size={18} />
-            ) : (
-              <PlayArrowIcon fontSize="small" />
-            )}
+            {isChecking ? <CircularProgress size={18} /> : <PlayArrowIcon fontSize="small" />}
           </ListItemIcon>
           <ListItemText>{t('proxyList.actions.check')}</ListItemText>
         </MenuItem>
@@ -854,10 +851,7 @@ function ProxyCard({
               : t('proxyList.actions.addToFavorites')}
           </ListItemText>
         </MenuItem>
-        <MenuItem
-          onClick={() => runContextAction(onToggleEnabled)}
-          disabled={isCheckingAll}
-        >
+        <MenuItem onClick={() => runContextAction(onToggleEnabled)} disabled={isCheckingAll}>
           <ListItemIcon>
             {enabled ? (
               <ToggleOffOutlinedIcon fontSize="small" />
@@ -866,9 +860,7 @@ function ProxyCard({
             )}
           </ListItemIcon>
           <ListItemText>
-            {enabled
-              ? t('proxyList.actions.disableProxy')
-              : t('proxyList.actions.enableProxy')}
+            {enabled ? t('proxyList.actions.disableProxy') : t('proxyList.actions.enableProxy')}
           </ListItemText>
         </MenuItem>
         <MenuItem onClick={openIconPickerFromMenu}>
@@ -949,11 +941,7 @@ function ProxyCard({
         {isCompact && (
           <>
             <Divider />
-            <MenuItem
-              onClick={() =>
-                runContextAction(() => setCardExpanded((value) => !value))
-              }
-            >
+            <MenuItem onClick={() => runContextAction(() => setCardExpanded((value) => !value))}>
               <ListItemIcon>
                 {cardExpanded ? (
                   <UnfoldLessOutlinedIcon fontSize="small" />
