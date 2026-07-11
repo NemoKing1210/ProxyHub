@@ -337,6 +337,11 @@ function SettingsPage(): React.JSX.Element {
     notifySaved()
   }
 
+  const handleLaunchAtLoginChange = async (enabled: boolean): Promise<void> => {
+    await updateSettings({ launchAtLogin: enabled })
+    notifySaved()
+  }
+
   const handleAutoCheckEnabledChange = async (enabled: boolean): Promise<void> => {
     await updateSettings({ autoCheckEnabled: enabled })
     notifySaved()
@@ -524,9 +529,11 @@ function SettingsPage(): React.JSX.Element {
         <SettingsSystemSection
           trayEnabled={settings.trayEnabled}
           startMinimized={settings.startMinimized}
+          launchAtLogin={settings.launchAtLogin}
           backgroundCheckNotifications={settings.backgroundCheckNotifications}
           onTrayEnabledChange={(enabled) => void handleTrayEnabledChange(enabled)}
           onStartMinimizedChange={(enabled) => void handleStartMinimizedChange(enabled)}
+          onLaunchAtLoginChange={(enabled) => void handleLaunchAtLoginChange(enabled)}
           onBackgroundCheckNotificationsChange={(enabled) =>
             void handleBackgroundCheckNotificationsChange(enabled)
           }

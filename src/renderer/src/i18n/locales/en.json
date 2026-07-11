@@ -374,6 +374,8 @@
     "trayEnabledHint": "Keep ProxyChecker in the tray when the window is closed. Right-click the tray icon for favorite proxies and app actions.",
     "startMinimized": "Start minimized",
     "startMinimizedHint": "Launch the app hidden in the system tray instead of opening the window.",
+    "launchAtLogin": "Launch at system startup",
+    "launchAtLoginHint": "Start ProxyChecker automatically when you sign in to Windows. Works only in the installed app.",
     "backgroundCheckNotifications": "Native notifications in background",
     "backgroundCheckNotificationsHint": "Show check results as system notifications when the window is minimized or hidden.",
     "autoCheckEnabled": "Enable auto-check",

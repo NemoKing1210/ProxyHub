@@ -26,7 +26,7 @@ import {
   normalizeGroupInput,
   toGroupColorFormValue,
   toGroupIconFormValue
-} from '../../../shared/utils/proxy-group-appearance'
+} from '../../../shared/utils/proxy-group-normalize'
 import type { ProxyGroupInput } from '../../../shared/types/proxy-group'
 import ProxyColorSwatch from './ProxyColorSwatch'
 import ProxyGroupAvatar from './ProxyGroupAvatar'

@@ -97,14 +97,14 @@ Releases are published to [GitHub Releases](https://github.com/NemoKing1210/Prox
 ```bash
 # 1. Commit version bump
 git add package.json CHANGELOG.md
-git commit -m "chore: release v1.37.0"
+git commit -m "chore: release v1.37.1"
 
 # 2. Tag (must match package.json version, with v prefix)
-git tag v1.37.0
+git tag v1.37.1
 
 # 3. Push
 git push origin main
-git push origin v1.37.0
+git push origin v1.37.1
 ```
 
 The workflow builds **Windows**, **macOS**, and **Linux** in parallel and uploads installers to GitHub Releases.

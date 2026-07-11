@@ -1,5 +1,6 @@
 import MinimizeOutlinedIcon from '@mui/icons-material/MinimizeOutlined'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
+import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined'
 import TabOutlinedIcon from '@mui/icons-material/TabOutlined'
 import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined'
 import { Box, Collapse, Stack } from '@mui/material'
@@ -12,18 +13,22 @@ import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../t
 interface SettingsSystemSectionProps {
   trayEnabled: boolean
   startMinimized: boolean
+  launchAtLogin: boolean
   backgroundCheckNotifications: boolean
   onTrayEnabledChange: (enabled: boolean) => void
   onStartMinimizedChange: (enabled: boolean) => void
+  onLaunchAtLoginChange: (enabled: boolean) => void
   onBackgroundCheckNotificationsChange: (enabled: boolean) => void
 }
 
 function SettingsSystemSection({
   trayEnabled,
   startMinimized,
+  launchAtLogin,
   backgroundCheckNotifications,
   onTrayEnabledChange,
   onStartMinimizedChange,
+  onLaunchAtLoginChange,
   onBackgroundCheckNotificationsChange
 }: SettingsSystemSectionProps): React.JSX.Element {
   const { t } = useTranslation()
@@ -71,6 +76,23 @@ function SettingsSystemSection({
               />
             </Box>
           </Collapse>
+        </Box>
+
+        <Box
+          sx={{
+            borderRadius: 2.5,
+            overflow: 'hidden',
+            bgcolor: surfaceContainer(theme, 'low'),
+            boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
+          }}
+        >
+          <SettingsSwitchCard
+            icon={<PowerSettingsNewOutlinedIcon fontSize="small" />}
+            title={t('settings.launchAtLogin')}
+            hint={t('settings.launchAtLoginHint')}
+            checked={launchAtLogin}
+            onChange={onLaunchAtLoginChange}
+          />
         </Box>
 
         <Box

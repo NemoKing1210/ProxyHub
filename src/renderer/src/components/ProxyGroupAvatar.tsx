@@ -2,7 +2,7 @@ import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import { Box } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
-import { getGroupColorStyles } from '../../../shared/utils/proxy-group-appearance'
+import { getGroupColorStyles } from '../utils/proxy-group-appearance'
 import ProxyIcon from './ProxyIcon'
 
 interface ProxyGroupAvatarProps {

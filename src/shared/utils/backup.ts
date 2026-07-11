@@ -36,7 +36,7 @@ import {
 import type { ProxyGroup } from '../types/proxy-group'
 import type { AppSettings } from '../types/settings'
 import { applyImportedSettings, normalizeSettings, stripLocalOnlySettings } from '../types/settings'
-import { normalizeGroupInput } from './proxy-group-appearance'
+import { normalizeGroupInput } from './proxy-group-normalize'
 import { findDuplicateGroupName } from './proxy-group-identity'
 import { findDuplicateProxy } from './proxy-identity'
 

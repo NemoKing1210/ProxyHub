@@ -12,6 +12,7 @@ import { registerSyncIpc, runStartupSyncPull } from './ipc/sync'
 import { registerTrayIpc, syncTrayEnabled } from './ipc/tray'
 import { registerUpdaterIpc } from './ipc/updater'
 import { initializeAutoUpdater, scheduleStartupUpdateCheck } from './services/auto-updater'
+import { syncLaunchAtLoginFromSettings } from './services/auto-launch'
 import { getSettings } from './services/app-store'
 import { getMainWindow, setMainWindow, showMainWindow } from './services/main-window'
 import { isTrayEnabled } from './services/tray-state'
@@ -98,6 +99,7 @@ app.whenReady().then(async () => {
   initializeNativeThemeListener(() => getMainWindow() ?? undefined)
 
   const settings = await getSettings()
+  syncLaunchAtLoginFromSettings(settings)
   await syncTrayEnabled(settings.trayEnabled)
   await runStartupSyncPull()
   await createWindow()

@@ -15,7 +15,7 @@
 [![CI](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/ci.yml/badge.svg)](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/ci.yml)
 [![Release](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/release.yml/badge.svg)](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/release.yml)
 
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#-download)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#-platform-support)
 [![Electron](https://img.shields.io/badge/Electron-39-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -61,19 +61,29 @@ ProxyChecker helps you validate proxy servers quickly from a single desktop inte
 
 ## 📥 Download
 
-Pre-built installers are available on **[GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases)**.
+Pre-built **Windows** installers are available on **[GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases)**.
 
-| Platform    | File                                                                      |
+| Platform    | Installer                                                                 |
 | ----------- | ------------------------------------------------------------------------- |
 | **Windows** | `ProxyChecker-{version}-setup.exe`                                        |
-| **macOS**   | `ProxyChecker-{version}-x64.dmg`, `ProxyChecker-{version}-arm64.dmg`      |
-| **Linux**   | `ProxyChecker-{version}-x64.AppImage`, `ProxyChecker-{version}-amd64.deb` |
 
-> **Note:** Builds are unsigned by default. Windows may show a SmartScreen prompt; macOS may require allowing the app in System Settings.
+> **Note:** Builds are unsigned by default. Windows may show a SmartScreen prompt.
+
+## 🖥 Platform support
+
+The app is built with Electron and can run on Windows, macOS, and Linux. **Automated release builds and published installers are Windows-only for now.**
+
+| Platform    | Status              | Release builds | Published installers | Notes |
+| ----------- | ------------------- | -------------- | -------------------- | ----- |
+| **Windows** | ✅ Supported        | Yes            | Yes (NSIS `.exe`)    | Primary target; CI release workflow, auto-update |
+| **macOS**   | ⏸ Paused            | No             | No                   | Can be built locally with `npm run build:mac` (DMG + zip) |
+| **Linux**   | ⏸ Paused            | No             | No                   | Can be built locally with `npm run build:linux` (AppImage + deb) |
+
+To build for macOS or Linux from source, see the **[Developer guide](./DEVELOPER.md)**.
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see [`package.json`](./package.json).
+This project is licensed under the **MIT License** — see [`LICENSE`](./LICENSE).
 
 ---
 

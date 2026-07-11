@@ -29,6 +29,7 @@ export interface AppSettings {
   fetchExternalIp: boolean
   trayEnabled: boolean
   startMinimized: boolean
+  launchAtLogin: boolean
   backgroundCheckNotifications: boolean
   autoCheckEnabled: boolean
   autoCheckIntervalMinutes: number
@@ -41,7 +42,7 @@ export interface AppSettings {
   lastRoute: AppRoute
 }
 
-export type SyncableAppSettings = Omit<AppSettings, 'lastRoute' | 'proxyListView'>
+export type SyncableAppSettings = Omit<AppSettings, 'lastRoute' | 'proxyListView' | 'launchAtLogin'>
 
 export const CHECK_TIMEOUT_MIN_MS = 1_000
 export const CHECK_TIMEOUT_MAX_MS = 120_000
@@ -59,6 +60,8 @@ export const AUTO_CHECK_INTERVAL_MIN = 1
 export const AUTO_CHECK_INTERVAL_MAX = 1_440
 export const AUTO_CHECK_INTERVAL_DEFAULT = 30
 
+const EMPTY_AUTO_CHECK_GROUP_IDS: string[] = []
+
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: 'dark',
   language: 'en',
@@ -70,6 +73,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   fetchExternalIp: true,
   trayEnabled: false,
   startMinimized: false,
+  launchAtLogin: false,
   backgroundCheckNotifications: true,
   autoCheckEnabled: false,
   autoCheckIntervalMinutes: AUTO_CHECK_INTERVAL_DEFAULT,
@@ -210,6 +214,7 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     fetchExternalIp: merged.fetchExternalIp !== false,
     trayEnabled,
     startMinimized: trayEnabled && merged.startMinimized === true,
+    launchAtLogin: merged.launchAtLogin === true,
     backgroundCheckNotifications: merged.backgroundCheckNotifications !== false,
     autoCheckEnabled: merged.autoCheckEnabled === true,
     autoCheckIntervalMinutes: clampAutoCheckIntervalMinutes(merged.autoCheckIntervalMinutes),
@@ -218,7 +223,7 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     autoCheckGroupIds:
       normalizeAutoCheckScope(merged.autoCheckScope) === 'groups'
         ? normalizeAutoCheckGroupIds(merged.autoCheckGroupIds)
-        : [],
+        : EMPTY_AUTO_CHECK_GROUP_IDS,
     proxyCardView: merged.proxyCardView === 'compact' ? 'compact' : 'standard',
     proxyDragEnabled: merged.proxyDragEnabled === true,
     proxyListView: normalizeProxyListView(merged.proxyListView),
@@ -228,7 +233,8 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
 
 export function stripLocalOnlySettings(settings: AppSettings): SyncableAppSettings {
   const normalized = normalizeSettings(settings)
-  const { lastRoute: _lastRoute, proxyListView: _proxyListView, ...syncable } = normalized
+  const { lastRoute: _lastRoute, proxyListView: _proxyListView, launchAtLogin: _launchAtLogin, ...syncable } =
+    normalized
   return syncable
 }
 
@@ -249,7 +255,8 @@ export function applyImportedSettings(
   return {
     ...merged,
     lastRoute: current.lastRoute,
-    proxyListView: current.proxyListView
+    proxyListView: current.proxyListView,
+    launchAtLogin: current.launchAtLogin
   }
 }
 

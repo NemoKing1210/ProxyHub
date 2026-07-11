@@ -5,13 +5,19 @@ import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
 
+function serializeAutoCheckGroupIds(groupIds: string[]): string {
+  return groupIds.join('\0')
+}
+
 function AutoCheckSync(): null {
   const autoCheckEnabled = useSettingsStore((state) => state.settings.autoCheckEnabled)
   const autoCheckIntervalMinutes = useSettingsStore(
     (state) => state.settings.autoCheckIntervalMinutes
   )
   const autoCheckScope = useSettingsStore((state) => state.settings.autoCheckScope)
-  const autoCheckGroupIds = useSettingsStore((state) => state.settings.autoCheckGroupIds)
+  const autoCheckGroupIdsKey = useSettingsStore((state) =>
+    serializeAutoCheckGroupIds(state.settings.autoCheckGroupIds)
+  )
   const scheduleEpoch = useAutoCheckStore((state) => state.scheduleEpoch)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -69,10 +75,14 @@ function AutoCheckSync(): null {
         clearInterval(timerRef.current)
         timerRef.current = null
       }
-
-      useAutoCheckStore.getState().setNextCheckAt(null)
     }
-  }, [autoCheckEnabled, autoCheckIntervalMinutes, autoCheckScope, autoCheckGroupIds, scheduleEpoch])
+  }, [
+    autoCheckEnabled,
+    autoCheckIntervalMinutes,
+    autoCheckScope,
+    autoCheckGroupIdsKey,
+    scheduleEpoch
+  ])
 
   return null
 }
