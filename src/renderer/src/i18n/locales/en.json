@@ -268,6 +268,16 @@
       "message_one": "Delete {{count}} dead proxy from \"{{name}}\"? This cannot be undone.",
       "message_other": "Delete {{count}} dead proxies from \"{{name}}\"? This cannot be undone."
     },
+    "clear": "Clear group",
+    "clearCount_one": "{{count}} proxy",
+    "clearCount_other": "{{count}} proxies",
+    "clearEmpty": "No proxies in this group",
+    "clearConfirm": {
+      "title": "Clear group?",
+      "message_one": "Delete all {{count}} proxy from \"{{name}}\"? The group will remain. This cannot be undone.",
+      "message_other": "Delete all {{count}} proxies from \"{{name}}\"? The group will remain. This cannot be undone.",
+      "confirm": "Clear"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

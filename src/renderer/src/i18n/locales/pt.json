@@ -671,6 +671,16 @@
       "message_one": "Excluir {{count}} proxy morto de \"{{name}}\"? Esta ação não pode ser desfeita.",
       "message_other": "Excluir {{count}} proxies mortos de \"{{name}}\"? Esta ação não pode ser desfeita."
     },
+    "clear": "Limpar grupo",
+    "clearCount_one": "{{count}} proxy",
+    "clearCount_other": "{{count}} proxies",
+    "clearEmpty": "Nenhum proxy neste grupo",
+    "clearConfirm": {
+      "title": "Limpar grupo?",
+      "message_one": "Excluir todos os {{count}} proxy de \"{{name}}\"? O grupo permanecerá. Esta ação não pode ser desfeita.",
+      "message_other": "Excluir todos os {{count}} proxies de \"{{name}}\"? O grupo permanecerá. Esta ação não pode ser desfeita.",
+      "confirm": "Limpar"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

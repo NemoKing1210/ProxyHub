@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.34.0] - 2026-07-11
+
+### Added
+
+- Context menu on proxy group headers (right-click), matching the proxy card menu pattern
+- Clear group action: delete all proxies inside a group with confirmation; the group itself remains
+
 ## [1.33.0] - 2026-07-11
 
 ### Added

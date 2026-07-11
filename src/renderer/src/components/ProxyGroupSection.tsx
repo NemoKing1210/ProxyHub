@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add'
+import ClearAllOutlinedIcon from '@mui/icons-material/ClearAllOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
@@ -36,6 +37,11 @@ import ProxyColorPickerPopover from './ProxyColorPickerPopover'
 import ProxyGroupAvatar from './ProxyGroupAvatar'
 import ProxyIconPickerPopover from './ProxyIconPickerPopover'
 
+interface ContextMenuPosition {
+  top: number
+  left: number
+}
+
 interface ProxyGroupSectionProps {
   group: ProxyGroup
   proxyCount: number
@@ -50,6 +56,7 @@ interface ProxyGroupSectionProps {
   onEdit: () => void
   onDelete: () => void
   onDeleteDead: () => void
+  onClear: () => void
   onIconChange: (iconId: ProxyIconId | undefined) => void
   onColorChange: (colorId: ProxyColorId | undefined) => void
   onAddProxy: () => void
@@ -70,6 +77,7 @@ function ProxyGroupSection({
   onEdit,
   onDelete,
   onDeleteDead,
+  onClear,
   onIconChange,
   onColorChange,
   onAddProxy,
@@ -84,12 +92,20 @@ function ProxyGroupSection({
   const isExpanded = expanded || forceExpanded || showDropHighlight
   const showEmptyDropPlaceholder = proxyCount === 0 && isDragActive && showDropHighlight
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
+  const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
   const [iconPickerAnchor, setIconPickerAnchor] = useState<HTMLElement | null>(null)
   const [colorPickerAnchor, setColorPickerAnchor] = useState<HTMLElement | null>(null)
   const iconButtonRef = useRef<HTMLButtonElement>(null)
 
   const closeMenu = (): void => {
     setMenuAnchor(null)
+    setContextMenu(null)
+  }
+
+  const handleContextMenu = (event: React.MouseEvent): void => {
+    event.preventDefault()
+    event.stopPropagation()
+    setContextMenu({ top: event.clientY, left: event.clientX })
   }
 
   const openIconPickerFromMenu = (): void => {
@@ -123,6 +139,7 @@ function ProxyGroupSection({
         direction="row"
         spacing={1}
         onClick={() => setExpanded((value) => !value)}
+        onContextMenu={handleContextMenu}
         sx={{
           alignItems: 'center',
           px: 2,
@@ -283,7 +300,23 @@ function ProxyGroupSection({
         </Stack>
       </Collapse>
 
-      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor) || contextMenu !== null}
+        onClose={closeMenu}
+        anchorReference={contextMenu !== null ? 'anchorPosition' : 'anchorEl'}
+        anchorPosition={
+          contextMenu !== null ? { top: contextMenu.top, left: contextMenu.left } : undefined
+        }
+        slotProps={{
+          paper: {
+            sx: {
+              minWidth: 220,
+              borderRadius: 2
+            }
+          }
+        }}
+      >
         <MenuItem
           onClick={() => {
             closeMenu()
@@ -324,6 +357,25 @@ function ProxyGroupSection({
               deadProxyCount > 0
                 ? t('proxyGroup.deleteDeadCount', { count: deadProxyCount })
                 : t('proxyGroup.deleteDeadEmpty')
+            }
+          />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            closeMenu()
+            onClear()
+          }}
+          disabled={proxyCount === 0}
+        >
+          <ListItemIcon>
+            <ClearAllOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('proxyGroup.clear')}
+            secondary={
+              proxyCount > 0
+                ? t('proxyGroup.clearCount', { count: proxyCount })
+                : t('proxyGroup.clearEmpty')
             }
           />
         </MenuItem>

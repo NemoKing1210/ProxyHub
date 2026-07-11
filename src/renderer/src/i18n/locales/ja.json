@@ -671,6 +671,16 @@
       "message_one": "「{{name}}」から死んだプロキシ {{count}} 件を削除しますか？元に戻せません。",
       "message_other": "「{{name}}」から死んだプロキシ {{count}} 件を削除しますか？元に戻せません。"
     },
+    "clear": "グループを空にする",
+    "clearCount_one": "{{count}} 件",
+    "clearCount_other": "{{count}} 件",
+    "clearEmpty": "このグループにプロキシはありません",
+    "clearConfirm": {
+      "title": "グループを空にしますか？",
+      "message_one": "「{{name}}」からプロキシ {{count}} 件をすべて削除しますか？グループは残ります。元に戻せません。",
+      "message_other": "「{{name}}」からプロキシ {{count}} 件をすべて削除しますか？グループは残ります。元に戻せません。",
+      "confirm": "空にする"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

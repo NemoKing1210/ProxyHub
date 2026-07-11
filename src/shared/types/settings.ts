@@ -11,6 +11,8 @@ export type ProxyCardViewMode = 'standard' | 'compact'
 
 export type AutoCheckScope = 'all' | 'favorites' | 'groups'
 
+export type AppRoute = '/' | '/settings'
+
 export interface CheckDomainEntry {
   domain: string
   enabled: boolean
@@ -36,7 +38,10 @@ export interface AppSettings {
   proxyCardView: ProxyCardViewMode
   proxyDragEnabled: boolean
   proxyListView: ProxyListViewState
+  lastRoute: AppRoute
 }
+
+export type SyncableAppSettings = Omit<AppSettings, 'lastRoute' | 'proxyListView'>
 
 export const CHECK_TIMEOUT_MIN_MS = 1_000
 export const CHECK_TIMEOUT_MAX_MS = 120_000
@@ -73,7 +78,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   autoCheckGroupIds: [],
   proxyCardView: 'standard',
   proxyDragEnabled: false,
-  proxyListView: DEFAULT_PROXY_LIST_VIEW
+  proxyListView: DEFAULT_PROXY_LIST_VIEW,
+  lastRoute: '/'
 }
 
 export interface ProxyCheckOptions {
@@ -111,6 +117,10 @@ function normalizeAutoCheckScope(value: unknown): AutoCheckScope {
   }
 
   return 'all'
+}
+
+function normalizeLastRoute(value: unknown): AppRoute {
+  return value === '/settings' ? '/settings' : '/'
 }
 
 function normalizeAutoCheckGroupIds(values: unknown): string[] {
@@ -217,7 +227,35 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
         : [],
     proxyCardView: merged.proxyCardView === 'compact' ? 'compact' : 'standard',
     proxyDragEnabled: merged.proxyDragEnabled === true,
-    proxyListView: normalizeProxyListView(merged.proxyListView)
+    proxyListView: normalizeProxyListView(merged.proxyListView),
+    lastRoute: normalizeLastRoute(merged.lastRoute)
+  }
+}
+
+export function stripLocalOnlySettings(settings: AppSettings): SyncableAppSettings {
+  const normalized = normalizeSettings(settings)
+  const { lastRoute: _lastRoute, proxyListView: _proxyListView, ...syncable } = normalized
+  return syncable
+}
+
+export function isSyncableSettingsEqual(a: AppSettings, b: AppSettings): boolean {
+  return JSON.stringify(stripLocalOnlySettings(a)) === JSON.stringify(stripLocalOnlySettings(b))
+}
+
+export function applyImportedSettings(
+  current: AppSettings,
+  imported: Partial<SyncableAppSettings>,
+  mode: 'merge' | 'replace'
+): AppSettings {
+  const merged =
+    mode === 'replace'
+      ? normalizeSettings(imported)
+      : normalizeSettings({ ...current, ...imported })
+
+  return {
+    ...merged,
+    lastRoute: current.lastRoute,
+    proxyListView: current.proxyListView
   }
 }
 

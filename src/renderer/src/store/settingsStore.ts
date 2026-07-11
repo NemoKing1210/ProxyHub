@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import {
   DEFAULT_SETTINGS,
+  isSyncableSettingsEqual,
   normalizeSettings,
   RTL_LANGUAGES,
   type AppLanguage,
@@ -24,9 +25,12 @@ interface SettingsState {
   resetSettings: () => Promise<void>
 }
 
-async function persist(settings: AppSettings): Promise<void> {
-  await window.api.saveSettings(settings)
-  notifySyncDataChange('settings')
+async function persist(previous: AppSettings, next: AppSettings): Promise<void> {
+  await window.api.saveSettings(next)
+
+  if (!isSyncableSettingsEqual(previous, next)) {
+    notifySyncDataChange('settings')
+  }
 }
 
 function applyLanguage(language: AppLanguage): void {
@@ -69,10 +73,11 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   },
 
   updateSettings: async (partial) => {
-    const settings = normalizeSettings({ ...get().settings, ...partial })
+    const previous = get().settings
+    const settings = normalizeSettings({ ...previous, ...partial })
 
     set({ settings })
-    await persist(settings)
+    await persist(previous, settings)
 
     if (partial.language) {
       applyLanguage(partial.language)
@@ -80,10 +85,11 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   },
 
   resetSettings: async () => {
+    const previous = get().settings
     const settings = normalizeSettings(DEFAULT_SETTINGS)
 
     set({ settings })
-    await persist(settings)
+    await persist(previous, settings)
     applyLanguage(settings.language)
   }
 }))

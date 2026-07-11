@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
   DEFAULT_PROXY_LIST_FILTERS,
   isProxyListViewEqual,
@@ -22,27 +22,20 @@ interface ProxyListViewActions {
 }
 
 export function useProxyListViewState(): ProxyListViewActions {
+  const proxyListView = useSettingsStore((state) => state.settings.proxyListView)
+  const viewState = useMemo(() => normalizeProxyListView(proxyListView), [proxyListView])
   const updateSettings = useSettingsStore((state) => state.updateSettings)
-  const [viewState, setViewState] = useState<ProxyListViewState>(() =>
-    normalizeProxyListView(useSettingsStore.getState().settings.proxyListView)
-  )
 
   const persistViewState = useCallback(
     (updater: (current: ProxyListViewState) => ProxyListViewState) => {
-      setViewState((current) => {
-        const next = normalizeProxyListView(updater(current))
+      const current = normalizeProxyListView(useSettingsStore.getState().settings.proxyListView)
+      const next = normalizeProxyListView(updater(current))
 
-        if (isProxyListViewEqual(next, current)) {
-          return current
-        }
+      if (isProxyListViewEqual(next, current)) {
+        return
+      }
 
-        const saved = normalizeProxyListView(useSettingsStore.getState().settings.proxyListView)
-        if (!isProxyListViewEqual(next, saved)) {
-          void updateSettings({ proxyListView: next })
-        }
-
-        return next
-      })
+      void updateSettings({ proxyListView: next })
     },
     [updateSettings]
   )

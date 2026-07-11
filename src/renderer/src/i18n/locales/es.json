@@ -671,6 +671,16 @@
       "message_one": "¿Eliminar {{count}} proxy muerto de \"{{name}}\"? Esta acción no se puede deshacer.",
       "message_other": "¿Eliminar {{count}} proxies muertos de \"{{name}}\"? Esta acción no se puede deshacer."
     },
+    "clear": "Vaciar grupo",
+    "clearCount_one": "{{count}} proxy",
+    "clearCount_other": "{{count}} proxies",
+    "clearEmpty": "No hay proxies en este grupo",
+    "clearConfirm": {
+      "title": "¿Vaciar grupo?",
+      "message_one": "¿Eliminar todos los {{count}} proxy de \"{{name}}\"? El grupo permanecerá. Esta acción no se puede deshacer.",
+      "message_other": "¿Eliminar todos los {{count}} proxies de \"{{name}}\"? El grupo permanecerá. Esta acción no se puede deshacer.",
+      "confirm": "Vaciar"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

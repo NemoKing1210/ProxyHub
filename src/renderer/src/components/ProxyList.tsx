@@ -68,6 +68,7 @@ import VirtualizedProxyList from './VirtualizedProxyList'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyDetailsDialog from './ProxyDetailsDialog'
 import ProxyFormDialog from './ProxyFormDialog'
+import ProxyGroupClearConfirmDialog from './ProxyGroupClearConfirmDialog'
 import ProxyGroupDeleteConfirmDialog from './ProxyGroupDeleteConfirmDialog'
 import ProxyGroupDeleteDeadConfirmDialog from './ProxyGroupDeleteDeadConfirmDialog'
 import ProxyGroupFormDialog from './ProxyGroupFormDialog'
@@ -174,6 +175,7 @@ function ProxyList(): React.JSX.Element {
   const [editingGroup, setEditingGroup] = useState<ProxyGroup | undefined>()
   const [deletingGroup, setDeletingGroup] = useState<ProxyGroup | undefined>()
   const [deletingDeadGroup, setDeletingDeadGroup] = useState<ProxyGroup | undefined>()
+  const [clearingGroup, setClearingGroup] = useState<ProxyGroup | undefined>()
   const [deletingProxy, setDeletingProxy] = useState<Proxy | undefined>()
   const {
     filters,
@@ -277,8 +279,19 @@ function ProxyList(): React.JSX.Element {
     await removeProxies(deadProxyIds)
   }
 
+  const handleClearGroupConfirm = async (groupId: string): Promise<void> => {
+    const groupProxyIds = proxies
+      .filter((proxy) => proxy.groupId === groupId)
+      .map((proxy) => proxy.id)
+
+    await removeProxies(groupProxyIds)
+  }
+
   const getGroupDeadProxyCount = (groupId: string): number =>
     proxies.filter((proxy) => proxy.groupId === groupId && proxy.status === 'dead').length
+
+  const getGroupProxyCount = (groupId: string): number =>
+    proxies.filter((proxy) => proxy.groupId === groupId).length
 
   const handleSubmit = async (values: ProxyFormValues): Promise<void> => {
     const input = toProxyInput(values)
@@ -513,6 +526,7 @@ function ProxyList(): React.JSX.Element {
   const deletingDeadGroupProxyCount = deletingDeadGroup
     ? getGroupDeadProxyCount(deletingDeadGroup.id)
     : 0
+  const clearingGroupProxyCount = clearingGroup ? getGroupProxyCount(clearingGroup.id) : 0
 
   const { aliveCount, deadCount, enabledCount, favoritesCount } = proxyStats
   const palette = getPalette(theme)
@@ -910,6 +924,7 @@ function ProxyList(): React.JSX.Element {
                       onEdit={() => openEditGroupDialog(section.group)}
                       onDelete={() => setDeletingGroup(section.group)}
                       onDeleteDead={() => setDeletingDeadGroup(section.group)}
+                      onClear={() => setClearingGroup(section.group)}
                       onIconChange={(iconId) => void handleGroupIconChange(section.group, iconId)}
                       onColorChange={(colorId) =>
                         void handleGroupColorChange(section.group, colorId)
@@ -986,6 +1001,14 @@ function ProxyList(): React.JSX.Element {
         deadProxyCount={deletingDeadGroupProxyCount}
         onClose={() => setDeletingDeadGroup(undefined)}
         onConfirm={handleDeleteDeadConfirm}
+      />
+
+      <ProxyGroupClearConfirmDialog
+        open={Boolean(clearingGroup)}
+        group={clearingGroup}
+        proxyCount={clearingGroupProxyCount}
+        onClose={() => setClearingGroup(undefined)}
+        onConfirm={handleClearGroupConfirm}
       />
 
       <ProxyDeleteConfirmDialog

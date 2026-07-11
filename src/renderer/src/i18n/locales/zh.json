@@ -672,6 +672,16 @@
       "message_one": "从「{{name}}」中删除 {{count}} 个失效代理？此操作无法撤销。",
       "message_other": "从「{{name}}」中删除 {{count}} 个失效代理？此操作无法撤销。"
     },
+    "clear": "清空分组",
+    "clearCount_one": "{{count}} 个代理",
+    "clearCount_other": "{{count}} 个代理",
+    "clearEmpty": "该分组没有代理",
+    "clearConfirm": {
+      "title": "清空分组？",
+      "message_one": "从「{{name}}」中删除全部 {{count}} 个代理？分组将保留。此操作无法撤销。",
+      "message_other": "从「{{name}}」中删除全部 {{count}} 个代理？分组将保留。此操作无法撤销。",
+      "confirm": "清空"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

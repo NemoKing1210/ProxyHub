@@ -1,6 +1,6 @@
 import type { ProxyGroup } from './proxy-group'
 import type { Proxy } from './proxy'
-import type { AppSettings } from './settings'
+import type { SyncableAppSettings } from './settings'
 
 export const BACKUP_FORMAT_ID = 'proxychecker-backup' as const
 
@@ -59,7 +59,7 @@ export interface BackupProxiesPayload {
 export interface BackupPayloadV1 {
   kind: BackupPayloadKind
   proxies?: BackupProxiesPayload
-  settings?: AppSettings
+  settings?: SyncableAppSettings
 }
 
 export interface BackupFileV1 {

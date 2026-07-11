@@ -29,7 +29,7 @@ import {
 } from '../types/proxy'
 import type { ProxyGroup } from '../types/proxy-group'
 import type { AppSettings } from '../types/settings'
-import { normalizeSettings } from '../types/settings'
+import { applyImportedSettings, normalizeSettings, stripLocalOnlySettings } from '../types/settings'
 import { normalizeGroupInput } from './proxy-group-appearance'
 import { findDuplicateGroupName } from './proxy-group-identity'
 import { findDuplicateProxy } from './proxy-identity'
@@ -316,7 +316,7 @@ function parsePayloadV1(value: unknown): BackupPayloadV1 {
   const settings =
     value.settings === undefined
       ? undefined
-      : normalizeSettings(value.settings as Partial<AppSettings>)
+      : stripLocalOnlySettings(normalizeSettings(value.settings as Partial<AppSettings>))
 
   const payload: BackupPayloadV1 = {
     kind,
@@ -447,7 +447,7 @@ export function buildBackupPayload(input: BackupBuildInput): BackupPayloadV1 {
   }
 
   if (input.kind === 'full' || input.kind === 'settings') {
-    payload.settings = normalizeSettings(input.settings)
+    payload.settings = stripLocalOnlySettings(normalizeSettings(input.settings))
   }
 
   return payload
@@ -749,10 +749,7 @@ export function applyBackupImport(
   }
 
   if (includesSettings && payload.settings) {
-    settings =
-      mode === 'replace'
-        ? normalizeSettings(payload.settings)
-        : normalizeSettings({ ...settings, ...payload.settings })
+    settings = applyImportedSettings(current.settings, payload.settings, mode)
     settingsImported = true
   }
 

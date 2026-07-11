@@ -671,6 +671,16 @@
       "message_one": "Supprimer {{count}} proxy mort de « {{name}} » ? Cette action est irréversible.",
       "message_other": "Supprimer {{count}} proxys morts de « {{name}} » ? Cette action est irréversible."
     },
+    "clear": "Vider le groupe",
+    "clearCount_one": "{{count}} proxy",
+    "clearCount_other": "{{count}} proxys",
+    "clearEmpty": "Aucun proxy dans ce groupe",
+    "clearConfirm": {
+      "title": "Vider le groupe ?",
+      "message_one": "Supprimer les {{count}} proxy de « {{name}} » ? Le groupe sera conservé. Cette action est irréversible.",
+      "message_other": "Supprimer les {{count}} proxys de « {{name}} » ? Le groupe sera conservé. Cette action est irréversible.",
+      "confirm": "Vider"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

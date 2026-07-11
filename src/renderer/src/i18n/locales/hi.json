@@ -670,6 +670,16 @@
       "message_one": "\"{{name}}\" से {{count}} मृत प्रॉक्सी हटाएँ? यह पूर्ववत नहीं हो सकता।",
       "message_other": "\"{{name}}\" से {{count}} मृत प्रॉक्सी हटाएँ? यह पूर्ववत नहीं हो सकता।"
     },
+    "clear": "समूह साफ़ करें",
+    "clearCount_one": "{{count}} प्रॉक्सी",
+    "clearCount_other": "{{count}} प्रॉक्सी",
+    "clearEmpty": "इस समूह में कोई प्रॉक्सी नहीं",
+    "clearConfirm": {
+      "title": "समूह साफ़ करें?",
+      "message_one": "\"{{name}}\" से सभी {{count}} प्रॉक्सी हटाएँ? समूह बना रहेगा। यह पूर्ववत नहीं हो सकता।",
+      "message_other": "\"{{name}}\" से सभी {{count}} प्रॉक्सी हटाएँ? समूह बना रहेगा। यह पूर्ववत नहीं हो सकता।",
+      "confirm": "साफ़ करें"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

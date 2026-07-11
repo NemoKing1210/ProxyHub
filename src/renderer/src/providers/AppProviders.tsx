@@ -32,13 +32,16 @@ function ThemeModeSync(): null {
 }
 
 function AppProviders(): React.JSX.Element {
-  const { settings, isReady, loadSettings } = useSettingsStore()
+  const isReady = useSettingsStore((state) => state.isReady)
+  const language = useSettingsStore((state) => state.settings.language)
+  const themeSetting = useSettingsStore((state) => state.settings.theme)
+  const loadSettings = useSettingsStore((state) => state.loadSettings)
   const loadProxies = useProxyStore((state) => state.loadProxies)
   const loadGroups = useGroupStore((state) => state.loadGroups)
   const [isDataReady, setIsDataReady] = useState(false)
-  const direction = RTL_LANGUAGES.includes(settings.language) ? 'rtl' : 'ltr'
+  const direction = RTL_LANGUAGES.includes(language) ? 'rtl' : 'ltr'
   const theme = useMemo(() => createAppTheme(direction), [direction])
-  const themeMode = isReady ? settings.theme : 'dark'
+  const themeMode = isReady ? themeSetting : 'dark'
   const isAppReady = isReady && isDataReady
 
   useEffect(() => {
@@ -80,9 +83,9 @@ function AppProviders(): React.JSX.Element {
 
   return (
     <>
-      <InitColorSchemeScript attribute="data" defaultMode={settings.theme} />
+      <InitColorSchemeScript attribute="data" defaultMode={themeSetting} />
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={theme} defaultMode={settings.theme} disableTransitionOnChange>
+        <ThemeProvider theme={theme} defaultMode={themeSetting} disableTransitionOnChange>
           <CssBaseline />
           <ThemeModeSync />
           <NativeTitleBarSync />

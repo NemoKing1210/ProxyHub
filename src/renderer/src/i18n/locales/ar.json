@@ -672,6 +672,16 @@
       "message_one": "حذف {{count}} بروكسي معطل من \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
       "message_other": "حذف {{count}} بروكسيات معطلة من \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
     },
+    "clear": "تفريغ المجموعة",
+    "clearCount_one": "{{count}} بروكسي",
+    "clearCount_other": "{{count}} بروكسيات",
+    "clearEmpty": "لا توجد بروكسيات في هذه المجموعة",
+    "clearConfirm": {
+      "title": "تفريغ المجموعة؟",
+      "message_one": "حذف جميع {{count}} بروكسي من \"{{name}}\"؟ ستبقى المجموعة. لا يمكن التراجع عن هذا الإجراء.",
+      "message_other": "حذف جميع {{count}} بروكسيات من \"{{name}}\"؟ ستبقى المجموعة. لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "تفريغ"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

@@ -671,6 +671,16 @@
       "message_one": "{{count}} toten Proxy aus \"{{name}}\" löschen? Dies kann nicht rückgängig gemacht werden.",
       "message_other": "{{count}} tote Proxys aus \"{{name}}\" löschen? Dies kann nicht rückgängig gemacht werden."
     },
+    "clear": "Gruppe leeren",
+    "clearCount_one": "{{count}} Proxy",
+    "clearCount_other": "{{count}} Proxys",
+    "clearEmpty": "Keine Proxys in dieser Gruppe",
+    "clearConfirm": {
+      "title": "Gruppe leeren?",
+      "message_one": "Alle {{count}} Proxy aus \"{{name}}\" löschen? Die Gruppe bleibt erhalten. Dies kann nicht rückgängig gemacht werden.",
+      "message_other": "Alle {{count}} Proxys aus \"{{name}}\" löschen? Die Gruppe bleibt erhalten. Dies kann nicht rückgängig gemacht werden.",
+      "confirm": "Leeren"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",

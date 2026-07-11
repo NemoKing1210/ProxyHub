@@ -7,7 +7,7 @@ function PersistentOutlet(): React.JSX.Element {
   const outlet = useOutlet()
   const cacheRef = useRef<Map<string, ReactElement>>(new Map())
 
-  if (outlet) {
+  if (outlet && !cacheRef.current.has(location.pathname)) {
     cacheRef.current.set(location.pathname, outlet)
   }
 

@@ -677,6 +677,20 @@
       "message_many": "Видалити {{count}} неробочих проксі з «{{name}}»? Цю дію не можна скасувати.",
       "message_other": "Видалити {{count}} неробочих проксі з «{{name}}»? Цю дію не можна скасувати."
     },
+    "clear": "Очистити групу",
+    "clearCount_one": "{{count}} проксі",
+    "clearCount_few": "{{count}} проксі",
+    "clearCount_many": "{{count}} проксі",
+    "clearCount_other": "{{count}} проксі",
+    "clearEmpty": "У групі немає проксі",
+    "clearConfirm": {
+      "title": "Очистити групу?",
+      "message_one": "Видалити всі {{count}} проксі з «{{name}}»? Група залишиться. Цю дію не можна скасувати.",
+      "message_few": "Видалити всі {{count}} проксі з «{{name}}»? Група залишиться. Цю дію не можна скасувати.",
+      "message_many": "Видалити всі {{count}} проксі з «{{name}}»? Група залишиться. Цю дію не можна скасувати.",
+      "message_other": "Видалити всі {{count}} проксі з «{{name}}»? Група залишиться. Цю дію не можна скасувати.",
+      "confirm": "Очистити"
+    },
     "validation": {
       "nameRequired": "Group name is required",
       "nameMax": "Name must be 64 characters or less",
