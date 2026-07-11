@@ -6,7 +6,7 @@ import {
 import type { BackupImportMode } from '../types/backup'
 import type { SyncConfig, SyncProviderType, SyncScope, SyncStatus } from '../types/sync'
 import { SYNC_PROVIDER_TYPES, SYNC_SCOPES } from '../types/sync'
-import { normalizeGistIdInput } from './sync-gist'
+import { normalizeDriveRemoteId, normalizeGistRemoteId } from './sync-remote-id'
 import { normalizeSyncLastError } from './sync-status'
 
 export const DEFAULT_SYNC_CONFIG: SyncConfig = {
@@ -52,8 +52,19 @@ function normalizePullMode(value: unknown): BackupImportMode {
   return value === 'replace' ? 'replace' : 'merge'
 }
 
-function normalizeGistId(value: unknown): string | undefined {
-  return normalizeGistIdInput(value)
+function normalizeRemoteId(provider: SyncProviderType, source: Partial<SyncConfig>): string | undefined {
+  const legacyGistId = source.gistId
+  const remoteId = source.remoteId ?? legacyGistId
+
+  if (provider === 'github-gist') {
+    return normalizeGistRemoteId(remoteId)
+  }
+
+  if (provider === 'google-drive') {
+    return normalizeDriveRemoteId(remoteId)
+  }
+
+  return undefined
 }
 
 function normalizeIsoDate(value: unknown): string | undefined {
@@ -69,6 +80,7 @@ export function normalizeSyncConfig(input?: Partial<SyncConfig> | null): SyncCon
   const source = input ?? {}
 
   const provider = normalizeProvider(source.provider)
+  const remoteId = normalizeRemoteId(provider, source)
 
   return {
     provider,
@@ -79,7 +91,8 @@ export function normalizeSyncConfig(input?: Partial<SyncConfig> | null): SyncCon
     syncOnStartup: provider !== 'none' && source.syncOnStartup === true,
     pushOnChange: provider !== 'none' && source.pushOnChange === true,
     encryptPayload: provider !== 'none' && source.encryptPayload === true,
-    gistId: provider === 'github-gist' ? normalizeGistId(source.gistId) : undefined
+    remoteId,
+    gistId: provider === 'github-gist' ? remoteId : undefined
   }
 }
 
@@ -96,4 +109,8 @@ export function normalizeSyncStatus(input?: Partial<SyncStatus> | null): SyncSta
 
 export function isSyncEnabled(config: SyncConfig): boolean {
   return config.provider !== 'none'
+}
+
+export function resolveSyncRemoteId(config: SyncConfig): string | undefined {
+  return config.remoteId ?? config.gistId
 }

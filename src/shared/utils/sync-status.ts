@@ -8,9 +8,12 @@ import type {
 export interface SyncStatusErrorContext {
   config: SyncConfig
   status: SyncStatus
-  hasToken: boolean
+  hasCredentials: boolean
+  /** @deprecated use hasCredentials */
+  hasToken?: boolean
   hasPayloadPassword: boolean
   safeStorageAvailable: boolean
+  googleEmail?: string
 }
 
 const SYNC_ERROR_CODES: SyncErrorCode[] = [
@@ -22,14 +25,19 @@ const SYNC_ERROR_CODES: SyncErrorCode[] = [
   'wrong_password',
   'sync_disabled',
   'token_required',
+  'auth_required',
+  'auth_cancelled',
   'safe_storage_unavailable',
   'invalid_token',
   'gist_not_found',
   'gist_file_missing',
+  'remote_not_found',
+  'remote_file_missing',
   'rate_limited',
   'payload_too_large',
   'network_error',
   'invalid_request',
+  'google_oauth_not_configured',
   'unknown'
 ]
 
@@ -109,11 +117,22 @@ function formatActivityTimestamp(value?: string): string {
   return value || '—'
 }
 
+function resolveRemoteIdLabel(config: SyncConfig): string {
+  return config.remoteId ?? config.gistId ?? 'not set'
+}
+
 export function buildSyncStatusErrorReport(
   error: SyncLastErrorInfo,
   context: SyncStatusErrorContext
 ): string {
-  const { config, status, hasToken, hasPayloadPassword, safeStorageAvailable } = context
+  const {
+    config,
+    status,
+    hasCredentials,
+    hasPayloadPassword,
+    safeStorageAvailable,
+    googleEmail
+  } = context
 
   const lines = [
     '=== ProxyChecker Sync Error ===',
@@ -126,8 +145,9 @@ export function buildSyncStatusErrorReport(
     `Provider: ${config.provider}`,
     `Scope: ${config.scope}`,
     `Pull mode: ${config.pullMode}`,
-    `Gist ID: ${config.gistId || 'not set'}`,
-    `Token saved: ${hasToken ? 'yes' : 'no'}`,
+    `Remote ID: ${resolveRemoteIdLabel(config)}`,
+    `Credentials saved: ${hasCredentials ? 'yes' : 'no'}`,
+    ...(config.provider === 'google-drive' && googleEmail ? [`Google account: ${googleEmail}`] : []),
     `Payload password saved: ${hasPayloadPassword ? 'yes' : 'no'}`,
     `Encryption enabled: ${config.encryptPayload ? 'yes' : 'no'}`,
     `Auto sync: ${config.autoSyncEnabled ? `enabled (${config.autoSyncIntervalMinutes} min)` : 'disabled'}`,

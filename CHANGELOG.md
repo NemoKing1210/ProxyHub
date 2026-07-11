@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.35.0] - 2026-07-11
+
+### Added
+
+- Google Drive sync provider: OAuth sign-in with Google account, hidden app data folder storage (like browser extensions), push/pull, auto-sync, and startup pull
+
+### Changed
+
+- Sync config uses generic `remoteId` (migrates existing `gistId` values for GitHub Gist)
+- Google OAuth Client ID is configured by the developer via `GOOGLE_OAUTH_CLIENT_ID` at build/dev time (removed from user settings)
+
 ## [1.34.0] - 2026-07-11
 
 ### Added

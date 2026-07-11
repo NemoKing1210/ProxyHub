@@ -16,6 +16,7 @@ import { useTheme } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SyncConfig, SyncPublicState } from '../../../shared/types/sync'
+import { resolveSyncRemoteId } from '../../../shared/utils/sync-config'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import {
   buildSyncStatusErrorReport,
@@ -27,7 +28,8 @@ import { outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
 interface SyncStatusSectionProps {
   config: SyncConfig
   status: SyncPublicState['status']
-  hasToken: boolean
+  hasCredentials: boolean
+  googleEmail?: string
   hasPayloadPassword: boolean
   safeStorageAvailable: boolean
 }
@@ -96,7 +98,8 @@ function StatusGroup({
 function SyncStatusSection({
   config,
   status,
-  hasToken,
+  hasCredentials,
+  googleEmail,
   hasPayloadPassword,
   safeStorageAvailable
 }: SyncStatusSectionProps): React.JSX.Element {
@@ -105,6 +108,10 @@ function SyncStatusSection({
   const [copied, setCopied] = useState(false)
 
   const lastSyncAt = resolveLastSyncAt(status)
+  const remoteId = resolveSyncRemoteId(config)
+  const isGoogleProvider = config.provider === 'google-drive'
+  const isGithubProvider = config.provider === 'github-gist'
+
   const errorReport = useMemo(() => {
     if (!status.lastError) {
       return ''
@@ -113,11 +120,12 @@ function SyncStatusSection({
     return buildSyncStatusErrorReport(status.lastError, {
       config,
       status,
-      hasToken,
+      hasCredentials,
       hasPayloadPassword,
-      safeStorageAvailable
+      safeStorageAvailable,
+      googleEmail
     })
-  }, [config, hasPayloadPassword, hasToken, safeStorageAvailable, status])
+  }, [config, googleEmail, hasCredentials, hasPayloadPassword, safeStorageAvailable, status])
 
   const sectionDescription = useMemo(() => {
     if (status.lastError) {
@@ -162,6 +170,18 @@ function SyncStatusSection({
   const boolLabel = (value: boolean): string =>
     value ? t('settings.sync.statusYes') : t('settings.sync.statusNo')
 
+  const credentialsLabel = isGoogleProvider
+    ? t('settings.sync.statusGoogleAccount')
+    : t('settings.sync.statusToken')
+
+  const credentialsValue = isGoogleProvider
+    ? hasCredentials
+      ? googleEmail || t('settings.sync.statusGoogleConnected')
+      : t('settings.sync.statusGoogleMissing')
+    : hasCredentials
+      ? t('settings.sync.statusTokenSaved')
+      : t('settings.sync.statusTokenMissing')
+
   return (
     <ProxyFormSection
       icon={<InfoOutlinedIcon fontSize="small" />}
@@ -172,18 +192,26 @@ function SyncStatusSection({
     >
       <StatusGroup title={t('settings.sync.statusConnection')}>
         <StatusRow
-          label={t('settings.sync.statusToken')}
-          value={
-            hasToken ? t('settings.sync.statusTokenSaved') : t('settings.sync.statusTokenMissing')
-          }
-          valueColor={hasToken ? 'success.main' : 'warning.main'}
+          label={credentialsLabel}
+          value={credentialsValue}
+          valueColor={hasCredentials ? 'success.main' : 'warning.main'}
         />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.gistId')}
-          value={config.gistId || t('settings.sync.statusGistIdMissing')}
-          valueColor={config.gistId ? undefined : 'text.secondary'}
-        />
+        {isGithubProvider && (
+          <>
+            <Divider />
+            <StatusRow
+              label={t('settings.sync.gistId')}
+              value={remoteId || t('settings.sync.statusGistIdMissing')}
+              valueColor={remoteId ? undefined : 'text.secondary'}
+            />
+          </>
+        )}
+        {isGoogleProvider && remoteId && (
+          <>
+            <Divider />
+            <StatusRow label={t('settings.sync.statusRemoteId')} value={remoteId} />
+          </>
+        )}
         <Divider />
         <StatusRow
           label={t('settings.sync.statusSafeStorage')}

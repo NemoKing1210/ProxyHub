@@ -24,6 +24,8 @@ import type { ProxyGroup } from './proxy-group'
 import type { Proxy, ProxyCheckProgress, ProxyCheckResult } from './proxy'
 import type { AppSettings, ProxyCheckOptions } from './settings'
 import type {
+  SyncGoogleConnectResult,
+  SyncGoogleDisconnectResult,
   SyncPublicState,
   SyncPullApplyRequest,
   SyncPullApplyResult,
@@ -75,6 +77,8 @@ export interface AppAPI {
   getSyncConfig: () => Promise<SyncPublicState>
   saveSyncConfig: (request: SyncSaveConfigRequest) => Promise<SyncPublicState>
   testSyncConnection: (githubToken?: string) => Promise<SyncTestResult>
+  connectGoogleDrive: () => Promise<SyncGoogleConnectResult>
+  disconnectGoogleDrive: () => Promise<SyncGoogleDisconnectResult>
   pushSync: () => Promise<SyncPushResult>
   pullSyncPreview: (password?: string) => Promise<SyncPullPreviewResult>
   unlockSyncPullPreview: (sessionId: string, password: string) => Promise<SyncPullPreviewResult>

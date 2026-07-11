@@ -2,6 +2,10 @@ import { safeStorage } from 'electron'
 
 const SECRET_KEYS = {
   githubToken: 'sync.githubToken',
+  googleAccessToken: 'sync.googleAccessToken',
+  googleRefreshToken: 'sync.googleRefreshToken',
+  googleTokenExpiresAt: 'sync.googleTokenExpiresAt',
+  googleEmail: 'sync.googleEmail',
   payloadPassword: 'sync.payloadPassword'
 } as const
 
@@ -9,6 +13,10 @@ type SecretKey = keyof typeof SECRET_KEYS
 
 interface SecretStoreSchema {
   [SECRET_KEYS.githubToken]?: string
+  [SECRET_KEYS.googleAccessToken]?: string
+  [SECRET_KEYS.googleRefreshToken]?: string
+  [SECRET_KEYS.googleTokenExpiresAt]?: string
+  [SECRET_KEYS.googleEmail]?: string
   [SECRET_KEYS.payloadPassword]?: string
 }
 
@@ -78,21 +86,63 @@ async function clearSecret(key: SecretKey): Promise<void> {
 
 export interface SyncSecrets {
   githubToken?: string
+  googleAccessToken?: string
+  googleRefreshToken?: string
+  googleTokenExpiresAt?: string
+  googleEmail?: string
   payloadPassword?: string
 }
 
-export async function getSyncSecrets(): Promise<SyncSecrets> {
-  const [githubToken, payloadPassword] = await Promise.all([
-    readSecret('githubToken'),
-    readSecret('payloadPassword')
-  ])
+export interface GoogleOAuthTokens {
+  accessToken: string
+  refreshToken?: string
+  expiresAt?: string
+  email?: string
+}
 
-  return { githubToken, payloadPassword }
+export async function getSyncSecrets(): Promise<SyncSecrets> {
+  const [githubToken, googleAccessToken, googleRefreshToken, googleTokenExpiresAt, googleEmail, payloadPassword] =
+    await Promise.all([
+      readSecret('githubToken'),
+      readSecret('googleAccessToken'),
+      readSecret('googleRefreshToken'),
+      readSecret('googleTokenExpiresAt'),
+      readSecret('googleEmail'),
+      readSecret('payloadPassword')
+    ])
+
+  return {
+    githubToken,
+    googleAccessToken,
+    googleRefreshToken,
+    googleTokenExpiresAt,
+    googleEmail,
+    payloadPassword
+  }
 }
 
 export async function hasGithubToken(): Promise<boolean> {
   const token = await readSecret('githubToken')
   return Boolean(token?.trim())
+}
+
+export async function hasGoogleAuth(): Promise<boolean> {
+  const refreshToken = await readSecret('googleRefreshToken')
+  const accessToken = await readSecret('googleAccessToken')
+  return Boolean(refreshToken?.trim() || accessToken?.trim())
+}
+
+export async function getGoogleEmail(): Promise<string | undefined> {
+  const email = await readSecret('googleEmail')
+  return email?.trim() || undefined
+}
+
+export async function hasProviderCredentials(provider: 'github-gist' | 'google-drive'): Promise<boolean> {
+  if (provider === 'github-gist') {
+    return hasGithubToken()
+  }
+
+  return hasGoogleAuth()
 }
 
 export async function hasPayloadPassword(): Promise<boolean> {
@@ -104,6 +154,7 @@ export async function saveSyncSecrets(input: {
   githubToken?: string
   payloadPassword?: string
   clearGithubToken?: boolean
+  clearGoogleAuth?: boolean
   clearPayloadPassword?: boolean
 }): Promise<void> {
   if (!isSafeStorageAvailable()) {
@@ -121,6 +172,15 @@ export async function saveSyncSecrets(input: {
     }
   }
 
+  if (input.clearGoogleAuth) {
+    await Promise.all([
+      clearSecret('googleAccessToken'),
+      clearSecret('googleRefreshToken'),
+      clearSecret('googleTokenExpiresAt'),
+      clearSecret('googleEmail')
+    ])
+  }
+
   if (input.clearPayloadPassword) {
     await clearSecret('payloadPassword')
   } else if (input.payloadPassword !== undefined) {
@@ -130,6 +190,30 @@ export async function saveSyncSecrets(input: {
     } else {
       await clearSecret('payloadPassword')
     }
+  }
+}
+
+export async function saveGoogleOAuthTokens(tokens: GoogleOAuthTokens): Promise<void> {
+  if (!isSafeStorageAvailable()) {
+    throw new Error('Safe storage is not available')
+  }
+
+  await writeSecret('googleAccessToken', tokens.accessToken)
+
+  if (tokens.refreshToken) {
+    await writeSecret('googleRefreshToken', tokens.refreshToken)
+  }
+
+  if (tokens.expiresAt) {
+    await writeSecret('googleTokenExpiresAt', tokens.expiresAt)
+  } else {
+    await clearSecret('googleTokenExpiresAt')
+  }
+
+  if (tokens.email) {
+    await writeSecret('googleEmail', tokens.email)
+  } else {
+    await clearSecret('googleEmail')
   }
 }
 

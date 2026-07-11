@@ -540,7 +540,8 @@
       "provider": "Sync provider",
       "providers": {
         "none": "No synchronization",
-        "github-gist": "GitHub Gist"
+        "github-gist": "GitHub Gist",
+        "google-drive": "Google Drive"
       },
       "scope": "What to sync",
       "pullMode": "Pull mode",

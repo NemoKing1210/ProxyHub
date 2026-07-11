@@ -1,8 +1,10 @@
 import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined'
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
+import GoogleIcon from '@mui/icons-material/Google'
 import HubOutlinedIcon from '@mui/icons-material/HubOutlined'
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined'
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import {
@@ -23,7 +25,7 @@ import {
   Typography
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GITHUB_CREATE_TOKEN_URL } from '../../../shared/constants/sync'
 import {
@@ -32,7 +34,7 @@ import {
 } from '../../../shared/constants/sync'
 import type { BackupImportMode, BackupPreview } from '../../../shared/types/backup'
 import type { SyncConfig, SyncProviderType, SyncPublicState, SyncScope } from '../../../shared/types/sync'
-import { DEFAULT_SYNC_CONFIG } from '../../../shared/utils/sync-config'
+import { DEFAULT_SYNC_CONFIG, resolveSyncRemoteId } from '../../../shared/utils/sync-config'
 import { resolveLastSyncAt } from '../../../shared/utils/sync-status'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
@@ -60,7 +62,7 @@ const INTERVAL_MARKS = [
   { value: 360, label: '360' }
 ]
 
-const PROVIDER_OPTIONS: SyncProviderType[] = ['none', 'github-gist']
+const PROVIDER_OPTIONS: SyncProviderType[] = ['none', 'github-gist', 'google-drive']
 
 function clampIntervalMinutes(value: number): number {
   return Math.min(SYNC_INTERVAL_MAX, Math.max(SYNC_INTERVAL_MIN, Math.round(value)))
@@ -73,12 +75,17 @@ function resolveSyncError(
   const messageKey = `settings.sync.errors.${error.code}`
   const localized = t(messageKey, { defaultValue: '' })
 
-  return (
-    localized ||
-    t('settings.sync.genericError', {
-      message: error.message
-    })
-  )
+  if (localized) {
+    return localized
+  }
+
+  if (error.message.trim()) {
+    return error.message
+  }
+
+  return t('settings.sync.genericError', {
+    message: error.message
+  })
 }
 
 function SettingsSyncSection({
@@ -95,14 +102,20 @@ function SettingsSyncSection({
   const [isPushing, setIsPushing] = useState(false)
   const [isPulling, setIsPulling] = useState(false)
 
+  const [isConnectingGoogle, setIsConnectingGoogle] = useState(false)
+  const [isDisconnectingGoogle, setIsDisconnectingGoogle] = useState(false)
+
+  const [hasGoogleClientId, setHasGoogleClientId] = useState(false)
+
   const [config, setConfig] = useState<SyncConfig>(DEFAULT_SYNC_CONFIG)
-  const [hasToken, setHasToken] = useState(false)
+  const [hasCredentials, setHasCredentials] = useState(false)
+  const [googleEmail, setGoogleEmail] = useState<string | undefined>()
   const [hasPayloadPassword, setHasPayloadPassword] = useState(false)
   const [safeStorageAvailable, setSafeStorageAvailable] = useState(true)
   const [status, setStatus] = useState<SyncPublicState['status']>({})
 
   const [githubTokenDraft, setGithubTokenDraft] = useState('')
-  const [gistIdDraft, setGistIdDraft] = useState('')
+  const [remoteIdDraft, setRemoteIdDraft] = useState('')
   const [encryptPayload, setEncryptPayload] = useState(false)
   const [payloadPassword, setPayloadPassword] = useState('')
   const [payloadPasswordConfirm, setPayloadPasswordConfirm] = useState('')
@@ -115,16 +128,20 @@ function SettingsSyncSection({
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [importPassword, setImportPassword] = useState('')
 
+  const resetUnavailableGoogleProviderRef = useRef(false)
+
   const isProviderEnabled = config.provider !== 'none'
   const isBusy = isSaving || isTesting || isPushing || isPulling
 
   const applyPublicState = useCallback((state: SyncPublicState): void => {
     setConfig(state.config)
     setStatus(state.status)
-    setHasToken(state.hasToken)
+    setHasCredentials(state.hasCredentials)
+    setGoogleEmail(state.googleEmail)
+    setHasGoogleClientId(state.hasGoogleClientId)
     setHasPayloadPassword(state.hasPayloadPassword)
     setSafeStorageAvailable(state.safeStorageAvailable)
-    setGistIdDraft(state.config.gistId ?? '')
+    setRemoteIdDraft(resolveSyncRemoteId(state.config) ?? '')
     setEncryptPayload(state.config.encryptPayload)
     setIntervalDraft(state.config.autoSyncIntervalMinutes)
   }, [])
@@ -200,11 +217,39 @@ function SettingsSyncSection({
     }
   }
 
+  useEffect(() => {
+    if (isLoading || hasGoogleClientId || config.provider !== 'google-drive') {
+      return
+    }
+
+    if (resetUnavailableGoogleProviderRef.current) {
+      return
+    }
+
+    resetUnavailableGoogleProviderRef.current = true
+
+    void saveConfig({
+      ...config,
+      provider: 'none',
+      remoteId: undefined,
+      gistId: undefined,
+      autoSyncEnabled: false,
+      syncOnStartup: false,
+      pushOnChange: false,
+      encryptPayload: false
+    })
+  }, [isLoading, hasGoogleClientId, config])
+
   const handleProviderChange = async (provider: SyncProviderType): Promise<void> => {
+    if (provider === 'google-drive' && !hasGoogleClientId) {
+      return
+    }
+
     const nextConfig: SyncConfig = {
       ...config,
       provider,
-      gistId: provider === 'github-gist' ? config.gistId : undefined,
+      remoteId: provider === config.provider ? resolveSyncRemoteId(config) : undefined,
+      gistId: provider === 'github-gist' ? resolveSyncRemoteId(config) : undefined,
       autoSyncEnabled: provider === 'none' ? false : config.autoSyncEnabled,
       syncOnStartup: provider === 'none' ? false : config.syncOnStartup,
       pushOnChange: provider === 'none' ? false : config.pushOnChange,
@@ -225,7 +270,8 @@ function SettingsSyncSection({
   const handleSaveProviderSettings = async (): Promise<void> => {
     const nextConfig: SyncConfig = {
       ...config,
-      gistId: gistIdDraft.trim() || undefined,
+      remoteId: config.provider === 'github-gist' ? remoteIdDraft.trim() || undefined : config.remoteId,
+      gistId: config.provider === 'github-gist' ? remoteIdDraft.trim() || undefined : undefined,
       encryptPayload
     }
 
@@ -268,6 +314,55 @@ function SettingsSyncSection({
     await saveConfig({ ...config, autoSyncIntervalMinutes: nextInterval })
   }
 
+  const handleConnectGoogle = async (): Promise<void> => {
+    setIsConnectingGoogle(true)
+
+    try {
+      if (!hasGoogleClientId) {
+        onFeedback(t('settings.sync.errors.google_oauth_not_configured'), 'error')
+        return
+      }
+
+      const result = await window.api.connectGoogleDrive()
+
+      if (!result.ok || result.error) {
+        onFeedback(resolveSyncError(t, result.error ?? { code: 'unknown', message: '' }), 'error')
+        return
+      }
+
+      await loadSyncState()
+      onFeedback(
+        result.email
+          ? t('settings.sync.googleConnectSuccess', { email: result.email })
+          : t('settings.sync.googleConnectSuccessGeneric')
+      )
+    } catch {
+      onFeedback(t('settings.sync.errors.unknown'), 'error')
+    } finally {
+      setIsConnectingGoogle(false)
+    }
+  }
+
+  const handleDisconnectGoogle = async (): Promise<void> => {
+    setIsDisconnectingGoogle(true)
+
+    try {
+      const result = await window.api.disconnectGoogleDrive()
+
+      if (!result.ok || result.error) {
+        onFeedback(resolveSyncError(t, result.error ?? { code: 'unknown', message: '' }), 'error')
+        return
+      }
+
+      await loadSyncState()
+      onFeedback(t('settings.sync.googleDisconnectSuccess'))
+    } catch {
+      onFeedback(t('settings.sync.errors.unknown'), 'error')
+    } finally {
+      setIsDisconnectingGoogle(false)
+    }
+  }
+
   const handleTestConnection = async (): Promise<void> => {
     setIsTesting(true)
 
@@ -301,8 +396,8 @@ function SettingsSyncSection({
         return
       }
 
-      if (result.gistId && result.gistId !== config.gistId) {
-        setGistIdDraft(result.gistId)
+      if (result.remoteId && result.remoteId !== resolveSyncRemoteId(config)) {
+        setRemoteIdDraft(result.remoteId)
       }
 
       await loadSyncState()
@@ -381,8 +476,18 @@ function SettingsSyncSection({
   }
 
   const displayedInterval = isDraggingInterval ? intervalDraft : config.autoSyncIntervalMinutes
-  const canPush = isProviderEnabled && (hasToken || githubTokenDraft.trim().length > 0)
-  const canPull = canPush && Boolean(config.gistId || gistIdDraft.trim())
+  const isGithubProvider = config.provider === 'github-gist'
+  const isGoogleProvider = config.provider === 'google-drive'
+  const canPushGithub = isGithubProvider && (hasCredentials || githubTokenDraft.trim().length > 0)
+  const canPushGoogle = isGoogleProvider && hasCredentials && hasGoogleClientId
+  const canPush = isProviderEnabled && (canPushGithub || canPushGoogle)
+  const canPullGithub =
+    canPushGithub && Boolean(resolveSyncRemoteId(config) || remoteIdDraft.trim())
+  const canPullGoogle = isGoogleProvider && hasCredentials && hasGoogleClientId
+  const canPull = isProviderEnabled && (canPullGithub || canPullGoogle)
+
+  const selectedProviderValue =
+    config.provider === 'google-drive' && !hasGoogleClientId ? 'none' : config.provider
 
   const sectionTitle = useMemo(
     () => (
@@ -466,15 +571,59 @@ function SettingsSyncSection({
             <TextField
               select
               fullWidth
-              value={config.provider}
+              value={selectedProviderValue}
               disabled={isBusy}
+              helperText={!hasGoogleClientId ? t('settings.sync.googleDriveSelectHint') : undefined}
               onChange={(event) => void handleProviderChange(event.target.value as SyncProviderType)}
             >
-              {PROVIDER_OPTIONS.map((provider) => (
-                <MenuItem key={provider} value={provider}>
-                  {t(`settings.sync.providers.${provider}`)}
-                </MenuItem>
-              ))}
+              {PROVIDER_OPTIONS.map((provider) => {
+                const isGoogleDriveOption = provider === 'google-drive'
+                const isGoogleDriveUnavailable = isGoogleDriveOption && !hasGoogleClientId
+
+                return (
+                  <MenuItem
+                    key={provider}
+                    value={provider}
+                    disabled={isGoogleDriveUnavailable}
+                    sx={
+                      isGoogleDriveUnavailable
+                        ? {
+                            opacity: 1,
+                            '&.Mui-disabled': {
+                              opacity: 1
+                            }
+                          }
+                        : undefined
+                    }
+                  >
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      useFlexGap
+                      sx={{ alignItems: 'center', width: '100%' }}
+                    >
+                      <Box component="span" sx={{ flex: 1 }}>
+                        {t(`settings.sync.providers.${provider}`)}
+                      </Box>
+                      {isGoogleDriveUnavailable && (
+                        <Chip
+                          label={t('settings.sync.googleDriveNotConfiguredBadge')}
+                          size="small"
+                          variant="outlined"
+                          sx={{
+                            height: 22,
+                            fontSize: '0.68rem',
+                            fontWeight: 700,
+                            color: 'warning.main',
+                            borderColor: withThemeAlpha(theme, theme.palette.warning.main, 0.45),
+                            pointerEvents: 'none'
+                          }}
+                        />
+                      )}
+                    </Stack>
+                  </MenuItem>
+                )
+              })}
             </TextField>
 
             <Collapse in={isProviderEnabled}>
@@ -486,57 +635,120 @@ function SettingsSyncSection({
                 )}
 
                 <Alert severity="info" variant="outlined">
-                  {t('settings.sync.securityHint')}
+                  {isGoogleProvider
+                    ? t('settings.sync.googleSecurityHint')
+                    : t('settings.sync.securityHint')}
                 </Alert>
 
-                <Box>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
-                    <Typography variant="subtitle2">{t('settings.sync.githubToken')}</Typography>
-                    <IconButton
-                      size="small"
-                      aria-label={t('settings.sync.createToken')}
-                      onClick={() => void window.api.openExternal(GITHUB_CREATE_TOKEN_URL)}
-                    >
-                      <LinkOutlinedIcon fontSize="small" />
-                    </IconButton>
-                  </Stack>
-                  <TextField
-                    fullWidth
-                    type="password"
-                    value={githubTokenDraft}
-                    disabled={isBusy || !safeStorageAvailable}
-                    placeholder={
-                      hasToken
-                        ? t('settings.sync.tokenSavedPlaceholder')
-                        : t('settings.sync.githubTokenPlaceholder')
-                    }
-                    onChange={(event) => setGithubTokenDraft(event.target.value)}
-                    slotProps={{
-                      input: {
-                        endAdornment: hasToken ? (
-                          <InputAdornment position="end">
-                            <Typography variant="caption" color="success.main">
-                              {t('settings.sync.tokenSaved')}
-                            </Typography>
-                          </InputAdornment>
-                        ) : undefined
-                      }
-                    }}
-                  />
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
-                    {t('settings.sync.githubTokenHint')}
-                  </Typography>
-                </Box>
+                {isGithubProvider && (
+                  <>
+                    <Box>
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
+                        <Typography variant="subtitle2">{t('settings.sync.githubToken')}</Typography>
+                        <IconButton
+                          size="small"
+                          aria-label={t('settings.sync.createToken')}
+                          onClick={() => void window.api.openExternal(GITHUB_CREATE_TOKEN_URL)}
+                        >
+                          <LinkOutlinedIcon fontSize="small" />
+                        </IconButton>
+                      </Stack>
+                      <TextField
+                        fullWidth
+                        type="password"
+                        value={githubTokenDraft}
+                        disabled={isBusy || !safeStorageAvailable}
+                        placeholder={
+                          hasCredentials
+                            ? t('settings.sync.tokenSavedPlaceholder')
+                            : t('settings.sync.githubTokenPlaceholder')
+                        }
+                        onChange={(event) => setGithubTokenDraft(event.target.value)}
+                        slotProps={{
+                          input: {
+                            endAdornment: hasCredentials ? (
+                              <InputAdornment position="end">
+                                <Typography variant="caption" color="success.main">
+                                  {t('settings.sync.tokenSaved')}
+                                </Typography>
+                              </InputAdornment>
+                            ) : undefined
+                          }
+                        }}
+                      />
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
+                        {t('settings.sync.githubTokenHint')}
+                      </Typography>
+                    </Box>
 
-                <TextField
-                  fullWidth
-                  label={t('settings.sync.gistId')}
-                  value={gistIdDraft}
-                  disabled={isBusy}
-                  placeholder={t('settings.sync.gistIdPlaceholder')}
-                  helperText={t('settings.sync.gistIdHint')}
-                  onChange={(event) => setGistIdDraft(event.target.value)}
-                />
+                    <TextField
+                      fullWidth
+                      label={t('settings.sync.gistId')}
+                      value={remoteIdDraft}
+                      disabled={isBusy}
+                      placeholder={t('settings.sync.gistIdPlaceholder')}
+                      helperText={t('settings.sync.gistIdHint')}
+                      onChange={(event) => setRemoteIdDraft(event.target.value)}
+                    />
+                  </>
+                )}
+
+                {isGoogleProvider && (
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                      {t('settings.sync.googleAccount')}
+                    </Typography>
+                    {hasCredentials ? (
+                      <Stack spacing={1.5}>
+                        <Alert severity="success" variant="outlined">
+                          {googleEmail
+                            ? t('settings.sync.googleConnectedAs', { email: googleEmail })
+                            : t('settings.sync.googleConnected')}
+                        </Alert>
+                        <Button
+                          variant="outlined"
+                          color="inherit"
+                          disabled={isBusy || isDisconnectingGoogle}
+                          onClick={() => void handleDisconnectGoogle()}
+                          startIcon={
+                            isDisconnectingGoogle ? (
+                              <CircularProgress size={18} color="inherit" />
+                            ) : (
+                              <LogoutOutlinedIcon />
+                            )
+                          }
+                        >
+                          {t('settings.sync.googleDisconnect')}
+                        </Button>
+                      </Stack>
+                    ) : (
+                      <Stack spacing={1.25}>
+                        <Typography variant="body2" color="text.secondary">
+                          {t('settings.sync.googleConnectHint')}
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          disabled={
+                            isBusy ||
+                            !safeStorageAvailable ||
+                            isConnectingGoogle ||
+                            !hasGoogleClientId
+                          }
+                          onClick={() => void handleConnectGoogle()}
+                          startIcon={
+                            isConnectingGoogle ? (
+                              <CircularProgress size={18} color="inherit" />
+                            ) : (
+                              <GoogleIcon />
+                            )
+                          }
+                        >
+                          {t('settings.sync.googleConnect')}
+                        </Button>
+                      </Stack>
+                    )}
+                  </Box>
+                )}
 
                 <Typography variant="subtitle2">{t('settings.sync.scope')}</Typography>
                 <ToggleButtonGroup
@@ -602,18 +814,29 @@ function SettingsSyncSection({
                   </Typography>
                 )}
 
-                <Button
-                  variant="outlined"
-                  disabled={isBusy || !safeStorageAvailable || (!hasToken && !githubTokenDraft.trim())}
-                  onClick={() => void handleSaveProviderSettings()}
-                  startIcon={isSaving ? <CircularProgress size={18} color="inherit" /> : undefined}
-                >
-                  {t('settings.sync.saveSettings')}
-                </Button>
+                {(isGithubProvider || isGoogleProvider) && (
+                  <Button
+                    variant="outlined"
+                    disabled={
+                      isBusy ||
+                      !safeStorageAvailable ||
+                      (isGithubProvider && !hasCredentials && !githubTokenDraft.trim()) ||
+                      (isGoogleProvider && !hasCredentials)
+                    }
+                    onClick={() => void handleSaveProviderSettings()}
+                    startIcon={isSaving ? <CircularProgress size={18} color="inherit" /> : undefined}
+                  >
+                    {t('settings.sync.saveSettings')}
+                  </Button>
+                )}
 
                 <Button
                   variant="text"
-                  disabled={isBusy || !hasToken}
+                  disabled={
+                    isBusy ||
+                    (isGithubProvider && !hasCredentials) ||
+                    (isGoogleProvider && !hasCredentials)
+                  }
                   onClick={() => void handleTestConnection()}
                   startIcon={
                     isTesting ? <CircularProgress size={18} color="inherit" /> : <PlayArrowOutlinedIcon />
@@ -702,7 +925,8 @@ function SettingsSyncSection({
             <SyncStatusSection
               config={config}
               status={status}
-              hasToken={hasToken}
+              hasCredentials={hasCredentials}
+              googleEmail={googleEmail}
               hasPayloadPassword={hasPayloadPassword}
               safeStorageAvailable={safeStorageAvailable}
             />

@@ -2,6 +2,8 @@ import { randomUUID } from 'crypto'
 import type { BackupFileV1, BackupPreview } from '../../../shared/types/backup'
 import type {
   SyncError,
+  SyncGoogleConnectResult,
+  SyncGoogleDisconnectResult,
   SyncPublicState,
   SyncPullApplyRequest,
   SyncPullApplyResult,
@@ -11,10 +13,11 @@ import type {
   SyncStartupPullResult,
   SyncStatus,
   SyncLastErrorInfo,
-  SyncTestResult
+  SyncTestResult,
+  SyncProviderType
 } from '../../../shared/types/sync'
-import { isSyncEnabled } from '../../../shared/utils/sync-config'
-import { isValidGistId } from '../../../shared/utils/sync-gist'
+import { isSyncEnabled, resolveSyncRemoteId } from '../../../shared/utils/sync-config'
+import { isValidGistRemoteId } from '../../../shared/utils/sync-remote-id'
 import {
   applyBackupImport,
   buildBackupPreview,
@@ -40,11 +43,18 @@ import { refreshTrayContextMenu } from '../tray'
 import { notifyTrayDataChanged } from '../tray-actions'
 import { syncTrayEnabled } from '../../ipc/tray'
 import { getSyncProvider } from './provider-registry'
-import { toSyncError } from './providers/github-gist'
+import { toSyncError } from './providers/sync-errors'
 import {
+  connectGoogleAccount,
+  disconnectGoogleAccount,
+  mapGoogleConnectError
+} from './google-oauth'
+import { isGoogleOAuthClientIdConfigured } from '../../config/google-oauth-env'
+import {
+  getGoogleEmail,
   getSyncSecrets,
-  hasGithubToken,
   hasPayloadPassword,
+  hasProviderCredentials,
   isSafeStorageAvailable,
   requireGithubToken,
   resolvePayloadPassword,
@@ -105,7 +115,7 @@ function serializeBackupError(error: unknown): SyncError {
   return toSyncError(error)
 }
 
-const SYNC_GIST_DISPLAY_NAME = 'proxychecker-sync.pcbackup.json'
+const SYNC_REMOTE_DISPLAY_NAME = 'proxychecker-sync.pcbackup.json'
 
 function buildRemotePreview(content: string, backup: BackupFileV1, envelopeEncrypted: boolean): BackupPreview {
   const remoteLabel = 'remote-sync'
@@ -113,11 +123,11 @@ function buildRemotePreview(content: string, backup: BackupFileV1, envelopeEncry
   if (envelopeEncrypted) {
     const envelope = parseBackupEnvelopeFromContent(content)
     if (isEncryptedBackupFile(envelope)) {
-      return buildLockedBackupPreview(envelope, remoteLabel, SYNC_GIST_DISPLAY_NAME)
+      return buildLockedBackupPreview(envelope, remoteLabel, SYNC_REMOTE_DISPLAY_NAME)
     }
   }
 
-  return buildBackupPreview(backup, remoteLabel, SYNC_GIST_DISPLAY_NAME)
+  return buildBackupPreview(backup, remoteLabel, SYNC_REMOTE_DISPLAY_NAME)
 }
 
 async function resolveSecretsWithToken(overrideToken?: string) {
@@ -131,20 +141,97 @@ async function resolveSecretsWithToken(overrideToken?: string) {
   return { ...secrets, githubToken: token }
 }
 
+async function hasActiveProviderCredentials(provider: SyncProviderType): Promise<boolean> {
+  if (provider === 'none') {
+    return false
+  }
+
+  return hasProviderCredentials(provider)
+}
+
+function credentialsRequiredMessage(provider: SyncProviderType): string {
+  if (provider === 'google-drive') {
+    return 'Google account is not connected'
+  }
+
+  return 'GitHub token is required'
+}
+
+function credentialsRequiredCode(provider: SyncProviderType): SyncError['code'] {
+  if (provider === 'google-drive') {
+    return 'auth_required'
+  }
+
+  return 'token_required'
+}
+
+async function ensureProviderCredentials(
+  provider: SyncProviderType,
+  secrets: Awaited<ReturnType<typeof getSyncSecrets>>
+): Promise<SyncError | null> {
+  if (provider === 'github-gist' && !secrets.githubToken?.trim()) {
+    return {
+      code: credentialsRequiredCode(provider),
+      message: credentialsRequiredMessage(provider)
+    }
+  }
+
+  if (provider === 'google-drive') {
+    const connected = await hasProviderCredentials('google-drive')
+
+    if (!connected) {
+      return {
+        code: credentialsRequiredCode(provider),
+        message: credentialsRequiredMessage(provider)
+      }
+    }
+  }
+
+  return null
+}
+
+function validateRemoteIdForPull(
+  provider: SyncProviderType,
+  remoteId: string | undefined
+): SyncError | null {
+  if (provider === 'github-gist') {
+    if (!remoteId) {
+      return { code: 'gist_not_found', message: 'Gist ID is not configured' }
+    }
+
+    if (!isValidGistRemoteId(remoteId)) {
+      return { code: 'gist_not_found', message: 'Gist ID is invalid' }
+    }
+  }
+
+  return null
+}
+
+function withRemoteIdAliases<T extends { remoteId?: string }>(result: T): T & { gistId?: string } {
+  return {
+    ...result,
+    gistId: result.remoteId
+  }
+}
+
 export async function getSyncPublicState(): Promise<SyncPublicState> {
-  const [config, status, hasToken, hasPassword] = await Promise.all([
-    getSyncConfig(),
+  const config = await getSyncConfig()
+  const [status, hasCredentials, hasPassword, googleEmail] = await Promise.all([
     getSyncStatus(),
-    hasGithubToken(),
-    hasPayloadPassword()
+    hasActiveProviderCredentials(config.provider),
+    hasPayloadPassword(),
+    getGoogleEmail()
   ])
 
   return {
     config,
     status,
-    hasToken,
+    hasCredentials,
+    hasToken: hasCredentials,
     hasPayloadPassword: hasPassword,
-    safeStorageAvailable: isSafeStorageAvailable()
+    safeStorageAvailable: isSafeStorageAvailable(),
+    googleEmail: config.provider === 'google-drive' ? googleEmail : undefined,
+    hasGoogleClientId: isGoogleOAuthClientIdConfigured()
   }
 }
 
@@ -155,6 +242,7 @@ export async function saveSyncConfiguration(request: SyncSaveConfigRequest): Pro
     (request.githubToken !== undefined ||
       request.payloadPassword !== undefined ||
       request.clearGithubToken ||
+      request.clearGoogleAuth ||
       request.clearPayloadPassword) &&
     !isSafeStorageAvailable()
   ) {
@@ -165,12 +253,14 @@ export async function saveSyncConfiguration(request: SyncSaveConfigRequest): Pro
     request.githubToken !== undefined ||
     request.payloadPassword !== undefined ||
     request.clearGithubToken ||
+    request.clearGoogleAuth ||
     request.clearPayloadPassword
   ) {
     await saveSyncSecrets({
       githubToken: request.githubToken,
       payloadPassword: request.payloadPassword,
       clearGithubToken: request.clearGithubToken,
+      clearGoogleAuth: request.clearGoogleAuth,
       clearPayloadPassword: request.clearPayloadPassword
     })
   }
@@ -182,6 +272,34 @@ export async function saveSyncConfiguration(request: SyncSaveConfigRequest): Pro
   }
 
   return getSyncPublicState()
+}
+
+export async function connectGoogleDrive(): Promise<SyncGoogleConnectResult> {
+  try {
+    if (!isSafeStorageAvailable()) {
+      return {
+        ok: false,
+        error: {
+          code: 'safe_storage_unavailable',
+          message: 'Safe storage is not available'
+        }
+      }
+    }
+
+    const result = await connectGoogleAccount()
+    return { ok: true, email: result.email }
+  } catch (error) {
+    return { ok: false, error: mapGoogleConnectError(error) }
+  }
+}
+
+export async function disconnectGoogleDrive(): Promise<SyncGoogleDisconnectResult> {
+  try {
+    await disconnectGoogleAccount()
+    return { ok: true }
+  } catch (error) {
+    return { ok: false, error: mapGoogleConnectError(error) }
+  }
 }
 
 export async function testSyncConnection(githubToken?: string): Promise<SyncTestResult> {
@@ -204,13 +322,25 @@ export async function testSyncConnection(githubToken?: string): Promise<SyncTest
       }
     }
 
-    const secrets = await resolveSecretsWithToken(githubToken)
+    const secrets =
+      config.provider === 'github-gist'
+        ? await resolveSecretsWithToken(githubToken)
+        : await getSyncSecrets()
+
+    const credentialError = await ensureProviderCredentials(config.provider, secrets)
+
+    if (credentialError) {
+      return { ok: false, error: credentialError }
+    }
+
     await provider.testConnection(config, secrets)
 
-    return {
+    const remoteId = resolveSyncRemoteId(config)
+
+    return withRemoteIdAliases({
       ok: true,
-      gistId: config.gistId
-    }
+      remoteId
+    })
   } catch (error) {
     return { ok: false, error: toSyncError(error) }
   }
@@ -264,9 +394,10 @@ export async function pushSync(): Promise<SyncPushResult> {
     }
 
     const secrets = await getSyncSecrets()
+    const credentialError = await ensureProviderCredentials(config.provider, secrets)
 
-    if (!secrets.githubToken?.trim()) {
-      return failPush({ code: 'token_required', message: 'GitHub token is required' })
+    if (credentialError) {
+      return failPush(credentialError)
     }
 
     if (config.encryptPayload && !secrets.payloadPassword) {
@@ -293,16 +424,16 @@ export async function pushSync(): Promise<SyncPushResult> {
     })
 
     const ensured = await provider.ensureRemote(config, secrets, content)
-    const gistId = ensured.gistId
+    const remoteId = ensured.remoteId
 
-    if (gistId !== config.gistId) {
-      config = { ...config, gistId }
+    if (remoteId !== resolveSyncRemoteId(config)) {
+      config = { ...config, remoteId, gistId: config.provider === 'github-gist' ? remoteId : undefined }
       await saveSyncConfig(config)
     }
 
     const pushed = ensured.created
       ? { updatedAt: ensured.updatedAt ?? new Date().toISOString() }
-      : await provider.push(content, config, secrets, gistId)
+      : await provider.push(content, config, secrets, remoteId)
     const pushedAt = new Date().toISOString()
 
     await updateSyncStatus({
@@ -311,7 +442,7 @@ export async function pushSync(): Promise<SyncPushResult> {
       lastError: undefined
     })
 
-    return { ok: true, gistId, pushedAt }
+    return withRemoteIdAliases({ ok: true, remoteId, pushedAt })
   } catch (error) {
     const syncError = toSyncError(error)
     await recordSyncError(syncError, 'push')
@@ -334,20 +465,29 @@ export async function pullSyncPreview(password?: string): Promise<SyncPullPrevie
     }
 
     const secrets = await getSyncSecrets()
+    const credentialError = await ensureProviderCredentials(config.provider, secrets)
 
-    if (!secrets.githubToken?.trim()) {
-      return failPullPreview({ code: 'token_required', message: 'GitHub token is required' })
+    if (credentialError) {
+      return failPullPreview(credentialError)
     }
 
-    if (!config.gistId) {
-      return failPullPreview({ code: 'gist_not_found', message: 'Gist ID is not configured' })
+    const remoteId = resolveSyncRemoteId(config)
+    const remoteIdError = validateRemoteIdForPull(config.provider, remoteId)
+
+    if (remoteIdError) {
+      return failPullPreview(remoteIdError)
     }
 
-    if (!isValidGistId(config.gistId)) {
-      return failPullPreview({ code: 'gist_not_found', message: 'Gist ID is invalid' })
+    const pulled = await provider.pull(config, secrets, remoteId)
+
+    if (pulled.remoteId && pulled.remoteId !== resolveSyncRemoteId(config)) {
+      await saveSyncConfig({
+        ...config,
+        remoteId: pulled.remoteId,
+        gistId: config.provider === 'github-gist' ? pulled.remoteId : undefined
+      })
     }
 
-    const pulled = await provider.pull(config, secrets, config.gistId)
     const envelope = parseBackupEnvelopeFromContent(pulled.content)
     const encrypted = isEncryptedBackupFile(envelope)
     const resolvedPassword = await resolvePayloadPassword(password, config.encryptPayload)
@@ -391,7 +531,7 @@ export async function unlockSyncPullPreview(
     }
 
     const backup = loadBackupFile(session.content, password)
-    const preview = buildBackupPreview(backup, 'remote-sync', SYNC_GIST_DISPLAY_NAME, {
+    const preview = buildBackupPreview(backup, 'remote-sync', SYNC_REMOTE_DISPLAY_NAME, {
       encrypted: true,
       decrypted: true,
       envelopeKind: backup.payload.kind,
@@ -470,10 +610,6 @@ export async function startupSyncPull(): Promise<SyncStartupPullResult> {
       return { ok: true, skipped: true }
     }
 
-    if (!config.gistId) {
-      return { ok: true, skipped: true }
-    }
-
     const provider = getSyncProvider(config.provider)
 
     if (!provider) {
@@ -481,12 +617,28 @@ export async function startupSyncPull(): Promise<SyncStartupPullResult> {
     }
 
     const secrets = await getSyncSecrets()
+    const credentialError = await ensureProviderCredentials(config.provider, secrets)
 
-    if (!secrets.githubToken?.trim()) {
+    if (credentialError) {
       return { ok: true, skipped: true }
     }
 
-    const pulled = await provider.pull(config, secrets, config.gistId)
+    const remoteId = resolveSyncRemoteId(config)
+
+    if (config.provider === 'github-gist' && !remoteId) {
+      return { ok: true, skipped: true }
+    }
+
+    const pulled = await provider.pull(config, secrets, remoteId)
+
+    if (pulled.remoteId && pulled.remoteId !== resolveSyncRemoteId(config)) {
+      await saveSyncConfig({
+        ...config,
+        remoteId: pulled.remoteId,
+        gistId: config.provider === 'github-gist' ? pulled.remoteId : undefined
+      })
+    }
+
     const password = await resolvePayloadPassword(undefined, config.encryptPayload)
     const backup = loadBackupFile(pulled.content, password)
 

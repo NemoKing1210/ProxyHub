@@ -1,5 +1,7 @@
 import { ipcMain } from 'electron'
 import type {
+  SyncGoogleConnectResult,
+  SyncGoogleDisconnectResult,
   SyncPullApplyRequest,
   SyncPullApplyResult,
   SyncPublicState,
@@ -11,6 +13,8 @@ import type {
 } from '../../shared/types/sync'
 import {
   applySyncPull,
+  connectGoogleDrive,
+  disconnectGoogleDrive,
   getSyncPublicState,
   pullSyncPreview,
   pushSync,
@@ -19,7 +23,7 @@ import {
   testSyncConnection,
   unlockSyncPullPreview
 } from '../services/sync/sync-service'
-import { toSyncError } from '../services/sync/providers/github-gist'
+import { toSyncError } from '../services/sync/providers/sync-errors'
 
 export function registerSyncIpc(): void {
   ipcMain.handle('sync:get-config', async (): Promise<SyncPublicState> => {
@@ -43,6 +47,14 @@ export function registerSyncIpc(): void {
       return testSyncConnection(githubToken)
     }
   )
+
+  ipcMain.handle('sync:google-connect', async (): Promise<SyncGoogleConnectResult> => {
+    return connectGoogleDrive()
+  })
+
+  ipcMain.handle('sync:google-disconnect', async (): Promise<SyncGoogleDisconnectResult> => {
+    return disconnectGoogleDrive()
+  })
 
   ipcMain.handle('sync:push', async (): Promise<SyncPushResult> => {
     return pushSync()

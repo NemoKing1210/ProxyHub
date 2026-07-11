@@ -3,9 +3,10 @@ import {
   SYNC_GIST_DESCRIPTION,
   SYNC_GIST_FILENAME
 } from '../../../../shared/constants/sync'
-import type { SyncError, SyncErrorCode } from '../../../../shared/types/sync'
-import { isValidGistId } from '../../../../shared/utils/sync-gist'
+import { resolveSyncRemoteId } from '../../../../shared/utils/sync-config'
+import { isValidGistRemoteId } from '../../../../shared/utils/sync-remote-id'
 import type { SyncSecrets } from '../../sync-secrets'
+import { SyncProviderError } from './sync-errors'
 import type { SyncProvider, SyncProviderEnsureResult } from './types'
 
 const USER_AGENT = 'ProxyChecker-Sync'
@@ -27,16 +28,6 @@ interface GithubErrorResponse {
     code?: string
     message?: string
   }>
-}
-
-export class SyncProviderError extends Error {
-  readonly code: SyncErrorCode
-
-  constructor(code: SyncErrorCode, message: string) {
-    super(message)
-    this.name = 'SyncProviderError'
-    this.code = code
-  }
 }
 
 function parseGithubErrorBody(body: string): string | undefined {
@@ -120,7 +111,7 @@ function requireToken(secrets: SyncSecrets): string {
 }
 
 function requireGistId(gistId: string | undefined): string {
-  if (!gistId || !isValidGistId(gistId)) {
+  if (!gistId || !isValidGistRemoteId(gistId)) {
     throw new SyncProviderError('gist_not_found', 'Gist ID is invalid')
   }
 
@@ -184,15 +175,17 @@ function buildUpdateGistBody(content: string): string {
 export const githubGistProvider: SyncProvider = {
   async testConnection(config, secrets) {
     const token = requireToken(secrets)
+    const remoteId = resolveSyncRemoteId(config)
 
-    if (config.gistId) {
-      const gistId = requireGistId(config.gistId)
+    if (remoteId) {
+      const gistId = requireGistId(remoteId)
       const response = await githubRequest(token, `/${gistId}`)
       await parseGistResponse(response)
       return
     }
 
     const response = await githubRequest(token, '')
+
     if (!response.ok) {
       const body = await response.text()
       throw mapHttpError(response.status, body)
@@ -202,12 +195,13 @@ export const githubGistProvider: SyncProvider = {
   async ensureRemote(config, secrets, initialContent): Promise<SyncProviderEnsureResult> {
     const token = requireToken(secrets)
     const content = requireSyncContent(initialContent)
+    const remoteId = resolveSyncRemoteId(config)
 
-    if (config.gistId) {
-      const gistId = requireGistId(config.gistId)
+    if (remoteId) {
+      const gistId = requireGistId(remoteId)
       const response = await githubRequest(token, `/${gistId}`)
       const gist = await parseGistResponse(response)
-      return { gistId: gist.id }
+      return { remoteId: gist.id, gistId: gist.id }
     }
 
     const response = await githubRequest(token, '', {
@@ -217,16 +211,18 @@ export const githubGistProvider: SyncProvider = {
     })
 
     const gist = await parseGistResponse(response)
+
     return {
+      remoteId: gist.id,
       gistId: gist.id,
       updatedAt: gist.updated_at,
       created: true
     }
   },
 
-  async push(content, _config, secrets, gistId) {
+  async push(content, _config, secrets, remoteId) {
     const token = requireToken(secrets)
-    const normalizedGistId = requireGistId(gistId)
+    const normalizedGistId = requireGistId(remoteId)
 
     const response = await githubRequest(token, `/${normalizedGistId}`, {
       method: 'PATCH',
@@ -238,9 +234,14 @@ export const githubGistProvider: SyncProvider = {
     return { updatedAt: gist.updated_at }
   },
 
-  async pull(_config, secrets, gistId) {
+  async pull(_config, secrets, remoteId) {
     const token = requireToken(secrets)
-    const normalizedGistId = requireGistId(gistId)
+    const normalizedGistId = requireGistId(remoteId)
+
+    if (!normalizedGistId) {
+      throw new SyncProviderError('gist_not_found', 'Gist ID is not configured')
+    }
+
     const response = await githubRequest(token, `/${normalizedGistId}`)
     const gist = await parseGistResponse(response)
     const file = extractGistFile(gist)
@@ -250,24 +251,4 @@ export const githubGistProvider: SyncProvider = {
       updatedAt: file.updatedAt
     }
   }
-}
-
-export function toSyncError(error: unknown): SyncError {
-  if (error instanceof SyncProviderError) {
-    return { code: error.code, message: error.message }
-  }
-
-  if (error instanceof Error) {
-    if (error.message === 'GitHub token is required') {
-      return { code: 'token_required', message: error.message }
-    }
-
-    if (error.message === 'Safe storage is not available') {
-      return { code: 'safe_storage_unavailable', message: error.message }
-    }
-
-    return { code: 'unknown', message: error.message }
-  }
-
-  return { code: 'unknown', message: 'Unknown sync error' }
 }

@@ -4,10 +4,13 @@ import type { SyncSecrets } from '../../sync-secrets'
 export interface SyncProviderPullResult {
   content: string
   updatedAt: string
+  remoteId?: string
 }
 
 export interface SyncProviderEnsureResult {
-  gistId: string
+  remoteId: string
+  /** @deprecated use remoteId */
+  gistId?: string
   updatedAt?: string
   created?: boolean
 }
@@ -23,7 +26,11 @@ export interface SyncProvider {
     content: string,
     config: SyncConfig,
     secrets: SyncSecrets,
-    gistId: string
+    remoteId: string
   ): Promise<{ updatedAt: string }>
-  pull(config: SyncConfig, secrets: SyncSecrets, gistId: string): Promise<SyncProviderPullResult>
+  pull(
+    config: SyncConfig,
+    secrets: SyncSecrets,
+    remoteId?: string
+  ): Promise<SyncProviderPullResult>
 }

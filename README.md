@@ -123,6 +123,24 @@ src/
 
 Proxy validation logic runs in the main process to avoid browser sandbox restrictions and to support native networking libraries.
 
+## Google Drive sync (developer setup)
+
+Google Drive sign-in uses an OAuth **Desktop app** Client ID embedded at **build time**. End users only click **Sign in with Google** — they do not enter a Client ID.
+
+1. Create a project in [Google Cloud Console](https://console.cloud.google.com/).
+2. Enable **Google Drive API**.
+3. Configure the **OAuth consent screen**.
+4. Create **Credentials → OAuth client ID → Desktop app** and copy the Client ID.
+5. Copy `.env.example` to `.env` and set:
+
+```env
+GOOGLE_OAUTH_CLIENT_ID=your-client-id.apps.googleusercontent.com
+```
+
+6. Run or build the app (`npm run dev`, `npm run build:win`, etc.). The value is injected into the main process bundle.
+
+For CI/release builds, set `GOOGLE_OAUTH_CLIENT_ID` as a secret environment variable in the pipeline instead of committing `.env`.
+
 ## License
 
 MIT
