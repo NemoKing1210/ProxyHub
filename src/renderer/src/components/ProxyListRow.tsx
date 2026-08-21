@@ -1,8 +1,14 @@
-import { memo, useCallback, type ReactNode } from 'react'
-import { useShallow } from 'zustand/react/shallow'
+import { motion } from 'framer-motion'
+import { memo, useCallback } from 'react'
 import type { ProxyIconId } from '../../../shared/types/proxy'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import type { ProxyCardViewMode } from '../../../shared/types/settings'
+import {
+  listItemTransition,
+  listLayoutTransition,
+  proxyCardVariants,
+  usePrefersReducedMotion
+} from '../utils/list-motion'
 import { useProxyStore } from '../store/proxyStore'
 import DraggableProxyCard from './DraggableProxyCard'
 import ProxyCard from './ProxyCard'
@@ -12,6 +18,9 @@ interface ProxyListRowProps {
   groups: ProxyGroup[]
   variant: ProxyCardViewMode
   dragEnabled: boolean
+  draggingProxyId: string | null
+  entryAnimationsEnabled: boolean
+  listRadius?: string
   onCheck: (proxyId: string) => void
   onEdit: (proxyId: string) => void
   onDelete: (proxyId: string) => void
@@ -19,7 +28,6 @@ interface ProxyListRowProps {
   onToggleFavorite: (proxyId: string) => void
   onToggleEnabled: (proxyId: string) => void
   onGroupChange: (proxyId: string, groupId: string | undefined) => void
-  motionWrapper?: (content: ReactNode) => ReactNode
 }
 
 function ProxyListRow({
@@ -27,25 +35,21 @@ function ProxyListRow({
   groups,
   variant,
   dragEnabled,
+  draggingProxyId,
+  entryAnimationsEnabled,
+  listRadius,
   onCheck,
   onEdit,
   onDelete,
   onIconChange,
   onToggleFavorite,
   onToggleEnabled,
-  onGroupChange,
-  motionWrapper
+  onGroupChange
 }: ProxyListRowProps): React.JSX.Element | null {
-  const { proxy, isChecking, isCheckingAll } = useProxyStore(
-    useShallow((state) => {
-      const current = state.proxies.find((item) => item.id === proxyId)
-      return {
-        proxy: current,
-        isChecking: state.checkingIds.has(proxyId),
-        isCheckingAll: state.isCheckingAll
-      }
-    })
-  )
+  const proxy = useProxyStore((state) => state.proxiesById.get(proxyId))
+  const isChecking = useProxyStore((state) => state.checkingIds.has(proxyId))
+  const isCheckingAll = useProxyStore((state) => state.isCheckingAll)
+  const reducedMotion = usePrefersReducedMotion()
 
   const handleCheck = useCallback(() => onCheck(proxyId), [onCheck, proxyId])
   const handleEdit = useCallback(() => onEdit(proxyId), [onEdit, proxyId])
@@ -71,35 +75,56 @@ function ProxyListRow({
     return null
   }
 
-  const renderCard = (dragHandle?: React.ReactNode): React.JSX.Element => {
-    const card = (
-      <ProxyCard
-        proxy={proxy}
-        groups={groups}
-        variant={variant}
-        isChecking={isChecking}
-        isCheckingAll={isCheckingAll}
-        dragHandle={dragHandle}
-        onCheck={handleCheck}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onIconChange={handleIconChange}
-        onToggleFavorite={handleToggleFavorite}
-        onToggleEnabled={handleToggleEnabled}
-        onGroupChange={handleGroupChange}
-      />
-    )
+  const isDragging = draggingProxyId === proxyId
 
-    return motionWrapper ? <>{motionWrapper(card)}</> : card
+  const renderCard = (dragHandle?: React.ReactNode): React.JSX.Element => (
+    <ProxyCard
+      proxy={proxy}
+      groups={groups}
+      variant={variant}
+      isChecking={isChecking}
+      isCheckingAll={isCheckingAll}
+      dragHandle={dragHandle}
+      listRadius={listRadius}
+      onCheck={handleCheck}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+      onIconChange={handleIconChange}
+      onToggleFavorite={handleToggleFavorite}
+      onToggleEnabled={handleToggleEnabled}
+      onGroupChange={handleGroupChange}
+    />
+  )
+
+  const renderContent = (dragHandle?: React.ReactNode): React.JSX.Element => {
+    const card = renderCard(dragHandle)
+
+    if (reducedMotion) {
+      return card
+    }
+
+    return (
+      <motion.div
+        layout={entryAnimationsEnabled && !isDragging}
+        variants={proxyCardVariants}
+        initial={entryAnimationsEnabled ? 'initial' : false}
+        animate="animate"
+        exit="exit"
+        transition={{ layout: listLayoutTransition, ...listItemTransition }}
+        style={{ overflow: 'hidden' }}
+      >
+        {card}
+      </motion.div>
+    )
   }
 
   if (!dragEnabled) {
-    return <div>{renderCard()}</div>
+    return <div>{renderContent()}</div>
   }
 
   return (
     <DraggableProxyCard id={proxyId} disabled={!dragEnabled}>
-      {(dragHandle) => renderCard(dragHandle)}
+      {(dragHandle) => renderContent(dragHandle)}
     </DraggableProxyCard>
   )
 }

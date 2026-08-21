@@ -1,11 +1,7 @@
 import { nativeTheme, type BrowserWindow } from 'electron'
 import type { ThemeMode } from '../../shared/types/settings'
 import { resolveColorScheme } from '../../shared/theme/resolve-color-scheme'
-import {
-  getTitleBarTheme,
-  TITLE_BAR_HEIGHT,
-  type TitleBarTheme
-} from '../../shared/theme/title-bar'
+import { getTitleBarTheme, type TitleBarTheme } from '../../shared/theme/title-bar'
 
 let activeThemeMode: ThemeMode = 'dark'
 
@@ -27,11 +23,6 @@ export function applyTitleBarTheme(window: BrowserWindow, theme: TitleBarTheme):
   }
 
   window.setBackgroundColor(theme.color)
-  window.setTitleBarOverlay({
-    color: theme.color,
-    symbolColor: theme.symbolColor,
-    height: TITLE_BAR_HEIGHT
-  })
 }
 
 export function applyTitleBarThemeFromSettings(window: BrowserWindow, mode: ThemeMode): void {

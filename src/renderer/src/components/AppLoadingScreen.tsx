@@ -1,8 +1,8 @@
 import { Box, CircularProgress } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { TITLE_BAR_HEIGHT } from '../../../shared/theme/title-bar'
 import { getPalette } from '../theme'
 import { isWindows } from '../utils/platform'
+import AppTitleBar from './AppTitleBar'
 
 function AppLoadingScreen(): React.JSX.Element {
   const theme = useTheme()
@@ -17,15 +17,7 @@ function AppLoadingScreen(): React.JSX.Element {
         bgcolor: palette.background.default
       }}
     >
-      {isWindows() && (
-        <Box
-          sx={{
-            height: TITLE_BAR_HEIGHT,
-            flexShrink: 0,
-            WebkitAppRegion: 'drag'
-          }}
-        />
-      )}
+      {isWindows() && <AppTitleBar />}
       <Box
         sx={{
           flex: 1,

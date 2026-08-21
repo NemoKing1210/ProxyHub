@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next'
 import type { ChangelogEntry } from '../../../shared/types/app'
 import { resolveGitHubAvatarUrl, resolveGitHubProfileUrl } from '../../../shared/utils/github'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
+import { getListCardPosition, getListCardRadius } from '../utils/card-list'
 
 interface ChangelogViewProps {
   version: string
@@ -84,7 +85,7 @@ function ChangelogView({
       <Box
         sx={{
           p: 2,
-          borderRadius: 2.5,
+          borderRadius: '16px',
           bgcolor: surfaceContainer(theme, 'low')
         }}
       >
@@ -102,7 +103,7 @@ function ChangelogView({
               {t('settings.currentVersion')}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              ProxyChecker
+              ProxyHub
             </Typography>
           </Box>
           <Chip
@@ -224,7 +225,7 @@ function ChangelogView({
             maxHeight: 520,
             overflowY: 'auto',
             pr: 0.5,
-            borderRadius: 2.5
+            borderRadius: '16px'
           }}
         >
           <Stack spacing={1}>
@@ -239,7 +240,7 @@ function ChangelogView({
                   disableGutters
                   elevation={0}
                   sx={{
-                    borderRadius: '12px !important',
+                    borderRadius: `${getListCardRadius(getListCardPosition(index, entries.length))} !important`,
                     overflow: 'hidden',
                     bgcolor: surfaceContainer(theme, 'low'),
                     transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,

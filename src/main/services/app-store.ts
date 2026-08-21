@@ -23,7 +23,7 @@ interface StoreInstance {
 }
 
 const storeOptions = {
-  name: 'proxy-checker',
+  name: 'proxyhub',
   defaults: {
     proxies: [] as Proxy[],
     groups: [] as ProxyGroup[],

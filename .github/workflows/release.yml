@@ -38,8 +38,27 @@ jobs:
           echo "version=$PKG_VERSION" >> "$GITHUB_OUTPUT"
           echo "Tag v$PKG_VERSION matches package.json"
 
-  release:
+  create-draft-release:
     needs: validate-tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create draft GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — uploads will target it"
+            exit 0
+          fi
+
+          gh release create "$TAG" --title "$TAG" --draft --notes ""
+
+  release:
+    needs: create-draft-release
     strategy:
       fail-fast: false
       matrix:
@@ -79,3 +98,37 @@ jobs:
           name: ${{ matrix.platform }}-release
           path: dist/*
           if-no-files-found: warn
+
+  publish-release:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          IS_DRAFT="$(gh release view "$TAG" --json isDraft --jq .isDraft)"
+
+          if [ "$IS_DRAFT" != "true" ]; then
+            echo "Release $TAG is already published"
+            exit 0
+          fi
+
+          NOTES="$(awk -v version="$VERSION" '
+            $0 ~ "^## \\[" version "\\]" { capture = 1; next }
+            capture && $0 ~ "^## \\[" { exit }
+            capture { print }
+          ' CHANGELOG.md)"
+
+          if [ -n "$NOTES" ]; then
+            gh release edit "$TAG" --draft=false --notes "$NOTES"
+          else
+            gh release edit "$TAG" --draft=false
+          fi

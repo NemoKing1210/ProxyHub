@@ -104,7 +104,7 @@ export function createTray(): Tray {
   }
 
   tray = new Tray(getTrayIcon())
-  tray.setToolTip('ProxyChecker')
+  tray.setToolTip('ProxyHub')
 
   tray.on('click', () => {
     showMainWindow()
@@ -136,11 +136,11 @@ export function refreshTrayTooltip(): void {
     const aliveCount = favorites.filter((proxy) => proxy.status === 'alive').length
 
     if (favorites.length === 0) {
-      tray?.setToolTip('ProxyChecker')
+      tray?.setToolTip('ProxyHub')
       return
     }
 
-    tray?.setToolTip(`ProxyChecker · ${aliveCount}/${favorites.length}`)
+    tray?.setToolTip(`ProxyHub · ${aliveCount}/${favorites.length}`)
   })
 }
 

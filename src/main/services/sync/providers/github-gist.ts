@@ -9,7 +9,7 @@ import type { SyncSecrets } from '../../sync-secrets'
 import { SyncProviderError } from './sync-errors'
 import type { SyncProvider, SyncProviderEnsureResult } from './types'
 
-const USER_AGENT = 'ProxyChecker-Sync'
+const USER_AGENT = 'ProxyHub-Sync'
 
 interface GistFile {
   content?: string

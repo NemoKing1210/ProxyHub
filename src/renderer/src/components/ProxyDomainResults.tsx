@@ -73,7 +73,7 @@ function ProxyDomainResults({ domainChecks }: ProxyDomainResultsProps): React.JS
             key={`${check.domain}-${check.url}`}
             sx={{
               p: 1.5,
-              borderRadius: 2.5,
+              borderRadius: '16px',
               bgcolor: styles.bgcolor,
               animation: `${domainEnter} 0.32s ${MD3_EASING.emphasizedDecelerate} both`,
               animationDelay: staggerDelay(index),

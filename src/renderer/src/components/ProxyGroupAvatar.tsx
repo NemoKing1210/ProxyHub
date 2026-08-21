@@ -27,7 +27,7 @@ function ProxyGroupAvatar({
         justifyContent: 'center',
         width: size,
         height: size,
-        borderRadius: 2,
+        borderRadius: '12px',
         flexShrink: 0,
         bgcolor: colorStyles.accent,
         color: colorStyles.main,

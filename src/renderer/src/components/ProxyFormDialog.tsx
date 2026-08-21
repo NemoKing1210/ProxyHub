@@ -34,6 +34,7 @@ import {
 import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
 import { parseProxyUrl } from '../../../shared/utils/proxy-format'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
+import { getListCardRadius } from '../utils/card-list'
 import {
   createProxyFormSchema,
   type ProxyFormSchemaContext,
@@ -284,29 +285,30 @@ function ProxyFormDialog({
       </DialogTitle>
 
       <DialogContent>
-        <Stack spacing={2} sx={{ mt: 1 }}>
+        {mode === 'add' ? (
+          <ProxyQuickFillPanel
+            value={quickFillValue}
+            error={quickFillError}
+            onChange={(nextValue) => {
+              setQuickFillValue(nextValue)
+              if (quickFillError) {
+                setQuickFillError(null)
+              }
+            }}
+            onApply={applyQuickFill}
+          />
+        ) : null}
+
+        <Stack spacing={1} sx={{ mt: mode === 'add' ? 2 : 1 }}>
           <ProxyFormSection
             icon={<LanOutlinedIcon sx={{ fontSize: 18 }} />}
             title={t('proxyForm.sections.connection')}
             description={t('proxyForm.sections.connectionDescription')}
+            listRadius={getListCardRadius('first')}
             collapsible
             expanded={connectionExpanded}
             onExpandedChange={setConnectionExpanded}
           >
-            {mode === 'add' ? (
-              <ProxyQuickFillPanel
-                value={quickFillValue}
-                error={quickFillError}
-                onChange={(nextValue) => {
-                  setQuickFillValue(nextValue)
-                  if (quickFillError) {
-                    setQuickFillError(null)
-                  }
-                }}
-                onApply={applyQuickFill}
-              />
-            ) : null}
-
             <Controller
               name="protocol"
               control={control}
@@ -370,6 +372,7 @@ function ProxyFormDialog({
 
           <ProxyFormSection
             icon={<LockOutlinedIcon sx={{ fontSize: 18 }} />}
+            listRadius={getListCardRadius('middle')}
             title={
               isMtproto
                 ? t('proxyForm.sections.mtprotoAuthentication')
@@ -445,6 +448,7 @@ function ProxyFormDialog({
             icon={<FmdGoodOutlinedIcon sx={{ fontSize: 18 }} />}
             title={t('proxyForm.sections.location')}
             description={t('proxyForm.sections.locationDescription')}
+            listRadius={getListCardRadius('middle')}
             collapsible
             expanded={locationExpanded}
             onExpandedChange={setLocationExpanded}
@@ -542,6 +546,7 @@ function ProxyFormDialog({
             icon={<FolderOutlinedIcon sx={{ fontSize: 18 }} />}
             title={t('proxyForm.sections.group')}
             description={t('proxyForm.sections.groupDescription')}
+            listRadius={getListCardRadius('middle')}
             collapsible
             expanded={groupExpanded}
             onExpandedChange={setGroupExpanded}
@@ -573,6 +578,7 @@ function ProxyFormDialog({
             icon={<PaletteOutlinedIcon sx={{ fontSize: 18 }} />}
             title={t('proxyForm.sections.appearance')}
             description={t('proxyForm.sections.appearanceDescription')}
+            listRadius={getListCardRadius('last')}
             collapsible
             expanded={appearanceExpanded}
             onExpandedChange={setAppearanceExpanded}
@@ -705,7 +711,7 @@ function ProxyFormDialog({
                 alignItems: 'center',
                 gap: 1.5,
                 p: 1.5,
-                borderRadius: 2,
+                borderRadius: '12px',
                 bgcolor: 'background.paper'
               }}
             >
@@ -716,7 +722,7 @@ function ProxyFormDialog({
                   justifyContent: 'center',
                   width: 40,
                   height: 40,
-                  borderRadius: 2,
+                  borderRadius: '12px',
                   flexShrink: 0,
                   bgcolor: previewColorStyles.background,
                   color: previewColorStyles.main

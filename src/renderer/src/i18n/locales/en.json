@@ -1,10 +1,18 @@
 {
   "app": {
-    "title": "ProxyChecker"
+    "title": "ProxyHub"
   },
   "nav": {
     "proxies": "Proxies",
-    "settings": "Settings"
+    "settings": "Settings",
+    "checking": "Checking proxies",
+    "checkProgress": "{{completed}} of {{total}} checked"
+  },
+  "windowControls": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "restoreDown": "Restore down",
+    "close": "Close"
   },
   "sync": {
     "activity": "Syncing..."
@@ -254,6 +262,8 @@
     "previewHint": "Group header preview",
     "proxyCount_one": "{{count}} proxy",
     "proxyCount_other": "{{count}} proxies",
+    "pageInfo": "{{start}}–{{end}} of {{total}}",
+    "filterEmpty": "No proxies match the selected filter",
     "deleteConfirm": {
       "title": "Delete group?",
       "message": "Delete group \"{{name}}\"? This cannot be undone.",
@@ -342,9 +352,14 @@
   "settings": {
     "title": "Settings",
     "description": "Configure appearance and how proxies are checked.",
+    "breadcrumbsLabel": "Settings navigation",
+    "appearanceThemeGroup": "Theme and colors",
+    "appearanceCardsGroup": "Proxy cards",
+    "appearanceNotificationsGroup": "Notifications",
+    "appearanceLanguageGroup": "Interface language",
     "sections": {
       "appearance": "Appearance",
-      "appearanceDescription": "Theme, interface language, and proxy card layout.",
+      "appearanceDescription": "Theme, accent color, interface language, and proxy card layout.",
       "system": "System",
       "systemDescription": "Background behavior and quick access from the notification area.",
       "checking": "Proxy checking",
@@ -352,7 +367,7 @@
       "autoCheck": "Auto-check",
       "autoCheckDescription": "Periodically re-check proxies in the background using your check settings.",
       "backup": "Import & export",
-      "backupDescription": "Back up or restore your full ProxyChecker data, or exchange proxy lists in CSV, JSON, and TXT formats.",
+      "backupDescription": "Back up or restore your full ProxyHub data, or exchange proxy lists in CSV, JSON, and TXT formats.",
       "sync": "Synchronization",
       "syncDescription": "Sync proxies and settings through a remote provider. Uses the same backup format as local export.",
       "dangerZone": "Danger zone",
@@ -364,18 +379,40 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeSystem": "System",
+    "accentColor": "Accent color",
+    "accentColorSelected": "Selected color",
+    "accentColorHint": "Choose a color used for buttons, links, and other highlights.",
+    "accentColorOptions": {
+      "blue": "Blue",
+      "violet": "Violet",
+      "teal": "Teal",
+      "green": "Green",
+      "orange": "Orange",
+      "red": "Red",
+      "pink": "Pink",
+      "cyan": "Cyan"
+    },
     "language": "Language",
     "proxyCardView": "Proxy card view",
     "proxyCardViewStandard": "Standard",
     "proxyCardViewCompact": "Compact",
     "proxyDragEnabled": "Drag proxy cards",
     "proxyDragEnabledHint": "Allow moving proxies between groups by dragging cards in the list.",
+    "toastEnabled": "Show notifications",
+    "toastEnabledHint": "Show pop-up notifications with proxy check results.",
+    "toastPosition": "Notification position",
+    "toastPositionTopLeft": "Top left",
+    "toastPositionTopCenter": "Top center",
+    "toastPositionTopRight": "Top right",
+    "toastPositionBottomLeft": "Bottom left",
+    "toastPositionBottomCenter": "Bottom center",
+    "toastPositionBottomRight": "Bottom right",
     "trayEnabled": "Show in system tray",
-    "trayEnabledHint": "Keep ProxyChecker in the tray when the window is closed. Right-click the tray icon for favorite proxies and app actions.",
+    "trayEnabledHint": "Keep ProxyHub in the tray when the window is closed. Right-click the tray icon for favorite proxies and app actions.",
     "startMinimized": "Start minimized",
     "startMinimizedHint": "Launch the app hidden in the system tray instead of opening the window.",
     "launchAtLogin": "Launch at system startup",
-    "launchAtLoginHint": "Start ProxyChecker automatically when you sign in to Windows. Works only in the installed app.",
+    "launchAtLoginHint": "Start ProxyHub automatically when you sign in to Windows. Works only in the installed app.",
     "backgroundCheckNotifications": "Native notifications in background",
     "backgroundCheckNotificationsHint": "Show check results as system notifications when the window is minimized or hidden.",
     "autoCheckEnabled": "Enable auto-check",
@@ -424,11 +461,11 @@
     "saved": "Settings saved",
     "backup": {
       "format": "File format",
-      "formatBackup": "ProxyChecker backup",
+      "formatBackup": "ProxyHub backup",
       "formatCsv": "CSV list",
       "formatJson": "JSON list",
       "formatTxt": "TXT list",
-      "nativeTitle": "ProxyChecker backup",
+      "nativeTitle": "ProxyHub backup",
       "nativeDescription": "Full export of proxies, groups, favorites, and app settings. Supports optional password encryption.",
       "listFormatsTitle": "Other formats",
       "listFormatsHeading": "External proxy lists",
@@ -476,7 +513,7 @@
         "settings": "Settings only"
       },
       "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
-      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "formatHint": "Files use the versioned ProxyHub JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
       "protectWithPassword": "Protect with password",
       "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
       "exportPassword": "Backup password",
@@ -702,7 +739,7 @@
       "googleDriveSelectHint": "Google Drive is unavailable until the developer sets GOOGLE_OAUTH_CLIENT_ID in the build environment.",
       "googleAccount": "Google account",
       "googleConnect": "Sign in with Google",
-      "googleConnectHint": "Authorize ProxyChecker to store sync data in your Google account's hidden app data folder.",
+      "googleConnectHint": "Authorize ProxyHub to store sync data in your Google account's hidden app data folder.",
       "googleConnected": "Google account connected",
       "googleConnectedAs": "Connected as {{email}}",
       "googleConnectSuccess": "Google account connected: {{email}}",
@@ -757,7 +794,7 @@
     "currentVersion": "Current version",
     "updates": {
       "title": "Updates",
-      "description": "Check GitHub Releases for new ProxyChecker versions.",
+      "description": "Check GitHub Releases for new ProxyHub versions.",
       "disabledHint": "Auto-update is available only in installed release builds.",
       "checking": "Checking for updates…",
       "upToDate": "You are on the latest version (v{{version}}).",

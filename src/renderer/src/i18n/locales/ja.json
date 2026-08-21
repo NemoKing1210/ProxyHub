@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "ProxyChecker"
+    "title": "ProxyHub"
   },
   "nav": {
     "proxies": "プロキシ",
@@ -286,7 +286,7 @@
       "autoCheck": "自動確認",
       "autoCheckDescription": "現在の確認設定を使って、バックグラウンドでプロキシを定期的に再確認します。",
       "backup": "インポートとエクスポート",
-      "backupDescription": "Back up or restore your full ProxyChecker data, or exchange proxy lists in CSV, JSON, and TXT formats.",
+      "backupDescription": "Back up or restore your full ProxyHub data, or exchange proxy lists in CSV, JSON, and TXT formats.",
       "sync": "Synchronization",
       "syncDescription": "Sync proxies and settings through a remote provider. Uses the same backup format as local export.",
       "dangerZone": "危険な操作",
@@ -345,7 +345,7 @@
     "saved": "設定を保存しました",
     "backup": {
       "format": "ファイル形式",
-      "formatBackup": "ProxyChecker バックアップ",
+      "formatBackup": "ProxyHub バックアップ",
       "formatCsv": "CSV リスト",
       "exportKind": "エクスポート内容",
       "exportKindFull": "プロキシと設定",
@@ -387,7 +387,7 @@
         "settings": "設定のみ"
       },
       "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
-      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "formatHint": "Files use the versioned ProxyHub JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
       "protectWithPassword": "Protect with password",
       "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
       "exportPassword": "Backup password",
@@ -527,7 +527,7 @@
           "unknown": "Unknown error"
         }
       },
-      "nativeTitle": "ProxyChecker バックアップ",
+      "nativeTitle": "ProxyHub バックアップ",
       "nativeDescription": "プロキシ、グループ、お気に入り、設定の完全エクスポート。パスワード暗号化に対応。",
       "listFormatsTitle": "その他の形式",
       "listFormatsHeading": "外部プロキシリスト",

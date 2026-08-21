@@ -280,7 +280,7 @@ function CsvImportPreviewDialog({
               sx={{
                 px: 1.75,
                 py: 0.5,
-                borderRadius: 2.5,
+                borderRadius: '16px',
                 bgcolor: surfaceContainer(theme, 'low'),
                 boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
               }}
@@ -403,7 +403,7 @@ function CsvImportPreviewDialog({
 
               <Box
                 sx={{
-                  borderRadius: 2.5,
+                  borderRadius: '16px',
                   bgcolor: surfaceContainer(theme, 'low'),
                   boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`,
                   overflow: 'hidden'

@@ -2,7 +2,6 @@ import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { TITLE_BAR_HEIGHT } from '../shared/theme/title-bar'
 import { registerAppIpc } from './ipc/app'
 import { registerBackupIpc } from './ipc/backup'
 import { registerProxyImportIpc } from './ipc/proxy-import'
@@ -34,12 +33,7 @@ async function createWindow(): Promise<void> {
     backgroundColor: initialTitleBarTheme.color,
     ...(process.platform === 'win32'
       ? {
-          titleBarStyle: 'hidden',
-          titleBarOverlay: {
-            color: initialTitleBarTheme.color,
-            symbolColor: initialTitleBarTheme.symbolColor,
-            height: TITLE_BAR_HEIGHT
-          }
+          frame: false
         }
       : {}),
     ...(process.platform !== 'darwin' ? { icon } : {}),
@@ -59,6 +53,13 @@ async function createWindow(): Promise<void> {
 
     mainWindow.show()
   })
+
+  const notifyMaximizedState = (): void => {
+    mainWindow.webContents.send('window:maximized-changed', mainWindow.isMaximized())
+  }
+
+  mainWindow.on('maximize', notifyMaximizedState)
+  mainWindow.on('unmaximize', notifyMaximizedState)
 
   mainWindow.on('close', (event) => {
     if (!isTrayEnabled() || isAppQuitting()) {
@@ -86,7 +87,7 @@ app.on('before-quit', () => {
 })
 
 app.whenReady().then(async () => {
-  electronApp.setAppUserModelId('com.nemoking1210.proxychecker')
+  electronApp.setAppUserModelId('com.nemoking1210.proxyhub')
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)

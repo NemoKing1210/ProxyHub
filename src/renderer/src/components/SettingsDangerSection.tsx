@@ -95,7 +95,7 @@ function SettingsDangerSection({
 
   const dangerSubCardSx = {
     p: 2,
-    borderRadius: 2.5,
+    borderRadius: '16px',
     bgcolor: withThemeAlpha(theme, palette.background.paper, isDark ? 0.14 : 0.68),
     backgroundImage: isDark
       ? `linear-gradient(180deg, ${withThemeAlpha(theme, palette.common.white, 0.05)} 0%, transparent 100%)`
@@ -119,8 +119,7 @@ function SettingsDangerSection({
         icon={<ErrorOutlineOutlinedIcon fontSize="small" />}
         title={t('settings.sections.dangerZone')}
         description={t('settings.sections.dangerZoneDescription')}
-        collapsible
-        defaultExpanded={false}
+        showHeader={false}
         accent="error"
       >
         <Stack spacing={2.5}>

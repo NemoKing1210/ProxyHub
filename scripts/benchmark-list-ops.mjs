@@ -1,5 +1,5 @@
 /**
- * Benchmarks in-memory list operations used by ProxyChecker.
+ * Benchmarks in-memory list operations used by ProxyHub.
  * Run: npm run benchmark:perf
  */
 
@@ -85,7 +85,7 @@ function benchmark(name, fn) {
 
 const proxies = Array.from({ length: PROXY_COUNT }, (_, index) => createSyntheticProxy(index))
 
-console.log(`ProxyChecker list benchmark (${PROXY_COUNT} proxies)\n`)
+console.log(`ProxyHub list benchmark (${PROXY_COUNT} proxies)\n`)
 
 benchmark('filterProxies (search)', () => filterProxies(proxies, FILTER_QUERY))
 benchmark('sortProxies (latency)', () => sortProxies(proxies, SORT_FIELD))

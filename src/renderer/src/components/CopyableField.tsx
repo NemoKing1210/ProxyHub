@@ -69,7 +69,7 @@ function CopyableField({
           width: '100%',
           px: 1.75,
           py: 1.25,
-          borderRadius: 2.5,
+          borderRadius: '16px',
           bgcolor: copied
             ? withThemeAlpha(theme, palette.success.main, 0.14)
             : surfaceContainer(theme, 'low'),
@@ -155,7 +155,7 @@ function CopyableField({
             flexShrink: 0,
             width: 34,
             height: 34,
-            borderRadius: 2,
+            borderRadius: '12px',
             color: copied ? 'success.main' : 'text.disabled',
             bgcolor: copied
               ? withThemeAlpha(theme, palette.success.main, 0.16)

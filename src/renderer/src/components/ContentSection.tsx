@@ -24,6 +24,7 @@ interface ContentSectionProps {
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
   accent?: ContentSectionAccent
+  showHeader?: boolean
 }
 
 function ContentSection({
@@ -36,7 +37,8 @@ function ContentSection({
   defaultExpanded = true,
   expanded,
   onExpandedChange,
-  accent = 'primary'
+  accent = 'primary',
+  showHeader = true
 }: ContentSectionProps): React.JSX.Element {
   const theme = useTheme()
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -64,7 +66,7 @@ function ContentSection({
     <Box
       sx={{
         p: nested ? 2 : { xs: 2.5, sm: 3 },
-        borderRadius: nested ? 2.5 : 3,
+        borderRadius: nested ? '12px' : '16px',
         bgcolor:
           accent === 'primary'
             ? surfaceContainer(theme, nested ? 'default' : 'low')
@@ -88,75 +90,82 @@ function ContentSection({
             }
       }}
     >
-      <Stack
-        direction="row"
-        spacing={1.5}
-        onClick={collapsible ? toggleExpanded : undefined}
-        sx={{
-          mb: !collapsible || isExpanded ? (description ? 1 : 2) : description ? 1 : 0,
-          alignItems: 'flex-start',
-          cursor: collapsible ? 'pointer' : 'default',
-          userSelect: collapsible ? 'none' : 'auto'
-        }}
-      >
-        <Box
+      {showHeader && (
+        <Stack
+          direction="row"
+          spacing={1.5}
+          onClick={collapsible ? toggleExpanded : undefined}
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: nested ? 36 : 44,
-            height: nested ? 36 : 44,
-            borderRadius: 2.5,
-            flexShrink: 0,
-            bgcolor: surfaceTint(theme, accent, nested ? 0.14 : 0.18),
-            color: `${accent}.main`,
-            transition: `transform ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
+            mb: !collapsible || isExpanded ? (description ? 1 : 2) : description ? 1 : 0,
+            alignItems: 'flex-start',
+            cursor: collapsible ? 'pointer' : 'default',
+            userSelect: collapsible ? 'none' : 'auto'
           }}
         >
-          {icon}
-        </Box>
-        <Box sx={{ minWidth: 0, pt: 0.25, flex: 1 }}>
-          <Typography
-            variant="h6"
+          <Box
             sx={{
-              fontSize: nested ? '0.98rem' : '1.05rem',
-              fontWeight: 600,
-              lineHeight: 1.3,
-              color: accent === 'primary' ? 'text.primary' : `${accent}.main`
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: nested ? 36 : 44,
+              height: nested ? 36 : 44,
+              borderRadius: '16px',
+              flexShrink: 0,
+              bgcolor: surfaceTint(theme, accent, nested ? 0.14 : 0.18),
+              color: `${accent}.main`,
+              transition: `transform ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
             }}
           >
-            {title}
-          </Typography>
-          {description && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              {description}
+            {icon}
+          </Box>
+          <Box sx={{ minWidth: 0, pt: 0.25, flex: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontSize: nested ? '0.98rem' : '1.05rem',
+                fontWeight: 600,
+                lineHeight: 1.3,
+                color: accent === 'primary' ? 'text.primary' : `${accent}.main`
+              }}
+            >
+              {title}
             </Typography>
+            {description && (
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                {description}
+              </Typography>
+            )}
+          </Box>
+          {collapsible && (
+            <IconButton
+              size="small"
+              onMouseDown={(event) => {
+                event.preventDefault()
+              }}
+              onClick={(event) => {
+                event.stopPropagation()
+                toggleExpanded()
+              }}
+              aria-expanded={isExpanded}
+              sx={{
+                mt: 0.25,
+                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: `transform ${MD3_DURATION.medium1}ms ${MD3_EASING.emphasizedDecelerate}`
+              }}
+            >
+              <ExpandMoreIcon fontSize="small" />
+            </IconButton>
           )}
-        </Box>
-        {collapsible && (
-          <IconButton
-            size="small"
-            onMouseDown={(event) => {
-              event.preventDefault()
-            }}
-            onClick={(event) => {
-              event.stopPropagation()
-              toggleExpanded()
-            }}
-            aria-expanded={isExpanded}
-            sx={{
-              mt: 0.25,
-              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: `transform ${MD3_DURATION.medium1}ms ${MD3_EASING.emphasizedDecelerate}`
-            }}
-          >
-            <ExpandMoreIcon fontSize="small" />
-          </IconButton>
-        )}
-      </Stack>
+        </Stack>
+      )}
 
-      <Collapse in={!collapsible || isExpanded} unmountOnExit>
-        <Box sx={{ pl: { xs: 0, sm: nested ? 5.5 : 6.5 }, pt: collapsible ? 1.5 : 0 }}>
+      <Collapse in={!collapsible || isExpanded} mountOnEnter unmountOnExit>
+        <Box
+          sx={{
+            pl: showHeader ? { xs: 0, sm: nested ? 5.5 : 6.5 } : 0,
+            pt: showHeader && collapsible ? 1.5 : 0
+          }}
+        >
           {children}
         </Box>
       </Collapse>

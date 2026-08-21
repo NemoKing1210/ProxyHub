@@ -27,6 +27,20 @@ const api: AppAPI = {
   getAppInfo: () => ipcRenderer.invoke('app:get-info'),
   openExternal: (url) => ipcRenderer.invoke('app:open-external', url),
   setTitleBarTheme: (mode) => ipcRenderer.invoke('app:set-title-bar-theme', mode),
+  minimizeWindow: () => ipcRenderer.invoke('window:minimize'),
+  toggleWindowMaximize: () => ipcRenderer.invoke('window:toggle-maximize'),
+  closeWindow: () => ipcRenderer.invoke('window:close'),
+  getWindowMaximized: () => ipcRenderer.invoke('window:get-maximized'),
+  onWindowMaximizedChange: (callback) => {
+    const handler = (_event: Electron.IpcRendererEvent, maximized: boolean): void => {
+      callback(maximized)
+    }
+
+    ipcRenderer.on('window:maximized-changed', handler)
+    return () => {
+      ipcRenderer.removeListener('window:maximized-changed', handler)
+    }
+  },
   showMainWindow: () => ipcRenderer.invoke('tray:show-main'),
   isMainWindowBackgrounded: () => ipcRenderer.invoke('app:is-backgrounded'),
   showNotification: (payload) => ipcRenderer.invoke('app:show-notification', payload),

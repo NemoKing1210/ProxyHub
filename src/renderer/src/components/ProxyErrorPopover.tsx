@@ -49,7 +49,7 @@ function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): Rea
           display: 'inline-block',
           px: 1.25,
           py: 0.5,
-          borderRadius: 1.5,
+          borderRadius: '8px',
           bgcolor: withThemeAlpha(theme, palette.error.main, 0.14)
         }}
       >
@@ -73,7 +73,7 @@ function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): Rea
             textDecoration: 'underline dotted',
             px: 1.25,
             py: 0.5,
-            borderRadius: 1.5,
+            borderRadius: '8px',
             bgcolor: withThemeAlpha(theme, palette.error.main, 0.14)
           }}
         >
@@ -100,7 +100,7 @@ function ProxyErrorPopover({ error, errorDetails }: ProxyErrorPopoverProps): Rea
               p: 2,
               maxWidth: 380,
               mt: 0.5,
-              borderRadius: 3,
+              borderRadius: '16px',
               boxShadow: elevationShadow(theme, 3)
             }
           }

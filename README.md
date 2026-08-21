@@ -1,19 +1,19 @@
 <div align="center">
 
-<img src="resources/icon.png" alt="ProxyChecker" width="96" />
+<img src="resources/icon.png" alt="ProxyHub" width="96" />
 
-# ProxyChecker
+# ProxyHub
 
 **Cross-platform desktop app for testing proxy availability and performance**
 
-[Download](#-download) · [Features](#-features) · [Releases](https://github.com/NemoKing1210/ProxyChecker/releases) · [Changelog](./CHANGELOG.md) · [Developer guide](./DEVELOPER.md) · [Report Bug](https://github.com/NemoKing1210/ProxyChecker/issues)
+[Download](#-download) · [Features](#-features) · [Releases](https://github.com/NemoKing1210/ProxyHub/releases) · [Changelog](./CHANGELOG.md) · [Developer guide](./DEVELOPER.md) · [Report Bug](https://github.com/NemoKing1210/ProxyHub/issues)
 
 <br />
 
-[![GitHub release](https://img.shields.io/github/v/release/NemoKing1210/ProxyChecker?label=release&sort=semver)](https://github.com/NemoKing1210/ProxyChecker/releases)
+[![GitHub release](https://img.shields.io/github/v/release/NemoKing1210/ProxyHub?label=release&sort=semver)](https://github.com/NemoKing1210/ProxyHub/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](#-license)
-[![CI](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/ci.yml/badge.svg)](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/ci.yml)
-[![Release](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/release.yml/badge.svg)](https://github.com/NemoKing1210/ProxyChecker/actions/workflows/release.yml)
+[![CI](https://github.com/NemoKing1210/ProxyHub/actions/workflows/ci.yml/badge.svg)](https://github.com/NemoKing1210/ProxyHub/actions/workflows/ci.yml)
+[![Release](https://github.com/NemoKing1210/ProxyHub/actions/workflows/release.yml/badge.svg)](https://github.com/NemoKing1210/ProxyHub/actions/workflows/release.yml)
 
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#-platform-support)
 [![Electron](https://img.shields.io/badge/Electron-39-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
@@ -25,7 +25,7 @@
 
 ---
 
-ProxyChecker helps you validate proxy servers quickly from a single desktop interface. Check connectivity, measure latency, organize lists into groups, sync settings across devices, and export results — all without leaving the app.
+ProxyHub helps you validate proxy servers quickly from a single desktop interface. Check connectivity, measure latency, organize lists into groups, sync settings across devices, and export results — all without leaving the app.
 
 ## ✨ Features
 
@@ -61,11 +61,11 @@ ProxyChecker helps you validate proxy servers quickly from a single desktop inte
 
 ## 📥 Download
 
-Pre-built **Windows** installers are available on **[GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases)**.
+Pre-built **Windows** installers are available on **[GitHub Releases](https://github.com/NemoKing1210/ProxyHub/releases)**.
 
 | Platform    | Installer                                                                 |
 | ----------- | ------------------------------------------------------------------------- |
-| **Windows** | `ProxyChecker-{version}-setup.exe`                                        |
+| **Windows** | `ProxyHub-{version}-setup.exe`                                        |
 
 > **Note:** Builds are unsigned by default. Windows may show a SmartScreen prompt.
 

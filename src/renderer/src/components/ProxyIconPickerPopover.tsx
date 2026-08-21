@@ -44,7 +44,7 @@ function ProxyIconPickerPopover({
         paper: {
           sx: {
             p: 1.5,
-            borderRadius: 2.5,
+            borderRadius: '16px',
             width: 280
           }
         }
@@ -72,7 +72,7 @@ function ProxyIconPickerPopover({
             aria-pressed={isDefault}
             sx={{
               position: 'relative',
-              borderRadius: 2,
+              borderRadius: '12px',
               py: 1.25,
               color: isDefault ? 'primary.main' : 'text.secondary',
               bgcolor: isDefault ? alpha(theme.palette.primary.main, 0.14) : 'transparent',
@@ -114,7 +114,7 @@ function ProxyIconPickerPopover({
                 aria-pressed={selected}
                 sx={{
                   position: 'relative',
-                  borderRadius: 2,
+                  borderRadius: '12px',
                   py: 1.25,
                   color: selected ? 'primary.main' : 'text.secondary',
                   bgcolor: selected ? alpha(theme.palette.primary.main, 0.14) : 'transparent',

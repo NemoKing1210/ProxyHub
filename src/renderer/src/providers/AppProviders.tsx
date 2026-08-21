@@ -35,12 +35,13 @@ function AppProviders(): React.JSX.Element {
   const isReady = useSettingsStore((state) => state.isReady)
   const language = useSettingsStore((state) => state.settings.language)
   const themeSetting = useSettingsStore((state) => state.settings.theme)
+  const accentColor = useSettingsStore((state) => state.settings.accentColor)
   const loadSettings = useSettingsStore((state) => state.loadSettings)
   const loadProxies = useProxyStore((state) => state.loadProxies)
   const loadGroups = useGroupStore((state) => state.loadGroups)
   const [isDataReady, setIsDataReady] = useState(false)
   const direction = RTL_LANGUAGES.includes(language) ? 'rtl' : 'ltr'
-  const theme = useMemo(() => createAppTheme(direction), [direction])
+  const theme = useMemo(() => createAppTheme(direction, accentColor), [accentColor, direction])
   const themeMode = isReady ? themeSetting : 'dark'
   const isAppReady = isReady && isDataReady
 

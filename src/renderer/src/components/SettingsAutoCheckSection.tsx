@@ -130,17 +130,12 @@ function SettingsAutoCheckSection({
         </Stack>
       }
       description={t('settings.sections.autoCheckDescription')}
-      collapsible
-      defaultExpanded={false}
+      showHeader={false}
     >
       <Stack spacing={2}>
         <Box
           sx={{
-            borderRadius: 2.5,
-            overflow: 'hidden',
-            bgcolor: surfaceContainer(theme, 'low'),
-            boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`,
-            transition: `box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
+            borderRadius: '16px'
           }}
         >
           <SettingsSwitchCard
@@ -149,9 +144,10 @@ function SettingsAutoCheckSection({
             hint={t('settings.autoCheckEnabledHint')}
             checked={enabled}
             onChange={onEnabledChange}
+            clickable
           />
 
-          <Collapse in={enabled} unmountOnExit>
+          <Collapse in={enabled} mountOnEnter unmountOnExit>
             <Box
               sx={{
                 borderTop: `1px solid ${outlineVariant(theme)}`,
@@ -175,7 +171,7 @@ function SettingsAutoCheckSection({
                         fontFamily: 'monospace',
                         px: 1.5,
                         py: 0.5,
-                        borderRadius: 2,
+                        borderRadius: '12px',
                         bgcolor: surfaceContainer(theme, 'high'),
                         color: 'primary.main'
                       }}
@@ -270,7 +266,7 @@ function SettingsAutoCheckSection({
                                 gap: 1.25,
                                 px: 1.5,
                                 py: 1.1,
-                                borderRadius: 2,
+                                borderRadius: '12px',
                                 cursor: 'pointer',
                                 bgcolor: checked
                                   ? surfaceContainer(theme, 'high')
@@ -333,15 +329,8 @@ function SettingsAutoCheckSection({
           </Collapse>
         </Box>
 
-        <Collapse in={enabled} unmountOnExit>
-          <Box
-            sx={{
-              borderRadius: 2.5,
-              overflow: 'hidden',
-              bgcolor: surfaceContainer(theme, 'low'),
-              boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-            }}
-          >
+        <Collapse in={enabled} mountOnEnter unmountOnExit>
+          <Box sx={{ mt: 0.75, ml: { xs: 1, sm: 2 } }}>
             <SettingsSwitchCard
               icon={<NotificationsOutlinedIcon fontSize="small" />}
               accent="info"
@@ -349,6 +338,7 @@ function SettingsAutoCheckSection({
               hint={t('settings.autoCheckNotificationsHint')}
               checked={notifications}
               onChange={onNotificationsChange}
+              clickable
             />
           </Box>
         </Collapse>

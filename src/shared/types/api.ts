@@ -56,6 +56,11 @@ export interface AppAPI {
   getAppInfo: () => Promise<AppInfo>
   openExternal: (url: string) => Promise<void>
   setTitleBarTheme: (mode: ThemeMode) => Promise<void>
+  minimizeWindow: () => Promise<void>
+  toggleWindowMaximize: () => Promise<boolean>
+  closeWindow: () => Promise<void>
+  getWindowMaximized: () => Promise<boolean>
+  onWindowMaximizedChange: (callback: (maximized: boolean) => void) => () => void
   showMainWindow: () => Promise<void>
   isMainWindowBackgrounded: () => Promise<boolean>
   showNotification: (payload: AppNotificationPayload) => Promise<boolean>

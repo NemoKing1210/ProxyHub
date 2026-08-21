@@ -94,7 +94,7 @@ function AppUpdateSection(): React.JSX.Element {
       sx={{
         p: 2,
         mb: 2.5,
-        borderRadius: 2.5,
+        borderRadius: '16px',
         bgcolor: surfaceContainer(theme, 'low')
       }}
     >
@@ -159,7 +159,7 @@ function AppUpdateSection(): React.JSX.Element {
             <LinearProgress
               variant={state.downloadPercent !== undefined ? 'determinate' : 'indeterminate'}
               value={state.downloadPercent}
-              sx={{ mb: 0.75, borderRadius: 999 }}
+              sx={{ mb: 0.75, borderRadius: '999px' }}
             />
             <Typography variant="caption" color="text.secondary">
               {state.downloadPercent !== undefined

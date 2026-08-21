@@ -15,6 +15,7 @@ interface ToastState {
   queue: Toast[]
   show: (toast: Omit<Toast, 'id'>) => void
   dismiss: () => void
+  clear: () => void
 }
 
 export const useToastStore = create<ToastState>((set) => ({
@@ -42,5 +43,9 @@ export const useToastStore = create<ToastState>((set) => ({
       const [next, ...rest] = state.queue
       return { current: next, queue: rest }
     })
+  },
+
+  clear: () => {
+    set({ current: null, queue: [] })
   }
 }))

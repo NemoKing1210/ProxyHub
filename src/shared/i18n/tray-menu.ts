@@ -32,7 +32,7 @@ const ANONYMITY_RU: TrayMenuStrings['anonymity'] = {
 
 const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
   en: {
-    openApp: 'Open ProxyChecker',
+    openApp: 'Open ProxyHub',
     checkAll: 'Check all',
     checkAllFavorites: 'Check all favorites',
     checkProxy: 'Check',
@@ -48,7 +48,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     anonymity: ANONYMITY_EN
   },
   ru: {
-    openApp: 'Открыть ProxyChecker',
+    openApp: 'Открыть ProxyHub',
     checkAll: 'Проверить все',
     checkAllFavorites: 'Проверить все избранные',
     checkProxy: 'Проверить',
@@ -64,7 +64,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     anonymity: ANONYMITY_RU
   },
   uk: {
-    openApp: 'Відкрити ProxyChecker',
+    openApp: 'Відкрити ProxyHub',
     checkAll: 'Перевірити всі',
     checkAllFavorites: 'Перевірити всі обрані',
     checkProxy: 'Перевірити',
@@ -80,7 +80,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     anonymity: ANONYMITY_RU
   },
   de: {
-    openApp: 'ProxyChecker öffnen',
+    openApp: 'ProxyHub öffnen',
     checkAll: 'Alle prüfen',
     checkAllFavorites: 'Alle Favoriten prüfen',
     checkProxy: 'Prüfen',
@@ -96,7 +96,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     anonymity: ANONYMITY_EN
   },
   fr: {
-    openApp: 'Ouvrir ProxyChecker',
+    openApp: 'Ouvrir ProxyHub',
     checkAll: 'Tout vérifier',
     checkAllFavorites: 'Vérifier tous les favoris',
     checkProxy: 'Vérifier',
@@ -116,7 +116,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     }
   },
   es: {
-    openApp: 'Abrir ProxyChecker',
+    openApp: 'Abrir ProxyHub',
     checkAll: 'Comprobar todos',
     checkAllFavorites: 'Comprobar todos los favoritos',
     checkProxy: 'Comprobar',
@@ -136,7 +136,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     }
   },
   pt: {
-    openApp: 'Abrir ProxyChecker',
+    openApp: 'Abrir ProxyHub',
     checkAll: 'Verificar todos',
     checkAllFavorites: 'Verificar todos os favoritos',
     checkProxy: 'Verificar',
@@ -156,7 +156,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     }
   },
   zh: {
-    openApp: '打开 ProxyChecker',
+    openApp: '打开 ProxyHub',
     checkAll: '全部检测',
     checkAllFavorites: '检查所有收藏',
     checkProxy: '检查',
@@ -172,7 +172,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     anonymity: ANONYMITY_EN
   },
   ja: {
-    openApp: 'ProxyChecker を開く',
+    openApp: 'ProxyHub を開く',
     checkAll: 'すべて確認',
     checkAllFavorites: 'お気に入りをすべて確認',
     checkProxy: '確認',
@@ -188,7 +188,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     anonymity: ANONYMITY_EN
   },
   hi: {
-    openApp: 'ProxyChecker खोलें',
+    openApp: 'ProxyHub खोलें',
     checkAll: 'सभी जांचें',
     checkAllFavorites: 'सभी पसंदीदा जांचें',
     checkProxy: 'जांचें',
@@ -204,7 +204,7 @@ const TRAY_MENU_STRINGS: Record<AppLanguage, TrayMenuStrings> = {
     anonymity: ANONYMITY_EN
   },
   ar: {
-    openApp: 'فتح ProxyChecker',
+    openApp: 'فتح ProxyHub',
     checkAll: 'فحص الكل',
     checkAllFavorites: 'فحص جميع المفضلة',
     checkProxy: 'فحص',

@@ -1,10 +1,10 @@
-# ProxyChecker — Design Document
+# ProxyHub — Design Document
 
-This document describes the product vision, system architecture, UI/UX guidelines, and technical design decisions for **ProxyChecker**.
+This document describes the product vision, system architecture, UI/UX guidelines, and technical design decisions for **ProxyHub**.
 
 ## 1. Product vision
 
-ProxyChecker is a cross-platform desktop application that helps users quickly validate proxy servers. The app should feel fast, reliable, and straightforward — optimized for bulk operations on large proxy lists.
+ProxyHub is a cross-platform desktop application that helps users quickly validate proxy servers. The app should feel fast, reliable, and straightforward — optimized for bulk operations on large proxy lists.
 
 ### Goals
 
@@ -55,7 +55,7 @@ protocol://user:pass@host:port
 ┌─────────────────────────▼──────────────────────────────────┐
 │                   Main process (Electron)                   │
 │  ┌──────────────┐  ┌──────────────┐  ┌─────────────────┐ │
-│  │ ProxyChecker │  │  File I/O    │  │  Window / Shell │ │
+│  │ ProxyHub │  │  File I/O    │  │  Window / Shell │ │
 │  │   Service    │  │  (import/    │  │  management     │ │
 │  │              │  │   export)    │  │                 │ │
 │  └──────┬───────┘  └──────────────┘  └─────────────────┘ │

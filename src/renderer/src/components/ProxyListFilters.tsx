@@ -21,7 +21,7 @@ import {
   Typography
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '../../../shared/constants/proxy-countries'
 import { PROXY_ANONYMITY_LEVELS, PROXY_PROTOCOLS } from '../../../shared/types/proxy'
@@ -92,7 +92,7 @@ function getCityOptions(proxies: Proxy[], countryCode: string): string[] {
   return [...cities.values()].sort((left, right) => left.localeCompare(right))
 }
 
-function ProxyListFilters({
+function ProxyListFiltersImpl({
   proxies,
   filters,
   shownCount,
@@ -395,7 +395,7 @@ function ProxyListFilters({
                     fontFamily: 'monospace',
                     px: 1.5,
                     py: 0.5,
-                    borderRadius: 2,
+                    borderRadius: '12px',
                     bgcolor: surfaceContainer(theme, 'high'),
                     color: 'primary.main'
                   }}
@@ -457,4 +457,4 @@ function ProxyListFilters({
   )
 }
 
-export default ProxyListFilters
+export default memo(ProxyListFiltersImpl)

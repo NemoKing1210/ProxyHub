@@ -155,7 +155,7 @@ function ProxyListFormatCard({
     <Box
       sx={{
         p: 2,
-        borderRadius: 2.5,
+        borderRadius: '16px',
         bgcolor: surfaceContainer(theme, 'low'),
         display: 'flex',
         flexDirection: 'column',
@@ -170,7 +170,7 @@ function ProxyListFormatCard({
             justifyContent: 'center',
             width: 40,
             height: 40,
-            borderRadius: 2,
+            borderRadius: '12px',
             flexShrink: 0,
             bgcolor: withThemeAlpha(theme, accent, theme.palette.mode === 'dark' ? 0.22 : 0.12),
             color: accent
@@ -188,7 +188,7 @@ function ProxyListFormatCard({
               sx={{
                 px: 0.75,
                 py: 0.15,
-                borderRadius: 1,
+                borderRadius: '12px',
                 fontWeight: 700,
                 letterSpacing: '0.04em',
                 bgcolor: withThemeAlpha(theme, accent, 0.1),
@@ -544,7 +544,7 @@ function SettingsBackupSection({
 
   const nativeCardSx: SxProps<Theme> = {
     p: { xs: 2, sm: 2.25 },
-    borderRadius: 2.5,
+    borderRadius: '16px',
     bgcolor: surfaceContainer(theme, 'default'),
     backgroundImage: `linear-gradient(135deg, ${withThemeAlpha(theme, theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.08 : 0.05)} 0%, transparent 55%)`
   }
@@ -555,8 +555,7 @@ function SettingsBackupSection({
         icon={<SwapHorizOutlinedIcon fontSize="small" />}
         title={t('settings.sections.backup')}
         description={t('settings.sections.backupDescription')}
-        collapsible
-        defaultExpanded={false}
+        showHeader={false}
       >
         <Stack spacing={3}>
           <Box sx={nativeCardSx}>
@@ -568,7 +567,7 @@ function SettingsBackupSection({
                   justifyContent: 'center',
                   width: 44,
                   height: 44,
-                  borderRadius: 2.5,
+                  borderRadius: '16px',
                   flexShrink: 0,
                   bgcolor: withThemeAlpha(
                     theme,
@@ -592,7 +591,7 @@ function SettingsBackupSection({
                     sx={{
                       px: 0.75,
                       py: 0.15,
-                      borderRadius: 1,
+                      borderRadius: '12px',
                       fontWeight: 700,
                       letterSpacing: '0.04em',
                       bgcolor: withThemeAlpha(theme, theme.palette.primary.main, 0.12),

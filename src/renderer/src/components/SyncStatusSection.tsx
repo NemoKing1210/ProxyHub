@@ -70,7 +70,7 @@ function StatusGroup({
       sx={{
         px: 1.5,
         py: 0.5,
-        borderRadius: 2.5,
+        borderRadius: '16px',
         bgcolor: surfaceContainer(theme, 'low'),
         boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
       }}
@@ -299,7 +299,7 @@ function SyncStatusSection({
       {status.lastError && (
         <Box
           sx={{
-            borderRadius: 2.5,
+            borderRadius: '16px',
             overflow: 'hidden',
             boxShadow: `inset 0 0 0 1px ${withThemeAlpha(theme, theme.palette.error.main, 0.35)}`
           }}
@@ -308,7 +308,7 @@ function SyncStatusSection({
             severity="error"
             variant="outlined"
             icon={<ErrorOutlineOutlinedIcon fontSize="small" />}
-            sx={{ borderRadius: 0, alignItems: 'flex-start' }}
+            sx={{ borderRadius: '12px', alignItems: 'flex-start' }}
           >
             <Stack spacing={1.25}>
               <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -349,7 +349,7 @@ function SyncStatusSection({
                 sx={{
                   m: 0,
                   p: 1.25,
-                  borderRadius: 2,
+                  borderRadius: '12px',
                   bgcolor: surfaceContainer(theme, 'high'),
                   fontFamily: 'monospace',
                   fontSize: '0.74rem',

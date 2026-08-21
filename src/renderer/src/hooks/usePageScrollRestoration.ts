@@ -1,6 +1,10 @@
 import { useCallback, useLayoutEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
+function getScrollContainer(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-app-scroll-container]')
+}
+
 export function usePageScrollRestoration(): {
   restoreScroll: (pathname: string) => void
 } {
@@ -12,9 +16,15 @@ export function usePageScrollRestoration(): {
     const previousPath = previousPathRef.current
 
     if (previousPath !== location.pathname) {
-      scrollPositionsRef.current[previousPath] = window.scrollY
+      const scrollContainer = getScrollContainer()
+      scrollPositionsRef.current[previousPath] = scrollContainer?.scrollTop ?? window.scrollY
       previousPathRef.current = location.pathname
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+
+      if (scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+      } else {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+      }
     }
   }, [location.pathname])
 
@@ -22,11 +32,17 @@ export function usePageScrollRestoration(): {
     const savedPosition = scrollPositionsRef.current[pathname]
     if (savedPosition === undefined) return
 
-    window.scrollTo({
-      top: savedPosition,
-      left: 0,
-      behavior: 'instant'
-    })
+    const scrollContainer = getScrollContainer()
+
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: savedPosition, left: 0, behavior: 'instant' })
+    } else {
+      window.scrollTo({
+        top: savedPosition,
+        left: 0,
+        behavior: 'instant'
+      })
+    }
   }, [])
 
   return { restoreScroll }

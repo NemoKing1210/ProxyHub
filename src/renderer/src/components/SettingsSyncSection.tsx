@@ -45,7 +45,7 @@ import ProxyFormSection from './ProxyFormSection'
 import SettingsSwitchCard from './SettingsSwitchCard'
 import SyncStatusSection from './SyncStatusSection'
 import SyncPullPreviewDialog from './SyncPullPreviewDialog'
-import { outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
+import { surfaceContainer, withThemeAlpha } from '../theme'
 import { pushSyncWithActivity } from '../utils/sync-push'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '../../../shared/constants/backup-crypto'
 
@@ -537,8 +537,7 @@ function SettingsSyncSection({
         icon={<CloudSyncOutlinedIcon fontSize="small" />}
         title={sectionTitle}
         description={sectionDescription}
-        collapsible
-        defaultExpanded={false}
+        showHeader={false}
       >
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
           <CircularProgress size={28} />
@@ -553,16 +552,13 @@ function SettingsSyncSection({
         icon={<CloudSyncOutlinedIcon fontSize="small" />}
         title={sectionTitle}
         description={sectionDescription}
-        collapsible
-        defaultExpanded={false}
+        showHeader={false}
       >
         <Stack spacing={3}>
           <ProxyFormSection
             icon={<HubOutlinedIcon fontSize="small" />}
             title={t('settings.sync.provider')}
             description={t(`settings.sync.providers.${config.provider}`)}
-            collapsible
-            defaultExpanded={false}
           >
             <TextField
               select
@@ -866,14 +862,8 @@ function SettingsSyncSection({
             </Collapse>
           </ProxyFormSection>
 
-          <Collapse in={isProviderEnabled}>
-            <Box
-              sx={{
-                borderRadius: 2.5,
-                overflow: 'hidden',
-                boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-              }}
-            >
+          <Collapse in={isProviderEnabled} mountOnEnter unmountOnExit>
+            <Box sx={{ borderRadius: '16px' }}>
               <SettingsSwitchCard
                 icon={<CloudSyncOutlinedIcon fontSize="small" />}
                 title={t('settings.sync.autoSyncEnabled')}
@@ -882,9 +872,10 @@ function SettingsSyncSection({
                 onChange={(enabled) => void handleAutoSyncChange(enabled)}
                 disabled={isBusy}
                 accent="info"
+                clickable
               />
 
-              <Collapse in={config.autoSyncEnabled}>
+              <Collapse in={config.autoSyncEnabled} mountOnEnter unmountOnExit>
                 <Box sx={{ px: 2.25, pb: 2.25 }}>
                   <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
                     <Typography variant="subtitle2">
@@ -895,7 +886,7 @@ function SettingsSyncSection({
                       sx={{
                         px: 1,
                         py: 0.25,
-                        borderRadius: 1,
+                        borderRadius: '12px',
                         fontFamily: 'monospace',
                         bgcolor: surfaceContainer(theme, 'high')
                       }}
@@ -929,6 +920,7 @@ function SettingsSyncSection({
                 onChange={(enabled) => void handleSyncOnStartupChange(enabled)}
                 disabled={isBusy}
                 accent="info"
+                clickable
               />
 
               <SettingsSwitchCard
@@ -939,6 +931,7 @@ function SettingsSyncSection({
                 onChange={(enabled) => void handlePushOnChangeChange(enabled)}
                 disabled={isBusy}
                 accent="info"
+                clickable
               />
             </Box>
           </Collapse>

@@ -12,6 +12,7 @@ function App(): React.JSX.Element {
         <Route element={<AppLayout />}>
           <Route index element={<ProxyList />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="settings/:section" element={<SettingsPage />} />
         </Route>
       </Routes>
     </>

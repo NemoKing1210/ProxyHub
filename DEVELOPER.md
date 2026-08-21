@@ -1,6 +1,6 @@
 # Developer guide
 
-This document covers local development, building installers, releasing, and OAuth setup for **ProxyChecker**.
+This document covers local development, building installers, releasing, and OAuth setup for **ProxyHub**.
 
 For product overview and download links, see [README.md](./README.md).
 
@@ -26,8 +26,8 @@ For product overview and download links, see [README.md](./README.md).
 ## Setup
 
 ```bash
-git clone https://github.com/NemoKing1210/ProxyChecker.git
-cd ProxyChecker
+git clone https://github.com/NemoKing1210/ProxyHub.git
+cd ProxyHub
 npm install
 ```
 
@@ -85,7 +85,7 @@ For product vision and design decisions, see [DESIGN.md](./DESIGN.md).
 
 ## Releasing
 
-Releases are published to [GitHub Releases](https://github.com/NemoKing1210/ProxyChecker/releases) automatically via the [**Release** workflow](.github/workflows/release.yml) when a version tag is pushed.
+Releases are published to [GitHub Releases](https://github.com/NemoKing1210/ProxyHub/releases) automatically via the [**Release** workflow](.github/workflows/release.yml) when a version tag is pushed.
 
 ### Prerequisites
 
@@ -113,9 +113,9 @@ Artifacts produced:
 
 | Platform  | Files                                                                 |
 | --------- | --------------------------------------------------------------------- |
-| Windows   | `ProxyChecker-{version}-setup.exe`                                    |
-| macOS     | `ProxyChecker-{version}-x64.dmg`, `ProxyChecker-{version}-arm64.dmg`, zip (auto-update) |
-| Linux     | `ProxyChecker-{version}-x64.AppImage`, `ProxyChecker-{version}-amd64.deb` |
+| Windows   | `ProxyHub-{version}-setup.exe`                                    |
+| macOS     | `ProxyHub-{version}-x64.dmg`, `ProxyHub-{version}-arm64.dmg`, zip (auto-update) |
+| Linux     | `ProxyHub-{version}-x64.AppImage`, `ProxyHub-{version}-amd64.deb` |
 
 ### Local release (single platform)
 
@@ -164,4 +164,4 @@ For CI/release builds, set `GOOGLE_OAUTH_CLIENT_ID` as a repository secret inste
 3. Run `npm run typecheck` and `npm run lint` before opening a PR
 4. Commit your changes and open a Pull Request
 
-Bug reports and feature requests are welcome in [Issues](https://github.com/NemoKing1210/ProxyChecker/issues).
+Bug reports and feature requests are welcome in [Issues](https://github.com/NemoKing1210/ProxyHub/issues).

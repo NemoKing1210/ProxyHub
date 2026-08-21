@@ -1,18 +1,14 @@
 import AddIcon from '@mui/icons-material/Add'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import StopIcon from '@mui/icons-material/Stop'
-import StarIcon from '@mui/icons-material/Star'
-import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
 import {
   Box,
   Button,
-  Chip,
   CircularProgress,
+  Divider,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -21,7 +17,6 @@ import {
   Stack,
   Typography
 } from '@mui/material'
-import type { SxProps, Theme } from '@mui/material/styles'
 import { useTheme } from '@mui/material/styles'
 import {
   DndContext,
@@ -36,7 +31,7 @@ import {
 } from '@dnd-kit/core'
 import { snapCenterToCursor } from '@dnd-kit/modifiers'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useMemo, useState, useCallback, type ReactElement, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, useCallback, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useShallow } from 'zustand/react/shallow'
 import type { Proxy, ProxyColorId, ProxyIconId, ProxyInput } from '../../../shared/types/proxy'
@@ -45,26 +40,24 @@ import { DEFAULT_PROXY_COLOR_ID, PROXY_ICON_AUTO_VALUE } from '../../../shared/t
 import { normalizeCountryCode } from '../../../shared/constants/proxy-countries'
 import { normalizeAnonymityLevel } from '../../../shared/utils/proxy-import'
 import { normalizeProxyColorId } from '../../../shared/utils/proxy-colors'
-import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
+import { parseProxyUrl } from '../../../shared/utils/proxy-format'
+import { filterEnabledProxies } from '../../../shared/utils/proxy-enabled'
 import { useProxyListViewState } from '../hooks/useProxyListViewState'
 import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
 import { filterProxies, hasActiveFilters } from '../utils/filter-proxies'
 import {
-  badgeTransition,
   listItemTransition,
   listLayoutTransition,
-  proxyCardVariants,
-  statBadgeVariants,
   usePrefersReducedMotion
 } from '../utils/list-motion'
 import { sortProxies, sortProxiesByFavorite } from '../utils/sort-proxies'
-import { organizeProxiesByGroup } from '../utils/organize-proxies-by-group'
 import {
-  buildVirtualProxyListItems,
-  PROXY_LIST_VIRTUALIZATION_THRESHOLD
-} from '../utils/virtual-proxy-list-items'
+  organizeProxiesByGroup,
+  type ProxyGroupSection as OrganizedGroupSection
+} from '../utils/organize-proxies-by-group'
+import { getListCardPosition, getListCardRadius } from '../utils/card-list'
 import {
   UNGROUPED_DROP_ZONE_ID,
   getGroupDropZoneId,
@@ -72,17 +65,10 @@ import {
   isHoveringGroup,
   resolveDropTargetGroupId
 } from '../utils/proxy-dnd'
-import {
-  elevationShadow,
-  getPalette,
-  surfaceContainer,
-  surfaceTint,
-  withThemeAlpha
-} from '../theme'
+import { MD3_DURATION, MD3_EASING, elevationShadow, surfaceContainer, surfaceTint } from '../theme'
 import type { ProxyFormValues } from '../validation/proxySchema'
 import ProxyCardDragOverlay from './ProxyCardDragOverlay'
 import ProxyListRow from './ProxyListRow'
-import VirtualizedProxyList from './VirtualizedProxyList'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyDetailsDialog from './ProxyDetailsDialog'
 import ProxyFormDialog from './ProxyFormDialog'
@@ -91,6 +77,7 @@ import ProxyGroupDeleteConfirmDialog from './ProxyGroupDeleteConfirmDialog'
 import ProxyGroupDeleteDeadConfirmDialog from './ProxyGroupDeleteDeadConfirmDialog'
 import ProxyGroupFormDialog from './ProxyGroupFormDialog'
 import ProxyGroupSection from './ProxyGroupSection'
+import ProxyStatBadges from './ProxyStatBadges'
 import ProxyDropZone from './ProxyDropZone'
 import ProxyListFilters from './ProxyListFilters'
 import ProxyListSearch from './ProxyListSearch'
@@ -118,12 +105,80 @@ function toProxyInput(values: ProxyFormValues): ProxyInput {
   }
 }
 
-interface StatBadgeItem {
-  key: string
-  icon: ReactElement
-  label: string
-  sx: SxProps<Theme>
+interface ProxyGroupSectionEntryProps {
+  section: OrganizedGroupSection
+  isCheckingAll: boolean
+  checkingIds: Set<string>
+  dragEnabled: boolean
+  draggingProxyId: string | null
+  hoveredDropTargetId: string | null
+  listRadius?: string
+  renderProxyCard: (proxy: Proxy, listRadius?: string) => React.JSX.Element
+  onEditGroup: (group: ProxyGroup) => void
+  onDeleteGroup: (group: ProxyGroup) => void
+  onDeleteDeadGroup: (group: ProxyGroup) => void
+  onClearGroup: (group: ProxyGroup) => void
+  onIconChange: (group: ProxyGroup, iconId: ProxyIconId | undefined) => void | Promise<void>
+  onColorChange: (group: ProxyGroup, colorId: ProxyColorId | undefined) => void | Promise<void>
+  onAddProxy: (group: ProxyGroup) => void
+  onCheckGroup: (proxies: Proxy[]) => void
 }
+
+const ProxyGroupSectionEntry = memo(function ProxyGroupSectionEntry({
+  section,
+  isCheckingAll,
+  checkingIds,
+  dragEnabled,
+  draggingProxyId,
+  hoveredDropTargetId,
+  listRadius,
+  renderProxyCard,
+  onEditGroup,
+  onDeleteGroup,
+  onDeleteDeadGroup,
+  onClearGroup,
+  onIconChange,
+  onColorChange,
+  onAddProxy,
+  onCheckGroup
+}: ProxyGroupSectionEntryProps): React.JSX.Element {
+  const { group, proxies } = section
+
+  const renderProxyItem = useCallback(
+    (proxy: Proxy, listRadius?: string): React.JSX.Element => (
+      <div key={proxy.id}>{renderProxyCard(proxy, listRadius)}</div>
+    ),
+    [renderProxyCard]
+  )
+
+  return (
+    <ProxyGroupSection
+      group={group}
+      proxies={proxies}
+      canCheck={filterEnabledProxies(proxies).length > 0}
+      isCheckingAll={isCheckingAll}
+      checkingIds={checkingIds}
+      dropZoneId={getGroupDropZoneId(group.id)}
+      listRadius={listRadius}
+      dropZoneDisabled={!dragEnabled}
+      isDragActive={Boolean(draggingProxyId)}
+      forceExpanded={isHoveringGroup(
+        hoveredDropTargetId,
+        group.id,
+        section.proxies.map((proxy) => proxy.id)
+      )}
+      onEdit={() => onEditGroup(group)}
+      onDelete={() => onDeleteGroup(group)}
+      onDeleteDead={() => onDeleteDeadGroup(group)}
+      onClear={() => onClearGroup(group)}
+      onIconChange={(iconId) => void onIconChange(group, iconId)}
+      onColorChange={(colorId) => void onColorChange(group, colorId)}
+      onAddProxy={() => onAddProxy(group)}
+      onCheck={() => onCheckGroup(proxies)}
+      renderProxyItem={renderProxyItem}
+    />
+  )
+})
 
 function ProxyList(): React.JSX.Element {
   const { t } = useTranslation()
@@ -182,12 +237,14 @@ function ProxyList(): React.JSX.Element {
   const autoCheckEnabled = useSettingsStore((state) => state.settings.autoCheckEnabled)
 
   const [addMenuAnchor, setAddMenuAnchor] = useState<HTMLElement | null>(null)
+  const [addMenuPosition, setAddMenuPosition] = useState<{ top: number; left: number } | null>(null)
   const [draggingProxyId, setDraggingProxyId] = useState<string | null>(null)
   const [hoveredDropTargetId, setHoveredDropTargetId] = useState<string | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<'add' | 'edit'>('add')
   const [editingProxy, setEditingProxy] = useState<Proxy | undefined>()
   const [addProxyGroupId, setAddProxyGroupId] = useState<string | undefined>()
+
   const [groupDialogOpen, setGroupDialogOpen] = useState(false)
   const [groupDialogMode, setGroupDialogMode] = useState<'add' | 'edit'>('add')
   const [editingGroup, setEditingGroup] = useState<ProxyGroup | undefined>()
@@ -211,9 +268,67 @@ function ProxyList(): React.JSX.Element {
     void loadGroups()
   }, [loadProxies, loadGroups])
 
-  const closeAddMenu = (): void => {
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent): void => {
+      const target = event.target
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        (target instanceof HTMLElement && target.isContentEditable)
+      ) {
+        return
+      }
+
+      const value = event.clipboardData?.getData('text/plain').trim() ?? ''
+      const parsed = value ? parseProxyUrl(value) : null
+      if (!parsed) {
+        return
+      }
+
+      event.preventDefault()
+      void addProxy(parsed)
+    }
+
+    window.addEventListener('paste', handlePaste)
+    return () => window.removeEventListener('paste', handlePaste)
+  }, [addProxy])
+
+  const closeAddMenu = useCallback((): void => {
     setAddMenuAnchor(null)
-  }
+    setAddMenuPosition(null)
+  }, [])
+
+  // Контекстное меню на свободных участках страницы — то же, что у кнопки «Добавить».
+  // Слушаем window, чтобы покрыть всю область прокрутки страницы (включая пустоту
+  // ниже контента и поля вокруг контейнера), а не только высоту контента ProxyList.
+  useEffect(() => {
+    const handleContextMenu = (event: MouseEvent): void => {
+      const target = event.target
+      if (!(target instanceof Element)) {
+        return
+      }
+
+      // Только область страницы под шапкой/навигацией.
+      if (!target.closest('[data-app-scroll-container]')) {
+        return
+      }
+
+      // Не перехватываем правый клик на контролах и текстовых полях.
+      if (
+        target.closest(
+          'input, textarea, button, a, select, [role="button"], [role="menu"], [contenteditable="true"]'
+        )
+      ) {
+        return
+      }
+
+      event.preventDefault()
+      setAddMenuPosition({ top: event.clientY, left: event.clientX })
+    }
+
+    window.addEventListener('contextmenu', handleContextMenu)
+    return () => window.removeEventListener('contextmenu', handleContextMenu)
+  }, [])
 
   const openAddDialog = (): void => {
     closeAddMenu()
@@ -223,12 +338,12 @@ function ProxyList(): React.JSX.Element {
     setDialogOpen(true)
   }
 
-  const openAddDialogForGroup = (group: ProxyGroup): void => {
+  const openAddDialogForGroup = useCallback((group: ProxyGroup): void => {
     setDialogMode('add')
     setEditingProxy(undefined)
     setAddProxyGroupId(group.id)
     setDialogOpen(true)
-  }
+  }, [])
 
   const openAddGroupDialog = (): void => {
     closeAddMenu()
@@ -237,11 +352,23 @@ function ProxyList(): React.JSX.Element {
     setGroupDialogOpen(true)
   }
 
-  const openEditGroupDialog = (group: ProxyGroup): void => {
+  const openEditGroupDialog = useCallback((group: ProxyGroup): void => {
     setGroupDialogMode('edit')
     setEditingGroup(group)
     setGroupDialogOpen(true)
-  }
+  }, [])
+
+  const openDeleteGroupDialog = useCallback((group: ProxyGroup): void => {
+    setDeletingGroup(group)
+  }, [])
+
+  const openDeleteDeadGroupDialog = useCallback((group: ProxyGroup): void => {
+    setDeletingDeadGroup(group)
+  }, [])
+
+  const openClearGroupDialog = useCallback((group: ProxyGroup): void => {
+    setClearingGroup(group)
+  }, [])
 
   const openEditDialog = (proxy: Proxy): void => {
     setDialogMode('edit')
@@ -267,19 +394,26 @@ function ProxyList(): React.JSX.Element {
     return false
   }
 
-  const handleGroupIconChange = async (
-    group: ProxyGroup,
-    iconId: ProxyIconId | undefined
-  ): Promise<void> => {
-    await patchGroup(group.id, { icon: iconId })
-  }
+  const handleGroupIconChange = useCallback(
+    async (group: ProxyGroup, iconId: ProxyIconId | undefined): Promise<void> => {
+      await patchGroup(group.id, { icon: iconId })
+    },
+    [patchGroup]
+  )
 
-  const handleGroupColorChange = async (
-    group: ProxyGroup,
-    colorId: ProxyColorId | undefined
-  ): Promise<void> => {
-    await patchGroup(group.id, { color: colorId })
-  }
+  const handleGroupColorChange = useCallback(
+    async (group: ProxyGroup, colorId: ProxyColorId | undefined): Promise<void> => {
+      await patchGroup(group.id, { color: colorId })
+    },
+    [patchGroup]
+  )
+
+  const handleCheckGroup = useCallback(
+    (groupProxies: Proxy[]): void => {
+      void checkAll(filterEnabledProxies(groupProxies).map((proxy) => proxy.id))
+    },
+    [checkAll]
+  )
 
   const handleGroupDeleteConfirm = async (groupId: string): Promise<void> => {
     await removeGroup(groupId)
@@ -411,69 +545,70 @@ function ProxyList(): React.JSX.Element {
   )
   const showUngroupedDropZone =
     organizedList.ungrouped.length > 0 || (dragEnabled && Boolean(draggingProxyId))
-  const useVirtualList =
-    visibleProxies.length >= PROXY_LIST_VIRTUALIZATION_THRESHOLD &&
-    !draggingProxyId &&
-    !reducedMotion
-  const virtualListItems = useMemo(
+
+  // Первый рендер данных страницы отдаём без entry/layout-анимаций карточек,
+  // чтобы они не конфликтовали с переходом страницы (финальный "рывок").
+  // Включаем анимации со следующего кадра — они нужны для изменений списка.
+  const [entryAnimationsEnabled, setEntryAnimationsEnabled] = useState(false)
+
+  useEffect(() => {
+    if (entryAnimationsEnabled || !hasVisibleItems) {
+      return
+    }
+
+    const rafId = requestAnimationFrame(() => {
+      setEntryAnimationsEnabled(true)
+    })
+    return () => cancelAnimationFrame(rafId)
+  }, [entryAnimationsEnabled, hasVisibleItems])
+
+  const renderProxyCard = useCallback(
+    (proxy: Proxy, listRadius?: string): React.JSX.Element => (
+      <ProxyListRow
+        key={proxy.id}
+        proxyId={proxy.id}
+        groups={groups}
+        variant={proxyCardView}
+        dragEnabled={dragEnabled}
+        draggingProxyId={draggingProxyId}
+        entryAnimationsEnabled={entryAnimationsEnabled}
+        listRadius={listRadius}
+        onCheck={handleCheckProxy}
+        onEdit={handleEditProxy}
+        onDelete={handleDeleteProxy}
+        onIconChange={handleIconChange}
+        onToggleFavorite={handleToggleFavoriteProxy}
+        onToggleEnabled={handleToggleEnabledProxy}
+        onGroupChange={handleGroupChange}
+      />
+    ),
+    [
+      groups,
+      proxyCardView,
+      dragEnabled,
+      draggingProxyId,
+      entryAnimationsEnabled,
+      handleCheckProxy,
+      handleEditProxy,
+      handleDeleteProxy,
+      handleIconChange,
+      handleToggleFavoriteProxy,
+      handleToggleEnabledProxy,
+      handleGroupChange
+    ]
+  )
+
+  const ungroupedItems = useMemo(
     () =>
-      buildVirtualProxyListItems(
-        organizedList,
-        visibleGroupSections,
-        showUngroupedDropZone,
-        getGroupDeadProxyCount
-      ),
-    [organizedList, visibleGroupSections, showUngroupedDropZone]
-  )
-
-  const getGroupEnabledProxyIds = useCallback(
-    (groupId: string): string[] =>
-      filterEnabledProxies(proxies.filter((proxy) => proxy.groupId === groupId)).map(
-        (proxy) => proxy.id
-      ),
-    [proxies]
-  )
-
-  const handleCheckGroup = useCallback(
-    (proxyIds: string[]) => {
-      void checkAll(proxyIds)
-    },
-    [checkAll]
-  )
-
-  const proxyStats = useMemo(
-    () => ({
-      aliveCount: proxies.filter((proxy) => proxy.status === 'alive').length,
-      deadCount: proxies.filter((proxy) => proxy.status === 'dead').length,
-      enabledCount: proxies.filter(isProxyEnabled).length,
-      favoritesCount: proxies.filter((proxy) => proxy.isFavorite).length
-    }),
-    [proxies]
-  )
-
-  const renderMotionWrapper = useCallback(
-    (proxyId: string, content: ReactNode): ReactNode => {
-      const isDragging = draggingProxyId === proxyId
-
-      return (
-        <motion.div
-          layout={!reducedMotion && !isDragging}
-          variants={reducedMotion ? undefined : proxyCardVariants}
-          initial={reducedMotion ? false : 'initial'}
-          animate={reducedMotion ? undefined : 'animate'}
-          exit={reducedMotion ? undefined : 'exit'}
-          transition={
-            reducedMotion
-              ? { duration: 0 }
-              : { layout: listLayoutTransition, ...listItemTransition }
-          }
-          style={{ overflow: 'hidden' }}
-        >
-          {content}
-        </motion.div>
-      )
-    },
-    [draggingProxyId, reducedMotion]
+      organizedList.ungrouped.map((proxy, index) => (
+        <div key={proxy.id}>
+          {renderProxyCard(
+            proxy,
+            getListCardRadius(getListCardPosition(index, organizedList.ungrouped.length))
+          )}
+        </div>
+      )),
+    [organizedList.ungrouped, renderProxyCard]
   )
 
   const sensors = useSensors(
@@ -523,24 +658,6 @@ function ProxyList(): React.JSX.Element {
 
   const dragOverlayModifiers = useMemo(() => [snapCenterToCursor], [])
 
-  const renderProxyCard = (proxy: Proxy): React.JSX.Element => (
-    <ProxyListRow
-      key={proxy.id}
-      proxyId={proxy.id}
-      groups={groups}
-      variant={proxyCardView}
-      dragEnabled={dragEnabled}
-      onCheck={handleCheckProxy}
-      onEdit={handleEditProxy}
-      onDelete={handleDeleteProxy}
-      onIconChange={handleIconChange}
-      onToggleFavorite={handleToggleFavoriteProxy}
-      onToggleEnabled={handleToggleEnabledProxy}
-      onGroupChange={handleGroupChange}
-      motionWrapper={(content) => renderMotionWrapper(proxy.id, content)}
-    />
-  )
-
   const detailsProxy = useMemo(
     () => proxies.find((proxy) => proxy.id === detailsProxyId),
     [proxies, detailsProxyId]
@@ -553,124 +670,6 @@ function ProxyList(): React.JSX.Element {
     : 0
   const clearingGroupProxyCount = clearingGroup ? getGroupProxyCount(clearingGroup.id) : 0
 
-  const { aliveCount, deadCount, enabledCount, favoritesCount } = proxyStats
-  const palette = getPalette(theme)
-
-  const statBadgeSx = {
-    fontWeight: 700,
-    border: 'none',
-    '& .MuiChip-icon': {
-      fontSize: 16,
-      ml: 0.75
-    },
-    '& .MuiChip-label': {
-      px: 1
-    }
-  } as const
-
-  const statBadges = useMemo((): StatBadgeItem[] => {
-    const badges: StatBadgeItem[] = []
-
-    if (proxies.length > 0) {
-      badges.push({
-        key: 'total',
-        icon: <DnsOutlinedIcon />,
-        label: t('proxyList.statsTotal', { count: proxies.length }),
-        sx: {
-          ...statBadgeSx,
-          bgcolor: surfaceContainer(theme, 'default'),
-          color: 'text.primary',
-          '& .MuiChip-icon': {
-            ...statBadgeSx['& .MuiChip-icon'],
-            color: 'primary.main'
-          }
-        }
-      })
-    }
-
-    if (aliveCount > 0) {
-      badges.push({
-        key: 'alive',
-        icon: <CheckCircleOutlinedIcon />,
-        label: t('proxyList.statsAlive', { count: aliveCount }),
-        sx: {
-          ...statBadgeSx,
-          bgcolor: withThemeAlpha(theme, palette.success.main, 0.14),
-          color: palette.success.main,
-          '& .MuiChip-icon': {
-            ...statBadgeSx['& .MuiChip-icon'],
-            color: palette.success.main
-          }
-        }
-      })
-    }
-
-    if (deadCount > 0) {
-      badges.push({
-        key: 'dead',
-        icon: <ErrorOutlineOutlinedIcon />,
-        label: t('proxyList.statsDead', { count: deadCount }),
-        sx: {
-          ...statBadgeSx,
-          bgcolor: withThemeAlpha(theme, palette.error.main, 0.14),
-          color: palette.error.main,
-          '& .MuiChip-icon': {
-            ...statBadgeSx['& .MuiChip-icon'],
-            color: palette.error.main
-          }
-        }
-      })
-    }
-
-    if (enabledCount > 0) {
-      badges.push({
-        key: 'enabled',
-        icon: <ToggleOnOutlinedIcon />,
-        label: t('proxyList.statsEnabled', { count: enabledCount }),
-        sx: {
-          ...statBadgeSx,
-          bgcolor: withThemeAlpha(theme, palette.primary.main, 0.14),
-          color: palette.primary.main,
-          '& .MuiChip-icon': {
-            ...statBadgeSx['& .MuiChip-icon'],
-            color: palette.primary.main
-          }
-        }
-      })
-    }
-
-    if (favoritesCount > 0) {
-      badges.push({
-        key: 'favorites',
-        icon: <StarIcon />,
-        label: t('proxyList.statsFavorites', { count: favoritesCount }),
-        sx: {
-          ...statBadgeSx,
-          bgcolor: withThemeAlpha(theme, palette.warning.main, 0.14),
-          color: palette.warning.main,
-          '& .MuiChip-icon': {
-            ...statBadgeSx['& .MuiChip-icon'],
-            color: palette.warning.main
-          }
-        }
-      })
-    }
-
-    return badges
-  }, [
-    aliveCount,
-    deadCount,
-    enabledCount,
-    favoritesCount,
-    palette.error.main,
-    palette.primary.main,
-    palette.success.main,
-    palette.warning.main,
-    proxies.length,
-    t,
-    theme
-  ])
-
   return (
     <Box>
       <Stack
@@ -682,33 +681,7 @@ function ProxyList(): React.JSX.Element {
           <Typography variant="h5" gutterBottom>
             {t('proxyList.title')}
           </Typography>
-          <Stack
-            direction="row"
-            spacing={0.75}
-            component={motion.div}
-            layout={!reducedMotion}
-            sx={{ flexWrap: 'wrap', mt: 0.5, gap: 0.75 }}
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {statBadges.map((badge) => (
-                <motion.div
-                  key={badge.key}
-                  layout={!reducedMotion}
-                  variants={reducedMotion ? undefined : statBadgeVariants}
-                  initial={reducedMotion ? false : 'initial'}
-                  animate={reducedMotion ? undefined : 'animate'}
-                  exit={reducedMotion ? undefined : 'exit'}
-                  transition={
-                    reducedMotion
-                      ? { duration: 0 }
-                      : { layout: listLayoutTransition, ...badgeTransition }
-                  }
-                >
-                  <Chip icon={badge.icon} label={badge.label} size="small" sx={badge.sx} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </Stack>
+          <ProxyStatBadges proxies={proxies} animated sx={{ mt: 0.5 }} />
         </Box>
 
         <Stack direction="row" spacing={1}>
@@ -734,7 +707,13 @@ function ProxyList(): React.JSX.Element {
           >
             {t('proxyList.add')}
           </Button>
-          <Menu anchorEl={addMenuAnchor} open={Boolean(addMenuAnchor)} onClose={closeAddMenu}>
+          <Menu
+            anchorEl={addMenuAnchor}
+            open={Boolean(addMenuAnchor) || addMenuPosition !== null}
+            onClose={closeAddMenu}
+            anchorReference={addMenuPosition !== null ? 'anchorPosition' : 'anchorEl'}
+            anchorPosition={addMenuPosition ?? undefined}
+          >
             <MenuItem onClick={openAddDialog}>
               <ListItemIcon>
                 <DnsOutlinedIcon fontSize="small" />
@@ -759,7 +738,7 @@ function ProxyList(): React.JSX.Element {
             flexDirection: 'column',
             alignItems: 'center',
             gap: 2,
-            borderRadius: 3,
+            borderRadius: '16px',
             boxShadow: elevationShadow(theme, 1)
           }}
         >
@@ -774,7 +753,7 @@ function ProxyList(): React.JSX.Element {
             py: 10,
             px: 3,
             textAlign: 'center',
-            borderRadius: 3,
+            borderRadius: '16px',
             boxShadow: elevationShadow(theme, 1),
             bgcolor: surfaceContainer(theme, 'low')
           }}
@@ -786,7 +765,7 @@ function ProxyList(): React.JSX.Element {
               justifyContent: 'center',
               width: 64,
               height: 64,
-              borderRadius: 4,
+              borderRadius: '16px',
               mb: 2,
               bgcolor: surfaceTint(theme),
               color: 'primary.main'
@@ -816,22 +795,38 @@ function ProxyList(): React.JSX.Element {
             onChange={setFilters}
           />
 
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ alignItems: 'stretch' }}>
-            <Box sx={{ flex: 1, minWidth: 0, display: 'flex' }}>
-              <ProxyListSearch
-                value={filters.searchQuery}
-                onChange={(searchQuery) => updateFilters({ searchQuery })}
-              />
-            </Box>
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            spacing={1.5}
+            sx={{
+              alignItems: 'stretch',
+              px: 1.75,
+              py: 1.25,
+              borderRadius: '16px',
+              bgcolor: surfaceContainer(theme, 'low'),
+              transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
+              '&:focus-within': {
+                bgcolor: surfaceContainer(theme, 'default')
+              }
+            }}
+          >
+            <ProxyListSearch
+              value={filters.searchQuery}
+              onChange={(searchQuery) => updateFilters({ searchQuery })}
+            />
 
-            <Box sx={{ flex: 1, minWidth: 0, display: 'flex' }}>
-              <ProxyListSort
-                sortField={sortField}
-                sortDirection={sortDirection}
-                onSortFieldChange={setSortField}
-                onSortDirectionChange={setSortDirection}
-              />
-            </Box>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ display: { xs: 'none', md: 'block' } }}
+            />
+
+            <ProxyListSort
+              sortField={sortField}
+              sortDirection={sortDirection}
+              onSortFieldChange={setSortField}
+              onSortDirectionChange={setSortDirection}
+            />
           </Stack>
 
           {!hasVisibleItems ? (
@@ -840,7 +835,7 @@ function ProxyList(): React.JSX.Element {
                 py: 6,
                 px: 3,
                 textAlign: 'center',
-                borderRadius: 3,
+                borderRadius: '16px',
                 boxShadow: elevationShadow(theme, 1),
                 bgcolor: surfaceContainer(theme, 'low')
               }}
@@ -866,25 +861,7 @@ function ProxyList(): React.JSX.Element {
               onDragEnd={(event) => void handleDragEnd(event)}
               onDragCancel={handleDragCancel}
             >
-              {useVirtualList ? (
-                <VirtualizedProxyList
-                  items={virtualListItems}
-                  groups={groups}
-                  proxyCardView={proxyCardView}
-                  dragEnabled={dragEnabled}
-                  onCheck={handleCheckProxy}
-                  onEdit={handleEditProxy}
-                  onDelete={handleDeleteProxy}
-                  onIconChange={handleIconChange}
-                  onToggleFavorite={handleToggleFavoriteProxy}
-                  onToggleEnabled={handleToggleEnabledProxy}
-                  onGroupChange={handleGroupChange}
-                  onEditGroup={openEditGroupDialog}
-                  onCheckGroup={handleCheckGroup}
-                  getGroupEnabledProxyIds={getGroupEnabledProxyIds}
-                  renderMotionWrapper={renderMotionWrapper}
-                />
-              ) : (
+              <Stack spacing={0.75}>
                 <AnimatePresence mode="popLayout" initial={false}>
                   {showUngroupedDropZone ? (
                     <motion.div
@@ -906,16 +883,12 @@ function ProxyList(): React.JSX.Element {
                         isDragActive={Boolean(draggingProxyId)}
                         emptyLabel={t('proxyList.drag.dropToUngrouped')}
                       >
-                        <Stack spacing={2}>
-                          {organizedList.ungrouped.map((proxy) => (
-                            <div key={proxy.id}>{renderProxyCard(proxy)}</div>
-                          ))}
-                        </Stack>
+                        <Stack spacing={0.75}>{ungroupedItems}</Stack>
                       </ProxyDropZone>
                     </motion.div>
                   ) : null}
 
-                  {visibleGroupSections.map((section) => (
+                  {visibleGroupSections.map((section, index) => (
                     <motion.div
                       key={section.group.id}
                       layout={!reducedMotion}
@@ -928,43 +901,30 @@ function ProxyList(): React.JSX.Element {
                           : { layout: listLayoutTransition, ...listItemTransition }
                       }
                     >
-                      <ProxyGroupSection
-                        group={section.group}
-                        proxyCount={section.proxies.length}
-                        deadProxyCount={getGroupDeadProxyCount(section.group.id)}
-                        canCheck={filterEnabledProxies(section.proxies).length > 0}
+                      <ProxyGroupSectionEntry
+                        section={section}
                         isCheckingAll={isCheckingAll}
-                        dropZoneId={getGroupDropZoneId(section.group.id)}
-                        dropZoneDisabled={!dragEnabled}
-                        isDragActive={Boolean(draggingProxyId)}
-                        forceExpanded={isHoveringGroup(
-                          hoveredDropTargetId,
-                          section.group.id,
-                          section.proxies.map((proxy) => proxy.id)
+                        checkingIds={checkingIds}
+                        dragEnabled={dragEnabled}
+                        draggingProxyId={draggingProxyId}
+                        hoveredDropTargetId={hoveredDropTargetId}
+                        listRadius={getListCardRadius(
+                          getListCardPosition(index, visibleGroupSections.length)
                         )}
-                        onEdit={() => openEditGroupDialog(section.group)}
-                        onDelete={() => setDeletingGroup(section.group)}
-                        onDeleteDead={() => setDeletingDeadGroup(section.group)}
-                        onClear={() => setClearingGroup(section.group)}
-                        onIconChange={(iconId) => void handleGroupIconChange(section.group, iconId)}
-                        onColorChange={(colorId) =>
-                          void handleGroupColorChange(section.group, colorId)
-                        }
-                        onAddProxy={() => openAddDialogForGroup(section.group)}
-                        onCheck={() =>
-                          void checkAll(
-                            filterEnabledProxies(section.proxies).map((proxy) => proxy.id)
-                          )
-                        }
-                      >
-                        {section.proxies.map((proxy) => (
-                          <div key={proxy.id}>{renderProxyCard(proxy)}</div>
-                        ))}
-                      </ProxyGroupSection>
+                        renderProxyCard={renderProxyCard}
+                        onEditGroup={openEditGroupDialog}
+                        onDeleteGroup={openDeleteGroupDialog}
+                        onDeleteDeadGroup={openDeleteDeadGroupDialog}
+                        onClearGroup={openClearGroupDialog}
+                        onIconChange={handleGroupIconChange}
+                        onColorChange={handleGroupColorChange}
+                        onAddProxy={openAddDialogForGroup}
+                        onCheckGroup={handleCheckGroup}
+                      />
                     </motion.div>
                   ))}
                 </AnimatePresence>
-              )}
+              </Stack>
 
               <DragOverlay
                 modifiers={dragOverlayModifiers}
@@ -990,6 +950,7 @@ function ProxyList(): React.JSX.Element {
         mode={dialogMode}
         initialProxy={editingProxy}
         initialGroupId={addProxyGroupId}
+
         existingProxies={proxies}
         groups={groups}
         onClose={() => {

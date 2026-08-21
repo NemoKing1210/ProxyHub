@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "ProxyChecker"
+    "title": "ProxyHub"
   },
   "nav": {
     "proxies": "Proxies",
@@ -286,7 +286,7 @@
       "autoCheck": "Auto-Prüfung",
       "autoCheckDescription": "Prüft Proxys regelmäßig im Hintergrund mit den aktuellen Prüfeinstellungen erneut.",
       "backup": "Import & Export",
-      "backupDescription": "Back up or restore your full ProxyChecker data, or exchange proxy lists in CSV, JSON, and TXT formats.",
+      "backupDescription": "Back up or restore your full ProxyHub data, or exchange proxy lists in CSV, JSON, and TXT formats.",
       "sync": "Synchronization",
       "syncDescription": "Sync proxies and settings through a remote provider. Uses the same backup format as local export.",
       "dangerZone": "Gefahrenbereich",
@@ -345,7 +345,7 @@
     "saved": "Einstellungen gespeichert",
     "backup": {
       "format": "Dateiformat",
-      "formatBackup": "ProxyChecker-Backup",
+      "formatBackup": "ProxyHub-Backup",
       "formatCsv": "CSV-Liste",
       "exportKind": "Was exportieren",
       "exportKindFull": "Proxys & Einstellungen",
@@ -387,7 +387,7 @@
         "settings": "Nur Einstellungen"
       },
       "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
-      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "formatHint": "Files use the versioned ProxyHub JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
       "protectWithPassword": "Protect with password",
       "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
       "exportPassword": "Backup password",
@@ -527,7 +527,7 @@
           "unknown": "Unknown error"
         }
       },
-      "nativeTitle": "ProxyChecker-Backup",
+      "nativeTitle": "ProxyHub-Backup",
       "nativeDescription": "Vollständiger Export von Proxys, Gruppen, Favoriten und App-Einstellungen. Optional mit Passwortverschlüsselung.",
       "listFormatsTitle": "Andere Formate",
       "listFormatsHeading": "Externe Proxy-Listen",

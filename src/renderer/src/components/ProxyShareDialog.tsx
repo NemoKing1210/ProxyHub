@@ -61,7 +61,7 @@ function ShareChannelButton({
         py: 1.25,
         px: 1,
         minWidth: 0,
-        borderRadius: 2.5,
+        borderRadius: '16px',
         textTransform: 'none',
         color: 'text.primary',
         '&:hover': {
@@ -184,7 +184,7 @@ function ProxyShareDialog({ open, proxy, onClose }: ProxyShareDialogProps): Reac
             <Box
               sx={{
                 p: 1.5,
-                borderRadius: 3,
+                borderRadius: '16px',
                 bgcolor: '#fff',
                 boxShadow: `inset 0 0 0 1px ${alpha(theme.palette.common.black, 0.06)}`
               }}

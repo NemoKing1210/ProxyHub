@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "ProxyChecker"
+    "title": "ProxyHub"
   },
   "nav": {
     "proxies": "प्रॉक्सी",
@@ -287,7 +287,7 @@
       "autoCheck": "ऑटो-जाँच",
       "autoCheckDescription": "वर्तमान जाँच सेटिंग्स का उपयोग करके पृष्ठभूमि में प्रॉक्सी की समय-समय पर पुनः जाँच करता है।",
       "backup": "आयात और निर्यात",
-      "backupDescription": "Back up or restore your full ProxyChecker data, or exchange proxy lists in CSV, JSON, and TXT formats.",
+      "backupDescription": "Back up or restore your full ProxyHub data, or exchange proxy lists in CSV, JSON, and TXT formats.",
       "dangerZone": "खतरनाक क्षेत्र",
       "dangerZoneDescription": "प्रॉक्सी डेटा साफ़ करें या डिफ़ॉल्ट सेटिंग्स पुनर्स्थापित करें।",
       "about": "ऐप के बारे में",
@@ -344,7 +344,7 @@
     "saved": "सेटिंग्स सहेजी गईं",
     "backup": {
       "format": "फ़ाइल प्रारूप",
-      "formatBackup": "ProxyChecker बैकअप",
+      "formatBackup": "ProxyHub बैकअप",
       "formatCsv": "CSV सूची",
       "exportKind": "क्या निर्यात करें",
       "exportKindFull": "प्रॉक्सी और सेटिंग्स",
@@ -386,7 +386,7 @@
         "settings": "केवल सेटिंग्स"
       },
       "securityWarning": "Unprotected backup files contain proxy credentials in plain text. Enable password protection when exporting, or store plain files securely.",
-      "formatHint": "Files use the versioned ProxyChecker JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
+      "formatHint": "Files use the versioned ProxyHub JSON format (.pcbackup.json). Version 2 supports optional password encryption.",
       "protectWithPassword": "Protect with password",
       "protectWithPasswordHint": "Encrypts proxies and settings inside the file. You will need this password to import the backup.",
       "exportPassword": "Backup password",
@@ -526,7 +526,7 @@
           "unknown": "Unknown error"
         }
       },
-      "nativeTitle": "ProxyChecker बैकअप",
+      "nativeTitle": "ProxyHub बैकअप",
       "nativeDescription": "प्रॉक्सी, समूह, पसंदीदा और ऐप सेटिंग्स का पूरा निर्यात। पासवर्ड एन्क्रिप्शन समर्थित।",
       "listFormatsTitle": "अन्य प्रारूप",
       "listFormatsHeading": "बाहरी प्रॉक्सी सूचियाँ",

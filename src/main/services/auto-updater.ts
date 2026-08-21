@@ -82,7 +82,7 @@ function applyUpdateError(error: Error): void {
 
 function notifyUpdateAvailable(version: string): void {
   showNativeNotification({
-    title: 'ProxyChecker update available',
+    title: 'ProxyHub update available',
     body: `Version ${version} is ready to download. Open Settings → About to update.`
   })
 }

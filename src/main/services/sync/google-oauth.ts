@@ -13,7 +13,7 @@ import { readGoogleOAuthClientIdFromEnv } from '../../config/google-oauth-env'
 import { saveGoogleOAuthTokens, type GoogleOAuthTokens } from '../sync-secrets'
 import { SyncProviderError, toSyncError } from './providers/sync-errors'
 
-const USER_AGENT = 'ProxyChecker-Sync'
+const USER_AGENT = 'ProxyHub-Sync'
 
 interface GoogleTokenResponse {
   access_token?: string
@@ -57,7 +57,7 @@ function buildSuccessHtml(): string {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>ProxyChecker</title>
+  <title>ProxyHub</title>
   <style>
     body { font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #0f1419; color: #e7ecf2; }
     .card { text-align: center; padding: 2rem; border-radius: 12px; background: #171d24; box-shadow: 0 8px 32px rgba(0,0,0,.35); }
@@ -67,7 +67,7 @@ function buildSuccessHtml(): string {
 </head>
 <body>
   <div class="card">
-    <h1>ProxyChecker</h1>
+    <h1>ProxyHub</h1>
     <p>Google account connected. You can close this tab and return to the app.</p>
   </div>
 </body>
@@ -79,7 +79,7 @@ function buildErrorHtml(message: string): string {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>ProxyChecker</title>
+  <title>ProxyHub</title>
   <style>
     body { font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #0f1419; color: #e7ecf2; }
     .card { text-align: center; padding: 2rem; border-radius: 12px; background: #171d24; box-shadow: 0 8px 32px rgba(0,0,0,.35); max-width: 420px; }

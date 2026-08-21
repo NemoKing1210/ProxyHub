@@ -1,10 +1,18 @@
 {
   "app": {
-    "title": "ProxyChecker"
+    "title": "ProxyHub"
   },
   "nav": {
     "proxies": "Прокси",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "checking": "Проверка прокси",
+    "checkProgress": "Проверено {{completed}} из {{total}}"
+  },
+  "windowControls": {
+    "minimize": "Свернуть",
+    "maximize": "Развернуть",
+    "restoreDown": "Восстановить",
+    "close": "Закрыть"
   },
   "sync": {
     "activity": "Синхронизация..."
@@ -256,6 +264,8 @@
     "proxyCount_few": "{{count}} прокси",
     "proxyCount_many": "{{count}} прокси",
     "proxyCount_other": "{{count}} прокси",
+    "pageInfo": "{{start}}–{{end}} из {{total}}",
+    "filterEmpty": "Нет прокси по выбранному фильтру",
     "deleteConfirm": {
       "title": "Удалить группу?",
       "message": "Удалить группу «{{name}}»? Это действие нельзя отменить.",
@@ -352,9 +362,14 @@
   "settings": {
     "title": "Настройки",
     "description": "Настройте внешний вид и параметры проверки прокси.",
+    "breadcrumbsLabel": "Навигация по настройкам",
+    "appearanceThemeGroup": "Тема и цвета",
+    "appearanceCardsGroup": "Карточки прокси",
+    "appearanceNotificationsGroup": "Уведомления",
+    "appearanceLanguageGroup": "Язык интерфейса",
     "sections": {
       "appearance": "Внешний вид",
-      "appearanceDescription": "Тема оформления, язык интерфейса и вид карточек прокси.",
+      "appearanceDescription": "Тема оформления, акцентный цвет, язык интерфейса и вид карточек прокси.",
       "system": "Система",
       "systemDescription": "Фоновая работа и быстрый доступ из области уведомлений.",
       "checking": "Проверка прокси",
@@ -362,7 +377,7 @@
       "autoCheck": "Автопроверка",
       "autoCheckDescription": "Периодически перепроверяет прокси в фоне с использованием текущих параметров проверки.",
       "backup": "Импорт и экспорт",
-      "backupDescription": "Резервное копирование данных ProxyChecker или обмен списками прокси в форматах CSV, JSON и TXT.",
+      "backupDescription": "Резервное копирование данных ProxyHub или обмен списками прокси в форматах CSV, JSON и TXT.",
       "sync": "Синхронизация",
       "syncDescription": "Синхронизация прокси и настроек через удалённый провайдер. Используется тот же формат, что и локальный экспорт.",
       "dangerZone": "Опасная зона",
@@ -374,18 +389,40 @@
     "themeLight": "Светлая",
     "themeDark": "Тёмная",
     "themeSystem": "Системная",
+    "accentColor": "Акцентный цвет",
+    "accentColorSelected": "Выбранный цвет",
+    "accentColorHint": "Выберите цвет кнопок, ссылок и других акцентных элементов.",
+    "accentColorOptions": {
+      "blue": "Синий",
+      "violet": "Фиолетовый",
+      "teal": "Бирюзовый",
+      "green": "Зелёный",
+      "orange": "Оранжевый",
+      "red": "Красный",
+      "pink": "Розовый",
+      "cyan": "Голубой"
+    },
     "language": "Язык",
     "proxyCardView": "Вид карточек",
     "proxyCardViewStandard": "Стандартный",
     "proxyCardViewCompact": "Миниатюрный",
     "proxyDragEnabled": "Перетаскивание карточек",
     "proxyDragEnabledHint": "Позволяет перетаскивать карточки прокси между группами в списке.",
+    "toastEnabled": "Показывать уведомления",
+    "toastEnabledHint": "Показывать всплывающие уведомления о результатах проверки прокси.",
+    "toastPosition": "Положение уведомлений",
+    "toastPositionTopLeft": "Сверху слева",
+    "toastPositionTopCenter": "Сверху по центру",
+    "toastPositionTopRight": "Сверху справа",
+    "toastPositionBottomLeft": "Снизу слева",
+    "toastPositionBottomCenter": "Снизу по центру",
+    "toastPositionBottomRight": "Снизу справа",
     "trayEnabled": "Показывать в системном трее",
-    "trayEnabledHint": "Оставлять ProxyChecker в трее при закрытии окна. ПКМ по иконке — меню избранных прокси и действия приложения.",
+    "trayEnabledHint": "Оставлять ProxyHub в трее при закрытии окна. ПКМ по иконке — меню избранных прокси и действия приложения.",
     "startMinimized": "Запускать свёрнутым",
     "startMinimizedHint": "При запуске скрывать окно и оставлять приложение только в трее.",
     "launchAtLogin": "Автозапуск",
-    "launchAtLoginHint": "Запускать ProxyChecker автоматически при входе в Windows. Работает только в установленной версии приложения.",
+    "launchAtLoginHint": "Запускать ProxyHub автоматически при входе в Windows. Работает только в установленной версии приложения.",
     "backgroundCheckNotifications": "Нативные уведомления в фоне",
     "backgroundCheckNotificationsHint": "Показывать результаты проверки системными уведомлениями, когда окно свёрнуто или скрыто.",
     "autoCheckEnabled": "Включить автопроверку",
@@ -434,11 +471,11 @@
     "saved": "Настройки сохранены",
     "backup": {
       "format": "Формат файла",
-      "formatBackup": "Резервная копия ProxyChecker",
+      "formatBackup": "Резервная копия ProxyHub",
       "formatCsv": "CSV-список",
       "formatJson": "JSON-список",
       "formatTxt": "TXT-список",
-      "nativeTitle": "Резервная копия ProxyChecker",
+      "nativeTitle": "Резервная копия ProxyHub",
       "nativeDescription": "Полный экспорт прокси, групп, избранного и настроек приложения. Поддерживается шифрование паролем.",
       "listFormatsTitle": "Другие форматы",
       "listFormatsHeading": "Внешние списки прокси",
@@ -486,7 +523,7 @@
         "settings": "Только настройки"
       },
       "securityWarning": "Незащищённые файлы резервных копий содержат учётные данные прокси в открытом виде. При экспорте включайте защиту паролем или храните обычные файлы безопасно.",
-      "formatHint": "Используется версионированный JSON-формат ProxyChecker (.pcbackup.json). Версия 2 поддерживает опциональное шифрование паролем.",
+      "formatHint": "Используется версионированный JSON-формат ProxyHub (.pcbackup.json). Версия 2 поддерживает опциональное шифрование паролем.",
       "protectWithPassword": "Защитить паролем",
       "protectWithPasswordHint": "Шифрует прокси и настройки внутри файла. Этот пароль понадобится для импорта резервной копии.",
       "exportPassword": "Пароль резервной копии",
@@ -712,7 +749,7 @@
       "googleDriveSelectHint": "Google Drive недоступен, пока разработчик не задаст GOOGLE_OAUTH_CLIENT_ID при сборке.",
       "googleAccount": "Google аккаунт",
       "googleConnect": "Войти через Google",
-      "googleConnectHint": "Разрешите ProxyChecker хранить данные синхронизации в скрытой папке app data вашего Google аккаунта.",
+      "googleConnectHint": "Разрешите ProxyHub хранить данные синхронизации в скрытой папке app data вашего Google аккаунта.",
       "googleConnected": "Google аккаунт подключён",
       "googleConnectedAs": "Подключён как {{email}}",
       "googleConnectSuccess": "Google аккаунт подключён: {{email}}",
@@ -767,7 +804,7 @@
     "currentVersion": "Текущая версия",
     "updates": {
       "title": "Обновления",
-      "description": "Проверка новых версий ProxyChecker на GitHub Releases.",
+      "description": "Проверка новых версий ProxyHub на GitHub Releases.",
       "disabledHint": "Автообновление доступно только в установленной release-сборке.",
       "checking": "Проверка обновлений…",
       "upToDate": "У вас установлена последняя версия (v{{version}}).",

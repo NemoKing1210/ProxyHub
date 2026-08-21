@@ -30,7 +30,7 @@ async function getSecretStore() {
   if (!storePromise) {
     storePromise = import('electron-store').then(({ default: Store }) => {
       return new Store<SecretStoreSchema>({
-        name: 'proxy-checker-secrets',
+        name: 'proxyhub-secrets',
         defaults: {}
       })
     })

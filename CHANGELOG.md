@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Application identity for installers and updates: `ProxyChecker` product name and `com.nemoking1210.proxychecker` app ID
+- Application identity for installers and updates: `ProxyHub` product name and `com.nemoking1210.proxyhub` app ID
 - macOS release builds now include a `zip` artifact required for in-app auto-update (alongside DMG)
 - README redesigned with badges, download table, and release instructions
 
@@ -133,13 +133,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - JSON and TXT proxy list import and export in Settings, alongside existing CSV and backup formats
-- Import & export settings UI: ProxyChecker backup shown first as a dedicated card; CSV, JSON, and TXT formats grouped below with type icons
+- Import & export settings UI: ProxyHub backup shown first as a dedicated card; CSV, JSON, and TXT formats grouped below with type icons
 
 ## [1.29.0] - 2026-07-11
 
 ### Added
 
-- CSV import and export in Settings: switch between ProxyChecker backup and CSV list format; import preview with pagination, optional target group, and duplicate detection; export with proxy selection
+- CSV import and export in Settings: switch between ProxyHub backup and CSV list format; import preview with pagination, optional target group, and duplicate detection; export with proxy selection
 - Group header **Check** button: run **Check all** for enabled proxies in that group only
 - **Stop check** while **Check all** is running: cancel in-progress batch checks in sequential and parallel modes
 - Group actions: delete all dead proxies in a group, with count in the menu and a confirmation dialog
@@ -177,7 +177,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Settings import and export: back up or restore proxies, groups, and app settings in a versioned ProxyChecker JSON format (`.pcbackup.json`), with export scope (full, proxies only, settings only), import preview before confirmation, and import modes (merge or replace)
+- Settings import and export: back up or restore proxies, groups, and app settings in a versioned ProxyHub JSON format (`.pcbackup.json`), with export scope (full, proxies only, settings only), import preview before confirmation, and import modes (merge or replace)
 
 ## [1.24.0] - 2026-07-10
 
@@ -540,4 +540,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Replaced default electron-vite template UI with Material UI components
-- Updated application identity to **ProxyChecker** (`com.proxychecker`)
+- Updated application identity to **ProxyHub** (`com.proxyhub`)

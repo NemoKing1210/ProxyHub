@@ -12,7 +12,6 @@ import { useDroppable } from '@dnd-kit/core'
 import {
   Box,
   Button,
-  Chip,
   CircularProgress,
   Collapse,
   Divider,
@@ -26,33 +25,46 @@ import {
   Typography
 } from '@mui/material'
 import { alpha } from '@mui/material/styles'
-import { useMemo, useRef, useState, type ReactNode } from 'react'
+import { memo, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
-import type { ProxyColorId, ProxyIconId } from '../../../shared/types/proxy'
+import type { Proxy, ProxyColorId, ProxyIconId } from '../../../shared/types/proxy'
 import type { ProxyGroup } from '../../../shared/types/proxy-group'
 import { getGroupColorStyles } from '../utils/proxy-group-appearance'
+import {
+  filterProxiesByGroupBadge,
+  type ProxyGroupBadgeFilter
+} from '../utils/proxy-group-badge-filter'
+import { getGroupPagination } from '../utils/proxy-group-pagination'
+import { getProxyCheckProgress } from '../utils/proxy-check-progress'
+import { getListCardPosition, getListCardRadius } from '../utils/card-list'
 import { elevationShadow } from '../theme'
+import ProxyCheckProgressBar from './ProxyCheckProgressBar'
 import ProxyColorPickerPopover from './ProxyColorPickerPopover'
 import ProxyGroupAvatar from './ProxyGroupAvatar'
+import ProxyGroupPagination from './ProxyGroupPagination'
 import ProxyIconPickerPopover from './ProxyIconPickerPopover'
+import ProxyStatBadges from './ProxyStatBadges'
 
 interface ContextMenuPosition {
   top: number
   left: number
 }
 
+const PROXY_GROUP_CONTENT_MAX_HEIGHT = 'min(55vh, 480px)'
+
 interface ProxyGroupSectionProps {
   group: ProxyGroup
-  proxyCount: number
-  deadProxyCount: number
+  proxies: Proxy[]
   canCheck: boolean
   isCheckingAll: boolean
+  checkingIds: Set<string>
   dropZoneId: string
   dropZoneDisabled?: boolean
   isDragActive?: boolean
   forceExpanded?: boolean
-  children: ReactNode
+  listRadius?: string
+  renderProxyItem: (proxy: Proxy, listRadius?: string) => ReactNode
   onEdit: () => void
   onDelete: () => void
   onDeleteDead: () => void
@@ -63,17 +75,18 @@ interface ProxyGroupSectionProps {
   onCheck: () => void
 }
 
-function ProxyGroupSection({
+function ProxyGroupSectionImpl({
   group,
-  proxyCount,
-  deadProxyCount,
+  proxies,
   canCheck,
   isCheckingAll,
+  checkingIds,
   dropZoneId,
   dropZoneDisabled = false,
   isDragActive = false,
   forceExpanded = false,
-  children,
+  listRadius,
+  renderProxyItem,
   onEdit,
   onDelete,
   onDeleteDead,
@@ -86,8 +99,51 @@ function ProxyGroupSection({
   const { t } = useTranslation()
   const theme = useTheme()
   const colorStyles = useMemo(() => getGroupColorStyles(theme, group.color), [theme, group.color])
-  const [expanded, setExpanded] = useState(true)
+  const proxyCount = proxies.length
+  const deadProxyCount = useMemo(
+    () => proxies.filter((proxy) => proxy.status === 'dead').length,
+    [proxies]
+  )
+  const [expanded, setExpanded] = useState(false)
+  const [page, setPage] = useState(1)
+  const [activeFilter, setActiveFilter] = useState<ProxyGroupBadgeFilter | null>(null)
   const { setNodeRef, isOver } = useDroppable({ id: dropZoneId, disabled: dropZoneDisabled })
+  const filteredProxies = useMemo(
+    () => filterProxiesByGroupBadge(proxies, activeFilter),
+    [activeFilter, proxies]
+  )
+  const { visibleProxies, pagination } = useMemo(() => {
+    const state = getGroupPagination(filteredProxies.length, page)
+    return {
+      visibleProxies: filteredProxies.slice(state.startIndex, state.endIndex),
+      pagination: state
+    }
+  }, [filteredProxies, page])
+  const visibleItems = useMemo(
+    () =>
+      visibleProxies.map((proxy, index) =>
+        renderProxyItem(proxy, getListCardRadius(getListCardPosition(index, visibleProxies.length)))
+      ),
+    [visibleProxies, renderProxyItem]
+  )
+  const groupCheckProgress = useMemo(
+    () => getProxyCheckProgress(proxies, checkingIds),
+    [checkingIds, proxies]
+  )
+
+  useEffect(() => {
+    setPage(1)
+  }, [group.id, proxyCount, activeFilter])
+
+  useEffect(() => {
+    setActiveFilter(null)
+  }, [group.id])
+
+  useEffect(() => {
+    if (page > pagination.pageCount) {
+      setPage(pagination.pageCount)
+    }
+  }, [page, pagination.pageCount])
   const showDropHighlight = isOver && !dropZoneDisabled
   const isExpanded = expanded || forceExpanded || showDropHighlight
   const showEmptyDropPlaceholder = proxyCount === 0 && isDragActive && showDropHighlight
@@ -126,7 +182,7 @@ function ProxyGroupSection({
     <Paper
       ref={setNodeRef}
       sx={{
-        borderRadius: 3,
+        borderRadius: listRadius ?? '16px',
         overflow: 'hidden',
         bgcolor: showDropHighlight ? alpha(theme.palette.primary.main, 0.06) : colorStyles.surface,
         boxShadow: showDropHighlight
@@ -141,7 +197,7 @@ function ProxyGroupSection({
         onClick={() => setExpanded((value) => !value)}
         onContextMenu={handleContextMenu}
         sx={{
-          alignItems: 'center',
+          alignItems: 'flex-start',
           px: 2,
           py: 1.5,
           cursor: 'pointer',
@@ -153,7 +209,7 @@ function ProxyGroupSection({
           size="small"
           onClick={(event) => event.stopPropagation()}
           aria-label={t('proxyGroup.changeIcon')}
-          sx={{ p: 0 }}
+          sx={{ p: 0, mt: 0.25 }}
         >
           <ProxyGroupAvatar group={group} />
         </IconButton>
@@ -162,13 +218,19 @@ function ProxyGroupSection({
           <Typography variant="subtitle1" sx={{ fontWeight: 600, lineHeight: 1.3 }}>
             {group.name}
           </Typography>
+          <Box>
+            <ProxyStatBadges
+              proxies={proxies}
+              clickable
+              activeFilter={activeFilter}
+              onFilterChange={(filter) => {
+                setActiveFilter(filter)
+                setExpanded(true)
+              }}
+              sx={{ mt: 0.5 }}
+            />
+          </Box>
         </Stack>
-
-        <Chip
-          label={t('proxyGroup.proxyCount', { count: proxyCount })}
-          size="small"
-          sx={{ fontWeight: 600, display: { xs: 'none', sm: 'flex' } }}
-        />
 
         <Button
           size="small"
@@ -183,6 +245,7 @@ function ProxyGroupSection({
           disabled={!canCheck || isCheckingAll}
           sx={{
             flexShrink: 0,
+            alignSelf: 'center',
             display: { xs: 'none', md: 'inline-flex' },
             borderColor: colorStyles.ring,
             color: colorStyles.main,
@@ -205,49 +268,11 @@ function ProxyGroupSection({
           disabled={!canCheck || isCheckingAll}
           sx={{
             display: { xs: 'inline-flex', md: 'none' },
+            alignSelf: 'center',
             color: colorStyles.main
           }}
         >
           {isCheckingAll ? <CircularProgress size={18} /> : <PlaylistPlayIcon fontSize="small" />}
-        </IconButton>
-
-        <Button
-          size="small"
-          variant="outlined"
-          startIcon={<AddIcon />}
-          onClick={(event) => {
-            event.stopPropagation()
-            setExpanded(true)
-            onAddProxy()
-          }}
-          sx={{
-            flexShrink: 0,
-            display: { xs: 'none', md: 'inline-flex' },
-            borderColor: colorStyles.ring,
-            color: colorStyles.main,
-            '&:hover': {
-              borderColor: colorStyles.main,
-              bgcolor: colorStyles.accent
-            }
-          }}
-        >
-          {t('proxyGroup.addProxy')}
-        </Button>
-
-        <IconButton
-          size="small"
-          aria-label={t('proxyGroup.addProxy')}
-          onClick={(event) => {
-            event.stopPropagation()
-            setExpanded(true)
-            onAddProxy()
-          }}
-          sx={{
-            display: { xs: 'inline-flex', md: 'none' },
-            color: colorStyles.main
-          }}
-        >
-          <AddIcon fontSize="small" />
         </IconButton>
 
         <IconButton
@@ -257,6 +282,7 @@ function ProxyGroupSection({
             event.stopPropagation()
             setMenuAnchor(event.currentTarget)
           }}
+          sx={{ alignSelf: 'center' }}
         >
           <MoreVertIcon fontSize="small" />
         </IconButton>
@@ -269,6 +295,7 @@ function ProxyGroupSection({
             setExpanded((value) => !value)
           }}
           sx={{
+            alignSelf: 'center',
             transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 200ms ease'
           }}
@@ -277,27 +304,72 @@ function ProxyGroupSection({
         </IconButton>
       </Stack>
 
+      <Box sx={{ px: 2, pb: groupCheckProgress ? 1 : 0 }}>
+        <ProxyCheckProgressBar progress={groupCheckProgress} />
+      </Box>
+
       <Collapse in={isExpanded} unmountOnExit={!isDragActive}>
-        <Stack spacing={2} sx={{ px: 2, pb: 2, pt: 0.5 }}>
-          {showEmptyDropPlaceholder ? (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: 72,
-                borderRadius: 2,
-                bgcolor: alpha(theme.palette.primary.main, 0.08)
-              }}
-            >
-              <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                {t('proxyList.drag.dropToGroup')}
-              </Typography>
+        <Box sx={{ px: 2, pb: 2, pt: 0.5 }}>
+          <Box
+            sx={{
+              maxHeight: PROXY_GROUP_CONTENT_MAX_HEIGHT,
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              pr: 0.5
+            }}
+          >
+            <Stack spacing={0.75}>
+              {showEmptyDropPlaceholder ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: 72,
+                    borderRadius: '12px',
+                    bgcolor: alpha(theme.palette.primary.main, 0.08)
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                    {t('proxyList.drag.dropToGroup')}
+                  </Typography>
+                </Box>
+              ) : filteredProxies.length === 0 ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: 72,
+                    borderRadius: '12px',
+                    bgcolor: alpha(theme.palette.primary.main, 0.06),
+                    px: 2,
+                    textAlign: 'center'
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {t('proxyGroup.filterEmpty')}
+                  </Typography>
+                </Box>
+              ) : (
+                visibleItems
+              )}
+            </Stack>
+          </Box>
+
+          {pagination.needsPagination && !showEmptyDropPlaceholder && filteredProxies.length > 0 ? (
+            <Box sx={{ pt: 1 }}>
+              <ProxyGroupPagination
+                page={pagination.page}
+                pageCount={pagination.pageCount}
+                rangeStart={pagination.startIndex + 1}
+                rangeEnd={pagination.endIndex}
+                total={filteredProxies.length}
+                onPageChange={setPage}
+              />
             </Box>
-          ) : (
-            children
-          )}
-        </Stack>
+          ) : null}
+        </Box>
       </Collapse>
 
       <Menu
@@ -312,7 +384,7 @@ function ProxyGroupSection({
           paper: {
             sx: {
               minWidth: 220,
-              borderRadius: 2
+              borderRadius: '16px'
             }
           }
         }}
@@ -339,6 +411,18 @@ function ProxyGroupSection({
             <PaletteOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{t('proxyGroup.changeColor')}</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            closeMenu()
+            setExpanded(true)
+            onAddProxy()
+          }}
+        >
+          <ListItemIcon>
+            <AddIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('proxyGroup.addProxy')}</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem
@@ -419,4 +503,4 @@ function ProxyGroupSection({
   )
 }
 
-export default ProxyGroupSection
+export default memo(ProxyGroupSectionImpl)

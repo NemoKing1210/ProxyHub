@@ -74,7 +74,7 @@ function ProxyConnectivityResultCard({
     <Box
       sx={{
         p: 1.5,
-        borderRadius: 2.5,
+        borderRadius: '16px',
         bgcolor: styles.bgcolor,
         animation: `${connectivityEnter} 0.32s ${MD3_EASING.emphasizedDecelerate} both`,
         ...(isChecking

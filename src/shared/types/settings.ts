@@ -3,11 +3,27 @@ import { DEFAULT_PROXY_LIST_VIEW, normalizeProxyListView } from './proxy-list-vi
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
+export const ACCENT_COLOR_DEFAULT = '#5c8aff'
+
+export const ACCENT_COLOR_OPTIONS = [
+  { id: 'blue', value: ACCENT_COLOR_DEFAULT },
+  { id: 'violet', value: '#8b6cff' },
+  { id: 'teal', value: '#16a6a0' },
+  { id: 'green', value: '#35a66f' },
+  { id: 'orange', value: '#d9852b' },
+  { id: 'red', value: '#d95b68' },
+  { id: 'pink', value: '#d45eaa' },
+  { id: 'cyan', value: '#3b9ee8' }
+] as const
+
 export type AppLanguage = 'en' | 'zh' | 'hi' | 'es' | 'fr' | 'ar' | 'pt' | 'ru' | 'uk' | 'ja' | 'de'
 
 export type CheckAllMode = 'sequential' | 'parallel'
 
 export type ProxyCardViewMode = 'standard' | 'compact'
+
+export type ToastPosition =
+  'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
 
 export type AutoCheckScope = 'all' | 'favorites' | 'groups'
 
@@ -20,6 +36,7 @@ export interface CheckDomainEntry {
 
 export interface AppSettings {
   theme: ThemeMode
+  accentColor: string
   language: AppLanguage
   checkDomains: CheckDomainEntry[]
   checkTimeoutMs: number
@@ -38,6 +55,8 @@ export interface AppSettings {
   autoCheckGroupIds: string[]
   proxyCardView: ProxyCardViewMode
   proxyDragEnabled: boolean
+  toastEnabled: boolean
+  toastPosition: ToastPosition
   proxyListView: ProxyListViewState
   lastRoute: AppRoute
 }
@@ -64,6 +83,7 @@ const EMPTY_AUTO_CHECK_GROUP_IDS: string[] = []
 
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: 'dark',
+  accentColor: ACCENT_COLOR_DEFAULT,
   language: 'en',
   checkDomains: [],
   checkTimeoutMs: CHECK_TIMEOUT_DEFAULT_MS,
@@ -82,6 +102,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   autoCheckGroupIds: [],
   proxyCardView: 'standard',
   proxyDragEnabled: false,
+  toastEnabled: true,
+  toastPosition: 'top-right',
   proxyListView: DEFAULT_PROXY_LIST_VIEW,
   lastRoute: '/'
 }
@@ -115,6 +137,32 @@ function normalizeAutoCheckScope(value: unknown): AutoCheckScope {
   }
 
   return 'all'
+}
+
+function normalizeToastPosition(value: unknown): ToastPosition {
+  if (
+    value === 'top-left' ||
+    value === 'top-center' ||
+    value === 'top-right' ||
+    value === 'bottom-left' ||
+    value === 'bottom-center' ||
+    value === 'bottom-right'
+  ) {
+    return value
+  }
+
+  return 'top-right'
+}
+
+function normalizeAccentColor(value: unknown): string {
+  if (typeof value !== 'string') {
+    return ACCENT_COLOR_DEFAULT
+  }
+
+  const normalized = value.toLowerCase()
+  return ACCENT_COLOR_OPTIONS.some((option) => option.value === normalized)
+    ? normalized
+    : ACCENT_COLOR_DEFAULT
 }
 
 function normalizeLastRoute(value: unknown): AppRoute {
@@ -207,6 +255,7 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
 
   return {
     ...merged,
+    accentColor: normalizeAccentColor(merged.accentColor),
     checkDomains: normalizeCheckDomains(merged.checkDomains),
     checkAllMode: merged.checkAllMode === 'parallel' ? 'parallel' : 'sequential',
     checkAllConcurrency: clampCheckAllConcurrency(merged.checkAllConcurrency),
@@ -226,6 +275,8 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
         : EMPTY_AUTO_CHECK_GROUP_IDS,
     proxyCardView: merged.proxyCardView === 'compact' ? 'compact' : 'standard',
     proxyDragEnabled: merged.proxyDragEnabled === true,
+    toastEnabled: merged.toastEnabled !== false,
+    toastPosition: normalizeToastPosition(merged.toastPosition),
     proxyListView: normalizeProxyListView(merged.proxyListView),
     lastRoute: normalizeLastRoute(merged.lastRoute)
   }
@@ -233,8 +284,12 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
 
 export function stripLocalOnlySettings(settings: AppSettings): SyncableAppSettings {
   const normalized = normalizeSettings(settings)
-  const { lastRoute: _lastRoute, proxyListView: _proxyListView, launchAtLogin: _launchAtLogin, ...syncable } =
-    normalized
+  const {
+    lastRoute: _lastRoute,
+    proxyListView: _proxyListView,
+    launchAtLogin: _launchAtLogin,
+    ...syncable
+  } = normalized
   return syncable
 }
 

@@ -4,11 +4,9 @@ import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOu
 import TabOutlinedIcon from '@mui/icons-material/TabOutlined'
 import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined'
 import { Box, Collapse, Stack } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import ContentSection from './ContentSection'
 import SettingsSwitchCard from './SettingsSwitchCard'
-import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../theme'
 
 interface SettingsSystemSectionProps {
   trayEnabled: boolean
@@ -32,77 +30,51 @@ function SettingsSystemSection({
   onBackgroundCheckNotificationsChange
 }: SettingsSystemSectionProps): React.JSX.Element {
   const { t } = useTranslation()
-  const theme = useTheme()
 
   return (
     <ContentSection
       icon={<WidgetsOutlinedIcon fontSize="small" />}
       title={t('settings.sections.system')}
       description={t('settings.sections.systemDescription')}
-      collapsible
-      defaultExpanded={false}
+      showHeader={false}
     >
-      <Stack spacing={2}>
-        <Box
-          sx={{
-            borderRadius: 2.5,
-            overflow: 'hidden',
-            bgcolor: surfaceContainer(theme, 'low'),
-            boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`,
-            transition: `box-shadow ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`
-          }}
-        >
+      <Stack spacing={1.5}>
+        <Box>
           <SettingsSwitchCard
             icon={<TabOutlinedIcon fontSize="small" />}
             title={t('settings.trayEnabled')}
             hint={t('settings.trayEnabledHint')}
             checked={trayEnabled}
             onChange={onTrayEnabledChange}
+            clickable
           />
 
-          <Collapse in={trayEnabled} unmountOnExit>
-            <Box
-              sx={{
-                borderTop: `1px solid ${outlineVariant(theme)}`,
-                bgcolor: surfaceContainer(theme, 'default')
-              }}
-            >
+          <Collapse in={trayEnabled} mountOnEnter unmountOnExit>
+            <Box sx={{ mt: 0.75, ml: { xs: 1, sm: 2 } }}>
               <SettingsSwitchCard
                 icon={<MinimizeOutlinedIcon fontSize="small" />}
                 title={t('settings.startMinimized')}
                 hint={t('settings.startMinimizedHint')}
                 checked={startMinimized}
                 onChange={onStartMinimizedChange}
+                clickable
               />
             </Box>
           </Collapse>
         </Box>
 
-        <Box
-          sx={{
-            borderRadius: 2.5,
-            overflow: 'hidden',
-            bgcolor: surfaceContainer(theme, 'low'),
-            boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-          }}
-        >
+        <Box>
           <SettingsSwitchCard
             icon={<PowerSettingsNewOutlinedIcon fontSize="small" />}
             title={t('settings.launchAtLogin')}
             hint={t('settings.launchAtLoginHint')}
             checked={launchAtLogin}
             onChange={onLaunchAtLoginChange}
+            clickable
           />
         </Box>
 
-        <Box
-          sx={{
-            borderRadius: 2.5,
-            overflow: 'hidden',
-            bgcolor: surfaceContainer(theme, 'low'),
-            boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
-          }}
-        >
+        <Box>
           <SettingsSwitchCard
             icon={<NotificationsOutlinedIcon fontSize="small" />}
             accent="info"
@@ -110,6 +82,7 @@ function SettingsSystemSection({
             hint={t('settings.backgroundCheckNotificationsHint')}
             checked={backgroundCheckNotifications}
             onChange={onBackgroundCheckNotificationsChange}
+            clickable
           />
         </Box>
       </Stack>

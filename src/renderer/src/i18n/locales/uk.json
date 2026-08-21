@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "ProxyChecker"
+    "title": "ProxyHub"
   },
   "nav": {
     "proxies": "Проксі",
@@ -288,7 +288,7 @@
       "autoCheck": "Автоперевірка",
       "autoCheckDescription": "Періодично перепроверяє проксі у фоновому режимі з використанням поточних параметрів перевірки.",
       "backup": "Імпорт і експорт",
-      "backupDescription": "Резервне копіювання даних ProxyChecker або обмін списками проксі у форматах CSV, JSON і TXT.",
+      "backupDescription": "Резервне копіювання даних ProxyHub або обмін списками проксі у форматах CSV, JSON і TXT.",
       "sync": "Synchronization",
       "syncDescription": "Sync proxies and settings through a remote provider. Uses the same backup format as local export.",
       "dangerZone": "Небезпечна зона",
@@ -347,7 +347,7 @@
     "saved": "Налаштування збережено",
     "backup": {
       "format": "Формат файлу",
-      "formatBackup": "Резервна копія ProxyChecker",
+      "formatBackup": "Резервна копія ProxyHub",
       "formatCsv": "CSV-список",
       "exportKind": "Що експортувати",
       "exportKindFull": "Проксі та налаштування",
@@ -389,7 +389,7 @@
         "settings": "Лише налаштування"
       },
       "securityWarning": "Незахищені файли резервних копій містять облікові дані проксі у відкритому вигляді. Увімкніть захист паролем під час експорту або зберігайте звичайні файли безпечно.",
-      "formatHint": "Використовується версіонований JSON-формат ProxyChecker (.pcbackup.json). Версія 2 підтримує опціональне шифрування паролем.",
+      "formatHint": "Використовується версіонований JSON-формат ProxyHub (.pcbackup.json). Версія 2 підтримує опціональне шифрування паролем.",
       "protectWithPassword": "Захистити паролем",
       "protectWithPasswordHint": "Шифрує проксі та налаштування всередині файлу. Цей пароль знадобиться для імпорту резервної копії.",
       "exportPassword": "Пароль резервної копії",
@@ -529,7 +529,7 @@
           "unknown": "Unknown error"
         }
       },
-      "nativeTitle": "Резервна копія ProxyChecker",
+      "nativeTitle": "Резервна копія ProxyHub",
       "nativeDescription": "Повний експорт проксі, груп, обраного та налаштувань. Підтримується шифрування паролем.",
       "listFormatsTitle": "Інші формати",
       "listFormatsHeading": "Зовнішні списки проксі",

@@ -38,13 +38,13 @@ function getActiveWindow(): BrowserWindow | undefined {
 
 function formatBackupFileName(kind: BackupExportKind): string {
   const date = new Date().toISOString().slice(0, 10)
-  return `proxychecker-backup-${kind}-${date}.pcbackup.json`
+  return `proxyhub-backup-${kind}-${date}.pcbackup.json`
 }
 
 const OPEN_DIALOG_OPTIONS = {
-  title: 'Import ProxyChecker backup',
+  title: 'Import ProxyHub backup',
   properties: ['openFile'] as Array<'openFile'>,
-  filters: [{ name: 'ProxyChecker Backup', extensions: ['json'] }]
+  filters: [{ name: 'ProxyHub Backup', extensions: ['json'] }]
 }
 
 async function persistImportedSettings(
@@ -100,9 +100,9 @@ export function registerBackupIpc(): void {
       const kind = request.kind
       const window = getActiveWindow()
       const dialogOptions = {
-        title: 'Export ProxyChecker backup',
+        title: 'Export ProxyHub backup',
         defaultPath: formatBackupFileName(kind),
-        filters: [{ name: 'ProxyChecker Backup', extensions: ['json'] }]
+        filters: [{ name: 'ProxyHub Backup', extensions: ['json'] }]
       }
       const dialogResult = window
         ? await dialog.showSaveDialog(window, dialogOptions)

@@ -2,7 +2,7 @@ import type { ProxyGroup } from './proxy-group'
 import type { Proxy } from './proxy'
 import type { SyncableAppSettings } from './settings'
 
-export const BACKUP_FORMAT_ID = 'proxychecker-backup' as const
+export const BACKUP_FORMAT_ID = 'proxyhub-backup' as const
 
 export const BACKUP_SCHEMA_VERSION = 1 as const
 

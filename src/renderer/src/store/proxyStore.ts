@@ -30,6 +30,7 @@ import {
 
 interface ProxyState {
   proxies: Proxy[]
+  proxiesById: Map<string, Proxy>
   isLoading: boolean
   isCheckingAll: boolean
   isAutoChecking: boolean
@@ -159,6 +160,18 @@ function applyLiveProgress(proxies: Proxy[], progress: ProxyCheckProgress): Prox
   return replaceProxyAt(proxies, index, applyCheckResult(proxy, progress.result))
 }
 
+function createProxiesById(proxies: Proxy[]): Map<string, Proxy> {
+  const map = new Map<string, Proxy>()
+  for (const proxy of proxies) {
+    map.set(proxy.id, proxy)
+  }
+  return map
+}
+
+// Прогресс-события приходят по IPC пачками; без батчинга каждое событие
+// вызывает полный re-render списка. Копим и применяем раз в интервал.
+const CHECK_PROGRESS_FLUSH_INTERVAL_MS = 120
+
 function isCheckInProgress(state: Pick<ProxyState, 'checkingIds' | 'isCheckingAll'>): boolean {
   return state.isCheckingAll || state.checkingIds.size > 0
 }
@@ -213,16 +226,36 @@ async function checkAllBatch(
     )
   })
 
-  const unsubscribe = window.api.onCheckProgress((progress) => {
-    set((state) => {
-      const updated = applyLiveProgress(state.proxies, progress)
+  const pendingProgress: ProxyCheckProgress[] = []
+  let flushTimeout: ReturnType<typeof setTimeout> | null = null
 
-      if (progress.phase === 'complete') {
-        scheduleDebouncedPersist(updated)
+  const flushProgress = (): void => {
+    flushTimeout = null
+    if (pendingProgress.length === 0) {
+      return
+    }
+
+    const events = pendingProgress.splice(0, pendingProgress.length)
+
+    set((state) => {
+      let proxies = state.proxies
+      for (const progress of events) {
+        proxies = applyLiveProgress(proxies, progress)
       }
 
-      return { proxies: updated }
+      if (events.some((progress) => progress.phase === 'complete')) {
+        scheduleDebouncedPersist(proxies)
+      }
+
+      return { proxies }
     })
+  }
+
+  const unsubscribe = window.api.onCheckProgress((progress) => {
+    pendingProgress.push(progress)
+    if (flushTimeout === null) {
+      flushTimeout = setTimeout(flushProgress, CHECK_PROGRESS_FLUSH_INTERVAL_MS)
+    }
   })
 
   try {
@@ -232,6 +265,11 @@ async function checkAllBatch(
     })
   } finally {
     unsubscribe()
+    if (flushTimeout !== null) {
+      clearTimeout(flushTimeout)
+      flushTimeout = null
+    }
+    flushProgress()
 
     const finalized = get().proxies.map((proxy) => {
       if (!targetIds.has(proxy.id)) {
@@ -275,220 +313,237 @@ function clearCheckingId(checkingIds: Set<string>, id: string): Set<string> {
   return nextCheckingIds
 }
 
-export const useProxyStore = create<ProxyState>((set, get) => ({
-  proxies: [],
-  isLoading: true,
-  isCheckingAll: false,
-  isAutoChecking: false,
-  checkingIds: new Set(),
-  detailsProxyId: null,
+export const useProxyStore = create<ProxyState>((rawSet, get) => {
+  const set: typeof rawSet = (partial) => {
+    rawSet((state) => {
+      const next = typeof partial === 'function' ? partial(state) : partial
+      if (next.proxies !== undefined && next.proxies !== state.proxies) {
+        return { ...next, proxiesById: createProxiesById(next.proxies) }
+      }
+      return next
+    })
+  }
 
-  setDetailsProxyId: (proxyId) => {
-    set({ detailsProxyId: proxyId })
-  },
+  return {
+    proxies: [],
+    proxiesById: new Map(),
+    isLoading: true,
+    isCheckingAll: false,
+    isAutoChecking: false,
+    checkingIds: new Set(),
+    detailsProxyId: null,
 
-  loadProxies: async () => {
-    if (isCheckInProgress(get())) {
-      return
-    }
+    setDetailsProxyId: (proxyId) => {
+      set({ detailsProxyId: proxyId })
+    },
 
-    const shouldShowLoader = get().proxies.length === 0
-    if (shouldShowLoader) {
-      set({ isLoading: true })
-    }
+    loadProxies: async () => {
+      if (isCheckInProgress(get())) {
+        return
+      }
 
-    try {
-      const proxies = await window.api.getProxies()
-      pruneProxySearchHaystackCache(new Set(proxies.map((proxy) => proxy.id)))
-      set({ proxies })
-    } finally {
+      const shouldShowLoader = get().proxies.length === 0
       if (shouldShowLoader) {
-        set({ isLoading: false })
-      }
-    }
-  },
-
-  addProxy: async (input) => {
-    if (findDuplicateProxy(input, get().proxies)) {
-      return
-    }
-
-    const proxy = createProxy(input)
-    const proxies = [...get().proxies, proxy]
-
-    set({ proxies })
-    await persist(proxies)
-  },
-
-  updateProxy: async (id, input) => {
-    if (findDuplicateProxy(input, get().proxies, id)) {
-      return
-    }
-
-    const proxies = get().proxies.map((proxy) => {
-      if (proxy.id !== id) {
-        return proxy
+        set({ isLoading: true })
       }
 
-      const updated: Proxy = {
-        ...proxy,
-        ...input,
-        host: input.host.trim()
+      try {
+        const proxies = await window.api.getProxies()
+        pruneProxySearchHaystackCache(new Set(proxies.map((proxy) => proxy.id)))
+        set({ proxies })
+      } finally {
+        if (shouldShowLoader) {
+          set({ isLoading: false })
+        }
       }
+    },
 
-      if (!hasConnectionChanges(proxy, input)) {
-        return updated
-      }
-
-      return clearCheckState(updated)
-    })
-
-    invalidateProxySearchHaystack(id)
-    set({ proxies })
-    await persist(proxies)
-  },
-
-  patchProxy: async (id, patch) => {
-    const proxies = get().proxies.map((proxy) => (proxy.id === id ? { ...proxy, ...patch } : proxy))
-
-    invalidateProxySearchHaystack(id)
-    set({ proxies })
-    await persist(proxies)
-  },
-
-  toggleFavorite: async (id) => {
-    const proxies = get().proxies.map((proxy) =>
-      proxy.id === id ? { ...proxy, isFavorite: !proxy.isFavorite } : proxy
-    )
-
-    set({ proxies })
-    await persist(proxies)
-  },
-
-  toggleEnabled: async (id) => {
-    const proxies = get().proxies.map((proxy) =>
-      proxy.id === id ? { ...proxy, isEnabled: proxy.isEnabled === false } : proxy
-    )
-
-    set({ proxies })
-    await persist(proxies)
-  },
-
-  removeProxy: async (id) => {
-    await get().removeProxies([id])
-  },
-
-  removeProxies: async (ids) => {
-    if (ids.length === 0) {
-      return
-    }
-
-    const idSet = new Set(ids)
-    const proxies = get().proxies.filter((proxy) => !idSet.has(proxy.id))
-    const detailsProxyId = get().detailsProxyId
-
-    for (const id of ids) {
-      invalidateProxySearchHaystack(id)
-    }
-
-    set({
-      proxies,
-      detailsProxyId: detailsProxyId && idSet.has(detailsProxyId) ? null : detailsProxyId
-    })
-    await persist(proxies)
-  },
-
-  checkProxy: async (id) => {
-    const proxy = get().proxies.find((item) => item.id === id)
-    if (!proxy || get().checkingIds.has(id)) return
-
-    const domains = getActiveCheckDomains()
-    const checkOptions = getCheckOptions()
-    const checkingIds = new Set(get().checkingIds)
-    checkingIds.add(id)
-
-    set({
-      checkingIds,
-      proxies: get().proxies.map((item) => (item.id === id ? beginProxyCheck(item, domains) : item))
-    })
-
-    const unsubscribe = window.api.onCheckProgress((progress) => {
-      if (progress.phase === 'complete') {
-        if (progress.result.id !== id) return
-      } else if (progress.proxyId !== id) {
+    addProxy: async (input) => {
+      if (findDuplicateProxy(input, get().proxies)) {
         return
       }
 
-      if (progress.phase === 'complete') {
+      const proxy = createProxy(input)
+      const proxies = [...get().proxies, proxy]
+
+      set({ proxies })
+      await persist(proxies)
+    },
+
+    updateProxy: async (id, input) => {
+      if (findDuplicateProxy(input, get().proxies, id)) {
         return
       }
 
-      set({ proxies: applyLiveProgress(get().proxies, progress) })
-    })
+      const proxies = get().proxies.map((proxy) => {
+        if (proxy.id !== id) {
+          return proxy
+        }
 
-    try {
-      const result = await window.api.checkProxy(proxy, checkOptions)
-      const updated = get().proxies.map((item) =>
-        item.id === id ? applyCheckResult(item, result) : item
+        const updated: Proxy = {
+          ...proxy,
+          ...input,
+          host: input.host.trim()
+        }
+
+        if (!hasConnectionChanges(proxy, input)) {
+          return updated
+        }
+
+        return clearCheckState(updated)
+      })
+
+      invalidateProxySearchHaystack(id)
+      set({ proxies })
+      await persist(proxies)
+    },
+
+    patchProxy: async (id, patch) => {
+      const proxies = get().proxies.map((proxy) =>
+        proxy.id === id ? { ...proxy, ...patch } : proxy
       )
 
       invalidateProxySearchHaystack(id)
-      set({ proxies: updated })
-      await persist(updated)
-    } catch {
-      const updated = get().proxies.map((item) =>
-        item.id === id ? finalizeIncompleteProxy(item) : item
+      set({ proxies })
+      await persist(proxies)
+    },
+
+    toggleFavorite: async (id) => {
+      const proxies = get().proxies.map((proxy) =>
+        proxy.id === id ? { ...proxy, isFavorite: !proxy.isFavorite } : proxy
       )
 
-      invalidateProxySearchHaystack(id)
-      set({ proxies: updated })
-      await persist(updated)
-    } finally {
-      unsubscribe()
+      set({ proxies })
+      await persist(proxies)
+    },
 
-      const finalized = get().proxies.map((item) =>
-        item.id === id ? finalizeIncompleteProxy(item) : item
+    toggleEnabled: async (id) => {
+      const proxies = get().proxies.map((proxy) =>
+        proxy.id === id ? { ...proxy, isEnabled: proxy.isEnabled === false } : proxy
       )
+
+      set({ proxies })
+      await persist(proxies)
+    },
+
+    removeProxy: async (id) => {
+      await get().removeProxies([id])
+    },
+
+    removeProxies: async (ids) => {
+      if (ids.length === 0) {
+        return
+      }
+
+      const idSet = new Set(ids)
+      const proxies = get().proxies.filter((proxy) => !idSet.has(proxy.id))
+      const detailsProxyId = get().detailsProxyId
+
+      for (const id of ids) {
+        invalidateProxySearchHaystack(id)
+      }
 
       set({
-        proxies: finalized,
-        checkingIds: clearCheckingId(get().checkingIds, id)
+        proxies,
+        detailsProxyId: detailsProxyId && idSet.has(detailsProxyId) ? null : detailsProxyId
       })
+      await persist(proxies)
+    },
+
+    checkProxy: async (id) => {
+      const proxy = get().proxies.find((item) => item.id === id)
+      if (!proxy || get().checkingIds.has(id)) return
+
+      const domains = getActiveCheckDomains()
+      const checkOptions = getCheckOptions()
+      const checkingIds = new Set(get().checkingIds)
+      checkingIds.add(id)
+
+      set({
+        checkingIds,
+        proxies: get().proxies.map((item) =>
+          item.id === id ? beginProxyCheck(item, domains) : item
+        )
+      })
+
+      const unsubscribe = window.api.onCheckProgress((progress) => {
+        if (progress.phase === 'complete') {
+          if (progress.result.id !== id) return
+        } else if (progress.proxyId !== id) {
+          return
+        }
+
+        if (progress.phase === 'complete') {
+          return
+        }
+
+        set({ proxies: applyLiveProgress(get().proxies, progress) })
+      })
+
+      try {
+        const result = await window.api.checkProxy(proxy, checkOptions)
+        const updated = get().proxies.map((item) =>
+          item.id === id ? applyCheckResult(item, result) : item
+        )
+
+        invalidateProxySearchHaystack(id)
+        set({ proxies: updated })
+        await persist(updated)
+      } catch {
+        const updated = get().proxies.map((item) =>
+          item.id === id ? finalizeIncompleteProxy(item) : item
+        )
+
+        invalidateProxySearchHaystack(id)
+        set({ proxies: updated })
+        await persist(updated)
+      } finally {
+        unsubscribe()
+
+        const finalized = get().proxies.map((item) =>
+          item.id === id ? finalizeIncompleteProxy(item) : item
+        )
+
+        set({
+          proxies: finalized,
+          checkingIds: clearCheckingId(get().checkingIds, id)
+        })
+      }
+    },
+
+    checkAll: async (proxyIds, options) => {
+      const { proxies } = get()
+      const targetIds = proxyIds ?? proxies.map((proxy) => proxy.id)
+      const targets = filterEnabledProxies(proxies.filter((proxy) => targetIds.includes(proxy.id)))
+
+      if (targets.length === 0 || get().isCheckingAll) return
+
+      const isAutoChecking = options?.source === 'auto'
+
+      if (!isAutoChecking && useSettingsStore.getState().settings.autoCheckEnabled) {
+        useAutoCheckStore.getState().bumpSchedule()
+      }
+
+      const checkOptions = getCheckOptions()
+
+      set({ isAutoChecking })
+
+      try {
+        await checkAllBatch(targets, checkOptions, get, set)
+      } finally {
+        set({ isAutoChecking: false })
+      }
+    },
+
+    cancelCheckAll: () => {
+      if (!get().isCheckingAll) {
+        return
+      }
+
+      cancelDebouncedPersist()
+      void window.api.cancelCheckAll()
     }
-  },
-
-  checkAll: async (proxyIds, options) => {
-    const { proxies } = get()
-    const targetIds = proxyIds ?? proxies.map((proxy) => proxy.id)
-    const targets = filterEnabledProxies(proxies.filter((proxy) => targetIds.includes(proxy.id)))
-
-    if (targets.length === 0 || get().isCheckingAll) return
-
-    const isAutoChecking = options?.source === 'auto'
-
-    if (!isAutoChecking && useSettingsStore.getState().settings.autoCheckEnabled) {
-      useAutoCheckStore.getState().bumpSchedule()
-    }
-
-    const checkOptions = getCheckOptions()
-
-    set({ isAutoChecking })
-
-    try {
-      await checkAllBatch(targets, checkOptions, get, set)
-    } finally {
-      set({ isAutoChecking: false })
-    }
-  },
-
-  cancelCheckAll: () => {
-    if (!get().isCheckingAll) {
-      return
-    }
-
-    cancelDebouncedPersist()
-    void window.api.cancelCheckAll()
   }
-}))
+})
 
 export { clearProxySearchHaystackCache }

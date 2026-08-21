@@ -155,7 +155,7 @@ function ProxyDetailsDialog({
               sx={{
                 width: 44,
                 height: 44,
-                borderRadius: 2.5,
+                borderRadius: '16px',
                 display: 'grid',
                 placeItems: 'center',
                 bgcolor: colorStyles?.background,

@@ -25,7 +25,7 @@ function CountryFlag({ countryCode, size = 20 }: CountryFlagProps): React.JSX.El
       sx={{
         width: size,
         height,
-        borderRadius: 0.5,
+        borderRadius: '12px',
         flexShrink: 0,
         overflow: 'hidden',
         display: 'inline-flex',

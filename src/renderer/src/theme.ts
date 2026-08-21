@@ -1,5 +1,13 @@
-import { alpha, createTheme, type Theme } from '@mui/material/styles'
+import {
+  alpha,
+  createTheme,
+  darken,
+  getContrastRatio,
+  lighten,
+  type Theme
+} from '@mui/material/styles'
 import type { ThemeMode } from '../../shared/types/settings'
+import { ACCENT_COLOR_DEFAULT } from '../../shared/types/settings'
 import { resolveColorScheme } from '../../shared/theme/resolve-color-scheme'
 import { getPalette, withThemeAlpha } from './theme/palette'
 import { MD3_DURATION, MD3_EASING } from './theme/motion'
@@ -36,8 +44,57 @@ const sharedTypography = {
   button: { fontWeight: 600, letterSpacing: '0.02em' }
 }
 
+// Единая шкала скруглений приложения:
+//   8px  — мелкие элементы: чипы, тултипы, мелкие инлайн-блоки
+//   12px — контролы и внутренние блоки: поля, свитч-карточки, иконки, вложенные боксы
+//   16px — карточки и контейнеры: карточки прокси, секции, фильтры/поиск,
+//          диалоги, меню и поповеры (включая внешние углы «сшитых» списков)
+//   Пилюли (999px) и круги (50%) — кнопки-капсулы, аватары, прогресс-треки.
 const sharedShape = {
   borderRadius: 12
+}
+
+// Смешивание двух hex-цветов (sRGB lerp) — для тональных поверхностей на основе акцента.
+function mixColor(base: string, accent: string, weight: number): string {
+  const parse = (hex: string): [number, number, number] => {
+    const value = hex.replace('#', '')
+    const full =
+      value.length === 3
+        ? value
+            .split('')
+            .map((ch) => ch + ch)
+            .join('')
+        : value
+    const num = parseInt(full, 16)
+    return [(num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff]
+  }
+
+  const [r1, g1, b1] = parse(base)
+  const [r2, g2, b2] = parse(accent)
+  const channel = (a: number, b: number): number =>
+    Math.round(a + (b - a) * Math.min(Math.max(weight, 0), 1))
+
+  const toHex = (n: number): string => n.toString(16).padStart(2, '0')
+  return `#${toHex(channel(r1, r2))}${toHex(channel(g1, g2))}${toHex(channel(b1, b2))}`
+}
+
+// Тональные фоны MD3: нейтральная база, подкрашенная акцентом.
+// Фон программы и paper подмешивают акцент, а поверхность карточек и секций
+// строится через surfaceContainer поверх них — получается цельная акцентная лестница.
+function tonalBackgrounds(accent: string): {
+  light: { default: string; paper: string }
+  dark: { default: string; paper: string }
+} {
+  return {
+    light: {
+      default: mixColor('#eef1f8', accent, 0.07),
+      paper: mixColor('#ffffff', accent, 0.035)
+    },
+    dark: {
+      default: mixColor('#0a0e1a', accent, 0.09),
+      paper: mixColor('#141824', accent, 0.06)
+    }
+  }
 }
 
 const sharedTransitions = {
@@ -55,6 +112,22 @@ const sharedTransitions = {
     complex: MD3_DURATION.medium4,
     enteringScreen: MD3_DURATION.medium3,
     leavingScreen: MD3_DURATION.medium1
+  }
+}
+
+function getPrimaryPalette(accentColor: string): {
+  main: string
+  light: string
+  dark: string
+  contrastText: string
+} {
+  const contrastText = getContrastRatio(accentColor, '#ffffff') >= 3 ? '#ffffff' : '#0a0e1a'
+
+  return {
+    main: accentColor,
+    light: lighten(accentColor, 0.24),
+    dark: darken(accentColor, 0.24),
+    contrastText
   }
 }
 
@@ -202,7 +275,7 @@ function buildComponentOverrides(): Theme['components'] {
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 28,
+          borderRadius: 16,
           padding: 4
         }
       }
@@ -349,6 +422,13 @@ function buildComponentOverrides(): Theme['components'] {
         }
       }
     },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 16
+        }
+      }
+    },
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
@@ -361,7 +441,13 @@ function buildComponentOverrides(): Theme['components'] {
   }
 }
 
-export function createAppTheme(direction: 'ltr' | 'rtl' = 'ltr'): Theme {
+export function createAppTheme(
+  direction: 'ltr' | 'rtl' = 'ltr',
+  accentColor = ACCENT_COLOR_DEFAULT
+): Theme {
+  const primary = getPrimaryPalette(accentColor)
+  const tonal = tonalBackgrounds(primary.main)
+
   return createTheme({
     direction,
     cssVariables: {
@@ -374,12 +460,7 @@ export function createAppTheme(direction: 'ltr' | 'rtl' = 'ltr'): Theme {
             primary: '#1a1d27',
             secondary: 'rgba(26, 29, 39, 0.68)'
           },
-          primary: {
-            main: '#3d5fc9',
-            light: '#5c8aff',
-            dark: '#2a4499',
-            contrastText: '#ffffff'
-          },
+          primary,
           secondary: {
             main: '#5c6bc0',
             light: '#8e99f3',
@@ -387,10 +468,10 @@ export function createAppTheme(direction: 'ltr' | 'rtl' = 'ltr'): Theme {
             contrastText: '#ffffff'
           },
           background: {
-            default: '#eef1f8',
-            paper: '#ffffff'
+            default: tonal.light.default,
+            paper: tonal.light.paper
           },
-          divider: alpha('#3d5fc9', 0.12),
+          divider: alpha(primary.main, 0.12),
           success: { main: '#1b873f' },
           error: { main: '#ba1a1a' },
           warning: { main: '#8a5000' },
@@ -403,12 +484,7 @@ export function createAppTheme(direction: 'ltr' | 'rtl' = 'ltr'): Theme {
             primary: '#e8ecf4',
             secondary: 'rgba(232, 236, 244, 0.72)'
           },
-          primary: {
-            main: '#5c8aff',
-            light: '#8ba8ff',
-            dark: '#3d6de0',
-            contrastText: '#0a0e1a'
-          },
+          primary,
           secondary: {
             main: '#7c93ee',
             light: '#a8b8ff',
@@ -416,10 +492,10 @@ export function createAppTheme(direction: 'ltr' | 'rtl' = 'ltr'): Theme {
             contrastText: '#0a0e1a'
           },
           background: {
-            default: '#0a0e1a',
-            paper: '#141824'
+            default: tonal.dark.default,
+            paper: tonal.dark.paper
           },
-          divider: alpha('#5c8aff', 0.14),
+          divider: alpha(primary.main, 0.14),
           success: { main: '#4cd964' },
           error: { main: '#ff6b6b' },
           warning: { main: '#ffb74d' },

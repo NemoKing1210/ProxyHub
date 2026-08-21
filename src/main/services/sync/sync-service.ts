@@ -118,7 +118,7 @@ function serializeBackupError(error: unknown): SyncError {
   return toSyncError(error)
 }
 
-const SYNC_REMOTE_DISPLAY_NAME = 'proxychecker-sync.pcbackup.json'
+const SYNC_REMOTE_DISPLAY_NAME = 'proxyhub-sync.pcbackup.json'
 
 function buildRemotePreview(
   content: string,

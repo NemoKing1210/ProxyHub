@@ -1,5 +1,5 @@
-appId: com.nemoking1210.proxychecker
-productName: ProxyChecker
+appId: com.nemoking1210.proxyhub
+productName: ProxyHub
 copyright: Copyright © 2026 NemoKing1210
 
 directories:
@@ -20,7 +20,7 @@ asarUnpack:
   - resources/**
 
 win:
-  executableName: ProxyChecker
+  executableName: ProxyHub
   target:
     - nsis
   artifactName: ${productName}-${version}-setup.${ext}
@@ -40,8 +40,8 @@ mac:
     - zip
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
-    NSDocumentsFolderUsageDescription: ProxyChecker needs access to open and save proxy list files.
-    NSDownloadsFolderUsageDescription: ProxyChecker needs access to import proxy lists from Downloads.
+    NSDocumentsFolderUsageDescription: ProxyHub needs access to open and save proxy list files.
+    NSDownloadsFolderUsageDescription: ProxyHub needs access to import proxy lists from Downloads.
   notarize: false
   artifactName: ${productName}-${version}-${arch}.${ext}
 
@@ -64,8 +64,11 @@ deb:
 
 npmRebuild: false
 
+# releaseType: draft — CI pre-creates an empty draft release before electron-builder
+# uploads artifacts. This avoids parallel upload races that create duplicate or
+# incomplete releases. The workflow publishes the draft after all builds finish.
 publish:
   provider: github
   owner: NemoKing1210
-  repo: ProxyChecker
-  releaseType: release
+  repo: ProxyHub
+  releaseType: draft

@@ -1,5 +1,5 @@
 {
-  "name": "ProxyChecker",
+  "name": "ProxyHub",
   "version": "1.37.2",
   "description": "Cross-platform desktop app for testing HTTP, HTTPS, SOCKS4, SOCKS5, and MTProto proxy availability and performance",
   "main": "./out/main/index.js",
@@ -9,18 +9,18 @@
     "name": "NemoKing1210",
     "email": "nemoking1210@gmail.com"
   },
-  "homepage": "https://github.com/NemoKing1210/ProxyChecker",
+  "homepage": "https://github.com/NemoKing1210/ProxyHub",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NemoKing1210/ProxyChecker.git"
+    "url": "https://github.com/NemoKing1210/ProxyHub.git"
   },
   "bugs": {
-    "url": "https://github.com/NemoKing1210/ProxyChecker/issues"
+    "url": "https://github.com/NemoKing1210/ProxyHub/issues"
   },
   "keywords": [
     "electron",
     "proxy",
-    "proxy-checker",
+    "proxyhub",
     "http-proxy",
     "socks5",
     "socks4",
@@ -63,7 +63,6 @@
     "@hookform/resolvers": "^5.4.0",
     "@mui/icons-material": "^9.2.0",
     "@mui/material": "^9.2.0",
-    "@tanstack/react-virtual": "^3.14.5",
     "country-flag-icons": "^1.6.20",
     "electron-store": "^11.0.2",
     "electron-updater": "^6.8.9",

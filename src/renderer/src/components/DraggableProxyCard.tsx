@@ -40,7 +40,7 @@ export function ProxyCardDragHandle({
         width: 48,
         height: 28,
         flexShrink: 0,
-        borderRadius: 1.5,
+        borderRadius: '12px',
         color: 'text.disabled',
         cursor: disabled ? 'default' : isDragging ? 'grabbing' : 'grab',
         touchAction: 'none',
@@ -108,7 +108,7 @@ function DraggableProxyCard({
       style={style}
       sx={{
         minWidth: 0,
-        borderRadius: 3,
+        borderRadius: '16px',
         transition: 'outline-color 180ms ease, background-color 180ms ease',
         ...(isDragging
           ? {

@@ -13,6 +13,7 @@ interface ProxyFormSectionProps {
   defaultExpanded?: boolean
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
+  listRadius?: string
 }
 
 function ProxyFormSection({
@@ -23,7 +24,8 @@ function ProxyFormSection({
   collapsible = false,
   defaultExpanded = false,
   expanded,
-  onExpandedChange
+  onExpandedChange,
+  listRadius
 }: ProxyFormSectionProps): React.JSX.Element {
   const theme = useTheme()
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -47,7 +49,7 @@ function ProxyFormSection({
     <Box
       sx={{
         p: 2,
-        borderRadius: 2.5,
+        borderRadius: listRadius ?? '16px',
         bgcolor: surfaceContainer(theme, 'low')
       }}
     >
@@ -69,7 +71,7 @@ function ProxyFormSection({
             justifyContent: 'center',
             width: 32,
             height: 32,
-            borderRadius: 2,
+            borderRadius: '12px',
             flexShrink: 0,
             bgcolor: surfaceContainer(theme, 'high'),
             color: 'primary.main'

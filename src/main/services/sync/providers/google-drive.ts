@@ -11,7 +11,7 @@ import { resolveGoogleAccessToken } from '../google-oauth'
 import { SyncProviderError } from './sync-errors'
 import type { SyncProvider, SyncProviderEnsureResult } from './types'
 
-const USER_AGENT = 'ProxyChecker-Sync'
+const USER_AGENT = 'ProxyHub-Sync'
 
 interface DriveFileListResponse {
   files?: Array<{
@@ -160,7 +160,7 @@ async function resolveRemoteFile(
 }
 
 async function createSyncFile(accessToken: string, content: string): Promise<DriveFileResponse> {
-  const boundary = `proxychecker-${Date.now()}`
+  const boundary = `proxyhub-${Date.now()}`
   const metadata = JSON.stringify({
     name: GOOGLE_DRIVE_SYNC_FILENAME,
     parents: ['appDataFolder']

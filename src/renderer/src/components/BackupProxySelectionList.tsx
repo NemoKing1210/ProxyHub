@@ -130,7 +130,7 @@ function BackupProxySelectionList({
           gap: 1.25,
           px: 1.5,
           py: 1.1,
-          borderRadius: 2,
+          borderRadius: '12px',
           cursor: disabled ? 'default' : 'pointer',
           bgcolor: checked ? surfaceContainer(theme, 'high') : surfaceContainer(theme, 'low'),
           opacity: disabled ? 0.72 : checked ? 1 : 0.86,
@@ -228,7 +228,7 @@ function BackupProxySelectionList({
             px: 0.5,
             py: 0.75,
             mb: 0.75,
-            borderRadius: 2,
+            borderRadius: '12px',
             cursor: disabled ? 'default' : 'pointer',
             ...(!disabled && {
               '&:hover': {
@@ -269,7 +269,7 @@ function BackupProxySelectionList({
       <Box
         sx={{
           p: 1.5,
-          borderRadius: 2.5,
+          borderRadius: '16px',
           bgcolor: surfaceContainer(theme, 'low'),
           boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
         }}
@@ -352,7 +352,7 @@ function BackupProxySelectionList({
           pr: 0.5,
           '&::-webkit-scrollbar': { width: 8 },
           '&::-webkit-scrollbar-thumb': {
-            borderRadius: 999,
+            borderRadius: '999px',
             bgcolor: 'action.disabled'
           }
         }}

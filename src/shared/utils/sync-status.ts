@@ -120,7 +120,7 @@ export function buildSyncStatusErrorReport(
     context
 
   const lines = [
-    '=== ProxyChecker Sync Error ===',
+    '=== ProxyHub Sync Error ===',
     `Time: ${error.occurredAt || 'unknown'}`,
     `Operation: ${error.operation || 'unknown'}`,
     `Code: ${error.code}`,

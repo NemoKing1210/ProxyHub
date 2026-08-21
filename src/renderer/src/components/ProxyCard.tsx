@@ -52,7 +52,7 @@ import { formatDateTime } from '../../../shared/utils/datetime'
 import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
 import { getProxyDomainChecks } from '../../../shared/utils/proxy-check-results'
 import { buildProxyUrl, formatProxyAddress } from '../../../shared/utils/proxy-format'
-import { elevationShadow } from '../theme'
+import { elevationShadow, surfaceContainer, surfaceTint } from '../theme'
 import { getProxyDisplayLatency } from '../utils/filter-proxies'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import { getProxyProtocolStyles } from '../utils/proxy-protocol-styles'
@@ -76,6 +76,7 @@ interface ProxyCardProps {
   isChecking: boolean
   isCheckingAll: boolean
   dragHandle?: React.ReactNode
+  listRadius?: string
   onCheck: () => void
   onEdit: () => void
   onDelete: () => void
@@ -132,6 +133,7 @@ function ProxyCard({
   isChecking,
   isCheckingAll,
   dragHandle,
+  listRadius,
   onCheck,
   onEdit,
   onDelete,
@@ -433,9 +435,9 @@ function ProxyCard({
     <Box
       onContextMenu={handleContextMenu}
       sx={{
-        borderRadius: 3,
-        bgcolor: 'background.paper',
-        boxShadow: elevationShadow(theme, 1),
+        borderRadius: listRadius ?? '16px',
+        bgcolor: surfaceContainer(theme, 'lowest'),
+        boxShadow: `${elevationShadow(theme, 1)}, inset 0 0 0 1px ${surfaceTint(theme, 'primary', 0.14)}`,
         overflow: 'hidden',
         opacity: enabled ? 1 : 0.62,
         transition: 'opacity 160ms ease'
@@ -493,7 +495,7 @@ function ProxyCard({
             outline: 'none',
             '&:focus-visible': isCompact
               ? {
-                  borderRadius: 2,
+                  borderRadius: '12px',
                   boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.4)}`
                 }
               : undefined
@@ -512,7 +514,7 @@ function ProxyCard({
               justifyContent: 'center',
               width: isCompact ? 40 : 44,
               height: isCompact ? 40 : 44,
-              borderRadius: 2.5,
+              borderRadius: '16px',
               flexShrink: 0,
               bgcolor: colorStyles.background,
               color: colorStyles.main,
@@ -801,7 +803,7 @@ function ProxyCard({
           paper: {
             sx: {
               minWidth: 220,
-              borderRadius: 2
+              borderRadius: '16px'
             }
           }
         }}
@@ -968,7 +970,7 @@ function ProxyCard({
             sx: {
               minWidth: 200,
               maxWidth: 280,
-              borderRadius: 2
+              borderRadius: '16px'
             }
           }
         }}
@@ -985,7 +987,7 @@ function ProxyCard({
                 justifyContent: 'center',
                 width: GROUP_MENU_AVATAR_SIZE,
                 height: GROUP_MENU_AVATAR_SIZE,
-                borderRadius: 1.5,
+                borderRadius: '12px',
                 bgcolor: 'action.hover',
                 color: 'text.secondary',
                 boxShadow: (theme) => `inset 0 0 0 1px ${alpha(theme.palette.divider, 0.8)}`

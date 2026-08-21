@@ -32,7 +32,7 @@ function ProxyDropZone({
     <Box
       ref={setNodeRef}
       sx={{
-        borderRadius: 2,
+        borderRadius: '12px',
         transition: 'background-color 150ms ease, box-shadow 150ms ease',
         bgcolor: showHighlight ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
         boxShadow: showHighlight
