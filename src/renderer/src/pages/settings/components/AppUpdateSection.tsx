@@ -97,7 +97,11 @@ function AppUpdateSection({ listRadius }: AppUpdateSectionProps): React.JSX.Elem
   const total = formatMegabytes(state.totalBytes)
   const showProgress = state.status === 'downloading'
   const canCheck =
-    !isBusy && (state.status === 'idle' || state.status === 'not-available' || state.status === 'available' || state.status === 'error')
+    !isBusy &&
+    (state.status === 'idle' ||
+      state.status === 'not-available' ||
+      state.status === 'available' ||
+      state.status === 'error')
   const canDownload = !isBusy && state.status === 'available'
   const canInstall = state.status === 'downloaded'
 
@@ -111,179 +115,246 @@ function AppUpdateSection({ listRadius }: AppUpdateSectionProps): React.JSX.Elem
     error: t('settings.aboutPage.updateError', { defaultValue: 'Error' })
   }
 
-
   return (
-    <ContentSection icon={<UpdateOutlinedIcon fontSize="small" />} title={t('settings.updates.title')} listRadius={listRadius}>
+    <ContentSection
+      icon={<UpdateOutlinedIcon fontSize="small" />}
+      title={t('settings.updates.title')}
+      listRadius={listRadius}
+    >
       <Stack spacing={1.75}>
-      {/* status header */}
-      <Box
-        sx={{
-          p: 2,
-          borderRadius: '12px',
-          bgcolor: surfaceContainer(theme, 'default'),
-          border: `1px solid ${outlineVariant(theme)}`,
-          display: 'flex',
-          gap: 1.75,
-          alignItems: 'flex-start'
-        }}
-      >
+        {/* status header */}
         <Box
           sx={{
-            width: 44,
-            height: 44,
+            p: 2,
             borderRadius: '12px',
+            bgcolor: surfaceContainer(theme, 'default'),
+            border: `1px solid ${outlineVariant(theme)}`,
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            bgcolor: surfaceTint(theme, 'primary', 0.14),
-            color: 'primary.main',
-            border: `1px solid ${withThemeAlpha(theme, theme.palette.primary.main, 0.18)}`
+            gap: 1.75,
+            alignItems: 'flex-start'
           }}
         >
-          <StatusIcon status={state.status} />
-        </Box>
+          <Box
+            sx={{
+              width: 44,
+              height: 44,
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              bgcolor: surfaceTint(theme, 'primary', 0.14),
+              color: 'primary.main',
+              border: `1px solid ${withThemeAlpha(theme, theme.palette.primary.main, 0.18)}`
+            }}
+          >
+            <StatusIcon status={state.status} />
+          </Box>
 
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', mb: 0.35 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800 }}>
-              {t('settings.updates.title')}
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ alignItems: 'center', flexWrap: 'wrap', mb: 0.35 }}
+            >
+              <Typography variant="subtitle2" sx={{ fontWeight: 800 }}>
+                {t('settings.updates.title')}
+              </Typography>
+              <Chip
+                label={statusChipLabel[state.status] ?? state.status}
+                size="small"
+                color={
+                  state.status === 'not-available' || state.status === 'downloaded'
+                    ? 'success'
+                    : state.status === 'available'
+                      ? 'info'
+                      : state.status === 'error'
+                        ? 'warning'
+                        : 'default'
+                }
+                sx={{ height: 20, fontSize: '0.68rem', fontWeight: 800, letterSpacing: '0.02em' }}
+              />
+              {state.currentVersion && (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ fontFamily: 'monospace', fontWeight: 600 }}
+                >
+                  v{state.currentVersion}
+                </Typography>
+              )}
+            </Stack>
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ lineHeight: 1.5, fontSize: '0.86rem' }}
+            >
+              {t('settings.updates.description')}
             </Typography>
-            <Chip
-              label={statusChipLabel[state.status] ?? state.status}
-              size="small"
-              color={
-                state.status === 'not-available' || state.status === 'downloaded'
-                  ? 'success'
-                  : state.status === 'available'
-                    ? 'info'
-                    : state.status === 'error'
-                      ? 'warning'
-                      : 'default'
-              }
-              sx={{ height: 20, fontSize: '0.68rem', fontWeight: 800, letterSpacing: '0.02em' }}
-            />
-            {state.currentVersion && (
-              <Typography variant="caption" color="text.secondary" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
-                v{state.currentVersion}
-              </Typography>
-            )}
-          </Stack>
 
-          <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5, fontSize: '0.86rem' }}>
-            {t('settings.updates.description')}
-          </Typography>
-
-          {/* inline status messages */}
-          <Box sx={{ mt: 1.25 }}>
-            {state.status === 'checking' && (
-              <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box component="span" sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.main', animation: 'pulse 1.2s infinite' }} />
-                {t('settings.updates.checking')}
-              </Typography>
-            )}
-
-            {state.status === 'not-available' && (
-              <Alert severity="success" variant="outlined" sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}>
-                {t('settings.updates.upToDate', { version: state.currentVersion })}
-              </Alert>
-            )}
-
-            {state.status === 'available' && state.availableVersion && (
-              <Alert severity="info" variant="outlined" sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}>
-                {t('settings.updates.available', { version: state.availableVersion })}
-              </Alert>
-            )}
-
-            {state.status === 'downloaded' && state.availableVersion && (
-              <Alert severity="success" variant="outlined" sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}>
-                {t('settings.updates.ready', { version: state.availableVersion })}
-              </Alert>
-            )}
-
-            {state.status === 'error' && (
-              <Alert severity="warning" variant="outlined" sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}>
-                {t(`settings.updates.errors.${state.errorCode ?? 'unavailable'}` as const)}
-              </Alert>
-            )}
-
-            {state.releaseNotes && (state.status === 'available' || state.status === 'downloaded') && (
-              <Box
-                sx={{
-                  mt: 1,
-                  p: 1.25,
-                  borderRadius: '12px',
-                  bgcolor: withThemeAlpha(theme, theme.palette.background.paper, 0.7),
-                  border: `1px solid ${withThemeAlpha(theme, theme.palette.divider, 0.5)}`,
-                  maxHeight: 140,
-                  overflow: 'auto'
-                }}
-              >
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', display: 'block', mb: 0.5 }}>
-                  Release notes
+            {/* inline status messages */}
+            <Box sx={{ mt: 1.25 }}>
+              {state.status === 'checking' && (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  <Box
+                    component="span"
+                    sx={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      bgcolor: 'primary.main',
+                      animation: 'pulse 1.2s infinite'
+                    }}
+                  />
+                  {t('settings.updates.checking')}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'pre-wrap', fontSize: '0.84rem', lineHeight: 1.6 }}>
-                  {state.releaseNotes}
-                </Typography>
-              </Box>
-            )}
+              )}
 
-            {showProgress && (
-              <Box sx={{ mt: 1.25 }}>
-                <LinearProgress
-                  variant={state.downloadPercent !== undefined ? 'determinate' : 'indeterminate'}
-                  value={state.downloadPercent}
-                  sx={{ height: 6, borderRadius: 999, bgcolor: withThemeAlpha(theme, theme.palette.primary.main, 0.12) }}
-                />
-                <Typography variant="caption" color="text.secondary" sx={{ mt: 0.75, display: 'block' }}>
-                  {state.downloadPercent !== undefined
-                    ? t('settings.updates.downloadProgress', {
-                        percent: Math.round(state.downloadPercent),
-                        transferred: transferred ?? '—',
-                        total: total ?? '—'
-                      })
-                    : t('settings.updates.downloading')}
-                </Typography>
-              </Box>
-            )}
+              {state.status === 'not-available' && (
+                <Alert
+                  severity="success"
+                  variant="outlined"
+                  sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}
+                >
+                  {t('settings.updates.upToDate', { version: state.currentVersion })}
+                </Alert>
+              )}
+
+              {state.status === 'available' && state.availableVersion && (
+                <Alert
+                  severity="info"
+                  variant="outlined"
+                  sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}
+                >
+                  {t('settings.updates.available', { version: state.availableVersion })}
+                </Alert>
+              )}
+
+              {state.status === 'downloaded' && state.availableVersion && (
+                <Alert
+                  severity="success"
+                  variant="outlined"
+                  sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}
+                >
+                  {t('settings.updates.ready', { version: state.availableVersion })}
+                </Alert>
+              )}
+
+              {state.status === 'error' && (
+                <Alert
+                  severity="warning"
+                  variant="outlined"
+                  sx={{ borderRadius: '12px', py: 0.25, fontSize: '0.86rem' }}
+                >
+                  {t(`settings.updates.errors.${state.errorCode ?? 'unavailable'}` as const)}
+                </Alert>
+              )}
+
+              {state.releaseNotes &&
+                (state.status === 'available' || state.status === 'downloaded') && (
+                  <Box
+                    sx={{
+                      mt: 1,
+                      p: 1.25,
+                      borderRadius: '12px',
+                      bgcolor: withThemeAlpha(theme, theme.palette.background.paper, 0.7),
+                      border: `1px solid ${withThemeAlpha(theme, theme.palette.divider, 0.5)}`,
+                      maxHeight: 140,
+                      overflow: 'auto'
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{
+                        fontWeight: 700,
+                        letterSpacing: '0.04em',
+                        textTransform: 'uppercase',
+                        display: 'block',
+                        mb: 0.5
+                      }}
+                    >
+                      Release notes
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ whiteSpace: 'pre-wrap', fontSize: '0.84rem', lineHeight: 1.6 }}
+                    >
+                      {state.releaseNotes}
+                    </Typography>
+                  </Box>
+                )}
+
+              {showProgress && (
+                <Box sx={{ mt: 1.25 }}>
+                  <LinearProgress
+                    variant={state.downloadPercent !== undefined ? 'determinate' : 'indeterminate'}
+                    value={state.downloadPercent}
+                    sx={{
+                      height: 6,
+                      borderRadius: 999,
+                      bgcolor: withThemeAlpha(theme, theme.palette.primary.main, 0.12)
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mt: 0.75, display: 'block' }}
+                  >
+                    {state.downloadPercent !== undefined
+                      ? t('settings.updates.downloadProgress', {
+                          percent: Math.round(state.downloadPercent),
+                          transferred: transferred ?? '—',
+                          total: total ?? '—'
+                        })
+                      : t('settings.updates.downloading')}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ flexWrap: 'wrap' }}>
-        <Button
-          variant="outlined"
-          startIcon={<RefreshOutlinedIcon />}
-          disabled={!canCheck}
-          onClick={() => void runCheck()}
-          sx={{ borderRadius: '999px', fontWeight: 700, px: 2 }}
-        >
-          {t('settings.updates.checkButton')}
-        </Button>
-
-        {canDownload && (
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ flexWrap: 'wrap' }}>
           <Button
-            variant="contained"
-            startIcon={<DownloadOutlinedIcon />}
-            onClick={() => void runDownload()}
+            variant="outlined"
+            startIcon={<RefreshOutlinedIcon />}
+            disabled={!canCheck}
+            onClick={() => void runCheck()}
             sx={{ borderRadius: '999px', fontWeight: 700, px: 2 }}
           >
-            {t('settings.updates.downloadButton', { version: state.availableVersion ?? '' })}
+            {t('settings.updates.checkButton')}
           </Button>
-        )}
 
-        {canInstall && (
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<RestartAltOutlinedIcon />}
-            onClick={runInstall}
-            sx={{ borderRadius: '999px', fontWeight: 700, px: 2 }}
-          >
-            {t('settings.updates.installButton')}
-          </Button>
-        )}
-      </Stack>
+          {canDownload && (
+            <Button
+              variant="contained"
+              startIcon={<DownloadOutlinedIcon />}
+              onClick={() => void runDownload()}
+              sx={{ borderRadius: '999px', fontWeight: 700, px: 2 }}
+            >
+              {t('settings.updates.downloadButton', { version: state.availableVersion ?? '' })}
+            </Button>
+          )}
+
+          {canInstall && (
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<RestartAltOutlinedIcon />}
+              onClick={runInstall}
+              sx={{ borderRadius: '999px', fontWeight: 700, px: 2 }}
+            >
+              {t('settings.updates.installButton')}
+            </Button>
+          )}
+        </Stack>
 
         <style>{`@keyframes pulse{0%{opacity:1}50%{opacity:0.35}100%{opacity:1}}`}</style>
       </Stack>

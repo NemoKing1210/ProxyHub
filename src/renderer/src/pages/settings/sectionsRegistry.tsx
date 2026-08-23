@@ -1,5 +1,6 @@
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined'
+import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined'
 import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import NetworkCheckOutlinedIcon from '@mui/icons-material/NetworkCheckOutlined'
@@ -9,9 +10,16 @@ import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSettingsStore } from '../../store/settingsStore'
-
 export type SettingsSectionKey =
-  'appearance' | 'system' | 'auto-check' | 'checking' | 'backup' | 'sync' | 'danger' | 'about'
+  | 'appearance'
+  | 'system'
+  | 'auto-check'
+  | 'checking'
+  | 'backup'
+  | 'sync'
+  | 'logs'
+  | 'danger'
+  | 'about'
 
 export const SETTINGS_SECTION_KEYS: readonly string[] = [
   'appearance',
@@ -20,6 +28,7 @@ export const SETTINGS_SECTION_KEYS: readonly string[] = [
   'checking',
   'backup',
   'sync',
+  'logs',
   'danger',
   'about'
 ]
@@ -113,6 +122,14 @@ export function useSettingsSections(): SettingsSectionMeta[] {
       description: t('settings.sections.syncDescription'),
       icon: <CloudSyncOutlinedIcon fontSize="small" />,
       summary: t('settings.sections.syncDescription')
+    },
+    {
+      key: 'logs',
+      path: '/settings/logs',
+      title: t('settings.sections.logs'),
+      description: t('settings.sections.logsDescription'),
+      icon: <BugReportOutlinedIcon fontSize="small" />,
+      summary: `${t(`settings.logs.levels.${settings.logLevel}`)} · ${t('settings.logs.folderTitle')}`
     },
     {
       key: 'danger',

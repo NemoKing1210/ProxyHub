@@ -18,6 +18,7 @@ import {
   createPendingDomainChecks
 } from '@shared/utils/proxy-check-results'
 import { CheckCancelledError, isCheckCancelledError, throwIfCancelled } from './check-cancellation'
+import { logger } from './logger'
 
 const DEFAULT_CONCURRENCY = 1
 const EXTERNAL_IP_URL = 'https://api.ipify.org?format=json'
@@ -150,6 +151,8 @@ function requestThroughProxy(
   timeoutMs: number,
   signal?: AbortSignal
 ): Promise<{ latencyMs: number }> {
+  const reqLog = logger.scope('proxy-checker')
+  reqLog.debug('Request through proxy', { checkUrl, timeoutMs })
   return new Promise((resolve, reject) => {
     throwIfCancelled(signal)
 
@@ -162,15 +165,26 @@ function requestThroughProxy(
         response.resume()
 
         if (response.statusCode && response.statusCode >= 400) {
+          reqLog.debug('Proxy request failed with HTTP status', {
+            checkUrl,
+            status: response.statusCode
+          })
           reject(new Error(`HTTP ${response.statusCode}`))
           return
         }
 
-        resolve({ latencyMs: Date.now() - start })
+        const latencyMs = Date.now() - start
+        reqLog.debug('Proxy request succeeded', {
+          checkUrl,
+          latencyMs,
+          status: response.statusCode
+        })
+        resolve({ latencyMs })
       }
     )
 
     const onAbort = (): void => {
+      reqLog.warn('Proxy request cancelled', { checkUrl })
       request.destroy()
       reject(new CheckCancelledError())
     }
@@ -180,11 +194,13 @@ function requestThroughProxy(
     request.on('timeout', () => {
       signal?.removeEventListener('abort', onAbort)
       request.destroy()
+      reqLog.debug('Proxy request timeout', { checkUrl })
       reject(new Error('Connection timeout'))
     })
 
     request.on('error', (error) => {
       signal?.removeEventListener('abort', onAbort)
+      reqLog.debug('Proxy request error', { checkUrl, error: error.message })
       reject(error)
     })
 
@@ -201,6 +217,8 @@ function fetchExternalIp(
   timeoutMs: number,
   signal?: AbortSignal
 ): Promise<string> {
+  const ipLog = logger.scope('proxy-checker')
+  ipLog.debug('Fetching external IP', { url: EXTERNAL_IP_URL, timeoutMs })
   return new Promise((resolve, reject) => {
     throwIfCancelled(signal)
 
@@ -216,6 +234,7 @@ function fetchExternalIp(
 
         response.on('end', () => {
           if (response.statusCode && response.statusCode >= 400) {
+            ipLog.debug('External IP fetch HTTP error', { status: response.statusCode })
             reject(new Error(`HTTP ${response.statusCode}`))
             return
           }
@@ -224,12 +243,15 @@ function fetchExternalIp(
             const parsed = JSON.parse(body) as { ip?: string }
 
             if (!parsed.ip) {
+              ipLog.warn('Invalid IP response', { body: body.slice(0, 200) })
               reject(new Error('Invalid IP response'))
               return
             }
 
+            ipLog.debug('External IP fetched', { ip: parsed.ip })
             resolve(parsed.ip)
-          } catch {
+          } catch (error) {
+            ipLog.debug('Failed to parse IP response', { error, body: body.slice(0, 200) })
             reject(new Error('Failed to parse IP response'))
           }
         })
@@ -237,6 +259,7 @@ function fetchExternalIp(
     )
 
     const onAbort = (): void => {
+      ipLog.warn('External IP fetch cancelled')
       request.destroy()
       reject(new CheckCancelledError())
     }
@@ -246,11 +269,13 @@ function fetchExternalIp(
     request.on('timeout', () => {
       signal?.removeEventListener('abort', onAbort)
       request.destroy()
+      ipLog.debug('External IP fetch timeout')
       reject(new Error('Connection timeout'))
     })
 
     request.on('error', (error) => {
       signal?.removeEventListener('abort', onAbort)
+      ipLog.debug('External IP fetch error', { error: error.message })
       reject(error)
     })
 
@@ -315,9 +340,11 @@ async function checkProxyConnectivity(
   onProgress?: (progress: ProxyCheckProgress) => void,
   signal?: AbortSignal
 ): Promise<ProxyConnectivityResult> {
+  const log = logger.scope('proxy-checker')
   const base = createConnectivityBase(proxy)
 
   throwIfCancelled(signal)
+  log.debug('Checking proxy connectivity', { proxyId: proxy.id, address: base.address, timeoutMs })
 
   emitConnectivityProgress(onProgress, proxy.id, {
     ...base,
@@ -332,17 +359,21 @@ async function checkProxyConnectivity(
       latencyMs: result.latencyMs
     }
 
+    log.debug('Proxy connectivity alive', { proxyId: proxy.id, latencyMs: result.latencyMs })
     emitConnectivityProgress(onProgress, proxy.id, connectivity)
     return connectivity
   } catch (error) {
     if (isCheckCancelledError(error)) {
+      log.warn('Proxy connectivity check cancelled', { proxyId: proxy.id })
       throw error
     }
 
+    const message = getErrorMessage(error)
+    log.debug('Proxy connectivity dead', { proxyId: proxy.id, error: message })
     const connectivity: ProxyConnectivityResult = {
       ...base,
       status: 'dead',
-      error: getErrorMessage(error),
+      error: message,
       code: getErrorCode(error)
     }
 
@@ -359,18 +390,30 @@ async function resolveExternalIp(
   fetchExternalIpEnabled: boolean,
   signal?: AbortSignal
 ): Promise<ProxyConnectivityResult> {
+  const log = logger.scope('proxy-checker')
   if (!fetchExternalIpEnabled || (connectivity.status !== 'alive' && !hasAliveDomain)) {
+    log.debug('Skipping external IP fetch', {
+      enabled: fetchExternalIpEnabled,
+      connectivity: connectivity.status,
+      hasAliveDomain
+    })
     return connectivity
   }
 
   try {
+    log.debug('Resolving external IP', { connectivity: connectivity.status, hasAliveDomain })
     const externalIp = await fetchExternalIp(agent, timeoutMs, signal)
+    log.debug('External IP resolved', { externalIp })
     return { ...connectivity, externalIp }
   } catch (error) {
     if (isCheckCancelledError(error)) {
+      log.warn('External IP resolution cancelled')
       throw error
     }
 
+    log.debug('External IP fetch failed, returning connectivity without IP', {
+      error: error instanceof Error ? error.message : String(error)
+    })
     return connectivity
   }
 }
@@ -384,9 +427,26 @@ export async function checkProxy(
   domainCheckConcurrency = 1,
   fetchExternalIpEnabled = true
 ): Promise<ProxyCheckResult> {
-  throwIfCancelled(signal)
+  const log = logger.scope('proxy-checker')
+  try {
+    throwIfCancelled(signal)
+  } catch (error) {
+    log.warn('checkProxy cancelled before start', { proxyId: proxy.id })
+    throw error
+  }
 
+  log.info('checkProxy started', {
+    proxyId: proxy.id,
+    protocol: proxy.protocol,
+    domains,
+    timeoutMs,
+    domainCheckConcurrency,
+    fetchExternalIp: fetchExternalIpEnabled
+  })
   const targets = skipsDomainChecks(proxy.protocol) ? [] : domains
+  if (targets.length === 0 && !skipsDomainChecks(proxy.protocol)) {
+    log.debug('No domains to check', { proxyId: proxy.id })
+  }
   const checkedAt = new Date().toISOString()
   const pendingChecks = createPendingDomainChecks(targets)
   const initialConnectivity = createCheckingConnectivity(proxy)
@@ -397,8 +457,13 @@ export async function checkProxy(
     domainChecks: pendingChecks,
     connectivity: initialConnectivity
   })
+  log.debug('Initial connectivity emitted', {
+    proxyId: proxy.id,
+    pendingChecks: pendingChecks.length
+  })
 
   let connectivity = await checkProxyConnectivity(proxy, timeoutMs, onProgress, signal)
+  log.debug('Initial connectivity result', { proxyId: proxy.id, status: connectivity.status })
 
   if (skipsDomainChecks(proxy.protocol)) {
     const connectivityAlive = connectivity.status === 'alive'
@@ -412,14 +477,20 @@ export async function checkProxy(
       checkedAt
     }
 
+    log.info('checkProxy completed (skipped domain checks)', {
+      proxyId: proxy.id,
+      status: finalResult.status
+    })
     onProgress?.({ phase: 'complete', result: finalResult })
     return finalResult
   }
 
   try {
     const agent = createAgent(proxy)
+    log.debug('Proxy agent created', { proxyId: proxy.id })
     const domainChecks: ProxyDomainCheckResult[] = new Array(targets.length)
     const domainConcurrency = Math.max(1, Math.min(domainCheckConcurrency, targets.length))
+    log.debug('Starting domain checks', { proxyId: proxy.id, targets, domainConcurrency })
 
     await runWithConcurrency(
       targets,
@@ -428,6 +499,7 @@ export async function checkProxy(
         throwIfCancelled(signal)
 
         const checkUrl = normalizeDomain(domain)
+        log.debug('Domain check starting', { proxyId: proxy.id, domain, checkUrl })
 
         emitDomainProgress(onProgress, proxy.id, {
           domain,
@@ -444,14 +516,26 @@ export async function checkProxy(
             latencyMs: result.latencyMs
           }
 
+          log.debug('Domain check alive', {
+            proxyId: proxy.id,
+            domain,
+            latencyMs: result.latencyMs
+          })
           domainChecks[domainIndex] = completed
           emitDomainProgress(onProgress, proxy.id, completed)
         } catch (error) {
           if (isCheckCancelledError(error)) {
+            log.warn('Domain check cancelled', { proxyId: proxy.id, domain })
             throw error
           }
 
           const detail = createErrorDetail(error, domain, checkUrl)
+          log.debug('Domain check dead', {
+            proxyId: proxy.id,
+            domain,
+            error: detail.message,
+            code: detail.code
+          })
           const completed: ProxyDomainCheckResult = {
             domain,
             url: checkUrl,
@@ -475,6 +559,12 @@ export async function checkProxy(
     const hasAliveDomain = aliveChecks.length > 0
     const hasDomains = targets.length > 0
     const connectivityAlive = connectivity.status === 'alive'
+    log.debug('Domain checks completed', {
+      proxyId: proxy.id,
+      total: completedDomainChecks.length,
+      alive: aliveChecks.length,
+      failures: failures.length
+    })
 
     connectivity = await resolveExternalIp(
       agent,
@@ -486,6 +576,10 @@ export async function checkProxy(
     )
 
     if (connectivity.externalIp) {
+      log.debug('External IP attached to connectivity', {
+        proxyId: proxy.id,
+        externalIp: connectivity.externalIp
+      })
       emitConnectivityProgress(onProgress, proxy.id, connectivity)
     }
 
@@ -532,16 +626,25 @@ export async function checkProxy(
             checkedAt
           }
 
+    log.info('checkProxy completed', {
+      proxyId: proxy.id,
+      status: finalResult.status,
+      latencyMs: finalResult.latencyMs,
+      aliveDomains: aliveChecks.length
+    })
     onProgress?.({ phase: 'complete', result: finalResult })
     return finalResult
   } catch (error) {
     if (isCheckCancelledError(error)) {
+      log.warn('checkProxy cancelled', { proxyId: proxy.id })
       throw error
     }
 
     const message = getErrorMessage(error)
     const code = getErrorCode(error)
+    log.error('checkProxy failed', error)
     const failedChecks = buildAgentFailureChecks(targets, message, code)
+    log.debug('Built agent failure checks', { proxyId: proxy.id, count: failedChecks.length })
 
     for (const domainCheck of failedChecks) {
       emitDomainProgress(onProgress, proxy.id, domainCheck)
@@ -558,6 +661,11 @@ export async function checkProxy(
       checkedAt
     }
 
+    log.info('checkProxy failed result', {
+      proxyId: proxy.id,
+      status: finalResult.status,
+      error: message
+    })
     onProgress?.({ phase: 'complete', result: finalResult })
     return finalResult
   }
@@ -573,16 +681,31 @@ export async function checkAllProxies(
   domainCheckConcurrency = 1,
   fetchExternalIpEnabled = true
 ): Promise<void> {
+  const checkLog = logger.scope('proxy-checker')
+  checkLog.info('checkAll started', {
+    total: proxies.length,
+    domains,
+    timeoutMs,
+    concurrency,
+    domainCheckConcurrency,
+    fetchExternalIp: fetchExternalIpEnabled
+  })
   let index = 0
 
   async function worker(): Promise<void> {
     while (index < proxies.length) {
-      throwIfCancelled(signal)
+      try {
+        throwIfCancelled(signal)
+      } catch {
+        checkLog.warn('checkAll worker cancelled', { index })
+        return
+      }
 
       const currentIndex = index
       index += 1
 
       const proxy = proxies[currentIndex]
+      checkLog.debug('checkAll worker checking proxy', { proxyId: proxy.id, index: currentIndex })
 
       try {
         await checkProxy(
@@ -594,16 +717,29 @@ export async function checkAllProxies(
           domainCheckConcurrency,
           fetchExternalIpEnabled
         )
+        checkLog.info('checkAll proxy completed', { proxyId: proxy.id })
       } catch (error) {
         if (isCheckCancelledError(error)) {
+          checkLog.warn('checkAll cancelled during proxy', { proxyId: proxy.id })
           return
         }
 
+        checkLog.error('checkAll proxy error', error)
         throw error
       }
     }
   }
 
   const workers = Array.from({ length: Math.min(concurrency, proxies.length) }, () => worker())
-  await Promise.all(workers)
+  try {
+    await Promise.all(workers)
+    checkLog.info('checkAll completed', { total: proxies.length })
+  } catch (error) {
+    if (isCheckCancelledError(error)) {
+      checkLog.warn('checkAll cancelled', { total: proxies.length })
+      throw error
+    }
+    checkLog.error('checkAll failed', error)
+    throw error
+  }
 }

@@ -37,8 +37,11 @@ function AppLayout(): React.JSX.Element {
   const loadProxies = useProxyStore((state) => state.loadProxies)
   const isProxies = useMatch({ path: '/', end: true })
   const isSettings = useMatch({ path: '/settings/*' })
+  const isProvidersExact = useMatch({ path: '/providers', end: true })
+  const isProvidersWild = useMatch({ path: '/providers/*' })
+  const isProviders = isProvidersExact ?? isProvidersWild
 
-  const activePath = isProxies ? '/' : isSettings ? '/settings' : null
+  const activePath = isProxies ? '/' : isProviders ? '/providers' : isSettings ? '/settings' : null
   const checkAllProgress = useMemo(() => {
     if (!isCheckingAll || checkingIdsSize === 0) {
       return null

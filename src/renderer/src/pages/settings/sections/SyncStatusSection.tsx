@@ -294,7 +294,10 @@ function SyncStatusSection({
             label={t('settings.sync.syncOnStartup')}
             value={boolLabel(config.syncOnStartup)}
           />
-          <StatusRow label={t('settings.sync.pushOnChange')} value={boolLabel(config.pushOnChange)} />
+          <StatusRow
+            label={t('settings.sync.pushOnChange')}
+            value={boolLabel(config.pushOnChange)}
+          />
         </StatusGroup>
 
         <StatusGroup
@@ -332,7 +335,9 @@ function SyncStatusSection({
           <StatusRow
             label={t('settings.sync.statusLastSync')}
             value={
-              lastSyncAt ? formatDateTime(lastSyncAt, i18n.language) : t('settings.sync.statusNotYet')
+              lastSyncAt
+                ? formatDateTime(lastSyncAt, i18n.language)
+                : t('settings.sync.statusNotYet')
             }
             valueColor={lastSyncAt ? undefined : 'text.secondary'}
           />
@@ -352,7 +357,12 @@ function SyncStatusSection({
             severity="error"
             variant="outlined"
             icon={<ErrorOutlineOutlinedIcon fontSize="small" />}
-            sx={{ border: 'none', borderRadius: '12px', alignItems: 'flex-start', bgcolor: surfaceContainer(theme, 'default') }}
+            sx={{
+              border: 'none',
+              borderRadius: '12px',
+              alignItems: 'flex-start',
+              bgcolor: surfaceContainer(theme, 'default')
+            }}
           >
             <Stack spacing={1.25}>
               <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>

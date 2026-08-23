@@ -78,9 +78,7 @@ describe('parseProxyUrl (mtproto)', () => {
   const SECRET = 'dd' + 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6'
 
   it('parses tg://proxy links', () => {
-    expect(
-      parseProxyUrl(`tg://proxy?server=1.2.3.4&port=443&secret=${SECRET}`)
-    ).toEqual({
+    expect(parseProxyUrl(`tg://proxy?server=1.2.3.4&port=443&secret=${SECRET}`)).toEqual({
       protocol: 'mtproto',
       host: '1.2.3.4',
       port: 443,
@@ -90,7 +88,9 @@ describe('parseProxyUrl (mtproto)', () => {
 
   it('parses t.me/proxy links and lowercases secret', () => {
     expect(
-      parseProxyUrl(`https://t.me/proxy?server=vpn.example.com&port=443&secret=${SECRET.toUpperCase()}`)
+      parseProxyUrl(
+        `https://t.me/proxy?server=vpn.example.com&port=443&secret=${SECRET.toUpperCase()}`
+      )
     ).toEqual({
       protocol: 'mtproto',
       host: 'vpn.example.com',
@@ -128,9 +128,9 @@ describe('isValidMtprotoSecret', () => {
 
 describe('buildProxyUrl', () => {
   it('builds plain url without credentials', () => {
-    expect(
-      buildProxyUrl({ protocol: 'socks5', host: '1.2.3.4', port: 1080 })
-    ).toBe('socks5://1.2.3.4:1080')
+    expect(buildProxyUrl({ protocol: 'socks5', host: '1.2.3.4', port: 1080 })).toBe(
+      'socks5://1.2.3.4:1080'
+    )
   })
 
   it('encodes credentials', () => {
@@ -146,9 +146,9 @@ describe('buildProxyUrl', () => {
   })
 
   it('omits auth when only one credential part is set', () => {
-    expect(
-      buildProxyUrl({ protocol: 'http', host: 'h', port: 1, username: 'user' })
-    ).toBe('http://h:1')
+    expect(buildProxyUrl({ protocol: 'http', host: 'h', port: 1, username: 'user' })).toBe(
+      'http://h:1'
+    )
   })
 })
 

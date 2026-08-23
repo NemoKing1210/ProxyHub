@@ -9,8 +9,8 @@ import { resolveGitHubUsername } from '@shared/utils/github'
 import { syncTitleBarTheme } from '../services/title-bar'
 import { showNativeNotification } from '../services/notifications'
 import { isMainWindowBackgrounded } from '../services/main-window'
+import { logger } from '../services/logger'
 import type { AppNotificationPayload } from '@shared/types/api'
-
 interface PackageJson {
   version: string
   author?: string | { name?: string; email?: string }
@@ -53,45 +53,121 @@ async function readAppInfo(): Promise<AppInfo> {
 }
 
 export function registerAppIpc(): void {
-  ipcMain.handle('app:get-info', async () => readAppInfo())
+  const log = logger.scope('ipc:app')
+
+  ipcMain.handle('app:get-info', async () => {
+    log.info('app:get-info invoked')
+    try {
+      const result = await readAppInfo()
+      log.debug('app:get-info succeeded', { version: result.version })
+      return result
+    } catch (error) {
+      log.error('app:get-info failed', error)
+      throw error
+    }
+  })
   ipcMain.handle('app:open-external', async (_event, url: string) => {
-    await shell.openExternal(url)
+    log.info('app:open-external invoked', { url })
+    try {
+      await shell.openExternal(url)
+      log.debug('app:open-external succeeded', { url })
+    } catch (error) {
+      log.error('app:open-external failed', error)
+      throw error
+    }
   })
   ipcMain.handle('app:set-title-bar-theme', async (_event, mode: ThemeMode) => {
-    const window = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0]
+    log.info('app:set-title-bar-theme invoked', { mode })
+    try {
+      const window = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0]
 
-    if (!window) {
-      return
+      if (!window) {
+        log.debug('app:set-title-bar-theme no window')
+        return
+      }
+
+      syncTitleBarTheme(window, mode)
+      log.debug('app:set-title-bar-theme succeeded', { mode })
+    } catch (error) {
+      log.error('app:set-title-bar-theme failed', error)
+      throw error
     }
-
-    syncTitleBarTheme(window, mode)
   })
   ipcMain.handle('window:minimize', (event) => {
-    BrowserWindow.fromWebContents(event.sender)?.minimize()
+    log.info('window:minimize invoked')
+    try {
+      BrowserWindow.fromWebContents(event.sender)?.minimize()
+      log.debug('window:minimize succeeded')
+    } catch (error) {
+      log.error('window:minimize failed', error)
+      throw error
+    }
   })
   ipcMain.handle('window:toggle-maximize', (event) => {
-    const window = BrowserWindow.fromWebContents(event.sender)
+    log.info('window:toggle-maximize invoked')
+    try {
+      const window = BrowserWindow.fromWebContents(event.sender)
 
-    if (!window) {
-      return false
+      if (!window) {
+        log.debug('window:toggle-maximize no window')
+        return false
+      }
+
+      if (window.isMaximized()) {
+        window.unmaximize()
+      } else {
+        window.maximize()
+      }
+
+      const maximized = window.isMaximized()
+      log.debug('window:toggle-maximize succeeded', { maximized })
+      return maximized
+    } catch (error) {
+      log.error('window:toggle-maximize failed', error)
+      throw error
     }
-
-    if (window.isMaximized()) {
-      window.unmaximize()
-    } else {
-      window.maximize()
-    }
-
-    return window.isMaximized()
   })
   ipcMain.handle('window:close', (event) => {
-    BrowserWindow.fromWebContents(event.sender)?.close()
+    log.info('window:close invoked')
+    try {
+      BrowserWindow.fromWebContents(event.sender)?.close()
+      log.debug('window:close succeeded')
+    } catch (error) {
+      log.error('window:close failed', error)
+      throw error
+    }
   })
   ipcMain.handle('window:get-maximized', (event) => {
-    return BrowserWindow.fromWebContents(event.sender)?.isMaximized() ?? false
+    log.info('window:get-maximized invoked')
+    try {
+      const result = BrowserWindow.fromWebContents(event.sender)?.isMaximized() ?? false
+      log.debug('window:get-maximized succeeded', { result })
+      return result
+    } catch (error) {
+      log.error('window:get-maximized failed', error)
+      throw error
+    }
   })
-  ipcMain.handle('app:is-backgrounded', async () => isMainWindowBackgrounded())
+  ipcMain.handle('app:is-backgrounded', async () => {
+    log.info('app:is-backgrounded invoked')
+    try {
+      const result = await isMainWindowBackgrounded()
+      log.debug('app:is-backgrounded succeeded', { result })
+      return result
+    } catch (error) {
+      log.error('app:is-backgrounded failed', error)
+      throw error
+    }
+  })
   ipcMain.handle('app:show-notification', async (_event, payload: AppNotificationPayload) => {
-    return showNativeNotification(payload)
+    log.info('app:show-notification invoked', { title: payload.title })
+    try {
+      const result = showNativeNotification(payload)
+      log.debug('app:show-notification succeeded')
+      return result
+    } catch (error) {
+      log.error('app:show-notification failed', error)
+      throw error
+    }
   })
 }

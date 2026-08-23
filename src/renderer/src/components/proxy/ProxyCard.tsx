@@ -118,7 +118,10 @@ interface ContextMenuPosition {
   left: number
 }
 
-const toastAnchors: Record<ToastPosition, { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' }> = {
+const toastAnchors: Record<
+  ToastPosition,
+  { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' }
+> = {
   'top-left': { vertical: 'top', horizontal: 'left' },
   'top-center': { vertical: 'top', horizontal: 'center' },
   'top-right': { vertical: 'top', horizontal: 'right' },
@@ -731,7 +734,10 @@ function ProxyCard({
                     sx={{ alignItems: 'center', color: 'text.secondary', flexShrink: 0 }}
                   >
                     <ScheduleOutlinedIcon sx={{ fontSize: 14 }} />
-                    <Typography variant="caption" sx={{ fontWeight: 500, lineHeight: 1, whiteSpace: 'nowrap' }}>
+                    <Typography
+                      variant="caption"
+                      sx={{ fontWeight: 500, lineHeight: 1, whiteSpace: 'nowrap' }}
+                    >
                       {formatDateTime(proxy.checkedAt, i18n.language)}
                     </Typography>
                   </Stack>
@@ -899,13 +905,17 @@ function ProxyCard({
             '& .MuiAlert-message': { width: '100%' }
           }}
         >
-          <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>{t('common.copied')}</AlertTitle>
-          <Typography variant="body2" sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}>
+          <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>
+            {t('common.copied')}
+          </AlertTitle>
+          <Typography
+            variant="body2"
+            sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}
+          >
             {t('common.copiedMessage')}
           </Typography>
         </ToastAlert>
       </Snackbar>
-
 
       <ProxyShareDialog open={shareOpen} proxy={proxy} onClose={() => setShareOpen(false)} />
 

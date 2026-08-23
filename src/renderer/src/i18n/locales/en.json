@@ -4,6 +4,7 @@
   },
   "nav": {
     "proxies": "Proxies",
+    "providers": "Providers",
     "settings": "Settings",
     "checking": "Checking proxies",
     "checkProgress": "{{completed}} of {{total}} checked"
@@ -387,6 +388,8 @@
       "backupDescription": "Back up or restore your full ProxyHub data, or exchange proxy lists in CSV, JSON, and TXT formats.",
       "sync": "Synchronization",
       "syncDescription": "Sync proxies and settings through a remote provider. Uses the same backup format as local export.",
+      "logs": "Logs",
+      "logsDescription": "Choose the logging level and open the daily log folder.",
       "dangerZone": "Danger zone",
       "dangerZoneDescription": "Clear proxy data or restore default application settings.",
       "about": "About",
@@ -794,11 +797,43 @@
         "unknown": "Unknown error"
       }
     },
+    "logs": {
+      "levelTitle": "Log level",
+      "levelHint": "Controls how much detail is written to daily log files. Higher levels include all levels below.",
+      "folderTitle": "Log files",
+      "folderHint": "Logs are stored per day (YYYY-MM-DD) and automatically kept for {{days}} days. Open the folder to view or share them.",
+      "openFolder": "Open logs folder",
+      "clearLogs": "Clear logs",
+      "clearLogsConfirmTitle": "Clear all log files?",
+      "clearLogsConfirmMessage": "This will permanently delete {{count}} log files ({{size}}). This action cannot be undone.",
+      "clearLogsSuccess": "Logs cleared",
+      "filesCount": "{{count}} files",
+      "moreFiles": "+{{count}} more",
+      "openFile": "Open",
+      "openFileHint": "Open file in system editor",
+      "levels": {
+        "off": "Off",
+        "error": "Error",
+        "warn": "Warning",
+        "info": "Info",
+        "debug": "Debug"
+      },
+      "levelDescriptions": {
+        "off": "Logging is disabled. No log files will be written.",
+        "error": "Only errors are logged. Minimal output for troubleshooting failures.",
+        "warn": "Errors and warnings. Good for noticing potential issues without noise.",
+        "info": "Standard operational logs — app lifecycle, checks, and warnings. Recommended for most users.",
+        "debug": "Verbose diagnostics including detailed check steps and internal events. Useful for bug reports."
+      },
+      "openError": "Could not open logs folder",
+      "openFileError": "Could not open log file",
+      "clearError": "Could not clear logs",
+      "updateError": "Could not update log level"
+    },
     "dangerZone": {
       "warning": "These actions cannot be undone. Export a backup first if you might need your data later.",
       "deleteAllTitle": "Delete all proxies and groups",
       "deleteAllHint": "Remove every proxy and group from the app. Your settings will stay unchanged.",
-      "deleteAllButton": "Delete all proxies and groups",
       "deleteAllConfirmTitle": "Delete all proxies and groups?",
       "deleteAllConfirmMessage": "This will permanently delete {{proxies}} proxies and {{groups}} groups. This action cannot be undone.",
       "deleteAllSuccess": "All proxies and groups were deleted",
@@ -868,6 +903,37 @@
       "updateAvailable": "Update available",
       "updateReady": "Ready to install",
       "updateError": "Error"
+    }
+  },
+  "providers": {
+    "title": "Providers",
+    "description": "Free proxy providers",
+    "empty": "No providers available",
+    "detail": {
+      "protocol": "Protocol",
+      "fetch": "Refresh",
+      "openWebsite": "Open website",
+      "check": "Check",
+      "add": "Add",
+      "checkAll": "Check all",
+      "stop": "Stop",
+      "addSelected": "Add selected",
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all",
+      "noSelection": "No selection",
+      "noSelectionMessage": "Select proxies to add",
+      "addResult": "Added to my proxies",
+      "addedCount": "{{count}} added",
+      "addedSingle": "Proxy added",
+      "alreadyExists": "Already exists",
+      "empty": "No proxies fetched. Click Refresh.",
+      "back": "Back"
+    },
+    "errors": {
+      "unknownProvider": "Unknown provider",
+      "unknownProviderMessage": "Provider {{providerId}} not found",
+      "fetchFailed": "Failed to fetch proxies",
+      "fetchFailedMessage": "Network error"
     }
   },
   "tray": {

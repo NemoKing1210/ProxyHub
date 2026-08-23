@@ -5,14 +5,14 @@ import { PROXY_ANONYMITY_LEVELS, PROXY_PROTOCOLS } from '../types/proxy'
 import { buildProxyUrl, parseProxyUrl } from './proxy-format'
 import { findDuplicateProxy } from './proxy-identity'
 
-export const PROXY_IMPORT_CSV_HEADER = 'host,port,protocol,username,password,secret,anonymity,https,country,city'
+export const PROXY_IMPORT_CSV_HEADER =
+  'host,port,protocol,username,password,secret,anonymity,https,country,city'
 
 const ANONYMITY_ALIASES: Record<string, ProxyAnonymityLevel> = {
   elite: 'elite',
   anonymous: 'anonymous',
   transparent: 'transparent'
 }
-
 
 const HEADER_FIELD_NAMES: Record<string, true> = {
   ip: true,
@@ -28,7 +28,6 @@ const HEADER_FIELD_NAMES: Record<string, true> = {
   country: true,
   city: true
 }
-
 
 interface ProxyImportJsonRecord {
   proxy?: string
@@ -47,7 +46,6 @@ interface ProxyImportJsonRecord {
     city?: string
   }
 }
-
 
 export interface ParseProxyImportListResult {
   entries: Array<ProxyInput & { id: string }>
@@ -132,7 +130,18 @@ export function parseProxyImportLine(line: string): ProxyInput | null {
 
   if (parts.length >= 10) {
     // New format with auth
-    ;[host, portValue, protocolValue, username, password, secret, anonymityValue, , countryValue, cityValue] = parts
+    ;[
+      host,
+      portValue,
+      protocolValue,
+      username,
+      password,
+      secret,
+      anonymityValue,
+      ,
+      countryValue,
+      cityValue
+    ] = parts
   } else {
     // Legacy format without auth (7 columns)
     ;[host, portValue, protocolValue, anonymityValue, , countryValue, cityValue] = parts
@@ -216,9 +225,19 @@ function parseProxyImportJsonRecord(record: unknown): ProxyInput | null {
   }
 }
 
-
 export function formatProxyImportLine(
-  proxy: Pick<Proxy, 'host' | 'port' | 'protocol' | 'username' | 'password' | 'secret' | 'anonymityLevel' | 'countryCode' | 'city'>
+  proxy: Pick<
+    Proxy,
+    | 'host'
+    | 'port'
+    | 'protocol'
+    | 'username'
+    | 'password'
+    | 'secret'
+    | 'anonymityLevel'
+    | 'countryCode'
+    | 'city'
+  >
 ): string {
   const anonymity = proxy.anonymityLevel ?? ''
   const country = proxy.countryCode ?? ''
@@ -227,12 +246,34 @@ export function formatProxyImportLine(
   const password = proxy.password ?? ''
   const secret = proxy.secret ?? ''
 
-  return [proxy.host, proxy.port, proxy.protocol, username, password, secret, anonymity, 'false', country, city].join(',')
+  return [
+    proxy.host,
+    proxy.port,
+    proxy.protocol,
+    username,
+    password,
+    secret,
+    anonymity,
+    'false',
+    country,
+    city
+  ].join(',')
 }
 
 export function formatProxyImportCsv(
   proxies: Array<
-    Pick<Proxy, 'host' | 'port' | 'protocol' | 'username' | 'password' | 'secret' | 'anonymityLevel' | 'countryCode' | 'city'>
+    Pick<
+      Proxy,
+      | 'host'
+      | 'port'
+      | 'protocol'
+      | 'username'
+      | 'password'
+      | 'secret'
+      | 'anonymityLevel'
+      | 'countryCode'
+      | 'city'
+    >
   >
 ): string {
   const lines = [PROXY_IMPORT_CSV_HEADER, ...proxies.map((proxy) => formatProxyImportLine(proxy))]
@@ -248,7 +289,18 @@ export function formatProxyImportTxt(
 
 export function formatProxyImportJson(
   proxies: Array<
-    Pick<Proxy, 'host' | 'port' | 'protocol' | 'username' | 'password' | 'secret' | 'anonymityLevel' | 'countryCode' | 'city'>
+    Pick<
+      Proxy,
+      | 'host'
+      | 'port'
+      | 'protocol'
+      | 'username'
+      | 'password'
+      | 'secret'
+      | 'anonymityLevel'
+      | 'countryCode'
+      | 'city'
+    >
   >
 ): string {
   const records = proxies.map((proxy) => ({
@@ -270,7 +322,6 @@ export function formatProxyImportJson(
 
   return `${JSON.stringify(records, null, 4)}\n`
 }
-
 
 function collectParsedEntries(
   items: Array<ProxyInput | null>,

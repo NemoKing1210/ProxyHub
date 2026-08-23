@@ -1,3 +1,5 @@
+import type { ProviderFetchParams, ProviderFetchResult, ProviderMeta } from './provider'
+import type { ProviderId } from './provider'
 import type {
   BackupExportRequest,
   BackupExportResponse,
@@ -36,7 +38,7 @@ import type {
   SyncTestResult
 } from './sync'
 import type { AppUpdateState } from './updater'
-
+import type { LogsInfo, LogLevel } from './logger'
 export interface SystemProxyInfo {
   enabled: boolean
   server: string | null
@@ -103,4 +105,19 @@ export interface AppAPI {
   getSystemProxy: () => Promise<SystemProxyInfo>
   setSystemProxy: (proxy: Proxy) => Promise<SystemProxyInfo>
   clearSystemProxy: () => Promise<SystemProxyInfo>
+  listProviders: () => Promise<ProviderMeta[]>
+  fetchProviderProxies: (
+    providerId: ProviderId,
+    params?: ProviderFetchParams
+  ) => Promise<ProviderFetchResult>
+  getLogsInfo: () => Promise<LogsInfo>
+  openLogsFolder: () => Promise<string>
+  openLogFile: (fileName: string) => Promise<string>
+  clearLogs: () => Promise<void>
+  log: (entry: {
+    level: LogLevel
+    scope?: string
+    message: string
+    meta?: unknown
+  }) => Promise<void>
 }

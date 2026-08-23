@@ -324,7 +324,9 @@
       "about": "Acerca de",
       "aboutDescription": "Versión de la aplicación e historial de versiones.",
       "system": "System",
-      "systemDescription": "Background behavior and quick access from the notification area."
+      "systemDescription": "Background behavior and quick access from the notification area.",
+      "logs": "Logs",
+      "logsDescription": "Choose the logging level and open the daily log folder."
     },
     "theme": "Tema",
     "themeLight": "Claro",
@@ -806,7 +808,40 @@
       "updateReady": "Ready to install",
       "updateError": "Error"
     },
-    "launchAtLogin": "Launch at system startup"
+    "launchAtLogin": "Launch at system startup",
+    "logs": {
+      "levelTitle": "Log level",
+      "levelHint": "Controls how much detail is written to daily log files. Higher levels include all levels below.",
+      "folderTitle": "Log files",
+      "folderHint": "Logs are stored per day (YYYY-MM-DD) and automatically kept for {{days}} days. Open the folder to view or share them.",
+      "openFolder": "Open logs folder",
+      "clearLogs": "Clear logs",
+      "clearLogsConfirmTitle": "Clear all log files?",
+      "clearLogsConfirmMessage": "This will permanently delete {{count}} log files ({{size}}). This action cannot be undone.",
+      "clearLogsSuccess": "Logs cleared",
+      "filesCount": "{{count}} files",
+      "moreFiles": "+{{count}} more",
+      "openFile": "Open",
+      "openFileHint": "Open file in system editor",
+      "levels": {
+        "off": "Off",
+        "error": "Error",
+        "warn": "Warning",
+        "info": "Info",
+        "debug": "Debug"
+      },
+      "levelDescriptions": {
+        "off": "Logging is disabled. No log files will be written.",
+        "error": "Only errors are logged. Minimal output for troubleshooting failures.",
+        "warn": "Errors and warnings. Good for noticing potential issues without noise.",
+        "info": "Standard operational logs — app lifecycle, checks, and warnings. Recommended for most users.",
+        "debug": "Verbose diagnostics including detailed check steps and internal events. Useful for bug reports."
+      },
+      "openError": "Could not open logs folder",
+      "openFileError": "Could not open log file",
+      "clearError": "Could not clear logs",
+      "updateError": "Could not update log level"
+    }
   },
   "validation": {
     "hostRequired": "El host es obligatorio",

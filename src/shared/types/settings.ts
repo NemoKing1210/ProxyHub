@@ -1,3 +1,4 @@
+import { DEFAULT_LOG_LEVEL, normalizeLogLevel, type LogLevel } from './logger'
 import type { ProxyListViewState } from './proxy-list-view'
 import { DEFAULT_PROXY_LIST_VIEW, normalizeProxyListView } from './proxy-list-view'
 
@@ -27,7 +28,7 @@ export type ToastPosition =
 
 export type AutoCheckScope = 'all' | 'favorites' | 'groups'
 
-export type AppRoute = '/' | '/settings'
+export type AppRoute = '/' | '/settings' | '/providers'
 
 export interface CheckDomainEntry {
   domain: string
@@ -58,9 +59,13 @@ export interface AppSettings {
   toastPosition: ToastPosition
   proxyListView: ProxyListViewState
   lastRoute: AppRoute
+  logLevel: LogLevel
 }
 
-export type SyncableAppSettings = Omit<AppSettings, 'lastRoute' | 'proxyListView' | 'launchAtLogin'>
+export type SyncableAppSettings = Omit<
+  AppSettings,
+  'lastRoute' | 'proxyListView' | 'launchAtLogin' | 'logLevel'
+>
 
 export const CHECK_TIMEOUT_MIN_MS = 1_000
 export const CHECK_TIMEOUT_MAX_MS = 120_000
@@ -103,7 +108,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   toastEnabled: true,
   toastPosition: 'top-right',
   proxyListView: DEFAULT_PROXY_LIST_VIEW,
-  lastRoute: '/'
+  lastRoute: '/',
+  logLevel: DEFAULT_LOG_LEVEL
 }
 
 export interface ProxyCheckOptions {
@@ -164,7 +170,8 @@ function normalizeAccentColor(value: unknown): string {
 }
 
 function normalizeLastRoute(value: unknown): AppRoute {
-  return value === '/settings' ? '/settings' : '/'
+  if (value === '/settings' || value === '/providers') return value as AppRoute
+  return '/'
 }
 
 function normalizeAutoCheckGroupIds(values: unknown): string[] {
@@ -275,16 +282,17 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     toastEnabled: merged.toastEnabled !== false,
     toastPosition: normalizeToastPosition(merged.toastPosition),
     proxyListView: normalizeProxyListView(merged.proxyListView),
-    lastRoute: normalizeLastRoute(merged.lastRoute)
+    lastRoute: normalizeLastRoute(merged.lastRoute),
+    logLevel: normalizeLogLevel(merged.logLevel)
   }
 }
-
 export function stripLocalOnlySettings(settings: AppSettings): SyncableAppSettings {
   const normalized = normalizeSettings(settings)
   const {
     lastRoute: _lastRoute,
     proxyListView: _proxyListView,
     launchAtLogin: _launchAtLogin,
+    logLevel: _logLevel,
     ...syncable
   } = normalized
   return syncable
@@ -308,7 +316,8 @@ export function applyImportedSettings(
     ...merged,
     lastRoute: current.lastRoute,
     proxyListView: current.proxyListView,
-    launchAtLogin: current.launchAtLogin
+    launchAtLogin: current.launchAtLogin,
+    logLevel: current.logLevel
   }
 }
 

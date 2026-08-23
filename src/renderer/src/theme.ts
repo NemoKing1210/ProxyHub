@@ -20,7 +20,13 @@ export {
   outlineVariant
 } from './theme/surfaces'
 export { getPalette, withThemeAlpha } from './theme/palette'
-export { MD3_DURATION, MD3_EASING, MD3_EASING_CURVES, staggerDelay, surfaceTransition } from './theme/motion'
+export {
+  MD3_DURATION,
+  MD3_EASING,
+  MD3_EASING_CURVES,
+  staggerDelay,
+  surfaceTransition
+} from './theme/motion'
 
 function withAlpha(
   theme: { vars?: Theme['vars']; palette: Theme['palette'] },

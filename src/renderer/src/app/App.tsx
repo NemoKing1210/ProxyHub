@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout'
 import ProxyList from '../components/proxy/ProxyList'
 import RoutePersistenceSync from './bootstrap/RoutePersistenceSync'
+import ProvidersPage from '../pages/providers/ProvidersPage'
+import ProviderDetailPage from '../pages/providers/ProviderDetailPage'
 import SettingsShell from '../pages/settings/SettingsShell'
 import AppearancePage from '../pages/settings/AppearancePage'
 import AutoCheckPage from '../pages/settings/AutoCheckPage'
@@ -9,6 +11,7 @@ import BackupPage from '../pages/settings/BackupPage'
 import CheckingPage from '../pages/settings/CheckingPage'
 import DangerPage from '../pages/settings/DangerPage'
 import AboutPage from '../pages/settings/AboutPage'
+import LogsPage from '../pages/settings/LogsPage'
 import SettingsOverviewPage from '../pages/settings/SettingsOverviewPage'
 import SyncPage from '../pages/settings/SyncPage'
 import SystemPage from '../pages/settings/SystemPage'
@@ -20,6 +23,8 @@ function App(): React.JSX.Element {
       <Routes>
         <Route element={<AppLayout />}>
           <Route index element={<ProxyList />} />
+          <Route path="providers" element={<ProvidersPage />} />
+          <Route path="providers/:providerId" element={<ProviderDetailPage />} />
           {/* Flat settings routes: each screen is a leaf so the transition
               animator caches the whole page without an inner Outlet. */}
           <Route
@@ -75,6 +80,14 @@ function App(): React.JSX.Element {
             element={
               <SettingsShell>
                 <SyncPage />
+              </SettingsShell>
+            }
+          />
+          <Route
+            path="settings/logs"
+            element={
+              <SettingsShell>
+                <LogsPage />
               </SettingsShell>
             }
           />

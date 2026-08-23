@@ -1,4 +1,5 @@
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
+import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { Box, Button, CircularProgress } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
@@ -15,6 +16,7 @@ import {
 
 const NAV_ITEMS = [
   { path: '/', labelKey: 'nav.proxies', icon: DnsOutlinedIcon },
+  { path: '/providers', labelKey: 'nav.providers', icon: LanguageOutlinedIcon },
   { path: '/settings', labelKey: 'nav.settings', icon: SettingsOutlinedIcon }
 ] as const
 

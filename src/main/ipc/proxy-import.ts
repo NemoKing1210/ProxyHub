@@ -23,8 +23,8 @@ import {
   type ParseProxyImportListResult
 } from '@shared/utils/proxy-import'
 import { getGroups, getProxies, saveProxies } from '../services/app-store'
+import { logger } from '../services/logger'
 import { notifyTrayDataChanged } from './tray'
-
 function getActiveWindow(): BrowserWindow | undefined {
   return BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0]
 }
@@ -245,23 +245,68 @@ async function exportList(
 }
 
 export function registerProxyImportIpc(): void {
+  const log = logger.scope('ipc:proxy-import')
   const formats: ProxyListImportFormat[] = ['csv', 'json', 'txt']
 
   for (const format of formats) {
-    ipcMain.handle(`${format}:preview`, async (): Promise<ProxyListImportPreviewResponse> =>
-      previewListImport(format)
-    )
-
+    ipcMain.handle(`${format}:preview`, async (): Promise<ProxyListImportPreviewResponse> => {
+      log.info(`${format}:preview invoked`, { format })
+      try {
+        const result = await previewListImport(format)
+        if (result.canceled) {
+          log.debug(`${format}:preview canceled`)
+        } else if ('error' in result) {
+          log.debug(`${format}:preview completed with error`, { code: result.error.code })
+        } else {
+          log.debug(`${format}:preview succeeded`, { entries: result.preview.entries.length })
+        }
+        return result
+      } catch (error) {
+        log.error(`${format}:preview failed`, error)
+        throw error
+      }
+    })
     ipcMain.handle(
       `${format}:import`,
-      async (_event, request: ProxyListImportRequest): Promise<ProxyListImportResponse> =>
-        importList(format, request)
+      async (_event, request: ProxyListImportRequest): Promise<ProxyListImportResponse> => {
+        log.info(`${format}:import invoked`, {
+          format,
+          filePath: request.filePath,
+          entryCount: request.entryIds.length,
+          hasGroupId: !!request.groupId
+        })
+        try {
+          const result = await importList(format, request)
+          if ('error' in result) {
+            log.debug(`${format}:import completed with error`, { code: result.error.code })
+          } else {
+            log.debug(`${format}:import succeeded`, { added: result.result.added })
+          }
+          return result
+        } catch (error) {
+          log.error(`${format}:import failed`, error)
+          throw error
+        }
+      }
     )
 
     ipcMain.handle(
       `${format}:export`,
-      async (_event, request: ProxyListExportRequest): Promise<ProxyListExportResponse> =>
-        exportList(format, request)
+      async (_event, request: ProxyListExportRequest): Promise<ProxyListExportResponse> => {
+        log.info(`${format}:export invoked`, { format, count: request.proxyIds.length })
+        try {
+          const result = await exportList(format, request)
+          if (!result.canceled) {
+            log.debug(`${format}:export succeeded`, { filePath: result.filePath })
+          } else {
+            log.debug(`${format}:export canceled`)
+          }
+          return result
+        } catch (error) {
+          log.error(`${format}:export failed`, error)
+          throw error
+        }
+      }
     )
   }
 }

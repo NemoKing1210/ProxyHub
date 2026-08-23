@@ -49,7 +49,6 @@ async function getSecretStore() {
   return storePromise
 }
 
-
 export function isSafeStorageAvailable(): boolean {
   return safeStorage.isEncryptionAvailable()
 }

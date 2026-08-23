@@ -11,7 +11,10 @@ import {
   type SettingsFeedbackContextValue
 } from './settingsFeedbackContext'
 
-const toastAnchors: Record<ToastPosition, { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' }> = {
+const toastAnchors: Record<
+  ToastPosition,
+  { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' }
+> = {
   'top-left': { vertical: 'top', horizontal: 'left' },
   'top-center': { vertical: 'top', horizontal: 'center' },
   'top-right': { vertical: 'top', horizontal: 'right' },
@@ -40,7 +43,8 @@ export function SettingsFeedbackProvider({ children }: { children: ReactNode }):
 
   const notifyFeedback = useCallback(
     (message: string, severity: 'success' | 'error' = 'success'): void => {
-      const titleKey = severity === 'error' ? 'settings.feedbackErrorTitle' : 'settings.feedbackSuccessTitle'
+      const titleKey =
+        severity === 'error' ? 'settings.feedbackErrorTitle' : 'settings.feedbackSuccessTitle'
       // t('settings.feedbackSuccessTitle') fallback will be handled by i18next; avoid hook call inside callback by storing message only.
       // Title resolved during render via t()
       setFeedbackTitle(titleKey)
@@ -83,8 +87,13 @@ export function SettingsFeedbackProvider({ children }: { children: ReactNode }):
               '& .MuiAlert-message': { width: '100%' }
             }}
           >
-            <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>{t('settings.saved')}</AlertTitle>
-            <Typography variant="body2" sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}>
+            <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>
+              {t('settings.saved')}
+            </AlertTitle>
+            <Typography
+              variant="body2"
+              sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}
+            >
               {t('settings.savedDescription')}
             </Typography>
           </ToastAlert>
@@ -112,8 +121,13 @@ export function SettingsFeedbackProvider({ children }: { children: ReactNode }):
               '& .MuiAlert-message': { width: '100%' }
             }}
           >
-            <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>{t(feedbackTitle)}</AlertTitle>
-            <Typography variant="body2" sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}>
+            <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>
+              {t(feedbackTitle)}
+            </AlertTitle>
+            <Typography
+              variant="body2"
+              sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}
+            >
               {feedbackMessage}
             </Typography>
           </ToastAlert>

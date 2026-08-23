@@ -19,6 +19,9 @@ import { useProxyStore } from '../../store/proxyStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { createAppTheme } from '../../theme'
 import { RTL_LANGUAGES } from '@shared/types/settings'
+import { logger } from '../../lib/renderer-logger'
+
+const appLogger = logger.scope('renderer')
 
 function AppProviders(): React.JSX.Element {
   const isReady = useSettingsStore((state) => state.isReady)
@@ -35,9 +38,29 @@ function AppProviders(): React.JSX.Element {
   const isAppReady = isReady && isDataReady
 
   useEffect(() => {
+    const handleError = (event: ErrorEvent): void => {
+      appLogger.error('Unhandled window error', {
+        message: event.message,
+        filename: event.filename,
+        lineno: event.lineno,
+        error: event.error
+      })
+    }
+    const handleRejection = (event: PromiseRejectionEvent): void => {
+      appLogger.error('Unhandled promise rejection', { reason: event.reason })
+    }
+    window.addEventListener('error', handleError)
+    window.addEventListener('unhandledrejection', handleRejection)
+    appLogger.info('Renderer global error handlers registered')
+    return () => {
+      window.removeEventListener('error', handleError)
+      window.removeEventListener('unhandledrejection', handleRejection)
+    }
+  }, [])
+
+  useEffect(() => {
     void loadSettings()
   }, [loadSettings])
-
   useEffect(() => {
     if (!isReady) {
       setIsDataReady(false)

@@ -61,4 +61,3 @@ function SystemSection({
   )
 }
 export default SystemSection
-

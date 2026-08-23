@@ -113,7 +113,15 @@ const api: AppAPI = {
   },
   getSystemProxy: () => ipcRenderer.invoke('system-proxy:get'),
   setSystemProxy: (proxy) => ipcRenderer.invoke('system-proxy:set', proxy),
-  clearSystemProxy: () => ipcRenderer.invoke('system-proxy:clear')
+  clearSystemProxy: () => ipcRenderer.invoke('system-proxy:clear'),
+  listProviders: () => ipcRenderer.invoke('provider:list'),
+  fetchProviderProxies: (providerId, params) =>
+    ipcRenderer.invoke('provider:fetch-proxies', providerId, params),
+  getLogsInfo: () => ipcRenderer.invoke('logs:get-info'),
+  openLogsFolder: () => ipcRenderer.invoke('logs:open-folder'),
+  openLogFile: (fileName: string) => ipcRenderer.invoke('logs:open-file', fileName),
+  clearLogs: () => ipcRenderer.invoke('logs:clear'),
+  log: (entry) => ipcRenderer.invoke('logs:write', entry)
 }
 
 if (process.contextIsolated) {

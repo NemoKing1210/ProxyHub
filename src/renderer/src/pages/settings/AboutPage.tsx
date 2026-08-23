@@ -3,7 +3,17 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
 import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined'
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined'
-import { Alert, Box, Button, Chip, CircularProgress, Link, Stack, Tooltip, Typography } from '@mui/material'
+import {
+  Alert,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Link,
+  Stack,
+  Tooltip,
+  Typography
+} from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +25,13 @@ import SettingsSectionHeader from './components/SettingsSectionHeader'
 import ContentSection from '../../components/ui/ContentSection'
 import SettingsCardList from '../../components/settings/SettingsCardList'
 import { getListCardPosition, getListCardRadius } from '../../lib/card-list'
-import { elevationShadow, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../../theme'
+import {
+  elevationShadow,
+  MD3_DURATION,
+  MD3_EASING,
+  surfaceContainer,
+  withThemeAlpha
+} from '../../theme'
 
 function AboutPage(): React.JSX.Element {
   const { t, i18n } = useTranslation()
@@ -89,7 +105,9 @@ function AboutPage(): React.JSX.Element {
   const totalCards = 1 + (isUpdateVisible ? 1 : 0) + 1 + 1
   const heroRadius = getListCardRadius(getListCardPosition(0, totalCards))
   const footerRadius = getListCardRadius(getListCardPosition(totalCards - 1, totalCards))
-  const changelogListRadius = getListCardRadius(getListCardPosition(isUpdateVisible ? 2 : 1, totalCards))
+  const changelogListRadius = getListCardRadius(
+    getListCardPosition(isUpdateVisible ? 2 : 1, totalCards)
+  )
 
   return (
     <>
@@ -112,8 +130,15 @@ function AboutPage(): React.JSX.Element {
           }}
         >
           <Box sx={{ minWidth: 0 }}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', mb: 0.5 }}>
-              <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.15 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ alignItems: 'center', flexWrap: 'wrap', mb: 0.5 }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.15 }}
+              >
                 ProxyHub
               </Typography>
               <Chip
@@ -125,7 +150,11 @@ function AboutPage(): React.JSX.Element {
               />
             </Stack>
 
-            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, maxWidth: 560 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ lineHeight: 1.6, maxWidth: 560 }}
+            >
               {t('settings.aboutPage.heroSubtitle', {
                 defaultValue:
                   'Cross-platform desktop app to check proxy availability in one click — HTTP, HTTPS, SOCKS4, SOCKS5 and MTProto with latency and external IP.'
@@ -141,7 +170,13 @@ function AboutPage(): React.JSX.Element {
               </Box>
             ) : appInfo ? (
               <Stack spacing={1.25} sx={{ mt: 2 }}>
-                <Tooltip title={copied ? t('common.copied') : t('settings.aboutPage.copyVersion', { defaultValue: 'Copy version' })}>
+                <Tooltip
+                  title={
+                    copied
+                      ? t('common.copied')
+                      : t('settings.aboutPage.copyVersion', { defaultValue: 'Copy version' })
+                  }
+                >
                   <Chip
                     clickable
                     onClick={() => void handleCopyVersion()}
@@ -217,19 +252,28 @@ function AboutPage(): React.JSX.Element {
                   }}
                 />
               ))}
-              <Typography variant="caption" color="text.secondary" sx={{ alignSelf: 'center', ml: 0.5 }}>
-                · {new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }).format(new Date())}
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ alignSelf: 'center', ml: 0.5 }}
+              >
+                ·{' '}
+                {new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }).format(new Date())}
               </Typography>
             </Stack>
           </Box>
         </Box>
 
-        {isUpdateVisible && <AppUpdateSection listRadius={getListCardRadius(getListCardPosition(1, totalCards))} />}
+        {isUpdateVisible && (
+          <AppUpdateSection listRadius={getListCardRadius(getListCardPosition(1, totalCards))} />
+        )}
 
         {/* CHANGELOG — receives radius via SettingsCardList, duplicated for consistency with manual calculation */}
         <ContentSection
           icon={<HistoryOutlinedIcon fontSize="small" />}
-          title={t('settings.aboutPage.changelogTitle', { defaultValue: t('settings.currentVersion') })}
+          title={t('settings.aboutPage.changelogTitle', {
+            defaultValue: t('settings.currentVersion')
+          })}
           description={t('settings.aboutPage.changelogDesc', {
             defaultValue: 'Version history — what was added, changed and fixed in each release.'
           })}
@@ -278,7 +322,8 @@ function AboutPage(): React.JSX.Element {
           }}
         >
           <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.5 }}>
-            © {new Date().getFullYear()} ProxyHub · {t('settings.aboutPage.madeWith', { defaultValue: 'Made with' })} ❤️{' '}
+            © {new Date().getFullYear()} ProxyHub ·{' '}
+            {t('settings.aboutPage.madeWith', { defaultValue: 'Made with' })} ❤️{' '}
             {appInfo?.author ?? 'NemoKing1210'} · MIT
           </Typography>
           <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>

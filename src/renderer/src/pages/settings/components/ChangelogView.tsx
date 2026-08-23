@@ -1,7 +1,16 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
 import TagOutlinedIcon from '@mui/icons-material/TagOutlined'
-import { Accordion, AccordionDetails, AccordionSummary, Box, Chip, Link, Stack, Typography } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Chip,
+  Link,
+  Stack,
+  Typography
+} from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ChangelogEntry } from '@shared/types/app'
@@ -41,7 +50,13 @@ function formatReleaseDate(date: string | undefined, locale: string): string | n
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(parsed)
 }
 
-function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }: ChangelogViewProps): React.JSX.Element {
+function ChangelogView({
+  version,
+  entries,
+  author,
+  authorEmail,
+  repositoryUrl
+}: ChangelogViewProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
   const visibleEntries = entries.filter((entry) => entry.version.toLowerCase() !== 'unreleased')
@@ -98,7 +113,6 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
 
             return (
               <Box key={entry.version}>
-
                 <Accordion
                   defaultExpanded={isFirst}
                   disableGutters
@@ -106,11 +120,18 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
                   sx={{
                     borderRadius: `${getListCardRadius(getListCardPosition(index, visibleEntries.length))} !important`,
                     overflow: 'hidden',
-                    bgcolor: isCurrent ? withThemeAlpha(theme, theme.palette.primary.main, 0.08) : surfaceContainer(theme, 'low'),
+                    bgcolor: isCurrent
+                      ? withThemeAlpha(theme, theme.palette.primary.main, 0.08)
+                      : surfaceContainer(theme, 'low'),
                     border: `1px solid ${isCurrent ? withThemeAlpha(theme, theme.palette.primary.main, 0.22) : withThemeAlpha(theme, theme.palette.divider, 0.5)}`,
                     transition: `all ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
                     '&:before': { display: 'none' },
-                    '&.Mui-expanded': { margin: 0, bgcolor: isCurrent ? withThemeAlpha(theme, theme.palette.primary.main, 0.1) : surfaceContainer(theme, 'default') }
+                    '&.Mui-expanded': {
+                      margin: 0,
+                      bgcolor: isCurrent
+                        ? withThemeAlpha(theme, theme.palette.primary.main, 0.1)
+                        : surfaceContainer(theme, 'default')
+                    }
                   }}
                 >
                   <AccordionSummary
@@ -126,7 +147,11 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
                       }
                     }}
                   >
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', flex: 1, minWidth: 0 }}>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      sx={{ alignItems: 'center', flexWrap: 'wrap', flex: 1, minWidth: 0 }}
+                    >
                       <Chip
                         icon={<TagOutlinedIcon sx={{ fontSize: 14 }} />}
                         label={`v${entry.version}`}
@@ -152,7 +177,13 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
                           size="small"
                           color="primary"
                           variant="outlined"
-                          sx={{ height: 20, fontSize: '0.66rem', fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase' }}
+                          sx={{
+                            height: 20,
+                            fontSize: '0.66rem',
+                            fontWeight: 800,
+                            letterSpacing: '0.04em',
+                            textTransform: 'uppercase'
+                          }}
                         />
                       )}
                       {isFirst && !isCurrent && (
@@ -169,10 +200,19 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
                       <Stack
                         direction="row"
                         spacing={0.6}
-                        sx={{ alignItems: 'center', ml: 'auto', mr: 1, flexShrink: 0, color: 'text.secondary' }}
+                        sx={{
+                          alignItems: 'center',
+                          ml: 'auto',
+                          mr: 1,
+                          flexShrink: 0,
+                          color: 'text.secondary'
+                        }}
                       >
                         <CalendarMonthOutlinedIcon sx={{ fontSize: 14 }} />
-                        <Typography variant="caption" sx={{ whiteSpace: 'nowrap', fontWeight: 500 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ whiteSpace: 'nowrap', fontWeight: 500 }}
+                        >
                           {releaseDate}
                         </Typography>
                       </Stack>
@@ -190,7 +230,13 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
                               label={sectionLabel}
                               size="small"
                               color={SECTION_COLOR_MAP[section.title] ?? 'default'}
-                              sx={{ mb: 1, fontWeight: 800, fontSize: '0.7rem', height: 22, letterSpacing: '0.02em' }}
+                              sx={{
+                                mb: 1,
+                                fontWeight: 800,
+                                fontSize: '0.7rem',
+                                height: 22,
+                                letterSpacing: '0.02em'
+                              }}
                             />
                             <Stack spacing={0.6} sx={{ pl: 0.25 }}>
                               {section.items.map((item) => (
@@ -212,7 +258,14 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
                                       opacity: isCurrent ? 1 : 0.45
                                     }}
                                   />
-                                  <Typography variant="body2" sx={{ lineHeight: 1.55, color: 'text.primary', fontSize: '0.86rem' }}>
+                                  <Typography
+                                    variant="body2"
+                                    sx={{
+                                      lineHeight: 1.55,
+                                      color: 'text.primary',
+                                      fontSize: '0.86rem'
+                                    }}
+                                  >
                                     {item}
                                   </Typography>
                                 </Stack>
@@ -239,11 +292,16 @@ function ChangelogView({ version, entries, author, authorEmail, repositoryUrl }:
             underline="hover"
             onClick={(e) => {
               e.preventDefault()
-              void window.api.openExternal(`${repositoryUrl.replace(/\/$/, '')}/blob/main/CHANGELOG.md`)
+              void window.api.openExternal(
+                `${repositoryUrl.replace(/\/$/, '')}/blob/main/CHANGELOG.md`
+              )
             }}
             sx={{ fontSize: '0.8rem', fontWeight: 600 }}
           >
-            {t('settings.aboutPage.viewFullChangelog', { defaultValue: 'Full changelog on GitHub' })} →
+            {t('settings.aboutPage.viewFullChangelog', {
+              defaultValue: 'Full changelog on GitHub'
+            })}{' '}
+            →
           </Link>
         </Stack>
       )}

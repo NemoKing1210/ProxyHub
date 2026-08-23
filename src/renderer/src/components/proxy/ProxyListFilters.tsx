@@ -99,7 +99,6 @@ function ProxyListFiltersImpl({
 }: ProxyListFiltersProps): React.JSX.Element {
   const { t } = useTranslation()
 
-
   const countryOptions = useMemo(() => getCountryOptions(proxies), [proxies])
   const protocolOptions = useMemo(() => getProtocolOptions(proxies), [proxies])
   const cityOptions = useMemo(

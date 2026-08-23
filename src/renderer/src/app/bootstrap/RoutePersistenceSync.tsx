@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import type { AppRoute } from '@shared/types/settings'
 import { useSettingsStore } from '../../store/settingsStore'
 
-const VALID_ROUTES: ReadonlySet<AppRoute> = new Set(['/', '/settings'])
+const VALID_ROUTES: ReadonlySet<AppRoute> = new Set(['/', '/settings', '/providers'])
 
 function isAppRoute(pathname: string): pathname is AppRoute {
   return VALID_ROUTES.has(pathname as AppRoute)

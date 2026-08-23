@@ -27,7 +27,9 @@ import {
   invalidateProxySearchHaystack,
   pruneProxySearchHaystackCache
 } from '../lib/proxy-search-cache'
+import { logger } from '../lib/renderer-logger'
 
+const proxyStoreLogger = logger.scope('proxy-store')
 interface ProxyState {
   proxies: Proxy[]
   proxiesById: Map<string, Proxy>
@@ -218,6 +220,8 @@ async function checkAllBatch(
   const targetIds = new Set(proxies.map((proxy) => proxy.id))
   const checkingIds = new Set(targetIds)
 
+  proxyStoreLogger.info('Starting checkAll batch', { count: proxies.length, domains })
+
   set({
     isCheckingAll: true,
     checkingIds,
@@ -263,6 +267,10 @@ async function checkAllBatch(
       ...checkOptions,
       checkAllConcurrency: resolveCheckAllConcurrency()
     })
+    proxyStoreLogger.info('checkAll batch completed', { count: proxies.length })
+  } catch (error) {
+    proxyStoreLogger.error('checkAll batch failed', error)
+    throw error
   } finally {
     unsubscribe()
     if (flushTimeout !== null) {
@@ -286,7 +294,11 @@ async function checkAllBatch(
     })
 
     await flushDebouncedPersist()
-    await persist(finalized)
+    try {
+      await persist(finalized)
+    } catch (error) {
+      proxyStoreLogger.error('Failed to persist after checkAll', error)
+    }
   }
 }
 
@@ -339,6 +351,7 @@ export const useProxyStore = create<ProxyState>((rawSet, get) => {
 
     loadProxies: async () => {
       if (isCheckInProgress(get())) {
+        proxyStoreLogger.debug('loadProxies skipped — check in progress')
         return
       }
 
@@ -348,9 +361,14 @@ export const useProxyStore = create<ProxyState>((rawSet, get) => {
       }
 
       try {
+        proxyStoreLogger.debug('Loading proxies')
         const proxies = await window.api.getProxies()
         pruneProxySearchHaystackCache(new Set(proxies.map((proxy) => proxy.id)))
         set({ proxies })
+        proxyStoreLogger.info('Proxies loaded', { count: proxies.length })
+      } catch (error) {
+        proxyStoreLogger.error('Failed to load proxies', error)
+        throw error
       } finally {
         if (shouldShowLoader) {
           set({ isLoading: false })
@@ -454,6 +472,7 @@ export const useProxyStore = create<ProxyState>((rawSet, get) => {
       const proxy = get().proxies.find((item) => item.id === id)
       if (!proxy || get().checkingIds.has(id)) return
 
+      proxyStoreLogger.info('Starting single proxy check', { id })
       const domains = getActiveCheckDomains()
       const checkOptions = getCheckOptions()
       const checkingIds = new Set(get().checkingIds)
@@ -482,21 +501,36 @@ export const useProxyStore = create<ProxyState>((rawSet, get) => {
 
       try {
         const result = await window.api.checkProxy(proxy, checkOptions)
+        proxyStoreLogger.info('Proxy check succeeded', { id, status: result.status })
         const updated = get().proxies.map((item) =>
           item.id === id ? applyCheckResult(item, result) : item
         )
 
         invalidateProxySearchHaystack(id)
         set({ proxies: updated })
-        await persist(updated)
-      } catch {
+        try {
+          await persist(updated)
+        } catch (error) {
+          proxyStoreLogger.error('Failed to persist after proxy check', { id, error })
+          throw error
+        }
+      } catch (error) {
+        proxyStoreLogger.error('Proxy check failed', { id, error })
         const updated = get().proxies.map((item) =>
           item.id === id ? finalizeIncompleteProxy(item) : item
         )
 
         invalidateProxySearchHaystack(id)
         set({ proxies: updated })
-        await persist(updated)
+        try {
+          await persist(updated)
+        } catch (persistError) {
+          proxyStoreLogger.error('Failed to persist after failed proxy check', {
+            id,
+            error: persistError
+          })
+          throw persistError
+        }
       } finally {
         unsubscribe()
 
@@ -516,9 +550,19 @@ export const useProxyStore = create<ProxyState>((rawSet, get) => {
       const targetIds = proxyIds ?? proxies.map((proxy) => proxy.id)
       const targets = filterEnabledProxies(proxies.filter((proxy) => targetIds.includes(proxy.id)))
 
-      if (targets.length === 0 || get().isCheckingAll) return
+      if (targets.length === 0 || get().isCheckingAll) {
+        proxyStoreLogger.debug('checkAll skipped', {
+          targets: targets.length,
+          isCheckingAll: get().isCheckingAll
+        })
+        return
+      }
 
       const isAutoChecking = options?.source === 'auto'
+      proxyStoreLogger.info('Starting checkAll', {
+        count: targets.length,
+        source: options?.source ?? 'manual'
+      })
 
       if (!isAutoChecking && useSettingsStore.getState().settings.autoCheckEnabled) {
         useAutoCheckStore.getState().bumpSchedule()
@@ -530,6 +574,10 @@ export const useProxyStore = create<ProxyState>((rawSet, get) => {
 
       try {
         await checkAllBatch(targets, checkOptions, get, set)
+        proxyStoreLogger.info('checkAll finished', { count: targets.length })
+      } catch (error) {
+        proxyStoreLogger.error('checkAll failed', error)
+        throw error
       } finally {
         set({ isAutoChecking: false })
       }
@@ -537,11 +585,15 @@ export const useProxyStore = create<ProxyState>((rawSet, get) => {
 
     cancelCheckAll: () => {
       if (!get().isCheckingAll) {
+        proxyStoreLogger.debug('cancelCheckAll ignored — not checking')
         return
       }
 
+      proxyStoreLogger.info('Cancelling checkAll')
       cancelDebouncedPersist()
-      void window.api.cancelCheckAll()
+      void window.api.cancelCheckAll().catch((error: unknown) => {
+        proxyStoreLogger.error('Failed to cancel checkAll', error)
+      })
     }
   }
 })

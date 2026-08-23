@@ -28,8 +28,8 @@ For product overview and download links, see [README.md](./README.md).
 All code comments, documentation (`*.md`, `*.mdx`), commit messages, and other project files must be written in **English**.
 Other languages are allowed **only** in translation files:
 
-* `src/renderer/src/i18n/locales/*.json`
-* `src/shared/i18n/**` (e.g. tray menu fallbacks, native language names in `SUPPORTED_LANGUAGES` are allowed inline as they are display names)
+- `src/renderer/src/i18n/locales/*.json`
+- `src/shared/i18n/**` (e.g. tray menu fallbacks, native language names in `SUPPORTED_LANGUAGES` are allowed inline as they are display names)
 
 Do not leave `defaultValue` with non-English text in `t()` calls — use the English key and keep translations in `locales`.
 Excluded from this rule: `node_modules/`, `dist/`, `out/`, and `.hermes/` (internal plans).
