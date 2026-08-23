@@ -13,7 +13,7 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import ContentSection from './ContentSection'
+import ContentSection from './ui/ContentSection'
 import SettingsCardList from './SettingsCardList'
 import { getPalette, withThemeAlpha } from '../theme'
 

@@ -6,7 +6,7 @@ import { Box, IconButton, Tooltip, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../theme'
+import { getPalette, MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../../theme'
 
 interface CopyableFieldProps {
   label: string

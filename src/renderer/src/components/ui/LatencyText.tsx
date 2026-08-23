@@ -1,6 +1,6 @@
 import { Box, type BoxProps } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { getLatencyColor } from '../utils/latency'
+import { getLatencyColor } from '../../utils/latency'
 
 interface LatencyTextProps extends Omit<BoxProps, 'children'> {
   latencyMs: number

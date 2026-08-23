@@ -29,8 +29,8 @@ import {
   type ThemeMode,
   type ToastPosition
 } from '@shared/types/settings'
-import ContentSection from '../../components/ContentSection'
-import LanguageFlag from '../../components/LanguageFlag'
+import ContentSection from '../../components/ui/ContentSection'
+import LanguageFlag from '../../components/ui/LanguageFlag'
 import SettingsCardList from '../../components/SettingsCardList'
 import SettingsSwitchCard from '../../components/SettingsSwitchCard'
 import { MD3_DURATION, MD3_EASING, withThemeAlpha } from '../../theme'

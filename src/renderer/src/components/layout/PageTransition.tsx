@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { useLayoutEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { usePageScrollRestoration } from '../hooks/usePageScrollRestoration'
+import { usePageScrollRestoration } from '../../hooks/usePageScrollRestoration'
 import PersistentOutlet from './PersistentOutlet'
 
 function PageTransition(): React.JSX.Element {

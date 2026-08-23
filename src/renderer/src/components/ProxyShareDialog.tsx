@@ -19,7 +19,7 @@ import type { Proxy } from '@shared/types/proxy'
 import { buildProxyUrl, formatProxyAddress } from '@shared/utils/proxy-format'
 import { buildProxyShareChannels, type ShareChannelNetwork } from '../utils/proxy-share-channels'
 import { trySystemShare } from '../utils/share-proxy'
-import CopyableField from './CopyableField'
+import CopyableField from './ui/CopyableField'
 import ShareNetworkIcon from './ShareNetworkIcon'
 
 interface ProxyShareDialogProps {

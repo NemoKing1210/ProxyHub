@@ -1,8 +1,8 @@
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion'
 import { type ReactElement, useRef } from 'react'
 import { useLocation, useOutlet } from 'react-router-dom'
-import { MD3_DURATION } from '../theme'
-import { usePrefersReducedMotion } from '../utils/list-motion'
+import { MD3_DURATION } from '../../theme'
+import { usePrefersReducedMotion } from '../../utils/list-motion'
 
 const enterTransition: Transition = {
   duration: MD3_DURATION.medium1 / 1000,

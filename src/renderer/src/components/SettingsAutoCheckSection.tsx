@@ -23,7 +23,7 @@ import {
   AUTO_CHECK_INTERVAL_MIN,
   type AutoCheckScope
 } from '@shared/types/settings'
-import ContentSection from './ContentSection'
+import ContentSection from './ui/ContentSection'
 import SettingsCardList from './SettingsCardList'
 import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'
 import ProxyGroupAvatar from './ProxyGroupAvatar'

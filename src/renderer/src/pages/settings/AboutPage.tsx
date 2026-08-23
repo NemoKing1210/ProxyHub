@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import type { AppInfo } from '@shared/types/app'
 import AppUpdateSection from '../../components/AppUpdateSection'
 import ChangelogView from '../../components/ChangelogView'
-import ContentSection from '../../components/ContentSection'
+import ContentSection from '../../components/ui/ContentSection'
 import SettingsCardList from '../../components/SettingsCardList'
 
 function AboutPage(): React.JSX.Element {

@@ -6,7 +6,7 @@ import { Box, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getPalette, withThemeAlpha } from '../theme'
+import { getPalette, withThemeAlpha } from '../../theme'
 
 function AppWindowControls(): React.JSX.Element {
   const { t } = useTranslation()

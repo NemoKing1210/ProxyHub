@@ -31,7 +31,7 @@ import {
   type CheckAllMode,
   getEnabledCheckDomains
 } from '@shared/types/settings'
-import ContentSection from '../../components/ContentSection'
+import ContentSection from '../../components/ui/ContentSection'
 import SettingsCardList from '../../components/SettingsCardList'
 import { useSettingsStore } from '../../store/settingsStore'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../theme'

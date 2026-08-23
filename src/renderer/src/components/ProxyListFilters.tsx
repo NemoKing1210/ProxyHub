@@ -40,8 +40,8 @@ import {
   hasActiveFilters
 } from '../utils/filter-proxies'
 import { surfaceContainer } from '../theme'
-import ContentSection from './ContentSection'
-import CountryFlag from './CountryFlag'
+import ContentSection from './ui/ContentSection'
+import CountryFlag from './ui/CountryFlag'
 
 interface ProxyListFiltersProps {
   proxies: Proxy[]

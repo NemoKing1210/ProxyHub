@@ -11,7 +11,7 @@ import {
   MD3_EASING,
   surfaceContainer,
   withThemeAlpha
-} from '../theme'
+} from '../../theme'
 
 const NAV_ITEMS = [
   { path: '/', labelKey: 'nav.proxies', icon: DnsOutlinedIcon },

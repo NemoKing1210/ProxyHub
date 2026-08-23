@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material'
 import { Children, cloneElement, isValidElement, type ReactNode } from 'react'
 import { getListCardPosition, getListCardRadius } from '../utils/card-list'
-import ContentSection from './ContentSection'
+import ContentSection from './ui/ContentSection'
 import ProxyFormSection from './ProxyFormSection'
 
 interface SettingsCardListProps {

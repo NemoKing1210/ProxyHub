@@ -40,7 +40,7 @@ import {
   type ProxyFormSchemaContext,
   type ProxyFormValues
 } from '../validation/proxySchema'
-import CountryFlag from './CountryFlag'
+import CountryFlag from './ui/CountryFlag'
 import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyColorSwatch from './ProxyColorSwatch'
 import ProxyFormSection from './ProxyFormSection'

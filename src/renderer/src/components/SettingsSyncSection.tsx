@@ -35,7 +35,7 @@ import { DEFAULT_SYNC_CONFIG, resolveSyncRemoteId } from '@shared/utils/sync-con
 import { resolveLastSyncAt } from '@shared/utils/sync-status'
 import { formatDateTime } from '@shared/utils/datetime'
 import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
-import ContentSection from './ContentSection'
+import ContentSection from './ui/ContentSection'
 import SettingsCardList from './SettingsCardList'
 import ProxyFormSection from './ProxyFormSection'
 import SettingsSwitchCard from './SettingsSwitchCard'

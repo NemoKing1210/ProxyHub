@@ -4,7 +4,7 @@ import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOu
 import TabOutlinedIcon from '@mui/icons-material/TabOutlined'
 import { Box, Collapse } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import ContentSection from './ContentSection'
+import ContentSection from './ui/ContentSection'
 import SettingsCardList from './SettingsCardList'
 import SettingsSwitchCard from './SettingsSwitchCard'
 

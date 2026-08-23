@@ -9,7 +9,7 @@ import {
   surfaceContainer,
   surfaceTint,
   withThemeAlpha
-} from '../theme'
+} from '../../theme'
 
 type ContentSectionAccent = 'primary' | 'error' | 'warning' | 'info'
 
