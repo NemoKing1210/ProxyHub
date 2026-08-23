@@ -34,18 +34,20 @@ import type { SyncConfig, SyncProviderType, SyncPublicState, SyncScope } from '@
 import { DEFAULT_SYNC_CONFIG, resolveSyncRemoteId } from '@shared/utils/sync-config'
 import { resolveLastSyncAt } from '@shared/utils/sync-status'
 import { formatDateTime } from '@shared/utils/datetime'
-import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
-import ContentSection from './ui/ContentSection'
-import SettingsCardList from './settings/SettingsCardList'
-import ProxyFormSection from './proxy/ProxyFormSection'
-import SettingsSwitchCard from './settings/SettingsSwitchCard'
+import BackupPasswordFields, {
+  validateBackupExportPassword
+} from '../../../components/BackupPasswordFields'
+import ContentSection from '../../../components/ui/ContentSection'
+import SettingsCardList from '../../../components/settings/SettingsCardList'
+import ProxyFormSection from '../../../components/proxy/ProxyFormSection'
+import SettingsSwitchCard from '../../../components/settings/SettingsSwitchCard'
 import SyncStatusSection from './SyncStatusSection'
-import SyncPullPreviewDialog from './SyncPullPreviewDialog'
-import { surfaceContainer, withThemeAlpha } from '../theme'
-import { pushSyncWithActivity } from '../utils/sync-push'
+import SyncPullPreviewDialog from '../../../components/SyncPullPreviewDialog'
+import { surfaceContainer, withThemeAlpha } from '../../../theme'
+import { pushSyncWithActivity } from '../../../utils/sync-push'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
-interface SettingsSyncSectionProps {
+interface SyncSectionProps {
   onSaved: () => void
   onFeedback: (message: string, severity?: 'success' | 'error') => void
   onReloadData: () => Promise<void>
@@ -86,11 +88,7 @@ function resolveSyncError(
   })
 }
 
-function SettingsSyncSection({
-  onSaved,
-  onFeedback,
-  onReloadData
-}: SettingsSyncSectionProps): React.JSX.Element {
+function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
 
@@ -987,4 +985,4 @@ function SettingsSyncSection({
   )
 }
 
-export default SettingsSyncSection
+export default SyncSection

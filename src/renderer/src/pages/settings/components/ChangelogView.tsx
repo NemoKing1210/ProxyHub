@@ -18,8 +18,8 @@ import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ChangelogEntry } from '@shared/types/app'
 import { resolveGitHubAvatarUrl, resolveGitHubProfileUrl } from '@shared/utils/github'
-import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
-import { getListCardPosition, getListCardRadius } from '../utils/card-list'
+import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../../theme'
+import { getListCardPosition, getListCardRadius } from '../../../utils/card-list'
 
 interface ChangelogViewProps {
   version: string

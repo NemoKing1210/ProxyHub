@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AppUpdateState } from '@shared/types/updater'
-import { surfaceContainer } from '../theme'
+import { surfaceContainer } from '../../../theme'
 
 function formatMegabytes(value: number | undefined): string | undefined {
   if (value === undefined) {

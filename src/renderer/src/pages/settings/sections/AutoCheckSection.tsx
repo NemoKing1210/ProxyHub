@@ -23,12 +23,12 @@ import {
   AUTO_CHECK_INTERVAL_MIN,
   type AutoCheckScope
 } from '@shared/types/settings'
-import ContentSection from './ui/ContentSection'
-import SettingsCardList from './settings/SettingsCardList'
-import AutoCheckCountdownBadge from './check/AutoCheckCountdownBadge'
-import ProxyGroupAvatar from './group/ProxyGroupAvatar'
-import SettingsSwitchCard from './settings/SettingsSwitchCard'
-import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../theme'
+import ContentSection from '../../../components/ui/ContentSection'
+import SettingsCardList from '../../../components/settings/SettingsCardList'
+import AutoCheckCountdownBadge from '../../../components/check/AutoCheckCountdownBadge'
+import ProxyGroupAvatar from '../../../components/group/ProxyGroupAvatar'
+import SettingsSwitchCard from '../../../components/settings/SettingsSwitchCard'
+import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../../../theme'
 
 const INTERVAL_MARKS = [
   { value: 1, label: '1' },
@@ -44,7 +44,7 @@ function clampIntervalMinutes(value: number): number {
   return Math.min(AUTO_CHECK_INTERVAL_MAX, Math.max(AUTO_CHECK_INTERVAL_MIN, Math.round(value)))
 }
 
-interface SettingsAutoCheckSectionProps {
+interface AutoCheckSectionProps {
   enabled: boolean
   intervalMinutes: number
   notifications: boolean
@@ -59,7 +59,7 @@ interface SettingsAutoCheckSectionProps {
   onGroupIdsChange: (groupIds: string[]) => void
 }
 
-function SettingsAutoCheckSection({
+function AutoCheckSection({
   enabled,
   intervalMinutes,
   notifications,
@@ -72,7 +72,7 @@ function SettingsAutoCheckSection({
   onNotificationsChange,
   onScopeChange,
   onGroupIdsChange
-}: SettingsAutoCheckSectionProps): React.JSX.Element {
+}: AutoCheckSectionProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
   const [intervalDraft, setIntervalDraft] = useState(intervalMinutes)
@@ -341,4 +341,4 @@ function SettingsAutoCheckSection({
   )
 }
 
-export default SettingsAutoCheckSection
+export default AutoCheckSection

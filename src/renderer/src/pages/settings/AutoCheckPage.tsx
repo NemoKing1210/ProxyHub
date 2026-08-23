@@ -1,4 +1,4 @@
-import SettingsAutoCheckSection from '../../components/SettingsAutoCheckSection'
+import AutoCheckSection from './sections/AutoCheckSection'
 import type { AutoCheckScope } from '@shared/types/settings'
 import { useGroupStore } from '../../store/groupStore'
 import { useProxyStore } from '../../store/proxyStore'
@@ -36,7 +36,7 @@ function AutoCheckPage(): React.JSX.Element {
   }
 
   return (
-    <SettingsAutoCheckSection
+    <AutoCheckSection
       enabled={settings.autoCheckEnabled}
       intervalMinutes={settings.autoCheckIntervalMinutes}
       notifications={settings.autoCheckNotifications}

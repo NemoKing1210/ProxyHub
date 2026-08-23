@@ -11,8 +11,8 @@ import type { SyncConfig, SyncPublicState } from '@shared/types/sync'
 import { resolveSyncRemoteId } from '@shared/utils/sync-config'
 import { formatDateTime } from '@shared/utils/datetime'
 import { buildSyncStatusErrorReport, resolveLastSyncAt } from '@shared/utils/sync-status'
-import ProxyFormSection from './proxy/ProxyFormSection'
-import { outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
+import ProxyFormSection from '../../../components/proxy/ProxyFormSection'
+import { outlineVariant, surfaceContainer, withThemeAlpha } from '../../../theme'
 
 interface SyncStatusSectionProps {
   config: SyncConfig

@@ -13,11 +13,11 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import ContentSection from './ui/ContentSection'
-import SettingsCardList from './settings/SettingsCardList'
-import { getPalette, withThemeAlpha } from '../theme'
+import ContentSection from '../../../components/ui/ContentSection'
+import SettingsCardList from '../../../components/settings/SettingsCardList'
+import { getPalette, withThemeAlpha } from '../../../theme'
 
-interface SettingsDangerSectionProps {
+interface DangerSectionProps {
   proxyCount: number
   groupCount: number
   disabled?: boolean
@@ -27,13 +27,13 @@ interface SettingsDangerSectionProps {
 
 type ConfirmKind = 'deleteAll' | 'resetSettings'
 
-function SettingsDangerSection({
+function DangerSection({
   proxyCount,
   groupCount,
   disabled = false,
   onDeleteAll,
   onResetSettings
-}: SettingsDangerSectionProps): React.JSX.Element {
+}: DangerSectionProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
   const [confirmKind, setConfirmKind] = useState<ConfirmKind | null>(null)
@@ -181,4 +181,4 @@ function SettingsDangerSection({
   )
 }
 
-export default SettingsDangerSection
+export default DangerSection

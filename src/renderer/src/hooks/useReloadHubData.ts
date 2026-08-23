@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { useGroupStore } from '../../store/groupStore'
-import { useProxyStore } from '../../store/proxyStore'
-import { useSettingsStore } from '../../store/settingsStore'
-import { suppressSyncOnChange } from '../../utils/sync-on-change'
+import { useGroupStore } from '../store/groupStore'
+import { useProxyStore } from '../store/proxyStore'
+import { useSettingsStore } from '../store/settingsStore'
+import { suppressSyncOnChange } from '../utils/sync-on-change'
 
 /**
  * Перезагружает прокси/группы/настройки из main-процесса после импорта

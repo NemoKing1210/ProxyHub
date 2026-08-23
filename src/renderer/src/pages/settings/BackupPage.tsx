@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import SettingsBackupSection from '../../components/SettingsBackupSection'
+import BackupSection from './sections/BackupSection'
 import { useGroupStore } from '../../store/groupStore'
 import { useProxyStore } from '../../store/proxyStore'
-import { useSettingsFeedback } from './useSettingsFeedback'
-import { useReloadHubData } from './useReloadHubData'
+import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
+import { useReloadHubData } from '../../hooks/useReloadHubData'
 
 function BackupPage(): React.JSX.Element {
   const { t } = useTranslation()
@@ -13,7 +13,7 @@ function BackupPage(): React.JSX.Element {
   const { notifyFeedback } = useSettingsFeedback()
 
   return (
-    <SettingsBackupSection
+    <BackupSection
       proxies={proxies}
       groups={groups}
       onExportSuccess={() => notifyFeedback(t('settings.backup.exportSuccess'))}

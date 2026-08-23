@@ -23,16 +23,18 @@ import type { BackupExportKind, BackupImportMode, BackupPreview } from '@shared/
 import type { ProxyListImportFormat, ProxyListImportPreview } from '@shared/types/proxy-import'
 import type { Proxy } from '@shared/types/proxy'
 import type { ProxyGroup } from '@shared/types/proxy-group'
-import BackupExportProxiesDialog from './BackupExportProxiesDialog'
-import BackupImportPreviewDialog from './BackupImportPreviewDialog'
-import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
-import ContentSection from './ui/ContentSection'
-import SettingsCardList from './settings/SettingsCardList'
-import CsvImportPreviewDialog from './CsvImportPreviewDialog'
-import { surfaceContainer, withThemeAlpha } from '../theme'
+import BackupExportProxiesDialog from '../../../components/BackupExportProxiesDialog'
+import BackupImportPreviewDialog from '../../../components/BackupImportPreviewDialog'
+import BackupPasswordFields, {
+  validateBackupExportPassword
+} from '../../../components/BackupPasswordFields'
+import ContentSection from '../../../components/ui/ContentSection'
+import SettingsCardList from '../../../components/settings/SettingsCardList'
+import CsvImportPreviewDialog from '../components/CsvImportPreviewDialog'
+import { surfaceContainer, withThemeAlpha } from '../../../theme'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
-interface SettingsBackupSectionProps {
+interface BackupSectionProps {
   proxies: Proxy[]
   groups: ProxyGroup[]
   onExportSuccess: () => void
@@ -231,7 +233,7 @@ function ProxyListFormatCard({
   )
 }
 
-function SettingsBackupSection({
+function BackupSection({
   proxies,
   groups,
   onExportSuccess,
@@ -240,7 +242,7 @@ function SettingsBackupSection({
   onListImportSuccess,
   onError,
   onReloadData
-}: SettingsBackupSectionProps): React.JSX.Element {
+}: BackupSectionProps): React.JSX.Element {
   const { t } = useTranslation()
   const theme = useTheme()
   const [exportKind, setExportKind] = useState<BackupExportKind>('full')
@@ -705,4 +707,4 @@ function SettingsBackupSection({
   )
 }
 
-export default SettingsBackupSection
+export default BackupSection

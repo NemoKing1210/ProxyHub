@@ -1,6 +1,6 @@
-import SettingsSystemSection from '../../components/SettingsSystemSection'
+import SystemSection from './sections/SystemSection'
 import { useSettingsStore } from '../../store/settingsStore'
-import { useSettingsFeedback } from './useSettingsFeedback'
+import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
 
 function SystemPage(): React.JSX.Element {
   const settings = useSettingsStore((state) => state.settings)
@@ -32,7 +32,7 @@ function SystemPage(): React.JSX.Element {
   }
 
   return (
-    <SettingsSystemSection
+    <SystemSection
       trayEnabled={settings.trayEnabled}
       startMinimized={settings.startMinimized}
       launchAtLogin={settings.launchAtLogin}

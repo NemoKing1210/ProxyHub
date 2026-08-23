@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import {
   SettingsFeedbackContext,
   type SettingsFeedbackContextValue
-} from './settingsFeedbackContext'
+} from '../pages/settings/feedback/settingsFeedbackContext'
 
 export function useSettingsFeedback(): SettingsFeedbackContextValue {
   const context = useContext(SettingsFeedbackContext)

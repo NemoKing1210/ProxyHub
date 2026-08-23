@@ -4,11 +4,11 @@ import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOu
 import TabOutlinedIcon from '@mui/icons-material/TabOutlined'
 import { Box, Collapse } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import ContentSection from './ui/ContentSection'
-import SettingsCardList from './settings/SettingsCardList'
-import SettingsSwitchCard from './settings/SettingsSwitchCard'
+import ContentSection from '../../../components/ui/ContentSection'
+import SettingsCardList from '../../../components/settings/SettingsCardList'
+import SettingsSwitchCard from '../../../components/settings/SettingsSwitchCard'
 
-interface SettingsSystemSectionProps {
+interface SystemSectionProps {
   trayEnabled: boolean
   startMinimized: boolean
   launchAtLogin: boolean
@@ -19,7 +19,7 @@ interface SettingsSystemSectionProps {
   onBackgroundCheckNotificationsChange: (enabled: boolean) => void
 }
 
-function SettingsSystemSection({
+function SystemSection({
   trayEnabled,
   startMinimized,
   launchAtLogin,
@@ -28,7 +28,7 @@ function SettingsSystemSection({
   onStartMinimizedChange,
   onLaunchAtLoginChange,
   onBackgroundCheckNotificationsChange
-}: SettingsSystemSectionProps): React.JSX.Element {
+}: SystemSectionProps): React.JSX.Element {
   const { t } = useTranslation()
 
   return (
@@ -95,4 +95,4 @@ function SettingsSystemSection({
   )
 }
 
-export default SettingsSystemSection
+export default SystemSection

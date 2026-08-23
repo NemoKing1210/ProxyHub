@@ -35,7 +35,7 @@ import SettingsCardList from '../../components/settings/SettingsCardList'
 import SettingsSwitchCard from '../../components/settings/SettingsSwitchCard'
 import { MD3_DURATION, MD3_EASING, withThemeAlpha } from '../../theme'
 import { useSettingsStore } from '../../store/settingsStore'
-import { useSettingsFeedback } from './useSettingsFeedback'
+import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
 
 function AppearancePage(): React.JSX.Element {
   const { t } = useTranslation()

@@ -1,17 +1,13 @@
-import SettingsSyncSection from '../../components/SettingsSyncSection'
-import { useSettingsFeedback } from './useSettingsFeedback'
-import { useReloadHubData } from './useReloadHubData'
+import SyncSection from './sections/SyncSection'
+import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
+import { useReloadHubData } from '../../hooks/useReloadHubData'
 
 function SyncPage(): React.JSX.Element {
   const { notifySaved, notifyFeedback } = useSettingsFeedback()
   const reloadHubData = useReloadHubData()
 
   return (
-    <SettingsSyncSection
-      onSaved={notifySaved}
-      onFeedback={notifyFeedback}
-      onReloadData={reloadHubData}
-    />
+    <SyncSection onSaved={notifySaved} onFeedback={notifyFeedback} onReloadData={reloadHubData} />
   )
 }
 

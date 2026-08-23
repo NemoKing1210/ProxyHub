@@ -1,8 +1,8 @@
 import { Box, Breadcrumbs, Typography } from '@mui/material'
 import { Outlet, useMatch, Link as RouterLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { isSettingsSectionKey, useSettingsSections } from './settings/sections'
-import { SettingsFeedbackProvider } from './settings/SettingsFeedbackProvider'
+import { isSettingsSectionKey, useSettingsSections } from './sectionsRegistry'
+import { SettingsFeedbackProvider } from './feedback/SettingsFeedbackProvider'
 
 /**
  * Оболочка настроек: маршруты /settings (список категорий) и /settings/:section

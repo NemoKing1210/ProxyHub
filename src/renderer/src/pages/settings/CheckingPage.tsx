@@ -36,7 +36,7 @@ import SettingsCardList from '../../components/settings/SettingsCardList'
 import { useSettingsStore } from '../../store/settingsStore'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../theme'
 import { normalizeDomainInput, validateDomain } from '../../validation/proxySchema'
-import { useSettingsFeedback } from './useSettingsFeedback'
+import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
 
 const TIMEOUT_MARKS = [
   { value: 5, label: '5' },
