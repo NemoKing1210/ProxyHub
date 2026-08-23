@@ -218,9 +218,27 @@ Based on the MUI theme defined in `src/renderer/src/theme.ts`.
 
 ### Shape and spacing
 
-- **Border radius:** `10px` (theme `shape.borderRadius`)
+- **Border radius scale (required for all cards):**
+  - `8px` — chips / tooltips
+  - `12px` — controls, nested blocks (`nested`), inner status groups
+  - `16px` — outer settings cards, proxy cards, dialogs (`full`)
+  - `999px`/`50%` — pills / circles
 - **Spacing unit:** MUI default (8px grid)
 - **Panels:** `Paper` with `elevation={0}` and `border: 1, borderColor: 'divider'`
+
+#### List stitching radius rules (mandatory for all settings pages)
+
+All settings cards are rendered inside `SettingsCardList` and **must account for the accent color and list position**:
+
+- Outer list — `full=16, seam=6` via `getListCardPosition` / `getListCardRadius` from `src/renderer/src/lib/card-list.ts`:
+  - `single → 16px` (single item)
+  - `first  → 16px 16px 6px 6px`
+  - `middle → 6px`
+  - `last   → 6px 6px 16px 16px`
+- Nested lists inside a card (e.g., 3 groups in `Sync Status`) — `full=12, seam=6` using the same helpers.
+- Do not hardcode `borderRadius: '16px'` / `'12px'` for cards inside `SettingsCardList` — always pass `listRadius` from `SettingsCardList` (or compute via `getListCardRadius` for nested lists).
+- The main (outer) card of a block also participates in the stitched list — its top corners are `6px` when another card is above it (otherwise the seam breaks).
+- Icon tiles of all settings cards use the accent color: `surfaceTint(theme, accent, 0.18)` + `color: ${accent}.main` (default `primary` = user-selected accent), header `color: accent==='primary' ? text.primary : accent.main`.
 
 ### Components
 

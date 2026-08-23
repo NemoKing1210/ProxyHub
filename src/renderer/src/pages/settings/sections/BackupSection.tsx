@@ -31,7 +31,7 @@ import BackupPasswordFields, {
 import ContentSection from '../../../components/ui/ContentSection'
 import SettingsCardList from '../../../components/settings/SettingsCardList'
 import CsvImportPreviewDialog from './CsvImportPreviewDialog'
-import { surfaceContainer, withThemeAlpha } from '../../../theme'
+import { outlineVariant, surfaceContainer, withThemeAlpha } from '../../../theme'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
 interface BackupSectionProps {
@@ -148,8 +148,9 @@ function ProxyListFormatCard({
     <Box
       sx={{
         p: 2,
-        borderRadius: '16px',
-        bgcolor: surfaceContainer(theme, 'low'),
+        borderRadius: '12px',
+        bgcolor: surfaceContainer(theme, 'default'),
+        border: `1px solid ${outlineVariant(theme)}`,
         display: 'flex',
         flexDirection: 'column',
         gap: 1.5
@@ -161,8 +162,8 @@ function ProxyListFormatCard({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 40,
-            height: 40,
+            width: 36,
+            height: 36,
             borderRadius: '12px',
             flexShrink: 0,
             bgcolor: withThemeAlpha(theme, accent, theme.palette.mode === 'dark' ? 0.22 : 0.12),

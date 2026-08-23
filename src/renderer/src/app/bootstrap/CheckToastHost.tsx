@@ -76,17 +76,15 @@ function CheckToastHost(): React.JSX.Element {
             }
           }}
         >
-          <AlertTitle sx={{ mb: current.message ? 0.5 : 0, fontWeight: 700, lineHeight: 1.35 }}>
+          <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>
             {current.title}
           </AlertTitle>
-          {current.message ? (
-            <Typography
-              variant="body2"
-              sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}
-            >
-              {current.message}
-            </Typography>
-          ) : null}
+          <Typography
+            variant="body2"
+            sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}
+          >
+            {current.message}
+          </Typography>
         </ToastAlert>
       ) : undefined}
     </Snackbar>

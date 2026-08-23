@@ -13,7 +13,7 @@ export interface BatchCheckResultEntry {
 interface ToastPayload {
   severity: ToastSeverity
   title: string
-  message?: string
+  message: string
   duration?: number
 }
 
@@ -125,7 +125,9 @@ export function buildSingleCheckToast(
   return {
     severity: isAlive ? 'success' : 'error',
     title: isAlive ? t('checkToast.aliveTitle', { name }) : t('checkToast.deadTitle', { name }),
-    message: isAlive ? buildAliveDetails(result, t) : resolveDeadMessage(result, t),
+    message: isAlive
+      ? (buildAliveDetails(result, t) ?? t('checkToast.aliveFallback'))
+      : resolveDeadMessage(result, t),
     duration: isAlive ? 4500 : 6000
   }
 }
@@ -142,6 +144,7 @@ export function buildBatchCheckToast(
     return {
       severity: 'warning',
       title: t('checkToast.batchEmptyTitle'),
+      message: t('checkToast.batchEmptyMessage'),
       duration: 4000
     }
   }

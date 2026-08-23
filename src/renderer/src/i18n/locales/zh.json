@@ -4,7 +4,9 @@
   },
   "nav": {
     "proxies": "代理",
-    "settings": "设置"
+    "settings": "设置",
+    "checking": "Checking proxies",
+    "checkProgress": "{{completed}} of {{total}} checked"
   },
   "common": {
     "cancel": "取消",
@@ -15,7 +17,9 @@
     "copy": "复制",
     "copied": "已复制",
     "showPassword": "显示密码",
-    "hidePassword": "隐藏密码"
+    "hidePassword": "隐藏密码",
+    "copiedMessage": "Address copied to clipboard",
+    "close": "Close"
   },
   "proxyList": {
     "title": "代理列表",
@@ -130,7 +134,8 @@
       "country": "国家",
       "city": "城市",
       "anonymityLevel": "匿名级别",
-      "actions": "操作"
+      "actions": "操作",
+      "secret": "Secret"
     },
     "actions": {
       "check": "检查",
@@ -198,7 +203,9 @@
       "authentication": "身份验证",
       "authenticationDescription": "代理需要授权时的凭据。",
       "group": "Group",
-      "groupDescription": "Optional folder to organize proxies in the list."
+      "groupDescription": "Optional folder to organize proxies in the list.",
+      "mtprotoAuthentication": "MTProto secret",
+      "mtprotoAuthenticationDescription": "Secret key from the tg:// or t.me/proxy link."
     },
     "protocol": "协议",
     "host": "主机",
@@ -220,7 +227,10 @@
     "quickFillError": "无法解析代理链接。请检查格式后重试。",
     "quickFillOrManual": "或手动填写",
     "group": "Group (optional)",
-    "groupHint": "Move the proxy into a folder in the list."
+    "groupHint": "Move the proxy into a folder in the list.",
+    "secret": "Secret",
+    "secretPlaceholder": "32-char hex, or dd/ee-prefixed secret",
+    "secretHint": "Required for MTProto. Copy the full secret from the proxy link."
   },
   "proxyIcons": {
     "auto": "自动",
@@ -259,7 +269,8 @@
     "unknown": "未检测",
     "checking": "检测中",
     "alive": "可用",
-    "dead": "不可用"
+    "dead": "不可用",
+    "pending": "Waiting"
   },
   "checkToast": {
     "aliveTitle": "{{name}} — 可用",
@@ -274,7 +285,9 @@
     "batchEmptyTitle": "未检测任何代理",
     "detailedAliveLine": "{{name}} — Alive · {{details}}",
     "detailedAliveLinePlain": "{{name}} — Alive",
-    "detailedDeadLine": "{{name}} — Dead · {{error}}"
+    "detailedDeadLine": "{{name}} — Dead · {{error}}",
+    "batchEmptyMessage": "No proxies matched the check. Try adding or enabling proxies.",
+    "aliveFallback": "Proxy is responding"
   },
   "settings": {
     "title": "设置",
@@ -294,7 +307,9 @@
       "dangerZone": "危险操作",
       "dangerZoneDescription": "清除代理数据或恢复默认应用设置。",
       "about": "关于",
-      "aboutDescription": "应用版本和发布历史。"
+      "aboutDescription": "应用版本和发布历史。",
+      "system": "System",
+      "systemDescription": "Background behavior and quick access from the notification area."
     },
     "theme": "主题",
     "themeLight": "浅色",
@@ -600,8 +615,67 @@
         "unsupported_version": "Unsupported backup version",
         "invalid_payload": "Invalid backup payload",
         "wrong_password": "Wrong encryption password",
-        "unknown": "Unknown error"
-      }
+        "unknown": "Unknown error",
+        "auth_required": "Google account is not connected",
+        "auth_cancelled": "Google sign-in was cancelled or timed out",
+        "remote_not_found": "Sync file not found in remote storage",
+        "remote_file_missing": "Sync file is empty in remote storage",
+        "invalid_request": "Sync provider rejected the request",
+        "google_oauth_not_configured": "Google Drive sign-in is not configured in this build (GOOGLE_OAUTH_CLIENT_ID)."
+      },
+      "headerDate": "Last sync: {{date}}",
+      "headerNever": "Not synced yet",
+      "statusSummaryError": "Last error: {{code}}",
+      "statusSummaryOk": "Last sync: {{date}}",
+      "statusSummaryEmpty": "No sync activity yet",
+      "statusConnection": "Connection",
+      "statusConfiguration": "Configuration",
+      "statusActivity": "Activity",
+      "statusToken": "GitHub token",
+      "statusTokenSaved": "Saved on this device",
+      "statusTokenMissing": "Not configured",
+      "statusGistIdMissing": "Not set yet",
+      "statusSafeStorage": "Secure storage",
+      "statusSafeStorageOk": "Available",
+      "statusSafeStorageUnavailable": "Unavailable",
+      "statusEncryption": "Payload encryption",
+      "statusEncryptionOnSaved": "Enabled, password saved",
+      "statusEncryptionOnMissingPassword": "Enabled, password missing",
+      "statusEncryptionOff": "Disabled",
+      "statusAutoSyncOn": "Enabled ({{interval}})",
+      "statusAutoSyncOff": "Disabled",
+      "statusLastSync": "Last sync",
+      "statusNotYet": "Not yet",
+      "statusYes": "Yes",
+      "statusNo": "No",
+      "statusErrorTitle": "Last error details",
+      "statusErrorOccurredAt": "Occurred at {{date}}",
+      "statusCopyError": "Copy full error report",
+      "statusOperations": {
+        "push": "Push",
+        "pull": "Pull",
+        "pull-preview": "Pull preview",
+        "pull-apply": "Pull apply",
+        "startup-pull": "Startup pull",
+        "test": "Connection test"
+      },
+      "googleSecurityHint": "Data is stored in a hidden Google Drive app folder (like browser extensions). Optional payload encryption is recommended.",
+      "googleOAuthNotBuiltIn": "Google Drive sign-in is not available in this build. The developer must set GOOGLE_OAUTH_CLIENT_ID when building the app.",
+      "googleDriveNotConfiguredBadge": "Not configured",
+      "googleDriveSelectHint": "Google Drive is unavailable until the developer sets GOOGLE_OAUTH_CLIENT_ID in the build environment.",
+      "googleAccount": "Google account",
+      "googleConnect": "Sign in with Google",
+      "googleConnectHint": "Authorize ProxyHub to store sync data in your Google account's hidden app data folder.",
+      "googleConnected": "Google account connected",
+      "googleConnectedAs": "Connected as {{email}}",
+      "googleConnectSuccess": "Google account connected: {{email}}",
+      "googleConnectSuccessGeneric": "Google account connected successfully",
+      "googleDisconnect": "Disconnect Google account",
+      "googleDisconnectSuccess": "Google account disconnected",
+      "statusGoogleAccount": "Google account",
+      "statusGoogleConnected": "Connected",
+      "statusGoogleMissing": "Not connected",
+      "statusRemoteId": "Remote file ID"
     },
     "dangerZone": {
       "warning": "这些操作无法撤销。如果以后可能需要数据，请先导出备份。",
@@ -631,7 +705,93 @@
       "removed": "移除",
       "fixed": "修复",
       "security": "安全"
-    }
+    },
+    "savedDescription": "Changes have been applied",
+    "feedbackSuccessTitle": "Success",
+    "feedbackErrorTitle": "Error",
+    "appearanceThemeGroup": "Theme and colors",
+    "appearanceCardsGroup": "Proxy cards",
+    "appearanceNotificationsGroup": "Notifications",
+    "appearanceLanguageGroup": "Interface language",
+    "accentColor": "Accent color",
+    "accentColorSelected": "Selected color",
+    "accentColorHint": "Choose a color used for buttons, links, and other highlights.",
+    "accentColorOptions": {
+      "blue": "Blue",
+      "violet": "Violet",
+      "teal": "Teal",
+      "green": "Green",
+      "orange": "Orange",
+      "red": "Red",
+      "pink": "Pink",
+      "cyan": "Cyan"
+    },
+    "toastEnabled": "Show notifications",
+    "toastEnabledHint": "Show pop-up notifications with proxy check results.",
+    "toastPosition": "Notification position",
+    "toastPositionTopLeft": "Top left",
+    "toastPositionTopCenter": "Top center",
+    "toastPositionTopRight": "Top right",
+    "toastPositionBottomLeft": "Bottom left",
+    "toastPositionBottomCenter": "Bottom center",
+    "toastPositionBottomRight": "Bottom right",
+    "trayEnabled": "Show in system tray",
+    "trayEnabledHint": "Keep ProxyHub in the tray when the window is closed. Right-click the tray icon for favorite proxies and app actions.",
+    "startMinimized": "Start minimized",
+    "startMinimizedHint": "Launch the app hidden in the system tray instead of opening the window.",
+    "launchAtLoginHint": "Start ProxyHub automatically when you sign in to Windows. Works only in the installed app.",
+    "domainCheckConcurrency": "Domain check concurrency",
+    "domainCheckConcurrencyHint": "How many enabled check domains are tested at the same time for each proxy.",
+    "domainCheckConcurrencyValue": "{{value}} domains",
+    "fetchExternalIp": "Resolve external IP",
+    "fetchExternalIpHint": "When enabled, the checker requests the proxy's public IP after domain checks. Disable to skip this extra request.",
+    "updates": {
+      "title": "Updates",
+      "description": "Check GitHub Releases for new ProxyHub versions.",
+      "disabledHint": "Auto-update is available only in installed release builds.",
+      "checking": "Checking for updates…",
+      "upToDate": "You are on the latest version (v{{version}}).",
+      "available": "Version {{version}} is available.",
+      "ready": "Version {{version}} has been downloaded and is ready to install.",
+      "errors": {
+        "unavailable": "Updates are currently unavailable. Try again later or download the latest version from GitHub Releases.",
+        "network": "Could not reach the update server. Check your internet connection and try again."
+      },
+      "downloading": "Downloading update…",
+      "downloadProgress": "{{percent}}% downloaded ({{transferred}} / {{total}} MB)",
+      "checkButton": "Check for updates",
+      "downloadButton": "Download v{{version}}",
+      "installButton": "Restart and install"
+    },
+    "aboutPage": {
+      "heroSubtitle": "Cross-platform desktop app to check proxy availability in one click — HTTP, HTTPS, SOCKS4, SOCKS5 and MTProto with latency and external IP.",
+      "copyVersion": "Copy version",
+      "openGithub": "Open GitHub",
+      "releases": "Releases",
+      "reportBug": "Report a bug",
+      "featuresTitle": "Capabilities",
+      "featureCheckTitle": "Proxy checking",
+      "featureCheckDesc": "HTTP, HTTPS, SOCKS4/5 and MTProto — reachability, latency and external IP.",
+      "featureGroupsTitle": "Groups & favorites",
+      "featureGroupsDesc": "Folders with color and icon, drag-and-drop and quick tray access.",
+      "featureAutoTitle": "Auto-check",
+      "featureAutoDesc": "Background schedule — all, favorites or selected groups.",
+      "featureBackupTitle": "Import & export",
+      "featureBackupDesc": "Backups, CSV / JSON / TXT with selection and encryption.",
+      "featureSyncTitle": "Synchronization",
+      "featureSyncDesc": "GitHub Gist and Google Drive with auto-push and startup pull.",
+      "featureTrayTitle": "Tray & notifications",
+      "featureTrayDesc": "Background mode, native notifications and favorites in tray menu.",
+      "changelogTitle": "Changelog",
+      "changelogDesc": "What was added, changed and fixed in each release.",
+      "viewFullChangelog": "Full changelog on GitHub",
+      "madeWith": "Made with",
+      "updateUpToDate": "Up to date",
+      "updateAvailable": "Update available",
+      "updateReady": "Ready to install",
+      "updateError": "Error"
+    },
+    "launchAtLogin": "Launch at system startup"
   },
   "validation": {
     "hostRequired": "请输入主机",
@@ -648,7 +808,12 @@
     "proxyDuplicate": "该代理已在列表中",
     "countryCodeInvalid": "请输入有效的两位国家代码",
     "cityMax": "城市名称不能超过64个字符",
-    "groupNotFound": "Selected group no longer exists"
+    "groupNotFound": "Selected group no longer exists",
+    "secretRequired": "Secret is required for MTProto proxies",
+    "secretInvalid": "Enter a valid MTProto secret (hex, optionally dd/ee-prefixed)",
+    "secretMax": "Secret is too long",
+    "secretNotAllowed": "Secret is only used for MTProto proxies",
+    "mtprotoNoAuth": "MTProto proxies use a secret instead of username and password"
   },
   "proxyGroup": {
     "addTitle": "Add group",
@@ -700,6 +865,28 @@
     "previewFallback": "Group name",
     "previewHint": "Group header preview",
     "addProxy": "添加代理",
-    "check": "检查"
+    "check": "检查",
+    "pageInfo": "{{start}}–{{end}} of {{total}}",
+    "filterEmpty": "No proxies match the selected filter"
+  },
+  "windowControls": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "restoreDown": "Restore down",
+    "close": "Close"
+  },
+  "sync": {
+    "activity": "Syncing..."
+  },
+  "tray": {
+    "title": "Favorite proxies",
+    "subtitle": "{{alive}} of {{total}} alive",
+    "emptyTitle": "No favorites yet",
+    "emptyHint": "Star proxies in the app to pin them to the tray menu.",
+    "checkProxy": "Check proxy",
+    "checkAll": "Check all",
+    "stopCheckAll": "Stop check",
+    "openApp": "Open app",
+    "disabled": "Disabled"
   }
 }

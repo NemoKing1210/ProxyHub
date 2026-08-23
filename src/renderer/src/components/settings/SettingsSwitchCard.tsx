@@ -11,7 +11,7 @@ interface SettingsSwitchCardProps {
   onChange: (checked: boolean) => void
   disabled?: boolean
   compact?: boolean
-  accent?: 'primary' | 'info'
+  accent?: 'primary' | 'info' | 'error' | 'warning'
   clickable?: boolean
 }
 

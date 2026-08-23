@@ -23,7 +23,7 @@ import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined'
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import {
-  Alert,
+  AlertTitle,
   Box,
   Button,
   Chip,
@@ -46,6 +46,11 @@ import { memo, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '@shared/constants/proxy-countries'
 import type { Proxy, ProxyAnonymityLevel, ProxyIconId } from '@shared/types/proxy'
+import type { ToastPosition } from '@shared/types/settings'
+import { TITLE_BAR_HEIGHT } from '@shared/theme/title-bar'
+import { isWindows } from '../../lib/platform'
+import { useSettingsStore } from '../../store/settingsStore'
+import ToastAlert from '../ui/ToastAlert'
 import type { ProxyGroup } from '@shared/types/proxy-group'
 import type { ProxyCardViewMode } from '@shared/types/settings'
 import { formatDateTime } from '@shared/utils/datetime'
@@ -112,6 +117,15 @@ interface ContextMenuPosition {
   left: number
 }
 
+const toastAnchors: Record<ToastPosition, { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' }> = {
+  'top-left': { vertical: 'top', horizontal: 'left' },
+  'top-center': { vertical: 'top', horizontal: 'center' },
+  'top-right': { vertical: 'top', horizontal: 'right' },
+  'bottom-left': { vertical: 'bottom', horizontal: 'left' },
+  'bottom-center': { vertical: 'bottom', horizontal: 'center' },
+  'bottom-right': { vertical: 'bottom', horizontal: 'right' }
+}
+
 function AnonymityLevelIcon({ level }: { level: ProxyAnonymityLevel }): React.JSX.Element {
   const iconSx = { fontSize: 16 }
 
@@ -144,6 +158,8 @@ function ProxyCard({
 }: ProxyCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
+  const toastPosition = useSettingsStore((state) => state.settings.toastPosition)
+  const topOffset = isWindows() ? TITLE_BAR_HEIGHT + 8 : 72
   const [copyToastOpen, setCopyToastOpen] = useState(false)
   const [resultsExpanded, setResultsExpanded] = useState(false)
   const [cardExpanded, setCardExpanded] = useState(false)
@@ -783,12 +799,31 @@ function ProxyCard({
         open={copyToastOpen}
         autoHideDuration={2000}
         onClose={() => setCopyToastOpen(false)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={toastAnchors[toastPosition]}
+        sx={{
+          [`&.MuiSnackbar-anchorOriginTopLeft, &.MuiSnackbar-anchorOriginTopCenter,
+            &.MuiSnackbar-anchorOriginTopRight`]: {
+            top: topOffset
+          }
+        }}
       >
-        <Alert severity="success" variant="filled" onClose={() => setCopyToastOpen(false)}>
-          {t('common.copied')}
-        </Alert>
+        <ToastAlert
+          severity="success"
+          onClose={() => setCopyToastOpen(false)}
+          sx={{
+            minWidth: { xs: 280, sm: 360 },
+            maxWidth: 480,
+            alignItems: 'flex-start',
+            '& .MuiAlert-message': { width: '100%' }
+          }}
+        >
+          <AlertTitle sx={{ mb: 0.5, fontWeight: 700, lineHeight: 1.35 }}>{t('common.copied')}</AlertTitle>
+          <Typography variant="body2" sx={{ opacity: 0.92, lineHeight: 1.45, whiteSpace: 'pre-line' }}>
+            {t('common.copiedMessage')}
+          </Typography>
+        </ToastAlert>
       </Snackbar>
+
 
       <ProxyShareDialog open={shareOpen} proxy={proxy} onClose={() => setShareOpen(false)} />
 

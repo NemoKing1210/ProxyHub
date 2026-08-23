@@ -16,7 +16,7 @@ interface SettingsSwitchSectionProps {
   checked: boolean
   onChange: (checked: boolean) => void
   disabled?: boolean
-  accent?: 'primary' | 'info'
+  accent?: 'primary' | 'info' | 'error' | 'warning'
   children?: ReactNode
   listRadius?: string
 }
@@ -111,7 +111,15 @@ function SettingsSwitchSection({
         </Box>
 
         <Box sx={{ minWidth: 0, pt: 0.25, flex: 1 }}>
-          <Typography variant="h6" sx={{ fontSize: '1.05rem', fontWeight: 600, lineHeight: 1.3 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: '1.05rem',
+              fontWeight: 600,
+              lineHeight: 1.3,
+              color: accent === 'primary' ? 'text.primary' : `${accent}.main`
+            }}
+          >
             {title}
           </Typography>
           {description && (

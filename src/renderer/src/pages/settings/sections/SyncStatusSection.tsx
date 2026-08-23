@@ -2,7 +2,9 @@ import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined'
+import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
 import { Alert, Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useMemo, useState } from 'react'
@@ -12,7 +14,8 @@ import { resolveSyncRemoteId } from '@shared/utils/sync-config'
 import { formatDateTime } from '@shared/utils/datetime'
 import { buildSyncStatusErrorReport, resolveLastSyncAt } from '@shared/utils/sync-status'
 import ProxyFormSection from '../../../components/proxy/ProxyFormSection'
-import { outlineVariant, surfaceContainer, withThemeAlpha } from '../../../theme'
+import { getListCardPosition, getListCardRadius } from '../../../lib/card-list'
+import { outlineVariant, surfaceContainer, surfaceTint, withThemeAlpha } from '../../../theme'
 
 interface SyncStatusSectionProps {
   config: SyncConfig
@@ -22,32 +25,48 @@ interface SyncStatusSectionProps {
   hasPayloadPassword: boolean
   safeStorageAvailable: boolean
   children?: React.ReactNode
+  listRadius?: string
 }
 
-interface StatusRowProps {
+function StatusRow({
+  label,
+  value,
+  valueColor,
+  mono
+}: {
   label: string
   value: React.ReactNode
   valueColor?: string
-}
-
-function StatusRow({ label, value, valueColor }: StatusRowProps): React.JSX.Element {
+  mono?: boolean
+}): React.JSX.Element {
   return (
     <Box
       sx={{
-        display: 'grid',
-        gridTemplateColumns: { xs: '1fr', sm: 'minmax(150px, 40%) 1fr' },
-        gap: { xs: 0.35, sm: 1.5 },
-        py: 0.8
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        gap: 2,
+        py: 1.1,
+        minWidth: 0
       }}
     >
-      <Typography variant="body2" color="text.secondary">
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ flexShrink: 0, maxWidth: { xs: '45%', sm: '42%' }, lineHeight: 1.4 }}
+      >
         {label}
       </Typography>
       <Typography
         variant="body2"
         sx={{
-          fontWeight: 500,
+          flex: 1,
+          textAlign: 'right',
+          fontWeight: mono ? 600 : 500,
+          fontFamily: mono ? 'monospace' : undefined,
+          fontSize: mono ? '0.8rem' : undefined,
           wordBreak: 'break-word',
+          lineHeight: 1.4,
           color: valueColor
         }}
       >
@@ -58,29 +77,49 @@ function StatusRow({ label, value, valueColor }: StatusRowProps): React.JSX.Elem
 }
 
 function StatusGroup({
+  icon,
   title,
-  children
+  children,
+  listRadius
 }: {
+  icon: React.ReactNode
   title: string
   children: React.ReactNode
+  listRadius?: string
 }): React.JSX.Element {
   const theme = useTheme()
-
   return (
     <Box
       sx={{
-        px: 1.5,
-        py: 0.5,
-        borderRadius: '16px',
-        bgcolor: surfaceContainer(theme, 'low'),
-        boxShadow: `inset 0 0 0 1px ${outlineVariant(theme)}`
+        p: 2,
+        borderRadius: listRadius ?? '12px',
+        bgcolor: surfaceContainer(theme, 'default'),
+        border: `1px solid ${outlineVariant(theme)}`
       }}
     >
-      <Typography variant="subtitle2" sx={{ py: 0.85 }}>
-        {title}
-      </Typography>
-      <Divider sx={{ mb: 0.25 }} />
-      {children}
+      <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', mb: 1 }}>
+        <Box
+          sx={{
+            width: 32,
+            height: 32,
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            bgcolor: surfaceTint(theme, 'primary', 0.12),
+            color: 'primary.main'
+          }}
+        >
+          {icon}
+        </Box>
+        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+          {title}
+        </Typography>
+      </Stack>
+      <Stack divider={<Divider sx={{ opacity: 0.7 }} />} sx={{ mt: 0.5 }}>
+        {children}
+      </Stack>
     </Box>
   )
 }
@@ -92,7 +131,8 @@ function SyncStatusSection({
   googleEmail,
   hasPayloadPassword,
   safeStorageAvailable,
-  children
+  children,
+  listRadius
 }: SyncStatusSectionProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
@@ -173,144 +213,146 @@ function SyncStatusSection({
       ? t('settings.sync.statusTokenSaved')
       : t('settings.sync.statusTokenMissing')
 
+  const statusGroupsCount = 3
+
   return (
     <ProxyFormSection
       icon={<InfoOutlinedIcon fontSize="small" />}
       title={t('settings.sync.statusTitle')}
       description={sectionDescription}
-      collapsible
-      defaultExpanded={false}
+      listRadius={listRadius}
     >
-      <StatusGroup title={t('settings.sync.statusConnection')}>
-        <StatusRow
-          label={credentialsLabel}
-          value={credentialsValue}
-          valueColor={hasCredentials ? 'success.main' : 'warning.main'}
-        />
-        {isGithubProvider && (
-          <>
-            <Divider />
+      <Stack spacing={0.75}>
+        <StatusGroup
+          icon={<LinkOutlinedIcon fontSize="small" />}
+          title={t('settings.sync.statusConnection')}
+          listRadius={getListCardRadius(getListCardPosition(0, statusGroupsCount), 12, 6)}
+        >
+          <StatusRow
+            label={credentialsLabel}
+            value={credentialsValue}
+            valueColor={hasCredentials ? 'success.main' : 'warning.main'}
+          />
+          {isGithubProvider && (
             <StatusRow
               label={t('settings.sync.gistId')}
               value={remoteId || t('settings.sync.statusGistIdMissing')}
               valueColor={remoteId ? undefined : 'text.secondary'}
+              mono={Boolean(remoteId)}
             />
-          </>
-        )}
-        {isGoogleProvider && remoteId && (
-          <>
-            <Divider />
-            <StatusRow label={t('settings.sync.statusRemoteId')} value={remoteId} />
-          </>
-        )}
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.statusSafeStorage')}
-          value={
-            safeStorageAvailable
-              ? t('settings.sync.statusSafeStorageOk')
-              : t('settings.sync.statusSafeStorageUnavailable')
-          }
-          valueColor={safeStorageAvailable ? 'success.main' : 'warning.main'}
-        />
-      </StatusGroup>
+          )}
+          {isGoogleProvider && remoteId && (
+            <StatusRow label={t('settings.sync.statusRemoteId')} value={remoteId} mono />
+          )}
+          <StatusRow
+            label={t('settings.sync.statusSafeStorage')}
+            value={
+              safeStorageAvailable
+                ? t('settings.sync.statusSafeStorageOk')
+                : t('settings.sync.statusSafeStorageUnavailable')
+            }
+            valueColor={safeStorageAvailable ? 'success.main' : 'warning.main'}
+          />
+        </StatusGroup>
 
-      <StatusGroup title={t('settings.sync.statusConfiguration')}>
-        <StatusRow label={t('settings.sync.scope')} value={t(scopeLabelKey)} />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.pullMode')}
-          value={
-            config.pullMode === 'replace'
-              ? t('settings.backup.importModeReplace')
-              : t('settings.backup.importModeMerge')
-          }
-        />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.statusEncryption')}
-          value={
-            config.encryptPayload
-              ? hasPayloadPassword
-                ? t('settings.sync.statusEncryptionOnSaved')
-                : t('settings.sync.statusEncryptionOnMissingPassword')
-              : t('settings.sync.statusEncryptionOff')
-          }
-          valueColor={config.encryptPayload && !hasPayloadPassword ? 'warning.main' : undefined}
-        />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.autoSyncEnabled')}
-          value={
-            config.autoSyncEnabled
-              ? t('settings.sync.statusAutoSyncOn', {
-                  interval: formatIntervalLabel(config.autoSyncIntervalMinutes)
-                })
-              : t('settings.sync.statusAutoSyncOff')
-          }
-        />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.syncOnStartup')}
-          value={boolLabel(config.syncOnStartup)}
-        />
-        <Divider />
-        <StatusRow label={t('settings.sync.pushOnChange')} value={boolLabel(config.pushOnChange)} />
-      </StatusGroup>
+        <StatusGroup
+          icon={<SettingsOutlinedIcon fontSize="small" />}
+          title={t('settings.sync.statusConfiguration')}
+          listRadius={getListCardRadius(getListCardPosition(1, statusGroupsCount), 12, 6)}
+        >
+          <StatusRow label={t('settings.sync.scope')} value={t(scopeLabelKey)} />
+          <StatusRow
+            label={t('settings.sync.pullMode')}
+            value={
+              config.pullMode === 'replace'
+                ? t('settings.backup.importModeReplace')
+                : t('settings.backup.importModeMerge')
+            }
+          />
+          <StatusRow
+            label={t('settings.sync.statusEncryption')}
+            value={
+              config.encryptPayload
+                ? hasPayloadPassword
+                  ? t('settings.sync.statusEncryptionOnSaved')
+                  : t('settings.sync.statusEncryptionOnMissingPassword')
+                : t('settings.sync.statusEncryptionOff')
+            }
+            valueColor={config.encryptPayload && !hasPayloadPassword ? 'warning.main' : undefined}
+          />
+          <StatusRow
+            label={t('settings.sync.autoSyncEnabled')}
+            value={
+              config.autoSyncEnabled
+                ? t('settings.sync.statusAutoSyncOn', {
+                    interval: formatIntervalLabel(config.autoSyncIntervalMinutes)
+                  })
+                : t('settings.sync.statusAutoSyncOff')
+            }
+          />
+          <StatusRow
+            label={t('settings.sync.syncOnStartup')}
+            value={boolLabel(config.syncOnStartup)}
+          />
+          <StatusRow label={t('settings.sync.pushOnChange')} value={boolLabel(config.pushOnChange)} />
+        </StatusGroup>
 
-      <StatusGroup title={t('settings.sync.statusActivity')}>
-        <StatusRow
-          label={t('settings.sync.lastPush')}
-          value={
-            status.lastPushAt
-              ? formatDateTime(status.lastPushAt, i18n.language)
-              : t('settings.sync.statusNotYet')
-          }
-          valueColor={status.lastPushAt ? undefined : 'text.secondary'}
-        />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.lastPull')}
-          value={
-            status.lastPullAt
-              ? formatDateTime(status.lastPullAt, i18n.language)
-              : t('settings.sync.statusNotYet')
-          }
-          valueColor={status.lastPullAt ? undefined : 'text.secondary'}
-        />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.remoteUpdated')}
-          value={
-            status.remoteUpdatedAt
-              ? formatDateTime(status.remoteUpdatedAt, i18n.language)
-              : t('settings.sync.statusNotYet')
-          }
-          valueColor={status.remoteUpdatedAt ? undefined : 'text.secondary'}
-        />
-        <Divider />
-        <StatusRow
-          label={t('settings.sync.statusLastSync')}
-          value={
-            lastSyncAt ? formatDateTime(lastSyncAt, i18n.language) : t('settings.sync.statusNotYet')
-          }
-          valueColor={lastSyncAt ? undefined : 'text.secondary'}
-        />
-      </StatusGroup>
+        <StatusGroup
+          icon={<HistoryOutlinedIcon fontSize="small" />}
+          title={t('settings.sync.statusActivity')}
+          listRadius={getListCardRadius(getListCardPosition(2, statusGroupsCount), 12, 6)}
+        >
+          <StatusRow
+            label={t('settings.sync.lastPush')}
+            value={
+              status.lastPushAt
+                ? formatDateTime(status.lastPushAt, i18n.language)
+                : t('settings.sync.statusNotYet')
+            }
+            valueColor={status.lastPushAt ? undefined : 'text.secondary'}
+          />
+          <StatusRow
+            label={t('settings.sync.lastPull')}
+            value={
+              status.lastPullAt
+                ? formatDateTime(status.lastPullAt, i18n.language)
+                : t('settings.sync.statusNotYet')
+            }
+            valueColor={status.lastPullAt ? undefined : 'text.secondary'}
+          />
+          <StatusRow
+            label={t('settings.sync.remoteUpdated')}
+            value={
+              status.remoteUpdatedAt
+                ? formatDateTime(status.remoteUpdatedAt, i18n.language)
+                : t('settings.sync.statusNotYet')
+            }
+            valueColor={status.remoteUpdatedAt ? undefined : 'text.secondary'}
+          />
+          <StatusRow
+            label={t('settings.sync.statusLastSync')}
+            value={
+              lastSyncAt ? formatDateTime(lastSyncAt, i18n.language) : t('settings.sync.statusNotYet')
+            }
+            valueColor={lastSyncAt ? undefined : 'text.secondary'}
+          />
+        </StatusGroup>
+      </Stack>
 
       {status.lastError && (
         <Box
           sx={{
-            borderRadius: '16px',
+            mt: 1.5,
+            borderRadius: '12px',
             overflow: 'hidden',
-            boxShadow: `inset 0 0 0 1px ${withThemeAlpha(theme, theme.palette.error.main, 0.35)}`
+            border: `1px solid ${withThemeAlpha(theme, theme.palette.error.main, 0.28)}`
           }}
         >
           <Alert
             severity="error"
             variant="outlined"
             icon={<ErrorOutlineOutlinedIcon fontSize="small" />}
-            sx={{ borderRadius: '12px', alignItems: 'flex-start' }}
+            sx={{ border: 'none', borderRadius: '12px', alignItems: 'flex-start', bgcolor: surfaceContainer(theme, 'default') }}
           >
             <Stack spacing={1.25}>
               <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -351,8 +393,9 @@ function SyncStatusSection({
                 sx={{
                   m: 0,
                   p: 1.25,
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   bgcolor: surfaceContainer(theme, 'high'),
+                  border: `1px solid ${outlineVariant(theme)}`,
                   fontFamily: 'monospace',
                   fontSize: '0.74rem',
                   lineHeight: 1.45,
@@ -371,7 +414,7 @@ function SyncStatusSection({
                 size="small"
                 onClick={() => void handleCopyError()}
                 startIcon={copied ? <CheckIcon /> : <ContentCopyIcon />}
-                sx={{ alignSelf: 'flex-start' }}
+                sx={{ alignSelf: 'flex-start', borderRadius: '999px', px: 2 }}
               >
                 {copied ? t('common.copied') : t('settings.sync.statusCopyError')}
               </Button>
@@ -381,15 +424,40 @@ function SyncStatusSection({
       )}
 
       {!status.lastError && !lastSyncAt && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', color: 'text.secondary' }}>
-          <TimelineOutlinedIcon fontSize="small" />
-          <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+        <Box
+          sx={{
+            mt: 1,
+            p: 2,
+            borderRadius: '12px',
+            bgcolor: surfaceContainer(theme, 'default'),
+            border: `1px dashed ${withThemeAlpha(theme, theme.palette.divider, 0.7)}`,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.25,
+            color: 'text.secondary'
+          }}
+        >
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              bgcolor: surfaceTint(theme, 'primary', 0.1),
+              color: 'text.secondary'
+            }}
+          >
+            <HistoryOutlinedIcon fontSize="small" />
+          </Box>
+          <Typography variant="body2" sx={{ fontStyle: 'italic', lineHeight: 1.4 }}>
             {t('settings.sync.statusEmpty')}
           </Typography>
-        </Stack>
+        </Box>
       )}
 
-      {children ? <Box sx={{ pt: 1 }}>{children}</Box> : null}
+      {children ? <Box sx={{ mt: 0.5 }}>{children}</Box> : null}
     </ProxyFormSection>
   )
 }

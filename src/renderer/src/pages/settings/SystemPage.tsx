@@ -27,11 +27,6 @@ function SystemPage(): React.JSX.Element {
     notifySaved()
   }
 
-  const handleBackgroundCheckNotificationsChange = async (enabled: boolean): Promise<void> => {
-    await updateSettings({ backgroundCheckNotifications: enabled })
-    notifySaved()
-  }
-
   return (
     <>
       <SettingsSectionHeader />
@@ -39,13 +34,9 @@ function SystemPage(): React.JSX.Element {
         trayEnabled={settings.trayEnabled}
         startMinimized={settings.startMinimized}
         launchAtLogin={settings.launchAtLogin}
-        backgroundCheckNotifications={settings.backgroundCheckNotifications}
         onTrayEnabledChange={(enabled) => void handleTrayEnabledChange(enabled)}
         onStartMinimizedChange={(enabled) => void handleStartMinimizedChange(enabled)}
         onLaunchAtLoginChange={(enabled) => void handleLaunchAtLoginChange(enabled)}
-        onBackgroundCheckNotificationsChange={(enabled) =>
-          void handleBackgroundCheckNotificationsChange(enabled)
-        }
       />
     </>
   )

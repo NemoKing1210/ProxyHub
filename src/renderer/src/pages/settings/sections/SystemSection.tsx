@@ -1,5 +1,4 @@
 import MinimizeOutlinedIcon from '@mui/icons-material/MinimizeOutlined'
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined'
 import TabOutlinedIcon from '@mui/icons-material/TabOutlined'
 import { Box } from '@mui/material'
@@ -13,22 +12,18 @@ interface SystemSectionProps {
   trayEnabled: boolean
   startMinimized: boolean
   launchAtLogin: boolean
-  backgroundCheckNotifications: boolean
   onTrayEnabledChange: (enabled: boolean) => void
   onStartMinimizedChange: (enabled: boolean) => void
   onLaunchAtLoginChange: (enabled: boolean) => void
-  onBackgroundCheckNotificationsChange: (enabled: boolean) => void
 }
 
 function SystemSection({
   trayEnabled,
   startMinimized,
   launchAtLogin,
-  backgroundCheckNotifications,
   onTrayEnabledChange,
   onStartMinimizedChange,
-  onLaunchAtLoginChange,
-  onBackgroundCheckNotificationsChange
+  onLaunchAtLoginChange
 }: SystemSectionProps): React.JSX.Element {
   const { t } = useTranslation()
 
@@ -62,17 +57,8 @@ function SystemSection({
         checked={launchAtLogin}
         onChange={onLaunchAtLoginChange}
       />
-
-      <SettingsSwitchSection
-        icon={<NotificationsOutlinedIcon fontSize="small" />}
-        accent="info"
-        title={t('settings.backgroundCheckNotifications')}
-        description={t('settings.backgroundCheckNotificationsHint')}
-        checked={backgroundCheckNotifications}
-        onChange={onBackgroundCheckNotificationsChange}
-      />
     </SettingsCardList>
   )
 }
-
 export default SystemSection
+

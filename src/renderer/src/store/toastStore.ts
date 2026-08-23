@@ -6,7 +6,7 @@ export interface Toast {
   id: string
   severity: ToastSeverity
   title: string
-  message?: string
+  message: string
   duration?: number
 }
 

@@ -44,7 +44,7 @@ import SettingsSwitchCard from '../../../components/settings/SettingsSwitchCard'
 import SettingsSwitchSection from '../../../components/settings/SettingsSwitchSection'
 import SyncStatusSection from './SyncStatusSection'
 import SyncPullPreviewDialog from './SyncPullPreviewDialog'
-import { surfaceContainer, withThemeAlpha } from '../../../theme'
+import { outlineVariant, surfaceContainer, withThemeAlpha } from '../../../theme'
 import { pushSyncWithActivity } from '../../../services/sync-push'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
@@ -843,10 +843,9 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
           </RevealCollapse>
         </ProxyFormSection>
 
-        <RevealCollapse in={isProviderEnabled} unmountOnExit={false}>
+        {isProviderEnabled && (
           <SettingsSwitchSection
             icon={<CloudSyncOutlinedIcon fontSize="small" />}
-            accent="info"
             title={t('settings.sync.autoSyncEnabled')}
             description={t('settings.sync.autoSyncEnabledHint')}
             checked={config.autoSyncEnabled}
@@ -854,7 +853,14 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
             disabled={isBusy}
           >
             <RevealCollapse in={config.autoSyncEnabled}>
-              <Box sx={{ px: 2.25, pb: 2.25 }}>
+              <Box
+                sx={{
+                  borderTop: `1px solid ${outlineVariant(theme)}`,
+                  bgcolor: surfaceContainer(theme, 'default'),
+                  px: 1.75,
+                  py: 2.25
+                }}
+              >
                 <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
                   <Typography variant="subtitle2">{t('settings.sync.autoSyncInterval')}</Typography>
                   <Typography
@@ -894,7 +900,6 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
                 checked={config.syncOnStartup}
                 onChange={(enabled) => void handleSyncOnStartupChange(enabled)}
                 disabled={isBusy}
-                accent="info"
                 clickable
               />
             </Box>
@@ -907,14 +912,13 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
                 checked={config.pushOnChange}
                 onChange={(enabled) => void handlePushOnChangeChange(enabled)}
                 disabled={isBusy}
-                accent="info"
                 clickable
               />
             </Box>
           </SettingsSwitchSection>
-        </RevealCollapse>
+        )}
 
-        <RevealCollapse in={isProviderEnabled} unmountOnExit={false}>
+        {isProviderEnabled && (
           <SyncStatusSection
             config={config}
             status={status}
@@ -956,7 +960,7 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
               </Button>
             </Stack>
           </SyncStatusSection>
-        </RevealCollapse>
+        )}
       </SettingsCardList>
 
       <SyncPullPreviewDialog

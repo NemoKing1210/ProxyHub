@@ -47,7 +47,6 @@ export interface AppSettings {
   trayEnabled: boolean
   startMinimized: boolean
   launchAtLogin: boolean
-  backgroundCheckNotifications: boolean
   autoCheckEnabled: boolean
   autoCheckIntervalMinutes: number
   autoCheckNotifications: boolean
@@ -94,7 +93,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
   trayEnabled: false,
   startMinimized: false,
   launchAtLogin: false,
-  backgroundCheckNotifications: true,
   autoCheckEnabled: false,
   autoCheckIntervalMinutes: AUTO_CHECK_INTERVAL_DEFAULT,
   autoCheckNotifications: true,
@@ -264,7 +262,6 @@ export function normalizeSettings(settings: Partial<AppSettings> | undefined): A
     trayEnabled,
     startMinimized: trayEnabled && merged.startMinimized === true,
     launchAtLogin: merged.launchAtLogin === true,
-    backgroundCheckNotifications: merged.backgroundCheckNotifications !== false,
     autoCheckEnabled: merged.autoCheckEnabled === true,
     autoCheckIntervalMinutes: clampAutoCheckIntervalMinutes(merged.autoCheckIntervalMinutes),
     autoCheckNotifications: merged.autoCheckNotifications !== false,

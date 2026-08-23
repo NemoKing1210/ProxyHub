@@ -1,4 +1,4 @@
-import { safeStorage } from 'electron'
+import { app, safeStorage } from 'electron'
 
 const SECRET_KEYS = {
   githubToken: 'sync.githubToken',
@@ -29,8 +29,18 @@ let storePromise: Promise<{
 async function getSecretStore() {
   if (!storePromise) {
     storePromise = import('electron-store').then(({ default: Store }) => {
+      const cwd = (() => {
+        try {
+          return app.getPath('userData')
+        } catch {
+          return undefined
+        }
+      })()
+
       return new Store<SecretStoreSchema>({
         name: 'proxyhub-secrets',
+        ...(cwd ? { cwd } : {}),
+        clearInvalidConfig: false,
         defaults: {}
       })
     })
@@ -38,6 +48,7 @@ async function getSecretStore() {
 
   return storePromise
 }
+
 
 export function isSafeStorageAvailable(): boolean {
   return safeStorage.isEncryptionAvailable()

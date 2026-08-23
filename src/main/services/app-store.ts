@@ -1,3 +1,4 @@
+import { app } from 'electron'
 import type { ProxyGroup } from '@shared/types/proxy-group'
 import type { Proxy } from '@shared/types/proxy'
 import { DEFAULT_SETTINGS, normalizeSettings, type AppSettings } from '@shared/types/settings'
@@ -22,8 +23,9 @@ interface StoreInstance {
   set: <K extends keyof StoreSchema>(key: K, value: StoreSchema[K]) => void
 }
 
-const storeOptions = {
+const baseStoreOptions = {
   name: 'proxyhub',
+  clearInvalidConfig: false,
   defaults: {
     proxies: [] as Proxy[],
     groups: [] as ProxyGroup[],
@@ -31,14 +33,27 @@ const storeOptions = {
     sync: DEFAULT_SYNC_CONFIG,
     syncStatus: DEFAULT_SYNC_STATUS
   }
-}
+} as const
 
 let storePromise: Promise<StoreInstance> | null = null
 
 async function getStore(): Promise<StoreInstance> {
   if (!storePromise) {
     storePromise = import('electron-store').then(({ default: Store }) => {
-      return new Store<StoreSchema>(storeOptions)
+      // Explicit cwd inside userData ensures the file lives in %APPDATA%/ProxyHub
+      // and survives appId/productName changes and portable vs installer builds.
+      const cwd = (() => {
+        try {
+          return app.getPath('userData')
+        } catch {
+          return undefined
+        }
+      })()
+
+      return new Store<StoreSchema>({
+        ...baseStoreOptions,
+        ...(cwd ? { cwd } : {})
+      })
     })
   }
 

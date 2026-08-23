@@ -314,7 +314,6 @@ function AutoCheckSection({
 
       <SettingsSwitchSection
         icon={<NotificationsOutlinedIcon fontSize="small" />}
-        accent="info"
         title={t('settings.autoCheckNotifications')}
         description={t('settings.autoCheckNotificationsHint')}
         checked={notifications}
