@@ -17,9 +17,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '@shared/types/proxy'
 import { buildProxyUrl, formatProxyAddress } from '@shared/utils/proxy-format'
-import { buildProxyShareChannels, type ShareChannelNetwork } from '../utils/proxy-share-channels'
-import { trySystemShare } from '../utils/share-proxy'
-import CopyableField from './ui/CopyableField'
+import { buildProxyShareChannels, type ShareChannelNetwork } from '../../utils/proxy-share-channels'
+import { trySystemShare } from '../../utils/share-proxy'
+import CopyableField from '../ui/CopyableField'
 import ShareNetworkIcon from './ShareNetworkIcon'
 
 interface ProxyShareDialogProps {

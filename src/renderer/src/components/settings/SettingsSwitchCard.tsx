@@ -1,7 +1,7 @@
 import { Box, Switch, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import type { ReactNode } from 'react'
-import { MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint } from '../theme'
+import { MD3_DURATION, MD3_EASING, surfaceContainer, surfaceTint } from '../../theme'
 
 interface SettingsSwitchCardProps {
   icon: ReactNode

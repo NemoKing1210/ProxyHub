@@ -32,7 +32,7 @@ import {
   getEnabledCheckDomains
 } from '@shared/types/settings'
 import ContentSection from '../../components/ui/ContentSection'
-import SettingsCardList from '../../components/SettingsCardList'
+import SettingsCardList from '../../components/settings/SettingsCardList'
 import { useSettingsStore } from '../../store/settingsStore'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../theme'
 import { normalizeDomainInput, validateDomain } from '../../validation/proxySchema'

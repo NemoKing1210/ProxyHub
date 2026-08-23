@@ -14,7 +14,7 @@ import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContentSection from './ui/ContentSection'
-import SettingsCardList from './SettingsCardList'
+import SettingsCardList from './settings/SettingsCardList'
 import { getPalette, withThemeAlpha } from '../theme'
 
 interface SettingsDangerSectionProps {

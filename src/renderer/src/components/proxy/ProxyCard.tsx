@@ -66,7 +66,7 @@ import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
 import ProxyGroupAvatar from '../group/ProxyGroupAvatar'
 import ProxyIconPickerPopover from './ProxyIconPickerPopover'
-import ProxyShareDialog from '../ProxyShareDialog'
+import ProxyShareDialog from '../share/ProxyShareDialog'
 import ProxyStatusChip from './ProxyStatusChip'
 
 interface ProxyCardProps {

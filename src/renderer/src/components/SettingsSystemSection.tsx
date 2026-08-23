@@ -5,8 +5,8 @@ import TabOutlinedIcon from '@mui/icons-material/TabOutlined'
 import { Box, Collapse } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import ContentSection from './ui/ContentSection'
-import SettingsCardList from './SettingsCardList'
-import SettingsSwitchCard from './SettingsSwitchCard'
+import SettingsCardList from './settings/SettingsCardList'
+import SettingsSwitchCard from './settings/SettingsSwitchCard'
 
 interface SettingsSystemSectionProps {
   trayEnabled: boolean

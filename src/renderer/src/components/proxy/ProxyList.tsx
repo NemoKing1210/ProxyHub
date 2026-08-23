@@ -88,7 +88,7 @@ import ProxyDropZone from './ProxyDropZone'
 import ProxyListFilters from './ProxyListFilters'
 import ProxyListSearch from './ProxyListSearch'
 import ProxyListSort from './ProxyListSort'
-import AutoCheckCountdownBadge from '../AutoCheckCountdownBadge'
+import AutoCheckCountdownBadge from '../check/AutoCheckCountdownBadge'
 
 function toProxyInput(values: ProxyFormValues): ProxyInput {
   return {

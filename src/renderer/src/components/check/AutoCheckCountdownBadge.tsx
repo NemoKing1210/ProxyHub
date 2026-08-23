@@ -1,7 +1,7 @@
 import { Chip } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useAutoCheckCountdown } from '../hooks/useAutoCheckCountdown'
-import { surfaceContainer } from '../theme'
+import { useAutoCheckCountdown } from '../../hooks/useAutoCheckCountdown'
+import { surfaceContainer } from '../../theme'
 
 interface AutoCheckCountdownBadgeProps {
   enabled: boolean

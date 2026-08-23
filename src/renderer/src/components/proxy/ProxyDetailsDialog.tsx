@@ -32,7 +32,7 @@ import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyConnectivityResultCard from './ProxyConnectivityResult'
 import ProxyDomainResults from './ProxyDomainResults'
 import ProxyErrorPopover from './ProxyErrorPopover'
-import ProxyShareDialog from '../ProxyShareDialog'
+import ProxyShareDialog from '../share/ProxyShareDialog'
 import ProxyStatusChip from './ProxyStatusChip'
 
 interface ProxyDetailsDialogProps {

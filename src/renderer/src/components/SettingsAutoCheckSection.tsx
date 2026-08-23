@@ -24,10 +24,10 @@ import {
   type AutoCheckScope
 } from '@shared/types/settings'
 import ContentSection from './ui/ContentSection'
-import SettingsCardList from './SettingsCardList'
-import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'
+import SettingsCardList from './settings/SettingsCardList'
+import AutoCheckCountdownBadge from './check/AutoCheckCountdownBadge'
 import ProxyGroupAvatar from './group/ProxyGroupAvatar'
-import SettingsSwitchCard from './SettingsSwitchCard'
+import SettingsSwitchCard from './settings/SettingsSwitchCard'
 import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../theme'
 
 const INTERVAL_MARKS = [
