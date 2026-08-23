@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 import type { BackupExportKind } from '@shared/types/backup'
 import type { Proxy } from '@shared/types/proxy'
 import type { ProxyGroup } from '@shared/types/proxy-group'
-import BackupProxySelectionList from './BackupProxySelectionList'
+import BackupProxySelectionList from '../../../components/BackupProxySelectionList'
 
 interface BackupExportProxiesDialogProps {
   open: boolean

@@ -9,7 +9,7 @@ import { isWindows } from '../../utils/platform'
 import PageTransition from './PageTransition'
 import AppNavigation from './AppNavigation'
 import AppTitleBar from './AppTitleBar'
-import SyncActivityIndicator from '../SyncActivityIndicator'
+import SyncActivityIndicator from './SyncActivityIndicator'
 import TrayNavigationSync from '../../app/bootstrap/TrayNavigationSync'
 
 function AppLayout(): React.JSX.Element {

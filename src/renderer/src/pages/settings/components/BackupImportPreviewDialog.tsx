@@ -18,14 +18,13 @@ import { useTranslation } from 'react-i18next'
 import type { BackupImportMode, BackupPreview } from '@shared/types/backup'
 import { mapBackupRecordsToGroups, mapBackupRecordsToProxies } from '@shared/utils/backup'
 import { formatDateTime } from '@shared/utils/datetime'
-import { outlineVariant, surfaceContainer } from '../theme'
-import BackupProxySelectionList from './BackupProxySelectionList'
-import { BackupUnlockSection } from './BackupPasswordFields'
+import { outlineVariant, surfaceContainer } from '../../../theme'
+import BackupProxySelectionList from '../../../components/BackupProxySelectionList'
+import { BackupUnlockSection } from '../../../components/BackupPasswordFields'
 
-interface SyncPullPreviewDialogProps {
+interface BackupImportPreviewDialogProps {
   open: boolean
   preview: BackupPreview | null
-  sessionId: string | null
   importPassword: string
   onImportPasswordChange: (value: string) => void
   onPreviewChange: (preview: BackupPreview) => void
@@ -59,32 +58,31 @@ function PreviewRow({ label, value }: PreviewRowProps): React.JSX.Element {
   )
 }
 
-function resolveSyncError(
+function resolveBackupError(
   t: (key: string, options?: Record<string, unknown>) => string,
   error: { code: string; message: string }
 ): string {
-  const messageKey = `settings.sync.errors.${error.code}`
+  const messageKey = `settings.backup.errors.${error.code}`
   const localized = t(messageKey, { defaultValue: '' })
 
   return (
     localized ||
-    t('settings.sync.pullError', {
+    t('settings.backup.importError', {
       message: error.message
     })
   )
 }
 
-function SyncPullPreviewDialog({
+function BackupImportPreviewDialog({
   open,
   preview,
-  sessionId,
   importPassword,
   onImportPasswordChange,
   onPreviewChange,
   onClose,
   onError,
   onConfirm
-}: SyncPullPreviewDialogProps): React.JSX.Element {
+}: BackupImportPreviewDialogProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
   const [importMode, setImportMode] = useState<BackupImportMode>('merge')
@@ -114,7 +112,7 @@ function SyncPullPreviewDialog({
     setIsImporting(false)
     setUnlockError(undefined)
     setSelectedIds(new Set(preview.backupProxies.map((proxy) => proxy.id)))
-  }, [open, preview?.exportedAt, preview, isLocked])
+  }, [open, preview?.filePath, preview, isLocked])
 
   useEffect(() => {
     if (!open) {
@@ -132,7 +130,7 @@ function SyncPullPreviewDialog({
   }
 
   const handleUnlock = async (): Promise<void> => {
-    if (!preview || !sessionId || isUnlocking) {
+    if (!preview || isUnlocking) {
       return
     }
 
@@ -140,16 +138,19 @@ function SyncPullPreviewDialog({
     setUnlockError(undefined)
 
     try {
-      const response = await window.api.unlockSyncPullPreview(sessionId, importPassword)
+      const response = await window.api.unlockBackupPreview({
+        filePath: preview.filePath,
+        password: importPassword
+      })
 
-      if (!response.ok) {
-        setUnlockError(resolveSyncError(t, response.error))
+      if ('error' in response) {
+        setUnlockError(resolveBackupError(t, response.error))
         return
       }
 
       onPreviewChange(response.preview)
     } catch {
-      onError(t('settings.sync.pullError', { message: t('settings.sync.errors.unknown') }))
+      onError(t('settings.backup.importError', { message: t('settings.backup.errors.unknown') }))
     } finally {
       setIsUnlocking(false)
     }
@@ -196,7 +197,7 @@ function SyncPullPreviewDialog({
         }
       }}
     >
-      <DialogTitle>{t('settings.sync.pullPreviewTitle')}</DialogTitle>
+      <DialogTitle>{t('settings.backup.previewTitle')}</DialogTitle>
 
       <DialogContent>
         {preview && (
@@ -204,7 +205,7 @@ function SyncPullPreviewDialog({
             <Typography variant="body2" color="text.secondary">
               {isLocked
                 ? t('settings.backup.previewDescriptionEncrypted')
-                : t('settings.sync.pullPreviewDescription')}
+                : t('settings.backup.previewDescription')}
             </Typography>
 
             <Box
@@ -395,7 +396,7 @@ function SyncPullPreviewDialog({
             disabled={!preview || isImporting || !canImport}
             startIcon={isImporting ? <CircularProgress size={18} color="inherit" /> : undefined}
           >
-            {t('settings.sync.pullConfirm')}
+            {t('settings.backup.previewConfirm')}
           </Button>
         )}
       </DialogActions>
@@ -403,4 +404,4 @@ function SyncPullPreviewDialog({
   )
 }
 
-export default SyncPullPreviewDialog
+export default BackupImportPreviewDialog

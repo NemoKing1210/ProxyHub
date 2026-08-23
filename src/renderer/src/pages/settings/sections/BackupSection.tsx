@@ -23,14 +23,14 @@ import type { BackupExportKind, BackupImportMode, BackupPreview } from '@shared/
 import type { ProxyListImportFormat, ProxyListImportPreview } from '@shared/types/proxy-import'
 import type { Proxy } from '@shared/types/proxy'
 import type { ProxyGroup } from '@shared/types/proxy-group'
-import BackupExportProxiesDialog from '../../../components/BackupExportProxiesDialog'
-import BackupImportPreviewDialog from '../../../components/BackupImportPreviewDialog'
+import BackupExportProxiesDialog from '../components/BackupExportProxiesDialog'
+import BackupImportPreviewDialog from '../components/BackupImportPreviewDialog'
 import BackupPasswordFields, {
   validateBackupExportPassword
 } from '../../../components/BackupPasswordFields'
 import ContentSection from '../../../components/ui/ContentSection'
 import SettingsCardList from '../../../components/settings/SettingsCardList'
-import CsvImportPreviewDialog from '../components/CsvImportPreviewDialog'
+import CsvImportPreviewDialog from './CsvImportPreviewDialog'
 import { surfaceContainer, withThemeAlpha } from '../../../theme'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
