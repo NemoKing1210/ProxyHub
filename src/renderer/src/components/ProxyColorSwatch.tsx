@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
-import { PROXY_COLOR_VALUES } from '../../../shared/constants/proxy-colors'
-import type { ProxyColorId } from '../../../shared/types/proxy'
+import { PROXY_COLOR_VALUES } from '@shared/constants/proxy-colors'
+import type { ProxyColorId } from '@shared/types/proxy'
 
 interface ProxyColorSwatchProps {
   colorId: ProxyColorId

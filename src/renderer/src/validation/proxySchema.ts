@@ -1,16 +1,16 @@
 import { z } from 'zod'
 import type { TFunction } from 'i18next'
-import type { CheckDomainEntry } from '../../../shared/types/settings'
-import { getCheckDomainNames } from '../../../shared/types/settings'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
-import type { Proxy } from '../../../shared/types/proxy'
+import type { CheckDomainEntry } from '@shared/types/settings'
+import { getCheckDomainNames } from '@shared/types/settings'
+import type { ProxyGroup } from '@shared/types/proxy-group'
+import type { Proxy } from '@shared/types/proxy'
 import {
   PROXY_ANONYMITY_LEVELS,
   PROXY_COLOR_IDS,
   PROXY_ICON_FORM_VALUES
-} from '../../../shared/types/proxy'
-import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
-import { isValidMtprotoSecret } from '../../../shared/utils/proxy-format'
+} from '@shared/types/proxy'
+import { findDuplicateProxy } from '@shared/utils/proxy-identity'
+import { isValidMtprotoSecret } from '@shared/utils/proxy-format'
 
 const countryCodePattern = /^[A-Za-z]{2}$/
 

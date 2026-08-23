@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import type { ProxyGroup } from '@shared/types/proxy-group'
 
 interface ProxyGroupClearConfirmDialogProps {
   open: boolean

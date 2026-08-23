@@ -1,4 +1,4 @@
-import type { AppNotificationPayload } from '../../../shared/types/api'
+import type { AppNotificationPayload } from '@shared/types/api'
 import { useSettingsStore } from '../store/settingsStore'
 import { useToastStore, type Toast } from '../store/toastStore'
 

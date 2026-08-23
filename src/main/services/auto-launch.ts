@@ -1,5 +1,5 @@
 import { app } from 'electron'
-import type { AppSettings } from '../../shared/types/settings'
+import type { AppSettings } from '@shared/types/settings'
 
 export function syncLaunchAtLoginFromSettings(settings: AppSettings): void {
   if (!app.isPackaged) {

@@ -1,4 +1,4 @@
-import type { SyncProviderType } from '../../../shared/types/sync'
+import type { SyncProviderType } from '@shared/types/sync'
 import { githubGistProvider } from './providers/github-gist'
 import { googleDriveProvider } from './providers/google-drive'
 import type { SyncProvider } from './providers/types'

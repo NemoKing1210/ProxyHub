@@ -7,7 +7,7 @@ import {
   type ProxyListViewState,
   type ProxySortDirection,
   type ProxySortField
-} from '../../../shared/types/proxy-list-view'
+} from '@shared/types/proxy-list-view'
 import { useSettingsStore } from '../store/settingsStore'
 
 interface ProxyListViewActions {

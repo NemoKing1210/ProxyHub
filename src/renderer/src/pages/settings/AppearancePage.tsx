@@ -28,7 +28,7 @@ import {
   type ProxyCardViewMode,
   type ThemeMode,
   type ToastPosition
-} from '../../../../shared/types/settings'
+} from '@shared/types/settings'
 import ContentSection from '../../components/ContentSection'
 import LanguageFlag from '../../components/LanguageFlag'
 import SettingsCardList from '../../components/SettingsCardList'

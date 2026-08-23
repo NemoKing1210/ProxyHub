@@ -2,7 +2,7 @@ import PublicIcon from '@mui/icons-material/Public'
 import { Box } from '@mui/material'
 import { hasFlag } from 'country-flag-icons'
 import * as Flags from 'country-flag-icons/react/3x2'
-import { UNKNOWN_COUNTRY_CODE } from '../../../shared/constants/proxy-countries'
+import { UNKNOWN_COUNTRY_CODE } from '@shared/constants/proxy-countries'
 
 interface CountryFlagProps {
   countryCode: string

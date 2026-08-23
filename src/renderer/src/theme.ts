@@ -6,9 +6,9 @@ import {
   lighten,
   type Theme
 } from '@mui/material/styles'
-import type { ThemeMode } from '../../shared/types/settings'
-import { ACCENT_COLOR_DEFAULT } from '../../shared/types/settings'
-import { resolveColorScheme } from '../../shared/theme/resolve-color-scheme'
+import type { ThemeMode } from '@shared/types/settings'
+import { ACCENT_COLOR_DEFAULT } from '@shared/types/settings'
+import { resolveColorScheme } from '@shared/theme/resolve-color-scheme'
 import { getPalette, withThemeAlpha } from './theme/palette'
 import { MD3_DURATION, MD3_EASING } from './theme/motion'
 

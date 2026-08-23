@@ -1,5 +1,5 @@
 import SettingsAutoCheckSection from '../../components/SettingsAutoCheckSection'
-import type { AutoCheckScope } from '../../../../shared/types/settings'
+import type { AutoCheckScope } from '@shared/types/settings'
 import { useGroupStore } from '../../store/groupStore'
 import { useProxyStore } from '../../store/proxyStore'
 import { useSettingsStore } from '../../store/settingsStore'

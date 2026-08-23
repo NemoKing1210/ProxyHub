@@ -1,4 +1,4 @@
-import { DEFAULT_PROXY_ICON_ID, type ProxyIconId } from '../../../shared/types/proxy'
+import { DEFAULT_PROXY_ICON_ID, type ProxyIconId } from '@shared/types/proxy'
 import CountryFlag from './CountryFlag'
 import ProxyIcon from './ProxyIcon'
 

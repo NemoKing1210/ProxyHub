@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BACKUP_MIN_PASSWORD_LENGTH } from '../../../shared/constants/backup-crypto'
+import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
 interface BackupPasswordFieldsProps {
   enabled: boolean

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
-import type { Proxy, ProxyCheckProgress, ProxyInput } from '../../../shared/types/proxy'
-import type { ProxyCheckOptions } from '../../../shared/types/settings'
-import { applyCheckResult } from '../../../shared/utils/proxy-check-apply'
+import type { Proxy, ProxyCheckProgress, ProxyInput } from '@shared/types/proxy'
+import type { ProxyCheckOptions } from '@shared/types/settings'
+import { applyCheckResult } from '@shared/utils/proxy-check-apply'
 import {
   createCheckingConnectivity,
   createPendingDomainChecks,
@@ -9,13 +9,13 @@ import {
   resolveProxyStatus,
   resolveProxyStatusFromDomainChecks,
   upsertDomainCheck
-} from '../../../shared/utils/proxy-check-results'
-import { findDuplicateProxy } from '../../../shared/utils/proxy-identity'
-import { skipsDomainChecks } from '../../../shared/utils/proxy-format'
-import { filterEnabledProxies, isProxyEnabled } from '../../../shared/utils/proxy-enabled'
+} from '@shared/utils/proxy-check-results'
+import { findDuplicateProxy } from '@shared/utils/proxy-identity'
+import { skipsDomainChecks } from '@shared/utils/proxy-format'
+import { filterEnabledProxies, isProxyEnabled } from '@shared/utils/proxy-enabled'
 import { useSettingsStore } from './settingsStore'
 import { useAutoCheckStore } from './autoCheckStore'
-import { getEnabledCheckDomains } from '../../../shared/types/settings'
+import { getEnabledCheckDomains } from '@shared/types/settings'
 import {
   cancelDebouncedPersist,
   flushDebouncedPersist,

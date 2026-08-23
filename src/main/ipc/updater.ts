@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import type { AppUpdateState } from '../../shared/types/updater'
+import type { AppUpdateState } from '@shared/types/updater'
 import {
   checkForUpdates,
   downloadUpdate,

@@ -1,8 +1,8 @@
 import { BrowserWindow, ipcMain, type WebContents } from 'electron'
-import type { Proxy, ProxyCheckProgress } from '../../shared/types/proxy'
-import type { ProxyCheckOptions } from '../../shared/types/settings'
-import type { ProxyGroup } from '../../shared/types/proxy-group'
-import { createThrottledProgressEmitter } from '../../shared/utils/proxy-progress-throttle'
+import type { Proxy, ProxyCheckProgress } from '@shared/types/proxy'
+import type { ProxyCheckOptions } from '@shared/types/settings'
+import type { ProxyGroup } from '@shared/types/proxy-group'
+import { createThrottledProgressEmitter } from '@shared/utils/proxy-progress-throttle'
 import { getGroups, getProxies, saveGroups, saveProxies } from '../services/app-store'
 import {
   beginCancellableCheck,

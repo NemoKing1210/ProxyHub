@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import type { ProxyGroup, ProxyGroupInput } from '../../../shared/types/proxy-group'
-import { findDuplicateGroupName } from '../../../shared/utils/proxy-group-identity'
+import type { ProxyGroup, ProxyGroupInput } from '@shared/types/proxy-group'
+import { findDuplicateGroupName } from '@shared/utils/proxy-group-identity'
 import { fetchGroups, persistGroups } from '../utils/groups-api'
 import { notifySyncDataChange } from '../utils/sync-on-change'
 import { useProxyStore } from './proxyStore'

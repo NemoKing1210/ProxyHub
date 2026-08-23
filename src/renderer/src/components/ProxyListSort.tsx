@@ -6,7 +6,7 @@ import {
   PROXY_SORT_FIELDS,
   type ProxySortDirection,
   type ProxySortField
-} from '../../../shared/types/proxy-list-view'
+} from '@shared/types/proxy-list-view'
 interface ProxyListSortProps {
   sortField: ProxySortField
   sortDirection: ProxySortDirection

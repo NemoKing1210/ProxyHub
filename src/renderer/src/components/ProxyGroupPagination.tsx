@@ -30,7 +30,11 @@ function ProxyGroupPagination({
         pt: 0.5
       }}
     >
-      <Typography variant="caption" color="text.secondary" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ fontVariantNumeric: 'tabular-nums' }}
+      >
         {t('proxyGroup.pageInfo', { start: rangeStart, end: rangeEnd, total })}
       </Typography>
 

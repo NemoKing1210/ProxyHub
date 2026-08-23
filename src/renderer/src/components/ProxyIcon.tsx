@@ -11,8 +11,8 @@ import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined'
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined'
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined'
 import type { SvgIconProps } from '@mui/material'
-import { DEFAULT_PROXY_ICON_ID, type ProxyIconId } from '../../../shared/types/proxy'
-import { resolveProxyIconId } from '../../../shared/utils/proxy-icons'
+import { DEFAULT_PROXY_ICON_ID, type ProxyIconId } from '@shared/types/proxy'
+import { resolveProxyIconId } from '@shared/utils/proxy-icons'
 
 const ICON_COMPONENTS: Record<ProxyIconId, typeof RouterOutlinedIcon> = {
   router: RouterOutlinedIcon,

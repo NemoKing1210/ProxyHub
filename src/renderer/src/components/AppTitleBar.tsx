@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
-import { TITLE_BAR_HEIGHT } from '../../../shared/theme/title-bar'
+import { TITLE_BAR_HEIGHT } from '@shared/theme/title-bar'
 import { getPalette } from '../theme'
 import AppNavigation from './AppNavigation'
 import AppWindowControls from './AppWindowControls'

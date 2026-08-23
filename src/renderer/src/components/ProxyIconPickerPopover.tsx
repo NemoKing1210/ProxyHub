@@ -4,7 +4,7 @@ import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import { Box, IconButton, Popover, Tooltip, Typography } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import { PROXY_ICON_IDS, type ProxyIconId } from '../../../shared/types/proxy'
+import { PROXY_ICON_IDS, type ProxyIconId } from '@shared/types/proxy'
 import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyIcon from './ProxyIcon'
 

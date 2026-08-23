@@ -10,7 +10,7 @@ import type {
   BackupParseErrorCode,
   BackupPreviewResponse,
   BackupUnlockPreviewRequest
-} from '../../shared/types/backup'
+} from '@shared/types/backup'
 import {
   BackupParseError,
   applyBackupImport,
@@ -19,7 +19,7 @@ import {
   isEncryptedBackupFile,
   parseBackupEnvelopeFromContent,
   resolveBackupExportProxies
-} from '../../shared/utils/backup'
+} from '@shared/utils/backup'
 import { createBackupContent, loadBackupFile, readAppVersion } from '../services/backup-content'
 import {
   getGroups,

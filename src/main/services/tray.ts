@@ -3,9 +3,9 @@ import icon from '../../../resources/icon.png?asset'
 import {
   formatTrayProxyMenuPrimary,
   formatTrayProxyMenuSecondary
-} from '../../shared/utils/tray-proxy-label'
-import { getTrayMenuStrings } from '../../shared/i18n/tray-menu'
-import { getFavoriteProxies } from '../../shared/utils/favorite-proxies'
+} from '@shared/utils/tray-proxy-label'
+import { getTrayMenuStrings } from '@shared/i18n/tray-menu'
+import { getFavoriteProxies } from '@shared/utils/favorite-proxies'
 import { getProxies, getSettings } from './app-store'
 import { openProxyFromTray, showMainWindow } from './main-window'
 import {

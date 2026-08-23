@@ -2,10 +2,10 @@ import {
   GOOGLE_DRIVE_API_BASE,
   GOOGLE_DRIVE_SYNC_FILENAME,
   GOOGLE_DRIVE_UPLOAD_BASE
-} from '../../../../shared/constants/sync-google-drive'
-import type { SyncConfig } from '../../../../shared/types/sync'
-import { isValidDriveRemoteId } from '../../../../shared/utils/sync-remote-id'
-import { resolveSyncRemoteId } from '../../../../shared/utils/sync-config'
+} from '@shared/constants/sync-google-drive'
+import type { SyncConfig } from '@shared/types/sync'
+import { isValidDriveRemoteId } from '@shared/utils/sync-remote-id'
+import { resolveSyncRemoteId } from '@shared/utils/sync-config'
 import type { SyncSecrets } from '../../sync-secrets'
 import { resolveGoogleAccessToken } from '../google-oauth'
 import { SyncProviderError } from './sync-errors'

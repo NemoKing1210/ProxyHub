@@ -7,8 +7,8 @@ import {
   GOOGLE_OAUTH_REDIRECT_PATH,
   GOOGLE_OAUTH_TIMEOUT_MS,
   GOOGLE_OAUTH_TOKEN_URL
-} from '../../../shared/constants/sync-google-drive'
-import type { SyncError } from '../../../shared/types/sync'
+} from '@shared/constants/sync-google-drive'
+import type { SyncError } from '@shared/types/sync'
 import { readGoogleOAuthClientIdFromEnv } from '../../config/google-oauth-env'
 import { saveGoogleOAuthTokens, type GoogleOAuthTokens } from '../sync-secrets'
 import { SyncProviderError, toSyncError } from './providers/sync-errors'

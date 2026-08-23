@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import type { SyncPublicState } from '../../../shared/types/sync'
+import type { SyncPublicState } from '@shared/types/sync'
 import { useProxyStore } from '../store/proxyStore'
 import { pushSyncWithActivity } from '../utils/sync-push'
 

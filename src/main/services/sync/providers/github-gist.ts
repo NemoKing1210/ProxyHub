@@ -2,9 +2,9 @@ import {
   GITHUB_GIST_API_BASE,
   SYNC_GIST_DESCRIPTION,
   SYNC_GIST_FILENAME
-} from '../../../../shared/constants/sync'
-import { resolveSyncRemoteId } from '../../../../shared/utils/sync-config'
-import { isValidGistRemoteId } from '../../../../shared/utils/sync-remote-id'
+} from '@shared/constants/sync'
+import { resolveSyncRemoteId } from '@shared/utils/sync-config'
+import { isValidGistRemoteId } from '@shared/utils/sync-remote-id'
 import type { SyncSecrets } from '../../sync-secrets'
 import { SyncProviderError } from './sync-errors'
 import type { SyncProvider, SyncProviderEnsureResult } from './types'

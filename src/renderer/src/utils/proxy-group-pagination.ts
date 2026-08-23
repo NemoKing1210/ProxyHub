@@ -9,10 +9,7 @@ export interface GroupPaginationState {
   endIndex: number
 }
 
-export function getGroupPagination(
-  totalCount: number,
-  page: number
-): GroupPaginationState {
+export function getGroupPagination(totalCount: number, page: number): GroupPaginationState {
   if (totalCount <= PROXY_GROUP_PAGINATION_THRESHOLD) {
     return {
       needsPagination: false,
@@ -37,7 +34,10 @@ export function getGroupPagination(
   }
 }
 
-export function paginateItems<T>(items: T[], page: number): { visibleItems: T[]; pagination: GroupPaginationState } {
+export function paginateItems<T>(
+  items: T[],
+  page: number
+): { visibleItems: T[]; pagination: GroupPaginationState } {
   const pagination = getGroupPagination(items.length, page)
   const visibleItems = items.slice(pagination.startIndex, pagination.endIndex)
 

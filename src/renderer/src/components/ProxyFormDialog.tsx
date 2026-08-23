@@ -20,9 +20,9 @@ import { useTheme } from '@mui/material/styles'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { findProxyCountry, PROXY_COUNTRIES } from '../../../shared/constants/proxy-countries'
-import type { Proxy, ProxyProtocol } from '../../../shared/types/proxy'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import { findProxyCountry, PROXY_COUNTRIES } from '@shared/constants/proxy-countries'
+import type { Proxy, ProxyProtocol } from '@shared/types/proxy'
+import type { ProxyGroup } from '@shared/types/proxy-group'
 import {
   DEFAULT_PORTS,
   DEFAULT_PROXY_COLOR_ID,
@@ -30,9 +30,9 @@ import {
   PROXY_COLOR_IDS,
   PROXY_ICON_AUTO_VALUE,
   PROXY_ICON_IDS
-} from '../../../shared/types/proxy'
-import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
-import { parseProxyUrl } from '../../../shared/utils/proxy-format'
+} from '@shared/types/proxy'
+import { resolveProxyColorId } from '@shared/utils/proxy-colors'
+import { parseProxyUrl } from '@shared/utils/proxy-format'
 import { getProxyColorStyles } from '../utils/proxy-color-styles'
 import { getListCardRadius } from '../utils/card-list'
 import {

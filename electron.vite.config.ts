@@ -14,13 +14,19 @@ export default defineConfig(({ mode }) => {
       },
       define: {
         'process.env.GOOGLE_OAUTH_CLIENT_ID': JSON.stringify(env.GOOGLE_OAUTH_CLIENT_ID ?? '')
+      },
+      resolve: {
+        alias: {
+          '@shared': resolve('src/shared')
+        }
       }
     },
     preload: {},
     renderer: {
       resolve: {
         alias: {
-          '@renderer': resolve('src/renderer/src')
+          '@renderer': resolve('src/renderer/src'),
+          '@shared': resolve('src/shared')
         }
       },
       plugins: [react()]

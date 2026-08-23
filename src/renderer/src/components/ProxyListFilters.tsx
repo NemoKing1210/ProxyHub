@@ -23,9 +23,9 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { findProxyCountry } from '../../../shared/constants/proxy-countries'
-import { PROXY_ANONYMITY_LEVELS, PROXY_PROTOCOLS } from '../../../shared/types/proxy'
-import type { Proxy, ProxyProtocol } from '../../../shared/types/proxy'
+import { findProxyCountry } from '@shared/constants/proxy-countries'
+import { PROXY_ANONYMITY_LEVELS, PROXY_PROTOCOLS } from '@shared/types/proxy'
+import type { Proxy, ProxyProtocol } from '@shared/types/proxy'
 import {
   DEFAULT_PROXY_LIST_FILTERS,
   MAX_LATENCY_FILTER_DEFAULT_MS,

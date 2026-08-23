@@ -1,10 +1,10 @@
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { app } from 'electron'
-import type { BackupExportKind, BackupFileV1 } from '../../shared/types/backup'
-import type { ProxyGroup } from '../../shared/types/proxy-group'
-import type { Proxy } from '../../shared/types/proxy'
-import type { AppSettings } from '../../shared/types/settings'
+import type { BackupExportKind, BackupFileV1 } from '@shared/types/backup'
+import type { ProxyGroup } from '@shared/types/proxy-group'
+import type { Proxy } from '@shared/types/proxy'
+import type { AppSettings } from '@shared/types/settings'
 import {
   BackupParseError,
   buildBackupPayload,
@@ -14,7 +14,7 @@ import {
   parsePayloadFromString,
   serializeEncryptedBackupFile,
   serializePlainBackupFile
-} from '../../shared/utils/backup'
+} from '@shared/utils/backup'
 import { encryptBackupPayload, decryptBackupPayload } from '../utils/backup-crypto'
 
 export interface BackupContentInput {

@@ -26,9 +26,9 @@ import type {
   ProxyListImportFormat,
   ProxyListImportPreview,
   ProxyListImportPreviewEntry
-} from '../../../shared/types/proxy-import'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
-import { formatProxyAddress } from '../../../shared/utils/proxy-format'
+} from '@shared/types/proxy-import'
+import type { ProxyGroup } from '@shared/types/proxy-group'
+import { formatProxyAddress } from '@shared/utils/proxy-format'
 import { outlineVariant, surfaceContainer } from '../theme'
 import { getProxyProtocolStyles } from '../utils/proxy-protocol-styles'
 import CountryFlag from './CountryFlag'

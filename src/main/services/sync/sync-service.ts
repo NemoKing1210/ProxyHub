@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import type { BackupFileV1, BackupPreview } from '../../../shared/types/backup'
+import type { BackupFileV1, BackupPreview } from '@shared/types/backup'
 import type {
   SyncError,
   SyncGoogleConnectResult,
@@ -15,17 +15,17 @@ import type {
   SyncLastErrorInfo,
   SyncTestResult,
   SyncProviderType
-} from '../../../shared/types/sync'
-import { isSyncEnabled, resolveSyncRemoteId } from '../../../shared/utils/sync-config'
-import { isValidGistRemoteId } from '../../../shared/utils/sync-remote-id'
+} from '@shared/types/sync'
+import { isSyncEnabled, resolveSyncRemoteId } from '@shared/utils/sync-config'
+import { isValidGistRemoteId } from '@shared/utils/sync-remote-id'
 import {
   applyBackupImport,
   buildBackupPreview,
   buildLockedBackupPreview,
   isEncryptedBackupFile,
   parseBackupEnvelopeFromContent
-} from '../../../shared/utils/backup'
-import { BackupParseError } from '../../../shared/utils/backup'
+} from '@shared/utils/backup'
+import { BackupParseError } from '@shared/utils/backup'
 import {
   getGroups,
   getProxies,

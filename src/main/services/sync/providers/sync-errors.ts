@@ -1,4 +1,4 @@
-import type { SyncError, SyncErrorCode } from '../../../../shared/types/sync'
+import type { SyncError, SyncErrorCode } from '@shared/types/sync'
 
 export class SyncProviderError extends Error {
   readonly code: SyncErrorCode

@@ -19,17 +19,10 @@ import { useTheme } from '@mui/material/styles'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type {
-  BackupExportKind,
-  BackupImportMode,
-  BackupPreview
-} from '../../../shared/types/backup'
-import type {
-  ProxyListImportFormat,
-  ProxyListImportPreview
-} from '../../../shared/types/proxy-import'
-import type { Proxy } from '../../../shared/types/proxy'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import type { BackupExportKind, BackupImportMode, BackupPreview } from '@shared/types/backup'
+import type { ProxyListImportFormat, ProxyListImportPreview } from '@shared/types/proxy-import'
+import type { Proxy } from '@shared/types/proxy'
+import type { ProxyGroup } from '@shared/types/proxy-group'
 import BackupExportProxiesDialog from './BackupExportProxiesDialog'
 import BackupImportPreviewDialog from './BackupImportPreviewDialog'
 import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
@@ -37,7 +30,7 @@ import ContentSection from './ContentSection'
 import SettingsCardList from './SettingsCardList'
 import CsvImportPreviewDialog from './CsvImportPreviewDialog'
 import { surfaceContainer, withThemeAlpha } from '../theme'
-import { BACKUP_MIN_PASSWORD_LENGTH } from '../../../shared/constants/backup-crypto'
+import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
 interface SettingsBackupSectionProps {
   proxies: Proxy[]

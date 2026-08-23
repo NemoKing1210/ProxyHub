@@ -27,18 +27,13 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GITHUB_CREATE_TOKEN_URL } from '../../../shared/constants/sync'
-import { SYNC_INTERVAL_MAX, SYNC_INTERVAL_MIN } from '../../../shared/constants/sync'
-import type { BackupImportMode, BackupPreview } from '../../../shared/types/backup'
-import type {
-  SyncConfig,
-  SyncProviderType,
-  SyncPublicState,
-  SyncScope
-} from '../../../shared/types/sync'
-import { DEFAULT_SYNC_CONFIG, resolveSyncRemoteId } from '../../../shared/utils/sync-config'
-import { resolveLastSyncAt } from '../../../shared/utils/sync-status'
-import { formatDateTime } from '../../../shared/utils/datetime'
+import { GITHUB_CREATE_TOKEN_URL } from '@shared/constants/sync'
+import { SYNC_INTERVAL_MAX, SYNC_INTERVAL_MIN } from '@shared/constants/sync'
+import type { BackupImportMode, BackupPreview } from '@shared/types/backup'
+import type { SyncConfig, SyncProviderType, SyncPublicState, SyncScope } from '@shared/types/sync'
+import { DEFAULT_SYNC_CONFIG, resolveSyncRemoteId } from '@shared/utils/sync-config'
+import { resolveLastSyncAt } from '@shared/utils/sync-status'
+import { formatDateTime } from '@shared/utils/datetime'
 import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
 import ContentSection from './ContentSection'
 import SettingsCardList from './SettingsCardList'
@@ -48,7 +43,7 @@ import SyncStatusSection from './SyncStatusSection'
 import SyncPullPreviewDialog from './SyncPullPreviewDialog'
 import { surfaceContainer, withThemeAlpha } from '../theme'
 import { pushSyncWithActivity } from '../utils/sync-push'
-import { BACKUP_MIN_PASSWORD_LENGTH } from '../../../shared/constants/backup-crypto'
+import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
 interface SettingsSyncSectionProps {
   onSaved: () => void

@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import { memo, useCallback } from 'react'
-import type { ProxyIconId } from '../../../shared/types/proxy'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
-import type { ProxyCardViewMode } from '../../../shared/types/settings'
+import type { ProxyIconId } from '@shared/types/proxy'
+import type { ProxyGroup } from '@shared/types/proxy-group'
+import type { ProxyCardViewMode } from '@shared/types/settings'
 import {
   listItemTransition,
   listLayoutTransition,

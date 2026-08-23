@@ -5,7 +5,7 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import { Chip, type ChipProps } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import type { ProxyStatus } from '../../../shared/types/proxy'
+import type { ProxyStatus } from '@shared/types/proxy'
 import { getPalette, withThemeAlpha } from '../theme'
 
 interface ProxyStatusChipProps {

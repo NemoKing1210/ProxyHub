@@ -63,9 +63,9 @@ ProxyHub helps you validate proxy servers quickly from a single desktop interfac
 
 Pre-built **Windows** installers are available on **[GitHub Releases](https://github.com/NemoKing1210/ProxyHub/releases)**.
 
-| Platform    | Installer                                                                 |
-| ----------- | ------------------------------------------------------------------------- |
-| **Windows** | `ProxyHub-{version}-setup.exe`                                        |
+| Platform    | Installer                      |
+| ----------- | ------------------------------ |
+| **Windows** | `ProxyHub-{version}-setup.exe` |
 
 > **Note:** Builds are unsigned by default. Windows may show a SmartScreen prompt.
 
@@ -73,11 +73,11 @@ Pre-built **Windows** installers are available on **[GitHub Releases](https://gi
 
 The app is built with Electron and can run on Windows, macOS, and Linux. **Automated release builds and published installers are Windows-only for now.**
 
-| Platform    | Status              | Release builds | Published installers | Notes |
-| ----------- | ------------------- | -------------- | -------------------- | ----- |
-| **Windows** | ✅ Supported        | Yes            | Yes (NSIS `.exe`)    | Primary target; CI release workflow, auto-update |
-| **macOS**   | ⏸ Paused            | No             | No                   | Can be built locally with `npm run build:mac` (DMG + zip) |
-| **Linux**   | ⏸ Paused            | No             | No                   | Can be built locally with `npm run build:linux` (AppImage + deb) |
+| Platform    | Status       | Release builds | Published installers | Notes                                                            |
+| ----------- | ------------ | -------------- | -------------------- | ---------------------------------------------------------------- |
+| **Windows** | ✅ Supported | Yes            | Yes (NSIS `.exe`)    | Primary target; CI release workflow, auto-update                 |
+| **macOS**   | ⏸ Paused     | No             | No                   | Can be built locally with `npm run build:mac` (DMG + zip)        |
+| **Linux**   | ⏸ Paused     | No             | No                   | Can be built locally with `npm run build:linux` (AppImage + deb) |
 
 To build for macOS or Linux from source, see the **[Developer guide](./DEVELOPER.md)**.
 

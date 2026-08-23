@@ -18,7 +18,7 @@ import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'
 import { useSettingsStore } from '../store/settingsStore'
 import { createAppTheme } from '../theme'
-import { RTL_LANGUAGES } from '../../../shared/types/settings'
+import { RTL_LANGUAGES } from '@shared/types/settings'
 
 function ThemeModeSync(): null {
   const themeMode = useSettingsStore((state) => state.settings.theme)

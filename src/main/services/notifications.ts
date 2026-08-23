@@ -1,6 +1,6 @@
 import { Notification } from 'electron'
 import icon from '../../../resources/icon.png?asset'
-import type { AppNotificationPayload } from '../../shared/types/api'
+import type { AppNotificationPayload } from '@shared/types/api'
 import { showMainWindow } from './main-window'
 
 export function showNativeNotification(payload: AppNotificationPayload): boolean {

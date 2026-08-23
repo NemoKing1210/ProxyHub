@@ -1,4 +1,4 @@
-import type { SyncConfig } from '../../../../shared/types/sync'
+import type { SyncConfig } from '@shared/types/sync'
 import type { SyncSecrets } from '../../sync-secrets'
 
 export interface SyncProviderPullResult {

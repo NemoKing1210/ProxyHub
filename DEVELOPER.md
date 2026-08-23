@@ -35,21 +35,21 @@ For **Google Drive sync** in dev builds, copy [`.env.example`](./.env.example) t
 
 ## Scripts
 
-| Command                 | Description                              |
-| ----------------------- | ---------------------------------------- |
-| `npm run dev`           | Start with HMR (`F12` — DevTools)        |
-| `npm start`             | Preview production build                 |
-| `npm run build`         | Type-check + production build            |
-| `npm run build:win`     | Windows installer → `dist/`              |
-| `npm run build:mac`     | macOS installer → `dist/`                |
-| `npm run build:linux`   | Linux AppImage + deb → `dist/`           |
-| `npm run build:unpack`  | Unpacked build (no installer)            |
-| `npm run release:win`   | Build and publish Windows release        |
-| `npm run release:mac`   | Build and publish macOS release          |
-| `npm run release:linux` | Build and publish Linux release          |
-| `npm run typecheck`     | TypeScript checks                        |
-| `npm run lint`          | ESLint                                   |
-| `npm run format`        | Prettier                                 |
+| Command                 | Description                       |
+| ----------------------- | --------------------------------- |
+| `npm run dev`           | Start with HMR (`F12` — DevTools) |
+| `npm start`             | Preview production build          |
+| `npm run build`         | Type-check + production build     |
+| `npm run build:win`     | Windows installer → `dist/`       |
+| `npm run build:mac`     | macOS installer → `dist/`         |
+| `npm run build:linux`   | Linux AppImage + deb → `dist/`    |
+| `npm run build:unpack`  | Unpacked build (no installer)     |
+| `npm run release:win`   | Build and publish Windows release |
+| `npm run release:mac`   | Build and publish macOS release   |
+| `npm run release:linux` | Build and publish Linux release   |
+| `npm run typecheck`     | TypeScript checks                 |
+| `npm run lint`          | ESLint                            |
+| `npm run format`        | Prettier                          |
 
 ## Project structure
 
@@ -111,11 +111,11 @@ The workflow builds **Windows**, **macOS**, and **Linux** in parallel and upload
 
 Artifacts produced:
 
-| Platform  | Files                                                                 |
-| --------- | --------------------------------------------------------------------- |
-| Windows   | `ProxyHub-{version}-setup.exe`                                    |
-| macOS     | `ProxyHub-{version}-x64.dmg`, `ProxyHub-{version}-arm64.dmg`, zip (auto-update) |
-| Linux     | `ProxyHub-{version}-x64.AppImage`, `ProxyHub-{version}-amd64.deb` |
+| Platform | Files                                                                           |
+| -------- | ------------------------------------------------------------------------------- |
+| Windows  | `ProxyHub-{version}-setup.exe`                                                  |
+| macOS    | `ProxyHub-{version}-x64.dmg`, `ProxyHub-{version}-arm64.dmg`, zip (auto-update) |
+| Linux    | `ProxyHub-{version}-x64.AppImage`, `ProxyHub-{version}-amd64.deb`               |
 
 ### Local release (single platform)
 

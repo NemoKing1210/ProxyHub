@@ -17,12 +17,12 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import type { ProxyGroup } from '@shared/types/proxy-group'
 import {
   AUTO_CHECK_INTERVAL_MAX,
   AUTO_CHECK_INTERVAL_MIN,
   type AutoCheckScope
-} from '../../../shared/types/settings'
+} from '@shared/types/settings'
 import ContentSection from './ContentSection'
 import SettingsCardList from './SettingsCardList'
 import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'

@@ -1,4 +1,4 @@
-import type { Proxy } from '../../../shared/types/proxy'
+import type { Proxy } from '@shared/types/proxy'
 import { notifySyncDataChange } from './sync-on-change'
 
 const DEFAULT_DELAY_MS = 500

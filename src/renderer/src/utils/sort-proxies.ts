@@ -1,12 +1,7 @@
-import { findProxyCountry } from '../../../shared/constants/proxy-countries'
-import type {
-  Proxy,
-  ProxyAnonymityLevel,
-  ProxyProtocol,
-  ProxyStatus
-} from '../../../shared/types/proxy'
-import type { ProxySortDirection, ProxySortField } from '../../../shared/types/proxy-list-view'
-import { getProxyDisplayName } from '../../../shared/utils/favorite-proxies'
+import { findProxyCountry } from '@shared/constants/proxy-countries'
+import type { Proxy, ProxyAnonymityLevel, ProxyProtocol, ProxyStatus } from '@shared/types/proxy'
+import type { ProxySortDirection, ProxySortField } from '@shared/types/proxy-list-view'
+import { getProxyDisplayName } from '@shared/utils/favorite-proxies'
 import { getProxyDisplayLatency } from './filter-proxies'
 
 const STATUS_ORDER: Record<ProxyStatus, number> = {

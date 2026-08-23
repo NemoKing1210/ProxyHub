@@ -9,8 +9,8 @@ import type {
   ProxyListImportRequest,
   ProxyListImportResponse,
   ProxyListImportFormat
-} from '../../shared/types/proxy-import'
-import type { Proxy } from '../../shared/types/proxy'
+} from '@shared/types/proxy-import'
+import type { Proxy } from '@shared/types/proxy'
 import {
   applyProxyListImport,
   buildProxyListImportPreviewEntries,
@@ -21,7 +21,7 @@ import {
   parseProxyImportJson,
   parseProxyImportTxt,
   type ParseProxyImportListResult
-} from '../../shared/utils/proxy-import'
+} from '@shared/utils/proxy-import'
 import { getGroups, getProxies, saveProxies } from '../services/app-store'
 import { notifyTrayDataChanged } from './tray'
 

@@ -8,8 +8,8 @@ import {
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Proxy } from '../../../shared/types/proxy'
-import { formatProxyAddress } from '../../../shared/utils/proxy-format'
+import type { Proxy } from '@shared/types/proxy'
+import { formatProxyAddress } from '@shared/utils/proxy-format'
 
 interface ProxyDeleteConfirmDialogProps {
   open: boolean

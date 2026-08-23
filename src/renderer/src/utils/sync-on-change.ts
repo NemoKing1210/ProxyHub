@@ -1,5 +1,5 @@
-import { SYNC_ON_CHANGE_DEBOUNCE_MS } from '../../../shared/constants/sync'
-import type { SyncScope } from '../../../shared/types/sync'
+import { SYNC_ON_CHANGE_DEBOUNCE_MS } from '@shared/constants/sync'
+import type { SyncScope } from '@shared/types/sync'
 import { useProxyStore } from '../store/proxyStore'
 import { pushSyncWithActivity } from './sync-push'
 

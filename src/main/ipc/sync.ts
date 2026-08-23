@@ -10,7 +10,7 @@ import type {
   SyncSaveConfigRequest,
   SyncStartupPullResult,
   SyncTestResult
-} from '../../shared/types/sync'
+} from '@shared/types/sync'
 import {
   applySyncPull,
   connectGoogleDrive,

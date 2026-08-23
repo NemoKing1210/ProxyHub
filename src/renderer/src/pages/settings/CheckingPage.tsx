@@ -30,7 +30,7 @@ import {
   DOMAIN_CHECK_CONCURRENCY_MIN,
   type CheckAllMode,
   getEnabledCheckDomains
-} from '../../../../shared/types/settings'
+} from '@shared/types/settings'
 import ContentSection from '../../components/ContentSection'
 import SettingsCardList from '../../components/SettingsCardList'
 import { useSettingsStore } from '../../store/settingsStore'

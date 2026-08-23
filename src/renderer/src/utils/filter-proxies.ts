@@ -1,18 +1,18 @@
-import type { Proxy } from '../../../shared/types/proxy'
+import type { Proxy } from '@shared/types/proxy'
 import {
   DEFAULT_PROXY_LIST_FILTERS,
   type ProxyActivityFilter,
   type ProxyFavoriteFilter,
   type ProxyListFilters,
   type ProxyStatusFilter
-} from '../../../shared/types/proxy-list-view'
-import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
+} from '@shared/types/proxy-list-view'
+import { isProxyEnabled } from '@shared/utils/proxy-enabled'
 import {
   MAX_LATENCY_FILTER_DEFAULT_MS,
   MAX_LATENCY_FILTER_MAX_MS,
   MAX_LATENCY_FILTER_MIN_MS,
   MAX_LATENCY_FILTER_STEP_MS
-} from '../../../shared/types/proxy-list-view.constants'
+} from '@shared/types/proxy-list-view.constants'
 import { matchesProxySearch } from './proxy-search'
 
 export type { ProxyActivityFilter, ProxyFavoriteFilter, ProxyListFilters, ProxyStatusFilter }

@@ -1,8 +1,8 @@
 import { app } from 'electron'
 import { autoUpdater, type UpdateInfo } from 'electron-updater'
 import { is } from '@electron-toolkit/utils'
-import type { AppUpdateState } from '../../shared/types/updater'
-import { resolveUpdateErrorCode } from '../../shared/utils/update-error'
+import type { AppUpdateState } from '@shared/types/updater'
+import { resolveUpdateErrorCode } from '@shared/utils/update-error'
 import { getMainWindow } from './main-window'
 import { showNativeNotification } from './notifications'
 

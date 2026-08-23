@@ -1,7 +1,7 @@
 import { alpha, type Theme } from '@mui/material/styles'
-import { PROXY_COLOR_VALUES } from '../../../shared/constants/proxy-colors'
-import type { ProxyColorId } from '../../../shared/types/proxy'
-import { resolveProxyColorId } from '../../../shared/utils/proxy-colors'
+import { PROXY_COLOR_VALUES } from '@shared/constants/proxy-colors'
+import type { ProxyColorId } from '@shared/types/proxy'
+import { resolveProxyColorId } from '@shared/utils/proxy-colors'
 
 export interface ProxyColorStyles {
   id: ProxyColorId

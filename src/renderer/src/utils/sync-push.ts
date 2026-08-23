@@ -1,4 +1,4 @@
-import type { SyncPushResult } from '../../../shared/types/sync'
+import type { SyncPushResult } from '@shared/types/sync'
 import { useSyncActivityStore } from '../store/syncActivityStore'
 
 export async function pushSyncWithActivity(): Promise<SyncPushResult> {

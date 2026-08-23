@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import type { AppSettings } from '../../shared/types/settings'
+import type { AppSettings } from '@shared/types/settings'
 import { syncLaunchAtLoginFromSettings } from '../services/auto-launch'
 import { getSettings, saveSettings } from '../services/app-store'
 import { refreshTrayContextMenu } from '../services/tray'

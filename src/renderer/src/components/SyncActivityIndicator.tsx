@@ -2,7 +2,7 @@ import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined'
 import { Box, Fade, Tooltip } from '@mui/material'
 import { keyframes } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import { TITLE_BAR_HEIGHT } from '../../../shared/theme/title-bar'
+import { TITLE_BAR_HEIGHT } from '@shared/theme/title-bar'
 import { useSyncActivityStore } from '../store/syncActivityStore'
 import { isWindows } from '../utils/platform'
 

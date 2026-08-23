@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, pbkdf2Sync, randomBytes } from 'crypto'
-import { BACKUP_KDF_ITERATIONS } from '../../shared/constants/backup-crypto'
-import type { BackupEncryptionMeta } from '../../shared/types/backup'
+import { BACKUP_KDF_ITERATIONS } from '@shared/constants/backup-crypto'
+import type { BackupEncryptionMeta } from '@shared/types/backup'
 
 const KEY_LENGTH_BYTES = 32
 const SALT_LENGTH_BYTES = 16

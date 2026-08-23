@@ -1,4 +1,4 @@
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import type { ProxyGroup } from '@shared/types/proxy-group'
 
 async function invokeGroups<T>(
   channel: 'groups:get-all' | 'groups:save-all',

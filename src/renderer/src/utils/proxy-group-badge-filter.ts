@@ -1,5 +1,5 @@
-import type { Proxy } from '../../../shared/types/proxy'
-import { isProxyEnabled } from '../../../shared/utils/proxy-enabled'
+import type { Proxy } from '@shared/types/proxy'
+import { isProxyEnabled } from '@shared/utils/proxy-enabled'
 
 export type ProxyGroupBadgeFilter = 'alive' | 'dead' | 'enabled' | 'favorites'
 

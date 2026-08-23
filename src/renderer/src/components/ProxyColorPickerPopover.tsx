@@ -3,8 +3,8 @@ import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
 import { Box, IconButton, Popover, Tooltip, Typography } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import type { ProxyColorId } from '../../../shared/types/proxy'
-import { PROXY_COLOR_IDS } from '../../../shared/types/proxy'
+import type { ProxyColorId } from '@shared/types/proxy'
+import { PROXY_COLOR_IDS } from '@shared/types/proxy'
 import ProxyColorSwatch from './ProxyColorSwatch'
 
 interface ProxyColorPickerPopoverProps {

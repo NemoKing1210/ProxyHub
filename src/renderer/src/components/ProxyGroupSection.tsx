@@ -28,8 +28,8 @@ import { alpha } from '@mui/material/styles'
 import { memo, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
-import type { Proxy, ProxyColorId, ProxyIconId } from '../../../shared/types/proxy'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import type { Proxy, ProxyColorId, ProxyIconId } from '@shared/types/proxy'
+import type { ProxyGroup } from '@shared/types/proxy-group'
 import { getGroupColorStyles } from '../utils/proxy-group-appearance'
 import {
   filterProxiesByGroupBadge,

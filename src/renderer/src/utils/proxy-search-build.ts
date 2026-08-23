@@ -1,6 +1,6 @@
-import { findProxyCountry } from '../../../shared/constants/proxy-countries'
-import type { Proxy } from '../../../shared/types/proxy'
-import { buildProxyUrl } from '../../../shared/utils/proxy-format'
+import { findProxyCountry } from '@shared/constants/proxy-countries'
+import type { Proxy } from '@shared/types/proxy'
+import { buildProxyUrl } from '@shared/utils/proxy-format'
 
 export function buildProxySearchHaystack(proxy: Proxy): string {
   const country = proxy.countryCode ? findProxyCountry(proxy.countryCode) : undefined

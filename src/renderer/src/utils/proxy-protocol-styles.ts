@@ -1,6 +1,6 @@
 import { alpha, type Theme } from '@mui/material/styles'
-import { PROXY_COLOR_VALUES } from '../../../shared/constants/proxy-colors'
-import type { ProxyProtocol } from '../../../shared/types/proxy'
+import { PROXY_COLOR_VALUES } from '@shared/constants/proxy-colors'
+import type { ProxyProtocol } from '@shared/types/proxy'
 
 const PROTOCOL_COLORS: Record<ProxyProtocol, string> = {
   http: PROXY_COLOR_VALUES.blue,

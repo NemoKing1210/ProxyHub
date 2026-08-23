@@ -10,17 +10,13 @@ import type {
   ProxyCheckResult,
   ProxyConnectivityResult,
   ProxyDomainCheckResult
-} from '../../shared/types/proxy'
-import {
-  buildProxyUrl,
-  formatProxyAddress,
-  skipsDomainChecks
-} from '../../shared/utils/proxy-format'
-import { runWithConcurrency } from '../../shared/utils/run-with-concurrency'
+} from '@shared/types/proxy'
+import { buildProxyUrl, formatProxyAddress, skipsDomainChecks } from '@shared/utils/proxy-format'
+import { runWithConcurrency } from '@shared/utils/run-with-concurrency'
 import {
   createCheckingConnectivity,
   createPendingDomainChecks
-} from '../../shared/utils/proxy-check-results'
+} from '@shared/utils/proxy-check-results'
 import { CheckCancelledError, isCheckCancelledError, throwIfCancelled } from './check-cancellation'
 
 const DEFAULT_CONCURRENCY = 1

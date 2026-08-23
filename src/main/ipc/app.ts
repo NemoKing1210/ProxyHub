@@ -1,15 +1,15 @@
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
-import type { AppInfo } from '../../shared/types/app'
-import type { ThemeMode } from '../../shared/types/settings'
-import { parseChangelog } from '../../shared/utils/changelog'
-import { parsePackageAuthor } from '../../shared/utils/package-author'
-import { resolveGitHubUsername } from '../../shared/utils/github'
+import type { AppInfo } from '@shared/types/app'
+import type { ThemeMode } from '@shared/types/settings'
+import { parseChangelog } from '@shared/utils/changelog'
+import { parsePackageAuthor } from '@shared/utils/package-author'
+import { resolveGitHubUsername } from '@shared/utils/github'
 import { syncTitleBarTheme } from '../services/title-bar'
 import { showNativeNotification } from '../services/notifications'
 import { isMainWindowBackgrounded } from '../services/main-window'
-import type { AppNotificationPayload } from '../../shared/types/api'
+import type { AppNotificationPayload } from '@shared/types/api'
 
 interface PackageJson {
   version: string

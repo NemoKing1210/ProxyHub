@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { resolveAutoCheckProxyIds } from '../../../shared/utils/auto-check-scope'
+import { resolveAutoCheckProxyIds } from '@shared/utils/auto-check-scope'
 import { useAutoCheckStore } from '../store/autoCheckStore'
 import { useGroupStore } from '../store/groupStore'
 import { useProxyStore } from '../store/proxyStore'

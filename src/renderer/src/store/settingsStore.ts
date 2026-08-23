@@ -8,7 +8,7 @@ import {
   type AppSettings,
   type CheckDomainEntry,
   type ThemeMode
-} from '../../../shared/types/settings'
+} from '@shared/types/settings'
 import { setAppLanguage } from '../i18n'
 import { notifySyncDataChange } from '../utils/sync-on-change'
 

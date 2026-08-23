@@ -1,5 +1,5 @@
-import type { Proxy } from '../../../shared/types/proxy'
-import type { ProxyGroup } from '../../../shared/types/proxy-group'
+import type { Proxy } from '@shared/types/proxy'
+import type { ProxyGroup } from '@shared/types/proxy-group'
 
 export interface ProxyGroupSection {
   group: ProxyGroup

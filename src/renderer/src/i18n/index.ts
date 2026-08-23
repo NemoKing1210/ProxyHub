@@ -1,6 +1,6 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import type { AppLanguage } from '../../../shared/types/settings'
+import type { AppLanguage } from '@shared/types/settings'
 import ar from './locales/ar.json'
 import de from './locales/de.json'
 import en from './locales/en.json'

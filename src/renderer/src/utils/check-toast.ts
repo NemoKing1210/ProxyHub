@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
-import type { Proxy, ProxyCheckResult } from '../../../shared/types/proxy'
-import { formatProxyAddress } from '../../../shared/utils/proxy-format'
+import type { Proxy, ProxyCheckResult } from '@shared/types/proxy'
+import { formatProxyAddress } from '@shared/utils/proxy-format'
 import type { ToastSeverity } from '../store/toastStore'
 
 export const CHECK_TOAST_DETAIL_THRESHOLD = 5

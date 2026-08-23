@@ -6,7 +6,7 @@ import { Alert, Box, Button, LinearProgress, Stack, Typography } from '@mui/mate
 import { useTheme } from '@mui/material/styles'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { AppUpdateState } from '../../../shared/types/updater'
+import type { AppUpdateState } from '@shared/types/updater'
 import { surfaceContainer } from '../theme'
 
 function formatMegabytes(value: number | undefined): string | undefined {

@@ -2,7 +2,7 @@ import { Box, Divider, Popover, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ProxyCheckErrorDetail } from '../../../shared/types/proxy'
+import type { ProxyCheckErrorDetail } from '@shared/types/proxy'
 import { elevationShadow, getPalette, withThemeAlpha } from '../theme'
 
 interface ProxyErrorPopoverProps {

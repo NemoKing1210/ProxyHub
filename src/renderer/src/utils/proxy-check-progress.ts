@@ -1,4 +1,4 @@
-import type { Proxy } from '../../../shared/types/proxy'
+import type { Proxy } from '@shared/types/proxy'
 
 export interface ProxyCheckProgress {
   completed: number

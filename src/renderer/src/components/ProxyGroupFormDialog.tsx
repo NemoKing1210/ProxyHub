@@ -19,15 +19,15 @@ import {
   GROUP_ICON_FORM_VALUES,
   type GroupIconFormValue,
   type ProxyGroup
-} from '../../../shared/types/proxy-group'
-import { PROXY_COLOR_IDS, PROXY_ICON_IDS } from '../../../shared/types/proxy'
-import { findDuplicateGroupName } from '../../../shared/utils/proxy-group-identity'
+} from '@shared/types/proxy-group'
+import { PROXY_COLOR_IDS, PROXY_ICON_IDS } from '@shared/types/proxy'
+import { findDuplicateGroupName } from '@shared/utils/proxy-group-identity'
 import {
   normalizeGroupInput,
   toGroupColorFormValue,
   toGroupIconFormValue
-} from '../../../shared/utils/proxy-group-normalize'
-import type { ProxyGroupInput } from '../../../shared/types/proxy-group'
+} from '@shared/utils/proxy-group-normalize'
+import type { ProxyGroupInput } from '@shared/types/proxy-group'
 import ProxyColorSwatch from './ProxyColorSwatch'
 import ProxyGroupAvatar from './ProxyGroupAvatar'
 import ProxyIcon from './ProxyIcon'

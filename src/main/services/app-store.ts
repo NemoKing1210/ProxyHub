@@ -1,13 +1,13 @@
-import type { ProxyGroup } from '../../shared/types/proxy-group'
-import type { Proxy } from '../../shared/types/proxy'
-import { DEFAULT_SETTINGS, normalizeSettings, type AppSettings } from '../../shared/types/settings'
-import type { SyncConfig, SyncStatus } from '../../shared/types/sync'
+import type { ProxyGroup } from '@shared/types/proxy-group'
+import type { Proxy } from '@shared/types/proxy'
+import { DEFAULT_SETTINGS, normalizeSettings, type AppSettings } from '@shared/types/settings'
+import type { SyncConfig, SyncStatus } from '@shared/types/sync'
 import {
   DEFAULT_SYNC_CONFIG,
   DEFAULT_SYNC_STATUS,
   normalizeSyncConfig,
   normalizeSyncStatus
-} from '../../shared/utils/sync-config'
+} from '@shared/utils/sync-config'
 
 interface StoreSchema {
   proxies: Proxy[]
