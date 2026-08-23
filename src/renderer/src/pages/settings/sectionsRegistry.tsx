@@ -34,13 +34,12 @@ export interface SettingsSectionMeta {
   title: string
   description: string
   icon: ReactNode
-  /** Короткая сводка текущего состояния для карточки в общем списке. */
   summary: string
 }
 
 /**
- * Метаданные категорий настроек. Хук, а не константа: заголовки и сводки
- * зависят от активного перевода и текущих значений настроек.
+ * Settings category metadata. A hook rather than a constant: titles and
+ * summaries depend on the active translation and current setting values.
  */
 export function useSettingsSections(): SettingsSectionMeta[] {
   const { t } = useTranslation()
@@ -91,7 +90,9 @@ export function useSettingsSections(): SettingsSectionMeta[] {
       title: t('settings.sections.checking'),
       description: t('settings.sections.checkingDescription'),
       icon: <NetworkCheckOutlinedIcon fontSize="small" />,
-      summary: `${settings.checkTimeoutMs / 1000} с · ${
+      summary: `${t('settings.checkTimeoutValue', {
+        value: settings.checkTimeoutMs / 1000
+      })} · ${
         settings.checkAllMode === 'parallel'
           ? t('settings.checkAllModeParallel')
           : t('settings.checkAllModeSequential')

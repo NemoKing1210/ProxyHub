@@ -47,7 +47,6 @@ function AppTitleBar({
         position: 'relative',
         height: TITLE_BAR_HEIGHT,
         px: 1.25,
-        pt: 1,
         flexShrink: 0,
         bgcolor: palette.background.default,
         WebkitAppRegion: 'drag'
@@ -86,7 +85,7 @@ function AppTitleBar({
         <Box
           sx={{
             position: 'absolute',
-            top: 'calc(50% + 4px)',
+            top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             WebkitAppRegion: 'no-drag'

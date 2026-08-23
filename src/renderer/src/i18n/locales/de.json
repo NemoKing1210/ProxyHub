@@ -278,6 +278,7 @@
   "settings": {
     "title": "Einstellungen",
     "description": "Erscheinungsbild und Proxy-Prüfung konfigurieren.",
+    "backToSettings": "Zurück zu den Einstellungen",
     "sections": {
       "appearance": "Erscheinungsbild",
       "appearanceDescription": "Design, Sprache und Darstellung der Proxy-Karten.",

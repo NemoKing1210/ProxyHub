@@ -352,7 +352,7 @@
   "settings": {
     "title": "Settings",
     "description": "Configure appearance and how proxies are checked.",
-    "breadcrumbsLabel": "Settings navigation",
+    "backToSettings": "Back to settings",
     "appearanceThemeGroup": "Theme and colors",
     "appearanceCardsGroup": "Proxy cards",
     "appearanceNotificationsGroup": "Notifications",

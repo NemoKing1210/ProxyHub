@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Box, Collapse, IconButton, Stack, Typography } from '@mui/material'
+import { Box, IconButton, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { type ReactNode, useState } from 'react'
 import {
@@ -10,6 +10,7 @@ import {
   surfaceTint,
   withThemeAlpha
 } from '../../theme'
+import RevealCollapse from './RevealCollapse'
 
 type ContentSectionAccent = 'primary' | 'error' | 'warning' | 'info'
 
@@ -161,7 +162,7 @@ function ContentSection({
         </Stack>
       )}
 
-      <Collapse in={!collapsible || isExpanded} mountOnEnter unmountOnExit>
+      <RevealCollapse in={!collapsible || isExpanded}>
         <Box
           sx={{
             pl: showHeader ? { xs: 0, sm: nested ? 5.5 : 6.5 } : 0,
@@ -170,7 +171,7 @@ function ContentSection({
         >
           {children}
         </Box>
-      </Collapse>
+      </RevealCollapse>
     </Box>
   )
 }

@@ -4,7 +4,7 @@ export interface TitleBarTheme {
   color: string
 }
 
-export const TITLE_BAR_HEIGHT = 40
+export const TITLE_BAR_HEIGHT = 48
 
 const TITLE_BAR_THEMES: Record<ResolvedColorScheme, TitleBarTheme> = {
   light: {

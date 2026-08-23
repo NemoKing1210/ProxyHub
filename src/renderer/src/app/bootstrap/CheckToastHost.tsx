@@ -1,9 +1,12 @@
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
-import { Alert, AlertTitle, Snackbar, Typography } from '@mui/material'
+import { AlertTitle, Snackbar, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import type { ToastPosition } from '@shared/types/settings'
+import { TITLE_BAR_HEIGHT } from '@shared/theme/title-bar'
+import { isWindows } from '../../lib/platform'
+import ToastAlert, { type ToastSeverity } from '../../components/ui/ToastAlert'
 import { useSettingsStore } from '../../store/settingsStore'
 import { useToastStore } from '../../store/toastStore'
 
@@ -31,6 +34,9 @@ function CheckToastHost(): React.JSX.Element {
   const clear = useToastStore((state) => state.clear)
   const toastEnabled = useSettingsStore((state) => state.settings.toastEnabled)
   const toastPosition = useSettingsStore((state) => state.settings.toastPosition)
+  // Top-anchored toasts must clear the fixed app header: the custom title
+  // bar on Windows, or the floating navigation pill on other platforms.
+  const topOffset = isWindows() ? TITLE_BAR_HEIGHT + 8 : 72
   const Icon = current ? severityIcons[current.severity] : null
 
   useEffect(() => {
@@ -49,24 +55,24 @@ function CheckToastHost(): React.JSX.Element {
         dismiss()
       }}
       anchorOrigin={toastAnchors[toastPosition]}
+      sx={{
+        [`&.MuiSnackbar-anchorOriginTopLeft, &.MuiSnackbar-anchorOriginTopCenter,
+          &.MuiSnackbar-anchorOriginTopRight`]: {
+          top: topOffset
+        }
+      }}
     >
       {current && Icon ? (
-        <Alert
-          severity={current.severity}
-          variant="filled"
+        <ToastAlert
+          severity={current.severity as ToastSeverity}
           icon={<Icon fontSize="inherit" />}
           onClose={dismiss}
           sx={{
-            width: '100%',
             minWidth: { xs: 280, sm: 360 },
             maxWidth: 480,
             alignItems: 'flex-start',
             '& .MuiAlert-message': {
               width: '100%'
-            },
-            '& .MuiAlert-icon': {
-              opacity: 0.95,
-              mt: 0.25
             }
           }}
         >
@@ -81,7 +87,7 @@ function CheckToastHost(): React.JSX.Element {
               {current.message}
             </Typography>
           ) : null}
-        </Alert>
+        </ToastAlert>
       ) : undefined}
     </Snackbar>
   )

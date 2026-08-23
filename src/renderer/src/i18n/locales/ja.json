@@ -278,6 +278,7 @@
   "settings": {
     "title": "設定",
     "description": "外観とプロキシ確認の設定を行います。",
+    "backToSettings": "設定に戻る",
     "sections": {
       "appearance": "外観",
       "appearanceDescription": "テーマ、言語、プロキシカードの表示形式。",

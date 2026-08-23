@@ -168,8 +168,8 @@ function createProxiesById(proxies: Proxy[]): Map<string, Proxy> {
   return map
 }
 
-// Прогресс-события приходят по IPC пачками; без батчинга каждое событие
-// вызывает полный re-render списка. Копим и применяем раз в интервал.
+// Check progress events arrive over IPC in bursts; without batching each
+// one triggers a full list re-render. Accumulate and apply once per interval.
 const CHECK_PROGRESS_FLUSH_INTERVAL_MS = 120
 
 function isCheckInProgress(state: Pick<ProxyState, 'checkingIds' | 'isCheckingAll'>): boolean {

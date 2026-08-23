@@ -362,7 +362,7 @@
   "settings": {
     "title": "Настройки",
     "description": "Настройте внешний вид и параметры проверки прокси.",
-    "breadcrumbsLabel": "Навигация по настройкам",
+    "backToSettings": "Назад к настройкам",
     "appearanceThemeGroup": "Тема и цвета",
     "appearanceCardsGroup": "Карточки прокси",
     "appearanceNotificationsGroup": "Уведомления",

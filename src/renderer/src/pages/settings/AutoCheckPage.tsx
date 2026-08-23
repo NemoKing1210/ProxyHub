@@ -1,4 +1,5 @@
 import AutoCheckSection from './sections/AutoCheckSection'
+import SettingsSectionHeader from './components/SettingsSectionHeader'
 import type { AutoCheckScope } from '@shared/types/settings'
 import { useGroupStore } from '../../store/groupStore'
 import { useProxyStore } from '../../store/proxyStore'
@@ -36,20 +37,23 @@ function AutoCheckPage(): React.JSX.Element {
   }
 
   return (
-    <AutoCheckSection
-      enabled={settings.autoCheckEnabled}
-      intervalMinutes={settings.autoCheckIntervalMinutes}
-      notifications={settings.autoCheckNotifications}
-      scope={settings.autoCheckScope}
-      groupIds={settings.autoCheckGroupIds}
-      groups={groups}
-      favoriteCount={favoriteCount}
-      onEnabledChange={(enabled) => void handleAutoCheckEnabledChange(enabled)}
-      onIntervalChange={(minutes) => void handleAutoCheckIntervalChange(minutes)}
-      onNotificationsChange={(enabled) => void handleAutoCheckNotificationsChange(enabled)}
-      onScopeChange={(scope) => void handleAutoCheckScopeChange(scope)}
-      onGroupIdsChange={(groupIds) => void handleAutoCheckGroupIdsChange(groupIds)}
-    />
+    <>
+      <SettingsSectionHeader />
+      <AutoCheckSection
+        enabled={settings.autoCheckEnabled}
+        intervalMinutes={settings.autoCheckIntervalMinutes}
+        notifications={settings.autoCheckNotifications}
+        scope={settings.autoCheckScope}
+        groupIds={settings.autoCheckGroupIds}
+        groups={groups}
+        favoriteCount={favoriteCount}
+        onEnabledChange={(enabled) => void handleAutoCheckEnabledChange(enabled)}
+        onIntervalChange={(minutes) => void handleAutoCheckIntervalChange(minutes)}
+        onNotificationsChange={(enabled) => void handleAutoCheckNotificationsChange(enabled)}
+        onScopeChange={(scope) => void handleAutoCheckScopeChange(scope)}
+        onGroupIdsChange={(groupIds) => void handleAutoCheckGroupIdsChange(groupIds)}
+      />
+    </>
   )
 }
 

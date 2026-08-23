@@ -7,7 +7,6 @@ import ViewListOutlinedIcon from '@mui/icons-material/ViewListOutlined'
 import {
   Box,
   Checkbox,
-  Collapse,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
@@ -23,11 +22,11 @@ import {
   AUTO_CHECK_INTERVAL_MIN,
   type AutoCheckScope
 } from '@shared/types/settings'
-import ContentSection from '../../../components/ui/ContentSection'
+import RevealCollapse from '../../../components/ui/RevealCollapse'
 import SettingsCardList from '../../../components/settings/SettingsCardList'
 import AutoCheckCountdownBadge from '../../../components/check/AutoCheckCountdownBadge'
 import ProxyGroupAvatar from '../../../components/group/ProxyGroupAvatar'
-import SettingsSwitchCard from '../../../components/settings/SettingsSwitchCard'
+import SettingsSwitchSection from '../../../components/settings/SettingsSwitchSection'
 import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../../../theme'
 
 const INTERVAL_MARKS = [
@@ -118,7 +117,7 @@ function AutoCheckSection({
 
   return (
     <SettingsCardList>
-      <ContentSection
+      <SettingsSwitchSection
         icon={<AutorenewOutlinedIcon fontSize="small" />}
         title={
           <Stack
@@ -132,24 +131,16 @@ function AutoCheckSection({
           </Stack>
         }
         description={t('settings.autoCheckEnabledHint')}
+        checked={enabled}
+        onChange={onEnabledChange}
       >
-        <SettingsSwitchCard
-          icon={<AutorenewOutlinedIcon fontSize="small" />}
-          title={t('settings.autoCheckEnabled')}
-          hint={t('settings.autoCheckEnabledHint')}
-          checked={enabled}
-          onChange={onEnabledChange}
-          clickable
-        />
-
-        <Collapse in={enabled} mountOnEnter unmountOnExit>
+        <RevealCollapse in={enabled}>
           <Box
             sx={{
               borderTop: `1px solid ${outlineVariant(theme)}`,
               bgcolor: surfaceContainer(theme, 'default'),
               px: 1.75,
-              py: 2.25,
-              mt: 0.75
+              py: 2.25
             }}
           >
             <Stack spacing={2.75}>
@@ -318,25 +309,18 @@ function AutoCheckSection({
               )}
             </Stack>
           </Box>
-        </Collapse>
-      </ContentSection>
+        </RevealCollapse>
+      </SettingsSwitchSection>
 
-      <ContentSection
+      <SettingsSwitchSection
         icon={<NotificationsOutlinedIcon fontSize="small" />}
+        accent="info"
         title={t('settings.autoCheckNotifications')}
         description={t('settings.autoCheckNotificationsHint')}
-      >
-        <SettingsSwitchCard
-          icon={<NotificationsOutlinedIcon fontSize="small" />}
-          accent="info"
-          title={t('settings.autoCheckNotifications')}
-          hint={t('settings.autoCheckNotificationsHint')}
-          checked={notifications}
-          disabled={!enabled}
-          onChange={onNotificationsChange}
-          clickable
-        />
-      </ContentSection>
+        checked={notifications}
+        disabled={!enabled}
+        onChange={onNotificationsChange}
+      />
     </SettingsCardList>
   )
 }

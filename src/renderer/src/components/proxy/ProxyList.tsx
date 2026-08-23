@@ -301,9 +301,9 @@ function ProxyList(): React.JSX.Element {
     setAddMenuPosition(null)
   }, [])
 
-  // Контекстное меню на свободных участках страницы — то же, что у кнопки «Добавить».
-  // Слушаем window, чтобы покрыть всю область прокрутки страницы (включая пустоту
-  // ниже контента и поля вокруг контейнера), а не только высоту контента ProxyList.
+  // Context menu on free page areas — same as the "Add" button. Listening
+  // on window covers the whole scroll area (including empty space below the
+  // content and padding around the container), not just the ProxyList height.
   useEffect(() => {
     const handleContextMenu = (event: MouseEvent): void => {
       const target = event.target
@@ -311,12 +311,10 @@ function ProxyList(): React.JSX.Element {
         return
       }
 
-      // Только область страницы под шапкой/навигацией.
       if (!target.closest('[data-app-scroll-container]')) {
         return
       }
 
-      // Не перехватываем правый клик на контролах и текстовых полях.
       if (
         target.closest(
           'input, textarea, button, a, select, [role="button"], [role="menu"], [contenteditable="true"]'
@@ -549,9 +547,9 @@ function ProxyList(): React.JSX.Element {
   const showUngroupedDropZone =
     organizedList.ungrouped.length > 0 || (dragEnabled && Boolean(draggingProxyId))
 
-  // Первый рендер данных страницы отдаём без entry/layout-анимаций карточек,
-  // чтобы они не конфликтовали с переходом страницы (финальный "рывок").
-  // Включаем анимации со следующего кадра — они нужны для изменений списка.
+  // Serve the first data render without card entry/layout animations so they
+  // don't conflict with the page transition (final "jerk"). Enable them on
+  // the next frame — they're needed for list changes.
   const [entryAnimationsEnabled, setEntryAnimationsEnabled] = useState(false)
 
   useEffect(() => {

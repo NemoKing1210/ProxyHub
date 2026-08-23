@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useSettingsSections } from './sectionsRegistry'
 import { getListCardPosition, getListCardRadius } from '../../lib/card-list'
-import { surfaceContainer, withThemeAlpha } from '../../theme'
+import { surfaceContainer, surfaceTransition, withThemeAlpha } from '../../theme'
 
 /**
- * Корневая подстраница настроек: сканируемый список категорий.
- * Каждая категория ведёт на свою страницу /settings/:section.
+ * Settings overview subpage: a scannable list of categories, each leading
+ * to its own /settings/:section page.
  */
 function SettingsOverviewPage(): React.JSX.Element {
   const { t } = useTranslation()
@@ -44,8 +44,7 @@ function SettingsOverviewPage(): React.JSX.Element {
               textAlign: 'left',
               bgcolor: surfaceContainer(theme, 'low'),
               boxShadow: `0 1px 2px ${withThemeAlpha(theme, theme.palette.common.black, 0.08)}`,
-              transition:
-                'background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease',
+              transition: surfaceTransition(['background-color', 'transform', 'box-shadow']),
               '&:hover': {
                 bgcolor: surfaceContainer(theme, 'default'),
                 transform: 'translateY(-1px)',

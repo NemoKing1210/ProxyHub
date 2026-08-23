@@ -16,8 +16,8 @@ export function getListCardPosition(index: number, total: number): ListCardPosit
   return 'middle'
 }
 
-// Смежные карточки списка «сшиваются»: внешние углы ряда у крайних карточек
-// скругляются сильнее обычного (16px), а шов между карточками остаётся мелким.
+// Adjacent list cards are "stitched": outer corners of edge cards get a
+// larger radius (16px) while the seam between cards stays small.
 export function getListCardRadius(position: ListCardPosition, full = 16, seam = 6): string {
   switch (position) {
     case 'single':

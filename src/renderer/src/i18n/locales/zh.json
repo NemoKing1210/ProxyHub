@@ -279,6 +279,7 @@
   "settings": {
     "title": "设置",
     "description": "配置外观和代理检测参数。",
+    "backToSettings": "返回设置",
     "sections": {
       "appearance": "外观",
       "appearanceDescription": "主题、界面语言和代理卡片布局。",

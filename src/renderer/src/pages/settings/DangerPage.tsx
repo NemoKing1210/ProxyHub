@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import DangerSection from './sections/DangerSection'
+import SettingsSectionHeader from './components/SettingsSectionHeader'
 import { useGroupStore } from '../../store/groupStore'
 import { useProxyStore } from '../../store/proxyStore'
 import { useSettingsStore } from '../../store/settingsStore'
@@ -40,13 +41,16 @@ function DangerPage(): React.JSX.Element {
   }
 
   return (
-    <DangerSection
-      proxyCount={proxies.length}
-      groupCount={groups.length}
-      disabled={isDangerActionsDisabled}
-      onDeleteAll={handleDeleteAllProxiesAndGroups}
-      onResetSettings={handleResetSettings}
-    />
+    <>
+      <SettingsSectionHeader />
+      <DangerSection
+        proxyCount={proxies.length}
+        groupCount={groups.length}
+        disabled={isDangerActionsDisabled}
+        onDeleteAll={handleDeleteAllProxiesAndGroups}
+        onResetSettings={handleResetSettings}
+      />
+    </>
   )
 }
 

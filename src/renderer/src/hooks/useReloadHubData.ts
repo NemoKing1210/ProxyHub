@@ -5,8 +5,8 @@ import { useSettingsStore } from '../store/settingsStore'
 import { suppressSyncOnChange } from '../services/sync-on-change'
 
 /**
- * Перезагружает прокси/группы/настройки из main-процесса после импорта
- * (backup, sync). Используется подстраницами Backup и Sync.
+ * Reloads proxies/groups/settings from the main process after an import
+ * (backup, sync). Used by the Backup and Sync subpages.
  */
 export function useReloadHubData(): () => Promise<void> {
   const loadSettings = useSettingsStore((state) => state.loadSettings)

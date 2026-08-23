@@ -13,7 +13,6 @@ import {
   Button,
   Chip,
   CircularProgress,
-  Collapse,
   IconButton,
   InputAdornment,
   MenuItem,
@@ -38,9 +37,11 @@ import BackupPasswordFields, {
   validateBackupExportPassword
 } from '../../../components/BackupPasswordFields'
 import ContentSection from '../../../components/ui/ContentSection'
+import RevealCollapse from '../../../components/ui/RevealCollapse'
 import SettingsCardList from '../../../components/settings/SettingsCardList'
 import ProxyFormSection from '../../../components/proxy/ProxyFormSection'
 import SettingsSwitchCard from '../../../components/settings/SettingsSwitchCard'
+import SettingsSwitchSection from '../../../components/settings/SettingsSwitchSection'
 import SyncStatusSection from './SyncStatusSection'
 import SyncPullPreviewDialog from './SyncPullPreviewDialog'
 import { surfaceContainer, withThemeAlpha } from '../../../theme'
@@ -606,7 +607,7 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
             })}
           </TextField>
 
-          <Collapse in={isProviderEnabled}>
+          <RevealCollapse in={isProviderEnabled} unmountOnExit={false}>
             <Stack spacing={2.5}>
               {!safeStorageAvailable && (
                 <Alert severity="warning" variant="outlined" icon={<WarningAmberOutlinedIcon />}>
@@ -839,27 +840,20 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
                 {t('settings.sync.testConnection')}
               </Button>
             </Stack>
-          </Collapse>
+          </RevealCollapse>
         </ProxyFormSection>
 
-        {isProviderEnabled && (
-          <ContentSection
+        <RevealCollapse in={isProviderEnabled} unmountOnExit={false}>
+          <SettingsSwitchSection
             icon={<CloudSyncOutlinedIcon fontSize="small" />}
+            accent="info"
             title={t('settings.sync.autoSyncEnabled')}
             description={t('settings.sync.autoSyncEnabledHint')}
+            checked={config.autoSyncEnabled}
+            onChange={(enabled) => void handleAutoSyncChange(enabled)}
+            disabled={isBusy}
           >
-            <SettingsSwitchCard
-              icon={<CloudSyncOutlinedIcon fontSize="small" />}
-              title={t('settings.sync.autoSyncEnabled')}
-              hint={t('settings.sync.autoSyncEnabledHint')}
-              checked={config.autoSyncEnabled}
-              onChange={(enabled) => void handleAutoSyncChange(enabled)}
-              disabled={isBusy}
-              accent="info"
-              clickable
-            />
-
-            <Collapse in={config.autoSyncEnabled} mountOnEnter unmountOnExit>
+            <RevealCollapse in={config.autoSyncEnabled}>
               <Box sx={{ px: 2.25, pb: 2.25 }}>
                 <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
                   <Typography variant="subtitle2">{t('settings.sync.autoSyncInterval')}</Typography>
@@ -890,7 +884,7 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
                   onChangeCommitted={() => void handleIntervalCommit()}
                 />
               </Box>
-            </Collapse>
+            </RevealCollapse>
 
             <Box sx={{ mt: 0.75 }}>
               <SettingsSwitchCard
@@ -917,10 +911,10 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
                 clickable
               />
             </Box>
-          </ContentSection>
-        )}
+          </SettingsSwitchSection>
+        </RevealCollapse>
 
-        {isProviderEnabled && (
+        <RevealCollapse in={isProviderEnabled} unmountOnExit={false}>
           <SyncStatusSection
             config={config}
             status={status}
@@ -962,7 +956,7 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
               </Button>
             </Stack>
           </SyncStatusSection>
-        )}
+        </RevealCollapse>
       </SettingsCardList>
 
       <SyncPullPreviewDialog

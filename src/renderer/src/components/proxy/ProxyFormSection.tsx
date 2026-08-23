@@ -1,8 +1,9 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Box, Collapse, IconButton, Stack, Typography } from '@mui/material'
+import { Box, IconButton, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { type ReactNode, useState } from 'react'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../theme'
+import RevealCollapse from '../ui/RevealCollapse'
 
 interface ProxyFormSectionProps {
   icon: ReactNode
@@ -115,9 +116,9 @@ function ProxyFormSection({
         ) : null}
       </Stack>
 
-      <Collapse in={!collapsible || isExpanded} unmountOnExit>
+      <RevealCollapse in={!collapsible || isExpanded}>
         <Stack spacing={2}>{children}</Stack>
-      </Collapse>
+      </RevealCollapse>
     </Box>
   )
 }

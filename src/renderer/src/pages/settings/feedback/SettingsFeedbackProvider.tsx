@@ -1,14 +1,15 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
-import { Alert, Snackbar, Stack } from '@mui/material'
+import { Snackbar, Stack } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import ToastAlert from '../../../components/ui/ToastAlert'
 import {
   SettingsFeedbackContext,
   type SettingsFeedbackContextValue
 } from './settingsFeedbackContext'
 
 /**
- * Общая обратная связь (snackbar-уведомления) для всех подстраниц настроек.
- * Рендерится один раз в SettingsPage, страницы потребляют через useSettingsFeedback().
+ * Shared snackbar feedback for all settings subpages. Rendered once in
+ * SettingsShell; pages consume it via useSettingsFeedback().
  */
 export function SettingsFeedbackProvider({ children }: { children: ReactNode }): React.JSX.Element {
   const { t } = useTranslation()
@@ -47,9 +48,9 @@ export function SettingsFeedbackProvider({ children }: { children: ReactNode }):
           onClose={() => setSavedOpen(false)}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
-          <Alert severity="success" variant="filled" onClose={() => setSavedOpen(false)}>
+          <ToastAlert severity="success" onClose={() => setSavedOpen(false)}>
             {t('settings.saved')}
-          </Alert>
+          </ToastAlert>
         </Snackbar>
 
         <Snackbar
@@ -58,13 +59,9 @@ export function SettingsFeedbackProvider({ children }: { children: ReactNode }):
           onClose={() => setFeedbackOpen(false)}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
-          <Alert
-            severity={feedbackSeverity}
-            variant="filled"
-            onClose={() => setFeedbackOpen(false)}
-          >
+          <ToastAlert severity={feedbackSeverity} onClose={() => setFeedbackOpen(false)}>
             {feedbackMessage}
-          </Alert>
+          </ToastAlert>
         </Snackbar>
       </Stack>
     </SettingsFeedbackContext.Provider>

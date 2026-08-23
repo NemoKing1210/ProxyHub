@@ -32,9 +32,12 @@ import {
   getEnabledCheckDomains
 } from '@shared/types/settings'
 import ContentSection from '../../components/ui/ContentSection'
+import RevealCollapse from '../../components/ui/RevealCollapse'
 import SettingsCardList from '../../components/settings/SettingsCardList'
+import SettingsSwitchSection from '../../components/settings/SettingsSwitchSection'
+import SettingsSectionHeader from './components/SettingsSectionHeader'
 import { useSettingsStore } from '../../store/settingsStore'
-import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../theme'
+import { surfaceContainer, surfaceTransition } from '../../theme'
 import { normalizeDomainInput, validateDomain } from '../../lib/proxy-schema'
 import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
 
@@ -192,269 +195,271 @@ function CheckingPage(): React.JSX.Element {
   }
 
   return (
-    <SettingsCardList>
-      <ContentSection
-        icon={<TimerOutlinedIcon fontSize="small" />}
-        title={t('settings.checkTimeout')}
-        description={t('settings.checkTimeoutHint')}
-      >
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: 700,
-            fontFamily: 'monospace',
-            px: 1.5,
-            py: 0.5,
-            borderRadius: '12px',
-            bgcolor: surfaceContainer(theme, 'high'),
-            color: 'primary.main',
-            alignSelf: 'flex-start'
-          }}
+    <>
+      <SettingsSectionHeader />
+      <SettingsCardList>
+        <ContentSection
+          icon={<TimerOutlinedIcon fontSize="small" />}
+          title={t('settings.checkTimeout')}
+          description={t('settings.checkTimeoutHint')}
         >
-          {t('settings.checkTimeoutValue', { value: displayedTimeout })}
-        </Typography>
-        <Slider
-          value={displayedTimeout}
-          onChange={handleTimeoutChange}
-          onChangeCommitted={() => void handleTimeoutCommit()}
-          min={CHECK_TIMEOUT_MIN_MS / 1000}
-          max={CHECK_TIMEOUT_MAX_MS / 1000}
-          step={1}
-          marks={TIMEOUT_MARKS}
-          valueLabelDisplay="auto"
-          valueLabelFormat={(value) => t('settings.checkTimeoutValue', { value })}
-          sx={{ px: 0.5 }}
-        />
-      </ContentSection>
-
-      <ContentSection
-        icon={<ReorderOutlinedIcon fontSize="small" />}
-        title={t('settings.checkAllMode')}
-        description={t('settings.checkAllModeHint')}
-      >
-        <ToggleButtonGroup
-          value={settings.checkAllMode}
-          exclusive
-          onChange={(event, value) => void handleCheckAllModeChange(event, value)}
-          fullWidth
-          sx={{
-            '& .MuiToggleButton-root': {
-              py: 1.35,
-              gap: 0.75
-            }
-          }}
-        >
-          <ToggleButton value="sequential">
-            <ReorderOutlinedIcon fontSize="small" />
-            {t('settings.checkAllModeSequential')}
-          </ToggleButton>
-          <ToggleButton value="parallel">
-            <PlaylistPlayIcon fontSize="small" />
-            {t('settings.checkAllModeParallel')}
-          </ToggleButton>
-        </ToggleButtonGroup>
-
-        {settings.checkAllMode === 'parallel' && (
-          <Box sx={{ mt: 2.5 }}>
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{ mb: 1.25, alignItems: 'center', justifyContent: 'space-between' }}
-            >
-              <Typography variant="subtitle2">{t('settings.checkAllConcurrency')}</Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: 700,
-                  fontFamily: 'monospace',
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: '12px',
-                  bgcolor: surfaceContainer(theme, 'high'),
-                  color: 'primary.main'
-                }}
-              >
-                {t('settings.checkAllConcurrencyValue', { value: displayedConcurrency })}
-              </Typography>
-            </Stack>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              {t('settings.checkAllConcurrencyHint')}
-            </Typography>
-            <Slider
-              value={displayedConcurrency}
-              onChange={handleConcurrencyChange}
-              onChangeCommitted={() => void handleConcurrencyCommit()}
-              min={CHECK_ALL_CONCURRENCY_MIN}
-              max={CHECK_ALL_CONCURRENCY_MAX}
-              step={1}
-              marks={CONCURRENCY_MARKS}
-              valueLabelDisplay="auto"
-              valueLabelFormat={(value) => t('settings.checkAllConcurrencyValue', { value })}
-              sx={{ px: 0.5 }}
-            />
-          </Box>
-        )}
-      </ContentSection>
-
-      <ContentSection
-        icon={<PlaylistPlayIcon fontSize="small" />}
-        title={t('settings.domainCheckConcurrency')}
-        description={t('settings.domainCheckConcurrencyHint')}
-      >
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: 700,
-            fontFamily: 'monospace',
-            px: 1.5,
-            py: 0.5,
-            borderRadius: '12px',
-            bgcolor: surfaceContainer(theme, 'high'),
-            color: 'primary.main',
-            alignSelf: 'flex-start'
-          }}
-        >
-          {t('settings.domainCheckConcurrencyValue', { value: displayedDomainConcurrency })}
-        </Typography>
-        <Slider
-          value={displayedDomainConcurrency}
-          onChange={handleDomainConcurrencyChange}
-          onChangeCommitted={() => void handleDomainConcurrencyCommit()}
-          min={DOMAIN_CHECK_CONCURRENCY_MIN}
-          max={DOMAIN_CHECK_CONCURRENCY_MAX}
-          step={1}
-          marks={DOMAIN_CONCURRENCY_MARKS}
-          valueLabelDisplay="auto"
-          valueLabelFormat={(value) => t('settings.domainCheckConcurrencyValue', { value })}
-          sx={{ px: 0.5 }}
-        />
-      </ContentSection>
-
-      <ContentSection
-        icon={<PublicOutlinedIcon fontSize="small" />}
-        title={t('settings.fetchExternalIp')}
-        description={t('settings.fetchExternalIpHint')}
-      >
-        <Switch
-          checked={settings.fetchExternalIp}
-          onChange={(event) => void handleFetchExternalIpChange(event.target.checked)}
-        />
-      </ContentSection>
-
-      <ContentSection
-        icon={<DnsOutlinedIcon fontSize="small" />}
-        title={t('settings.checkDomains')}
-        description={t('settings.checkDomainsHint')}
-      >
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mb: 2 }}>
-          <TextField
-            label={t('settings.addDomain')}
-            placeholder={t('settings.domainPlaceholder')}
-            value={domainInput}
-            onChange={(event) => {
-              setDomainInput(event.target.value)
-              setDomainError(null)
-            }}
-            error={Boolean(domainError)}
-            helperText={domainError}
-            fullWidth
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault()
-                void handleAddDomain()
-              }
-            }}
-          />
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => void handleAddDomain()}
+          <Typography
+            variant="body2"
             sx={{
-              minWidth: { sm: 140 },
-              alignSelf: { xs: 'stretch', sm: 'flex-start' },
-              mt: { sm: 0.25 }
+              fontWeight: 700,
+              fontFamily: 'monospace',
+              px: 1.5,
+              py: 0.5,
+              borderRadius: '12px',
+              bgcolor: surfaceContainer(theme, 'high'),
+              color: 'primary.main',
+              alignSelf: 'flex-start'
             }}
           >
-            {t('common.add')}
-          </Button>
-        </Stack>
+            {t('settings.checkTimeoutValue', { value: displayedTimeout })}
+          </Typography>
+          <Slider
+            value={displayedTimeout}
+            onChange={handleTimeoutChange}
+            onChangeCommitted={() => void handleTimeoutCommit()}
+            min={CHECK_TIMEOUT_MIN_MS / 1000}
+            max={CHECK_TIMEOUT_MAX_MS / 1000}
+            step={1}
+            marks={TIMEOUT_MARKS}
+            valueLabelDisplay="auto"
+            valueLabelFormat={(value) => t('settings.checkTimeoutValue', { value })}
+            sx={{ px: 0.5 }}
+          />
+        </ContentSection>
 
-        <Stack spacing={0.75}>
-          {settings.checkDomains.length === 0 ? (
-            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-              {t('settings.checkDomainsEmpty')}
-            </Typography>
-          ) : (
-            settings.checkDomains.map((entry) => (
-              <Box
-                key={entry.domain}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  px: 1.5,
-                  py: 1.1,
-                  borderRadius: '12px',
-                  bgcolor: surfaceContainer(theme, 'low'),
-                  opacity: entry.enabled ? 1 : 0.62,
-                  transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}, opacity ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
-                  '&:hover': {
-                    bgcolor: surfaceContainer(theme, 'default'),
-                    transform: 'translateX(2px)'
-                  }
-                }}
-              >
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={entry.enabled}
-                      onChange={(event) =>
-                        void handleToggleDomain(entry.domain, event.target.checked)
-                      }
-                      size="small"
-                    />
-                  }
-                  label=""
-                  aria-label={
-                    entry.enabled
-                      ? t('settings.disableDomain', { domain: entry.domain })
-                      : t('settings.enableDomain', { domain: entry.domain })
-                  }
-                  sx={{ m: 0, flexShrink: 0 }}
+        <ContentSection
+          icon={<ReorderOutlinedIcon fontSize="small" />}
+          title={t('settings.checkAllMode')}
+          description={t('settings.checkAllModeHint')}
+        >
+          <ToggleButtonGroup
+            value={settings.checkAllMode}
+            exclusive
+            onChange={(event, value) => void handleCheckAllModeChange(event, value)}
+            fullWidth
+            sx={{
+              '& .MuiToggleButton-root': {
+                py: 1.35,
+                gap: 0.75
+              }
+            }}
+          >
+            <ToggleButton value="sequential">
+              <ReorderOutlinedIcon fontSize="small" />
+              {t('settings.checkAllModeSequential')}
+            </ToggleButton>
+            <ToggleButton value="parallel">
+              <PlaylistPlayIcon fontSize="small" />
+              {t('settings.checkAllModeParallel')}
+            </ToggleButton>
+          </ToggleButtonGroup>
+
+          {settings.checkAllMode === 'parallel' && (
+            <RevealCollapse in>
+              <Box sx={{ mt: 2.5 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ mb: 1.25, alignItems: 'center', justifyContent: 'space-between' }}
+                >
+                  <Typography variant="subtitle2">{t('settings.checkAllConcurrency')}</Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 700,
+                      fontFamily: 'monospace',
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: '12px',
+                      bgcolor: surfaceContainer(theme, 'high'),
+                      color: 'primary.main'
+                    }}
+                  >
+                    {t('settings.checkAllConcurrencyValue', { value: displayedConcurrency })}
+                  </Typography>
+                </Stack>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  {t('settings.checkAllConcurrencyHint')}
+                </Typography>
+                <Slider
+                  value={displayedConcurrency}
+                  onChange={handleConcurrencyChange}
+                  onChangeCommitted={() => void handleConcurrencyCommit()}
+                  min={CHECK_ALL_CONCURRENCY_MIN}
+                  max={CHECK_ALL_CONCURRENCY_MAX}
+                  step={1}
+                  marks={CONCURRENCY_MARKS}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(value) => t('settings.checkAllConcurrencyValue', { value })}
+                  sx={{ px: 0.5 }}
                 />
-                <Typography
-                  variant="body2"
+              </Box>
+            </RevealCollapse>
+          )}
+        </ContentSection>
+
+        <ContentSection
+          icon={<PlaylistPlayIcon fontSize="small" />}
+          title={t('settings.domainCheckConcurrency')}
+          description={t('settings.domainCheckConcurrencyHint')}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 700,
+              fontFamily: 'monospace',
+              px: 1.5,
+              py: 0.5,
+              borderRadius: '12px',
+              bgcolor: surfaceContainer(theme, 'high'),
+              color: 'primary.main',
+              alignSelf: 'flex-start'
+            }}
+          >
+            {t('settings.domainCheckConcurrencyValue', { value: displayedDomainConcurrency })}
+          </Typography>
+          <Slider
+            value={displayedDomainConcurrency}
+            onChange={handleDomainConcurrencyChange}
+            onChangeCommitted={() => void handleDomainConcurrencyCommit()}
+            min={DOMAIN_CHECK_CONCURRENCY_MIN}
+            max={DOMAIN_CHECK_CONCURRENCY_MAX}
+            step={1}
+            marks={DOMAIN_CONCURRENCY_MARKS}
+            valueLabelDisplay="auto"
+            valueLabelFormat={(value) => t('settings.domainCheckConcurrencyValue', { value })}
+            sx={{ px: 0.5 }}
+          />
+        </ContentSection>
+
+        <SettingsSwitchSection
+          icon={<PublicOutlinedIcon fontSize="small" />}
+          title={t('settings.fetchExternalIp')}
+          description={t('settings.fetchExternalIpHint')}
+          checked={settings.fetchExternalIp}
+          onChange={(enabled) => void handleFetchExternalIpChange(enabled)}
+        />
+
+        <ContentSection
+          icon={<DnsOutlinedIcon fontSize="small" />}
+          title={t('settings.checkDomains')}
+          description={t('settings.checkDomainsHint')}
+        >
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mb: 2 }}>
+            <TextField
+              label={t('settings.addDomain')}
+              placeholder={t('settings.domainPlaceholder')}
+              value={domainInput}
+              onChange={(event) => {
+                setDomainInput(event.target.value)
+                setDomainError(null)
+              }}
+              error={Boolean(domainError)}
+              helperText={domainError}
+              fullWidth
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  void handleAddDomain()
+                }
+              }}
+            />
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => void handleAddDomain()}
+              sx={{
+                minWidth: { sm: 140 },
+                alignSelf: { xs: 'stretch', sm: 'flex-start' },
+                mt: { sm: 0.25 }
+              }}
+            >
+              {t('common.add')}
+            </Button>
+          </Stack>
+
+          <Stack spacing={0.75}>
+            {settings.checkDomains.length === 0 ? (
+              <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                {t('settings.checkDomainsEmpty')}
+              </Typography>
+            ) : (
+              settings.checkDomains.map((entry) => (
+                <Box
+                  key={entry.domain}
                   sx={{
-                    flex: 1,
-                    fontFamily: 'monospace',
-                    fontWeight: 500,
-                    wordBreak: 'break-all',
-                    color: entry.enabled ? 'text.primary' : 'text.secondary'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    px: 1.5,
+                    py: 1.1,
+                    borderRadius: '12px',
+                    bgcolor: surfaceContainer(theme, 'low'),
+                    opacity: entry.enabled ? 1 : 0.62,
+                    transition: surfaceTransition(['background-color', 'transform', 'opacity']),
+                    '&:hover': {
+                      bgcolor: surfaceContainer(theme, 'default'),
+                      transform: 'translateX(2px)'
+                    }
                   }}
                 >
-                  {entry.domain}
-                </Typography>
-                <IconButton
-                  size="small"
-                  color="error"
-                  onClick={() => void handleRemoveDomain(entry.domain)}
-                  aria-label={t('common.delete')}
-                >
-                  <DeleteOutlinedIcon fontSize="small" />
-                </IconButton>
-              </Box>
-            ))
-          )}
-        </Stack>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={entry.enabled}
+                        onChange={(event) =>
+                          void handleToggleDomain(entry.domain, event.target.checked)
+                        }
+                        size="small"
+                      />
+                    }
+                    label=""
+                    aria-label={
+                      entry.enabled
+                        ? t('settings.disableDomain', { domain: entry.domain })
+                        : t('settings.enableDomain', { domain: entry.domain })
+                    }
+                    sx={{ m: 0, flexShrink: 0 }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      flex: 1,
+                      fontFamily: 'monospace',
+                      fontWeight: 500,
+                      wordBreak: 'break-all',
+                      color: entry.enabled ? 'text.primary' : 'text.secondary'
+                    }}
+                  >
+                    {entry.domain}
+                  </Typography>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={() => void handleRemoveDomain(entry.domain)}
+                    aria-label={t('common.delete')}
+                  >
+                    <DeleteOutlinedIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              ))
+            )}
+          </Stack>
 
-        {settings.checkDomains.length > 0 &&
-          getEnabledCheckDomains(settings.checkDomains).length === 0 && (
-            <Typography variant="body2" color="warning.main" sx={{ mt: 1.5 }}>
-              {t('settings.checkDomainsAllDisabled')}
-            </Typography>
-          )}
-      </ContentSection>
-    </SettingsCardList>
+          {settings.checkDomains.length > 0 &&
+            getEnabledCheckDomains(settings.checkDomains).length === 0 && (
+              <Typography variant="body2" color="warning.main" sx={{ mt: 1.5 }}>
+                {t('settings.checkDomainsAllDisabled')}
+              </Typography>
+            )}
+        </ContentSection>
+      </SettingsCardList>
+    </>
   )
 }
 

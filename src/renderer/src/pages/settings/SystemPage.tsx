@@ -1,4 +1,5 @@
 import SystemSection from './sections/SystemSection'
+import SettingsSectionHeader from './components/SettingsSectionHeader'
 import { useSettingsStore } from '../../store/settingsStore'
 import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
 
@@ -8,7 +9,7 @@ function SystemPage(): React.JSX.Element {
   const { notifySaved } = useSettingsFeedback()
 
   const handleTrayEnabledChange = async (enabled: boolean): Promise<void> => {
-    // При выключении трея связанный флаг автозапуска свёрнутым сбрасывается.
+    // Reset startMinimized when the tray is disabled.
     await updateSettings({
       trayEnabled: enabled,
       startMinimized: enabled ? settings.startMinimized : false
@@ -32,18 +33,21 @@ function SystemPage(): React.JSX.Element {
   }
 
   return (
-    <SystemSection
-      trayEnabled={settings.trayEnabled}
-      startMinimized={settings.startMinimized}
-      launchAtLogin={settings.launchAtLogin}
-      backgroundCheckNotifications={settings.backgroundCheckNotifications}
-      onTrayEnabledChange={(enabled) => void handleTrayEnabledChange(enabled)}
-      onStartMinimizedChange={(enabled) => void handleStartMinimizedChange(enabled)}
-      onLaunchAtLoginChange={(enabled) => void handleLaunchAtLoginChange(enabled)}
-      onBackgroundCheckNotificationsChange={(enabled) =>
-        void handleBackgroundCheckNotificationsChange(enabled)
-      }
-    />
+    <>
+      <SettingsSectionHeader />
+      <SystemSection
+        trayEnabled={settings.trayEnabled}
+        startMinimized={settings.startMinimized}
+        launchAtLogin={settings.launchAtLogin}
+        backgroundCheckNotifications={settings.backgroundCheckNotifications}
+        onTrayEnabledChange={(enabled) => void handleTrayEnabledChange(enabled)}
+        onStartMinimizedChange={(enabled) => void handleStartMinimizedChange(enabled)}
+        onLaunchAtLoginChange={(enabled) => void handleLaunchAtLoginChange(enabled)}
+        onBackgroundCheckNotificationsChange={(enabled) =>
+          void handleBackgroundCheckNotificationsChange(enabled)
+        }
+      />
+    </>
   )
 }
 

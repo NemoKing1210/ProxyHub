@@ -3,16 +3,19 @@ import { Children, cloneElement, isValidElement, type ReactNode } from 'react'
 import { getListCardPosition, getListCardRadius } from '../../lib/card-list'
 import ContentSection from '../ui/ContentSection'
 import ProxyFormSection from '../proxy/ProxyFormSection'
+import SettingsSwitchSection from './SettingsSwitchSection'
 
 interface SettingsCardListProps {
   children: ReactNode
 }
 
-// Список карточек подстраницы настроек: плотный ряд, «сшитый» позиционными
-// радиусами как списки прокси. listRadius прокидывается только карточным
-// компонентам (ContentSection / ProxyFormSection), остальные элементы
-// (условные false/null, фрагменты) пропускаются без изменений.
-const CARD_TYPES = new Set<unknown>([ContentSection, ProxyFormSection])
+/**
+ * Dense list of subpage cards stitched with positional radii like proxy
+ * lists. `listRadius` is only passed to card components (ContentSection /
+ * ProxyFormSection / SettingsSwitchSection); other elements (conditional
+ * false/null, fragments) pass through unchanged.
+ */
+const CARD_TYPES = new Set<unknown>([ContentSection, ProxyFormSection, SettingsSwitchSection])
 
 function SettingsCardList({ children }: SettingsCardListProps): React.JSX.Element {
   const items = Children.toArray(children).filter(Boolean)

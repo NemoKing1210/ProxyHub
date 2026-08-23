@@ -279,6 +279,7 @@
   "settings": {
     "title": "الإعدادات",
     "description": "اضبط المظهر وإعدادات فحص البروكسي.",
+    "backToSettings": "العودة إلى الإعدادات",
     "sections": {
       "appearance": "المظهر",
       "appearanceDescription": "السمة واللغة وتخطيط بطاقات البروكسي.",

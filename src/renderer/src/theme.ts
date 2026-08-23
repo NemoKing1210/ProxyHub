@@ -20,7 +20,7 @@ export {
   outlineVariant
 } from './theme/surfaces'
 export { getPalette, withThemeAlpha } from './theme/palette'
-export { MD3_DURATION, MD3_EASING, staggerDelay } from './theme/motion'
+export { MD3_DURATION, MD3_EASING, MD3_EASING_CURVES, staggerDelay, surfaceTransition } from './theme/motion'
 
 function withAlpha(
   theme: { vars?: Theme['vars']; palette: Theme['palette'] },
@@ -44,17 +44,17 @@ const sharedTypography = {
   button: { fontWeight: 600, letterSpacing: '0.02em' }
 }
 
-// Единая шкала скруглений приложения:
-//   8px  — мелкие элементы: чипы, тултипы, мелкие инлайн-блоки
-//   12px — контролы и внутренние блоки: поля, свитч-карточки, иконки, вложенные боксы
-//   16px — карточки и контейнеры: карточки прокси, секции, фильтры/поиск,
-//          диалоги, меню и поповеры (включая внешние углы «сшитых» списков)
-//   Пилюли (999px) и круги (50%) — кнопки-капсулы, аватары, прогресс-треки.
+// App-wide border-radius scale:
+//   8px  — small elements: chips, tooltips, small inline blocks
+//   12px — controls and inner blocks: fields, switch cards, icons, nested boxes
+//   16px — cards and containers: proxy cards, sections, filters/search,
+//          dialogs, menus, popovers (incl. outer corners of stitched lists)
+//   Pills (999px) and circles (50%) — capsule buttons, avatars, progress tracks.
 const sharedShape = {
   borderRadius: 12
 }
 
-// Смешивание двух hex-цветов (sRGB lerp) — для тональных поверхностей на основе акцента.
+// Mix two hex colors (sRGB lerp) for accent-tinted tonal surfaces.
 function mixColor(base: string, accent: string, weight: number): string {
   const parse = (hex: string): [number, number, number] => {
     const value = hex.replace('#', '')
@@ -78,9 +78,9 @@ function mixColor(base: string, accent: string, weight: number): string {
   return `#${toHex(channel(r1, r2))}${toHex(channel(g1, g2))}${toHex(channel(b1, b2))}`
 }
 
-// Тональные фоны MD3: нейтральная база, подкрашенная акцентом.
-// Фон программы и paper подмешивают акцент, а поверхность карточек и секций
-// строится через surfaceContainer поверх них — получается цельная акцентная лестница.
+// MD3 tonal backgrounds: neutral base tinted with the accent. The app and
+// paper backgrounds blend in the accent while card/section surfaces are built
+// on top via surfaceContainer, forming a cohesive accent ladder.
 function tonalBackgrounds(accent: string): {
   light: { default: string; paper: string }
   dark: { default: string; paper: string }
@@ -404,7 +404,12 @@ function buildComponentOverrides(): Theme['components'] {
     MuiSnackbar: {
       styleOverrides: {
         root: {
-          bottom: 24
+          // Scope to bottom anchors only: a global `bottom` would also apply
+          // to top-anchored snackbars, stretching them across the viewport.
+          [`&.MuiSnackbar-anchorOriginBottomLeft, &.MuiSnackbar-anchorOriginBottomCenter,
+            &.MuiSnackbar-anchorOriginBottomRight`]: {
+            bottom: 24
+          }
         }
       }
     },

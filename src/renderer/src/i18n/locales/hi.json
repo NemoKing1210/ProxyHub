@@ -279,6 +279,7 @@
   "settings": {
     "title": "सेटिंग्स",
     "description": "दिखावट और प्रॉक्सी जांच सेट करें।",
+    "backToSettings": "सेटिंग्स पर वापस जाएँ",
     "sections": {
       "appearance": "दिखावट",
       "appearanceDescription": "थीम, भाषा और प्रॉक्सी कार्ड का लेआउट।",

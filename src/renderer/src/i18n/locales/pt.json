@@ -278,6 +278,7 @@
   "settings": {
     "title": "Configurações",
     "description": "Configure a aparência e a verificação de proxies.",
+    "backToSettings": "Voltar às configurações",
     "sections": {
       "appearance": "Aparência",
       "appearanceDescription": "Tema, idioma e layout dos cartões de proxy.",

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import type { AppInfo } from '@shared/types/app'
 import AppUpdateSection from './components/AppUpdateSection'
 import ChangelogView from './components/ChangelogView'
+import SettingsSectionHeader from './components/SettingsSectionHeader'
 import ContentSection from '../../components/ui/ContentSection'
 import SettingsCardList from '../../components/settings/SettingsCardList'
 
@@ -15,7 +16,6 @@ function AboutPage(): React.JSX.Element {
   const [appInfoError, setAppInfoError] = useState(false)
   const [isAppInfoLoading, setIsAppInfoLoading] = useState(true)
 
-  // IPC-запрос выполняется только при открытии страницы «О программе».
   useEffect(() => {
     let isMounted = true
 
@@ -47,41 +47,44 @@ function AboutPage(): React.JSX.Element {
   }, [])
 
   return (
-    <SettingsCardList>
-      <ContentSection
-        icon={<UpdateOutlinedIcon fontSize="small" />}
-        title={t('settings.updates.title')}
-      >
-        <AppUpdateSection />
-      </ContentSection>
+    <>
+      <SettingsSectionHeader />
+      <SettingsCardList>
+        <ContentSection
+          icon={<UpdateOutlinedIcon fontSize="small" />}
+          title={t('settings.updates.title')}
+        >
+          <AppUpdateSection />
+        </ContentSection>
 
-      <ContentSection
-        icon={<HistoryOutlinedIcon fontSize="small" />}
-        title={t('settings.currentVersion')}
-      >
-        {isAppInfoLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-            <CircularProgress size={28} />
-          </Box>
-        ) : appInfoError ? (
-          <Alert severity="error" variant="outlined">
-            {t('settings.changelogLoadError')}
-          </Alert>
-        ) : appInfo ? (
-          <ChangelogView
-            version={appInfo.version}
-            entries={appInfo.changelog}
-            author={appInfo.author}
-            authorEmail={appInfo.authorEmail}
-            repositoryUrl={appInfo.repositoryUrl}
-          />
-        ) : (
-          <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-            {t('settings.changelogEmpty')}
-          </Typography>
-        )}
-      </ContentSection>
-    </SettingsCardList>
+        <ContentSection
+          icon={<HistoryOutlinedIcon fontSize="small" />}
+          title={t('settings.currentVersion')}
+        >
+          {isAppInfoLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress size={28} />
+            </Box>
+          ) : appInfoError ? (
+            <Alert severity="error" variant="outlined">
+              {t('settings.changelogLoadError')}
+            </Alert>
+          ) : appInfo ? (
+            <ChangelogView
+              version={appInfo.version}
+              entries={appInfo.changelog}
+              author={appInfo.author}
+              authorEmail={appInfo.authorEmail}
+              repositoryUrl={appInfo.repositoryUrl}
+            />
+          ) : (
+            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              {t('settings.changelogEmpty')}
+            </Typography>
+          )}
+        </ContentSection>
+      </SettingsCardList>
+    </>
   )
 }
 
