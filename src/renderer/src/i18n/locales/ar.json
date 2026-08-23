@@ -59,7 +59,9 @@
       "clear": "مسح الفلاتر",
       "shown": "عرض {{shown}} من {{total}}",
       "noResults": "لا توجد بروكسيات تطابق الفلاتر",
-      "noResultsHint": "جرّب تغيير الفلاتر أو مسحها."
+      "noResultsHint": "جرّب تغيير الفلاتر أو مسحها.",
+      "showEmptyGroups": "Empty groups",
+      "showEmptyGroupsHint": "Show empty groups"
     },
     "search": {
       "title": "بحث",
@@ -153,7 +155,9 @@
       "removeFromGroup": "Remove from group",
       "noGroup": "No group",
       "noGroups": "No groups yet",
-      "currentGroup": "Current: {{name}}"
+      "currentGroup": "Current: {{name}}",
+      "setAsSystemProxy": "Set as system proxy",
+      "clearSystemProxy": "Disable system proxy"
     },
     "disabled": "معطّل",
     "sections": {
@@ -181,7 +185,18 @@
     "errorMessage": "الرسالة",
     "errorCode": "الرمز",
     "add": "Add",
-    "addGroup": "Add group"
+    "addGroup": "Add group",
+    "systemProxy": {
+      "active": "System proxy",
+      "setSuccessTitle": "System proxy enabled",
+      "setSuccessMessage": "{{server}} is now the system proxy",
+      "clearSuccessTitle": "System proxy disabled",
+      "clearSuccessMessage": "System proxy has been disabled",
+      "unsupportedTitle": "Not supported",
+      "unsupportedMessage": "MTProto proxies cannot be used as system proxy",
+      "errorTitle": "System proxy error",
+      "notSupportedPlatform": "System proxy is only supported on Windows"
+    }
   },
   "proxyForm": {
     "addTitle": "إضافة بروكسي",

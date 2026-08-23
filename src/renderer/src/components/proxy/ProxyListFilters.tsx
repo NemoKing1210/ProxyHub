@@ -1,6 +1,7 @@
 import FilterListIcon from '@mui/icons-material/FilterList'
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
 import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
@@ -10,17 +11,14 @@ import {
   Box,
   Button,
   Chip,
-  FormControlLabel,
   MenuItem,
   Slider,
   Stack,
-  Switch,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { findProxyCountry } from '@shared/constants/proxy-countries'
@@ -39,9 +37,10 @@ import {
   countActiveFilters,
   hasActiveFilters
 } from '../../lib/filter-proxies'
-import { surfaceContainer } from '../../theme'
 import ContentSection from '../ui/ContentSection'
 import CountryFlag from '../ui/CountryFlag'
+import RevealCollapse from '../ui/RevealCollapse'
+import SettingsSwitchCard from '../settings/SettingsSwitchCard'
 
 interface ProxyListFiltersProps {
   proxies: Proxy[]
@@ -99,7 +98,7 @@ function ProxyListFiltersImpl({
   onChange
 }: ProxyListFiltersProps): React.JSX.Element {
   const { t } = useTranslation()
-  const theme = useTheme()
+
 
   const countryOptions = useMemo(() => getCountryOptions(proxies), [proxies])
   const protocolOptions = useMemo(() => getProtocolOptions(proxies), [proxies])
@@ -376,47 +375,16 @@ function ProxyListFiltersImpl({
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>
-
-          <Box>
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{ mb: 1.25, alignItems: 'center', justifyContent: 'space-between' }}
-            >
-              <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
-                <TimerOutlinedIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-                <Typography variant="subtitle2">{t('proxyList.filters.maxLatency')}</Typography>
-              </Stack>
-              {latencyLimitEnabled && (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontWeight: 700,
-                    fontFamily: 'monospace',
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: '12px',
-                    bgcolor: surfaceContainer(theme, 'high'),
-                    color: 'primary.main'
-                  }}
-                >
-                  {t('proxyList.filters.maxLatencyValue', { value: latencyValue })}
-                </Typography>
-              )}
-            </Stack>
-
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={latencyLimitEnabled}
-                  onChange={(event) => handleLatencyLimitToggle(event.target.checked)}
-                />
-              }
-              label={t('proxyList.filters.maxLatencyEnabled')}
-              sx={{ mb: latencyLimitEnabled ? 1.5 : 0 }}
-            />
-
-            {latencyLimitEnabled && (
+          <SettingsSwitchCard
+            icon={<TimerOutlinedIcon fontSize="small" />}
+            title={t('proxyList.filters.maxLatency')}
+            hint={t('proxyList.filters.maxLatencyEnabled')}
+            checked={latencyLimitEnabled}
+            onChange={handleLatencyLimitToggle}
+            clickable
+          />
+          <RevealCollapse in={latencyLimitEnabled}>
+            <Box sx={{ mt: 1, px: 0.5 }}>
               <Slider
                 value={latencyValue}
                 onChange={(_event, value) =>
@@ -429,8 +397,17 @@ function ProxyListFiltersImpl({
                 valueLabelFormat={(value) => t('proxyList.filters.maxLatencyValue', { value })}
                 sx={{ px: 0.5 }}
               />
-            )}
-          </Box>
+            </Box>
+          </RevealCollapse>
+
+          <SettingsSwitchCard
+            icon={<FolderOutlinedIcon fontSize="small" />}
+            title={t('proxyList.filters.showEmptyGroups')}
+            hint={t('proxyList.filters.showEmptyGroupsHint')}
+            checked={filters.showEmptyGroups}
+            onChange={(checked) => updateFilters({ showEmptyGroups: checked })}
+            clickable
+          />
         </Stack>
 
         <Stack

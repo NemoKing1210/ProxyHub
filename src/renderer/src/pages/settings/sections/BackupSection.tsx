@@ -1,4 +1,4 @@
-import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
+import BackupOutlinedIcon from '@mui/icons-material/BackupOutlined'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import DataObjectOutlinedIcon from '@mui/icons-material/DataObjectOutlined'
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
@@ -540,7 +540,7 @@ function BackupSection({
     <>
       <SettingsCardList>
         <ContentSection
-          icon={<ArchiveOutlinedIcon fontSize="small" />}
+          icon={<BackupOutlinedIcon fontSize="small" />}
           title={
             <Stack
               direction="row"

@@ -1,4 +1,4 @@
-import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined'
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined'
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
@@ -118,7 +118,7 @@ function AutoCheckSection({
   return (
     <SettingsCardList>
       <SettingsSwitchSection
-        icon={<AutorenewOutlinedIcon fontSize="small" />}
+        icon={<ScheduleOutlinedIcon fontSize="small" />}
         title={
           <Stack
             direction="row"

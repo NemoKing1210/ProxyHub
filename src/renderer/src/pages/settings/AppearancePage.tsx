@@ -2,8 +2,9 @@ import CheckIcon from '@mui/icons-material/Check'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
+import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
-import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
+import ColorLensOutlinedIcon from '@mui/icons-material/ColorLensOutlined'
 import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightnessOutlined'
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined'
 import ViewAgendaOutlinedIcon from '@mui/icons-material/ViewAgendaOutlined'
@@ -104,7 +105,7 @@ function AppearancePage(): React.JSX.Element {
       <SettingsSectionHeader />
       <SettingsCardList>
         <ContentSection
-          icon={<PaletteOutlinedIcon fontSize="small" />}
+          icon={<ColorLensOutlinedIcon fontSize="small" />}
           title={t('settings.appearanceThemeGroup')}
           description={t('settings.theme')}
         >
@@ -285,7 +286,7 @@ function AppearancePage(): React.JSX.Element {
           description={t('settings.toastEnabledHint')}
         >
           <SettingsSwitchCard
-            icon={<NotificationsOutlinedIcon fontSize="small" />}
+            icon={<NotificationsActiveOutlinedIcon fontSize="small" />}
             title={t('settings.toastEnabled')}
             hint={t('settings.toastEnabledHint')}
             checked={settings.toastEnabled}

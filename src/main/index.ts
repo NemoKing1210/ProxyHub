@@ -8,6 +8,7 @@ import { registerProxyImportIpc } from './ipc/proxy-import'
 import { registerProxyIpc } from './ipc/proxy'
 import { registerSettingsIpc } from './ipc/settings'
 import { registerSyncIpc, runStartupSyncPull } from './ipc/sync'
+import { registerSystemProxyIpc } from './ipc/system-proxy'
 import { registerTrayIpc, syncTrayEnabled } from './ipc/tray'
 import { registerUpdaterIpc } from './ipc/updater'
 import { initializeAutoUpdater, scheduleStartupUpdateCheck } from './services/auto-updater'
@@ -85,7 +86,6 @@ async function createWindow(): Promise<void> {
 app.on('before-quit', () => {
   setAppQuitting(true)
 })
-
 app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.nemoking1210.proxyhub')
 
@@ -101,6 +101,7 @@ app.whenReady().then(async () => {
   registerAppIpc()
   registerUpdaterIpc()
   registerTrayIpc()
+  registerSystemProxyIpc()
   initializeNativeThemeListener(() => getMainWindow() ?? undefined)
 
   const settings = await getSettings()

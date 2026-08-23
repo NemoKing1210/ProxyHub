@@ -59,7 +59,9 @@
       "clear": "Filter zurücksetzen",
       "shown": "{{shown}} von {{total}} angezeigt",
       "noResults": "Keine Proxies entsprechen den Filtern",
-      "noResultsHint": "Ändern oder löschen Sie die Filter."
+      "noResultsHint": "Ändern oder löschen Sie die Filter.",
+      "showEmptyGroups": "Empty groups",
+      "showEmptyGroupsHint": "Show empty groups"
     },
     "search": {
       "title": "Suche",
@@ -153,7 +155,9 @@
       "removeFromGroup": "Remove from group",
       "noGroup": "No group",
       "noGroups": "No groups yet",
-      "currentGroup": "Current: {{name}}"
+      "currentGroup": "Current: {{name}}",
+      "setAsSystemProxy": "Set as system proxy",
+      "clearSystemProxy": "Disable system proxy"
     },
     "disabled": "Deaktiviert",
     "sections": {
@@ -181,7 +185,18 @@
     "errorCode": "Code",
     "add": "Add",
     "addGroup": "Add group",
-    "errorDetailsTitle": "Error details"
+    "errorDetailsTitle": "Error details",
+    "systemProxy": {
+      "active": "System proxy",
+      "setSuccessTitle": "System proxy enabled",
+      "setSuccessMessage": "{{server}} is now the system proxy",
+      "clearSuccessTitle": "System proxy disabled",
+      "clearSuccessMessage": "System proxy has been disabled",
+      "unsupportedTitle": "Not supported",
+      "unsupportedMessage": "MTProto proxies cannot be used as system proxy",
+      "errorTitle": "System proxy error",
+      "notSupportedPlatform": "System proxy is only supported on Windows"
+    }
   },
   "proxyForm": {
     "addTitle": "Proxy hinzufügen",

@@ -525,12 +525,12 @@ function ProxyList(): React.JSX.Element {
     [visibleProxies, groups]
   )
   const visibleGroupSections = useMemo(() => {
-    if (filtersActive) {
-      return organizedList.groups.filter((section) => section.proxies.length > 0)
+    if (filters.showEmptyGroups) {
+      return organizedList.groups
     }
 
-    return organizedList.groups
-  }, [organizedList.groups, filtersActive])
+    return organizedList.groups.filter((section) => section.proxies.length > 0)
+  }, [organizedList.groups, filters.showEmptyGroups])
   const hasVisibleItems = organizedList.ungrouped.length > 0 || visibleGroupSections.length > 0
   const checkableProxyIds = useMemo(
     () => filterEnabledProxies(visibleProxies).map((proxy) => proxy.id),

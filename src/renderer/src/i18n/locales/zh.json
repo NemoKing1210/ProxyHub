@@ -59,7 +59,9 @@
       "clear": "清除筛选",
       "shown": "显示 {{shown}} / {{total}}",
       "noResults": "没有符合筛选条件的代理",
-      "noResultsHint": "请尝试更改或清除筛选条件。"
+      "noResultsHint": "请尝试更改或清除筛选条件。",
+      "showEmptyGroups": "Empty groups",
+      "showEmptyGroupsHint": "Show empty groups"
     },
     "search": {
       "title": "搜索",
@@ -153,7 +155,9 @@
       "removeFromGroup": "Remove from group",
       "noGroup": "No group",
       "noGroups": "No groups yet",
-      "currentGroup": "Current: {{name}}"
+      "currentGroup": "Current: {{name}}",
+      "setAsSystemProxy": "Set as system proxy",
+      "clearSystemProxy": "Disable system proxy"
     },
     "disabled": "已禁用",
     "sections": {
@@ -181,7 +185,18 @@
     "errorMessage": "消息",
     "errorCode": "代码",
     "add": "Add",
-    "addGroup": "Add group"
+    "addGroup": "Add group",
+    "systemProxy": {
+      "active": "System proxy",
+      "setSuccessTitle": "System proxy enabled",
+      "setSuccessMessage": "{{server}} is now the system proxy",
+      "clearSuccessTitle": "System proxy disabled",
+      "clearSuccessMessage": "System proxy has been disabled",
+      "unsupportedTitle": "Not supported",
+      "unsupportedMessage": "MTProto proxies cannot be used as system proxy",
+      "errorTitle": "System proxy error",
+      "notSupportedPlatform": "System proxy is only supported on Windows"
+    }
   },
   "proxyForm": {
     "addTitle": "添加代理",

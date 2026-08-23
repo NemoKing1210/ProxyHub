@@ -37,6 +37,11 @@ import type {
 } from './sync'
 import type { AppUpdateState } from './updater'
 
+export interface SystemProxyInfo {
+  enabled: boolean
+  server: string | null
+}
+
 export interface AppNotificationPayload {
   title: string
   body?: string
@@ -95,4 +100,7 @@ export interface AppAPI {
   downloadUpdate: () => Promise<AppUpdateState>
   installUpdate: () => Promise<void>
   onUpdateStateChange: (callback: (state: AppUpdateState) => void) => () => void
+  getSystemProxy: () => Promise<SystemProxyInfo>
+  setSystemProxy: (proxy: Proxy) => Promise<SystemProxyInfo>
+  clearSystemProxy: () => Promise<SystemProxyInfo>
 }

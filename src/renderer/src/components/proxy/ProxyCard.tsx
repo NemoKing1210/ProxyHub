@@ -16,6 +16,7 @@ import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined'
 import ToggleOffOutlinedIcon from '@mui/icons-material/ToggleOffOutlined'
 import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined'
 import UnfoldLessOutlinedIcon from '@mui/icons-material/UnfoldLessOutlined'
@@ -451,6 +452,7 @@ function ProxyCard({
     <Box
       onContextMenu={handleContextMenu}
       sx={{
+        position: 'relative',
         borderRadius: listRadius ?? '16px',
         bgcolor: surfaceContainer(theme, 'lowest'),
         boxShadow: `${elevationShadow(theme, 1)}, inset 0 0 0 1px ${surfaceTint(theme, 'primary', 0.14)}`,
@@ -459,9 +461,53 @@ function ProxyCard({
         transition: 'opacity 160ms ease'
       }}
     >
+      {isChecking && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 3,
+            zIndex: 3,
+            overflow: 'hidden',
+            borderTopLeftRadius: listRadius ?? '16px',
+            borderTopRightRadius: listRadius ?? '16px',
+            pointerEvents: 'none'
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              background: `linear-gradient(90deg, transparent 0%, ${theme.palette.primary.main} 50%, transparent 100%)`,
+              backgroundSize: '200% 100%',
+              animation: 'proxyCardShimmer 1.2s ease-in-out infinite',
+              opacity: 0.9,
+              '@keyframes proxyCardShimmer': {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+              }
+            }}
+          />
+        </Box>
+      )}
+      {isChecking && (
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            bgcolor: alpha(theme.palette.primary.main, 0.04),
+            pointerEvents: 'none',
+            zIndex: 1,
+            borderRadius: listRadius ?? '16px'
+          }}
+        />
+      )}
       <Box
         sx={{
           position: 'relative',
+          zIndex: 2,
           p: isCompact ? { xs: 1.5, sm: 2 } : { xs: 2.5, sm: 3 },
           pb: isCompact && !cardExpanded ? { xs: 1.5, sm: 2 } : undefined
         }}
@@ -517,48 +563,72 @@ function ProxyCard({
               : undefined
           }}
         >
-          <IconButton
-            ref={iconButtonRef}
-            onClick={(event) => {
-              stopPropagation(event)
-              setIconPickerAnchor(event.currentTarget)
-            }}
-            aria-label={t('proxyList.actions.changeIcon')}
+          <Box
             sx={{
+              position: 'relative',
+              flexShrink: 0,
+              width: isCompact ? 44 : 48,
+              height: isCompact ? 44 : 48,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              width: isCompact ? 40 : 44,
-              height: isCompact ? 40 : 44,
-              borderRadius: '16px',
-              flexShrink: 0,
-              bgcolor: colorStyles.background,
-              color: colorStyles.main,
-              transition: 'background-color 160ms ease, transform 160ms ease',
-              '&:hover': {
-                bgcolor: alpha(colorStyles.main, theme.palette.mode === 'dark' ? 0.32 : 0.22),
-                color: colorStyles.main
-              },
-              ...(isChecking
-                ? {
-                    animation: 'iconPulse 1.6s ease-in-out infinite',
-                    '@keyframes iconPulse': {
-                      '0%, 100%': {
-                        boxShadow: `0 0 0 0 ${colorStyles.ring}`
-                      },
-                      '50%': { boxShadow: `0 0 0 8px ${alpha(colorStyles.main, 0)}` }
-                    }
-                  }
-                : {})
+              justifyContent: 'center'
             }}
           >
-            <ProxyCardAvatar
-              icon={proxy.icon}
-              countryCode={proxy.countryCode}
-              flagSize={isCompact ? 20 : 22}
-              fontSize="small"
-            />
-          </IconButton>
+            <IconButton
+              ref={iconButtonRef}
+              onClick={(event) => {
+                stopPropagation(event)
+                setIconPickerAnchor(event.currentTarget)
+              }}
+              aria-label={t('proxyList.actions.changeIcon')}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: isCompact ? 40 : 44,
+                height: isCompact ? 40 : 44,
+                borderRadius: '16px',
+                bgcolor: colorStyles.background,
+                color: colorStyles.main,
+                transition: 'background-color 160ms ease, transform 160ms ease',
+                '&:hover': {
+                  bgcolor: alpha(colorStyles.main, theme.palette.mode === 'dark' ? 0.32 : 0.22),
+                  color: colorStyles.main
+                },
+                ...(isChecking
+                  ? {
+                      animation: 'iconPulse 1.6s ease-in-out infinite',
+                      '@keyframes iconPulse': {
+                        '0%, 100%': {
+                          boxShadow: `0 0 0 0 ${colorStyles.ring}`
+                        },
+                        '50%': { boxShadow: `0 0 0 8px ${alpha(colorStyles.main, 0)}` }
+                      }
+                    }
+                  : {})
+              }}
+            >
+              <ProxyCardAvatar
+                icon={proxy.icon}
+                countryCode={proxy.countryCode}
+                flagSize={isCompact ? 20 : 22}
+                fontSize="small"
+              />
+            </IconButton>
+            {isChecking && (
+              <CircularProgress
+                size={isCompact ? 44 : 48}
+                thickness={2.4}
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  color: alpha(theme.palette.primary.main, 0.95),
+                  pointerEvents: 'none'
+                }}
+              />
+            )}
+          </Box>
 
           <ProxyIconPickerPopover
             anchorEl={iconPickerAnchor}
@@ -654,6 +724,18 @@ function ProxyCard({
                   />
                 )}
                 <ProxyStatusChip status={proxy.status} />
+                {proxy.checkedAt && (
+                  <Stack
+                    direction="row"
+                    spacing={0.375}
+                    sx={{ alignItems: 'center', color: 'text.secondary', flexShrink: 0 }}
+                  >
+                    <ScheduleOutlinedIcon sx={{ fontSize: 14 }} />
+                    <Typography variant="caption" sx={{ fontWeight: 500, lineHeight: 1, whiteSpace: 'nowrap' }}>
+                      {formatDateTime(proxy.checkedAt, i18n.language)}
+                    </Typography>
+                  </Stack>
+                )}
                 {isCompact && displayLatency !== undefined && (
                   <Typography
                     variant="caption"

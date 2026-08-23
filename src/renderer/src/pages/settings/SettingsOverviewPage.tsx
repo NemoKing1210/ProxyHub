@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useSettingsSections } from './sectionsRegistry'
 import { getListCardPosition, getListCardRadius } from '../../lib/card-list'
-import { surfaceContainer, surfaceTransition, withThemeAlpha } from '../../theme'
-
+import { surfaceContainer, surfaceTint, surfaceTransition, withThemeAlpha } from '../../theme'
 /**
  * Settings overview subpage: a scannable list of categories, each leading
  * to its own /settings/:section page.
@@ -61,11 +60,11 @@ function SettingsOverviewPage(): React.JSX.Element {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 40,
-                height: 40,
+                width: 44,
+                height: 44,
                 flexShrink: 0,
-                borderRadius: '12px',
-                bgcolor: withThemeAlpha(theme, theme.palette.primary.main, 0.14),
+                borderRadius: '16px',
+                bgcolor: surfaceTint(theme, 'primary', 0.18),
                 color: 'primary.main'
               }}
             >

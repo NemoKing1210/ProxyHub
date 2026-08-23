@@ -18,6 +18,7 @@ export interface ProxyListFilters {
   status: ProxyStatusFilter
   activity: ProxyActivityFilter
   maxLatencyMs: number | null
+  showEmptyGroups: boolean
 }
 
 export const PROXY_SORT_FIELDS = [
@@ -53,7 +54,8 @@ export const DEFAULT_PROXY_LIST_FILTERS: ProxyListFilters = {
   favorite: 'all',
   status: 'all',
   activity: 'all',
-  maxLatencyMs: null
+  maxLatencyMs: null,
+  showEmptyGroups: false
 }
 
 export const DEFAULT_PROXY_LIST_VIEW: ProxyListViewState = {
@@ -124,7 +126,8 @@ export function normalizeProxyListFilters(
     favorite: normalizeFavoriteFilter(merged.favorite),
     status: normalizeStatusFilter(merged.status),
     activity: normalizeActivityFilter(merged.activity),
-    maxLatencyMs: normalizeMaxLatencyMs(merged.maxLatencyMs)
+    maxLatencyMs: normalizeMaxLatencyMs(merged.maxLatencyMs),
+    showEmptyGroups: merged.showEmptyGroups === true
   }
 }
 

@@ -106,12 +106,14 @@ const api: AppAPI = {
     const handler = (_event: Electron.IpcRendererEvent, state: AppUpdateState): void => {
       callback(state)
     }
-
     ipcRenderer.on('updater:state-changed', handler)
     return () => {
       ipcRenderer.removeListener('updater:state-changed', handler)
     }
-  }
+  },
+  getSystemProxy: () => ipcRenderer.invoke('system-proxy:get'),
+  setSystemProxy: (proxy) => ipcRenderer.invoke('system-proxy:set', proxy),
+  clearSystemProxy: () => ipcRenderer.invoke('system-proxy:clear')
 }
 
 if (process.contextIsolated) {

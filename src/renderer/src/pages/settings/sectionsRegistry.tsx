@@ -1,10 +1,10 @@
-import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined'
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
+import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined'
 import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined'
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import NetworkCheckOutlinedIcon from '@mui/icons-material/NetworkCheckOutlined'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -119,7 +119,7 @@ export function useSettingsSections(): SettingsSectionMeta[] {
       path: '/settings/danger',
       title: t('settings.sections.dangerZone'),
       description: t('settings.sections.dangerZoneDescription'),
-      icon: <ErrorOutlineOutlinedIcon fontSize="small" />,
+      icon: <WarningAmberOutlinedIcon fontSize="small" />,
       summary: t('settings.sections.dangerZoneDescription')
     },
     {

@@ -1,4 +1,5 @@
 import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined'
+import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined'
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
 import GoogleIcon from '@mui/icons-material/Google'
@@ -845,7 +846,7 @@ function SyncSection({ onSaved, onFeedback, onReloadData }: SyncSectionProps): R
 
         {isProviderEnabled && (
           <SettingsSwitchSection
-            icon={<CloudSyncOutlinedIcon fontSize="small" />}
+            icon={<SyncOutlinedIcon fontSize="small" />}
             title={t('settings.sync.autoSyncEnabled')}
             description={t('settings.sync.autoSyncEnabledHint')}
             checked={config.autoSyncEnabled}

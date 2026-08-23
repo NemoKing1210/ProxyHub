@@ -65,6 +65,8 @@
       "maxLatency": "Макс. задержка",
       "maxLatencyEnabled": "Ограничить по задержке",
       "maxLatencyValue": "{{value}} мс",
+      "showEmptyGroups": "Пустые группы",
+      "showEmptyGroupsHint": "Показывать пустые группы",
       "all": "Все",
       "activeCount": "{{count}} активных фильтров",
       "clear": "Сбросить фильтры",
@@ -164,9 +166,21 @@
       "removeFromGroup": "Убрать из группы",
       "noGroup": "Без группы",
       "noGroups": "Групп пока нет",
-      "currentGroup": "Сейчас: {{name}}"
+      "currentGroup": "Сейчас: {{name}}",
+      "setAsSystemProxy": "Установить как системный прокси",
+      "clearSystemProxy": "Отключить системный прокси"
     },
-    "disabled": "Отключён",
+    "systemProxy": {
+      "active": "Системный прокси",
+      "setSuccessTitle": "Системный прокси включён",
+      "setSuccessMessage": "{{server}} теперь системный прокси",
+      "clearSuccessTitle": "Системный прокси отключён",
+      "clearSuccessMessage": "Системный прокси отключён",
+      "unsupportedTitle": "Не поддерживается",
+      "unsupportedMessage": "MTProto прокси нельзя использовать как системный",
+      "errorTitle": "Ошибка системного прокси",
+      "notSupportedPlatform": "Системный прокси поддерживается только в Windows"
+    },
     "sections": {
       "connection": "Подключение",
       "connectionDescription": "Хост, порт и данные авторизации.",

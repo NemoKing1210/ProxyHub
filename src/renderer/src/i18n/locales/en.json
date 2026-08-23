@@ -65,6 +65,8 @@
       "maxLatency": "Max latency",
       "maxLatencyEnabled": "Limit by latency",
       "maxLatencyValue": "{{value}} ms",
+      "showEmptyGroups": "Empty groups",
+      "showEmptyGroupsHint": "Show empty groups",
       "all": "All",
       "activeCount": "{{count}} filters active",
       "clear": "Clear filters",
@@ -164,9 +166,21 @@
       "removeFromGroup": "Remove from group",
       "noGroup": "No group",
       "noGroups": "No groups yet",
-      "currentGroup": "Current: {{name}}"
+      "currentGroup": "Current: {{name}}",
+      "setAsSystemProxy": "Set as system proxy",
+      "clearSystemProxy": "Disable system proxy"
     },
-    "disabled": "Disabled",
+    "systemProxy": {
+      "active": "System proxy",
+      "setSuccessTitle": "System proxy enabled",
+      "setSuccessMessage": "{{server}} is now the system proxy",
+      "clearSuccessTitle": "System proxy disabled",
+      "clearSuccessMessage": "System proxy has been disabled",
+      "unsupportedTitle": "Not supported",
+      "unsupportedMessage": "MTProto proxies cannot be used as system proxy",
+      "errorTitle": "System proxy error",
+      "notSupportedPlatform": "System proxy is only supported on Windows"
+    },
     "sections": {
       "connection": "Connection",
       "connectionDescription": "Host, port, and authentication credentials.",
