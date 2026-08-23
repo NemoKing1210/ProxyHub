@@ -33,14 +33,14 @@ import {
 } from '@shared/types/proxy'
 import { resolveProxyColorId } from '@shared/utils/proxy-colors'
 import { parseProxyUrl } from '@shared/utils/proxy-format'
-import { getProxyColorStyles } from '../utils/proxy-color-styles'
-import { getListCardRadius } from '../utils/card-list'
+import { getProxyColorStyles } from '../../utils/proxy-color-styles'
+import { getListCardRadius } from '../../utils/card-list'
 import {
   createProxyFormSchema,
   type ProxyFormSchemaContext,
   type ProxyFormValues
-} from '../validation/proxySchema'
-import CountryFlag from './ui/CountryFlag'
+} from '../../validation/proxySchema'
+import CountryFlag from '../ui/CountryFlag'
 import ProxyCardAvatar from './ProxyCardAvatar'
 import ProxyColorSwatch from './ProxyColorSwatch'
 import ProxyFormSection from './ProxyFormSection'

@@ -28,9 +28,9 @@ import {
   toGroupIconFormValue
 } from '@shared/utils/proxy-group-normalize'
 import type { ProxyGroupInput } from '@shared/types/proxy-group'
-import ProxyColorSwatch from './ProxyColorSwatch'
+import ProxyColorSwatch from '../proxy/ProxyColorSwatch'
 import ProxyGroupAvatar from './ProxyGroupAvatar'
-import ProxyIcon from './ProxyIcon'
+import ProxyIcon from '../proxy/ProxyIcon'
 
 interface ProxyGroupFormDialogProps {
   open: boolean

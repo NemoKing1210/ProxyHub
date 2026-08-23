@@ -2,8 +2,8 @@ import { Box, Chip, CircularProgress, Stack, Typography } from '@mui/material'
 import { keyframes, useTheme, type Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ProxyDomainCheckResult } from '@shared/types/proxy'
-import { getPalette, MD3_EASING, staggerDelay, withThemeAlpha } from '../theme'
-import LatencyText from './ui/LatencyText'
+import { getPalette, MD3_EASING, staggerDelay, withThemeAlpha } from '../../theme'
+import LatencyText from '../ui/LatencyText'
 
 interface ProxyDomainResultsProps {
   domainChecks: ProxyDomainCheckResult[]

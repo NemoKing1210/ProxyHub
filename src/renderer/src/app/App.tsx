@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout'
-import ProxyList from '../components/ProxyList'
+import ProxyList from '../components/proxy/ProxyList'
 import RoutePersistenceSync from './bootstrap/RoutePersistenceSync'
 import SettingsPage from '../pages/SettingsPage'
 import AppearancePage from '../pages/settings/AppearancePage'

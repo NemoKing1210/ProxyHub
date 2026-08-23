@@ -23,8 +23,8 @@ import { matchesProxySearch } from '../utils/matches-proxy-search'
 import { organizeProxiesByGroup } from '../utils/organize-proxies-by-group'
 import { getProxyProtocolStyles } from '../utils/proxy-protocol-styles'
 import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../theme'
-import ProxyCardAvatar from './ProxyCardAvatar'
-import ProxyGroupAvatar from './ProxyGroupAvatar'
+import ProxyCardAvatar from './proxy/ProxyCardAvatar'
+import ProxyGroupAvatar from './group/ProxyGroupAvatar'
 
 interface BackupProxySelectionListProps {
   proxies: Proxy[]

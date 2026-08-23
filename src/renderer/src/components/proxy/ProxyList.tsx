@@ -42,47 +42,53 @@ import { normalizeAnonymityLevel } from '@shared/utils/proxy-import'
 import { normalizeProxyColorId } from '@shared/utils/proxy-colors'
 import { parseProxyUrl } from '@shared/utils/proxy-format'
 import { filterEnabledProxies } from '@shared/utils/proxy-enabled'
-import { useProxyListViewState } from '../hooks/useProxyListViewState'
-import { useGroupStore } from '../store/groupStore'
-import { useProxyStore } from '../store/proxyStore'
-import { useSettingsStore } from '../store/settingsStore'
-import { filterProxies, hasActiveFilters } from '../utils/filter-proxies'
+import { useProxyListViewState } from '../../hooks/useProxyListViewState'
+import { useGroupStore } from '../../store/groupStore'
+import { useProxyStore } from '../../store/proxyStore'
+import { useSettingsStore } from '../../store/settingsStore'
+import { filterProxies, hasActiveFilters } from '../../utils/filter-proxies'
 import {
   listItemTransition,
   listLayoutTransition,
   usePrefersReducedMotion
-} from '../utils/list-motion'
-import { sortProxies, sortProxiesByFavorite } from '../utils/sort-proxies'
+} from '../../utils/list-motion'
+import { sortProxies, sortProxiesByFavorite } from '../../utils/sort-proxies'
 import {
   organizeProxiesByGroup,
   type ProxyGroupSection as OrganizedGroupSection
-} from '../utils/organize-proxies-by-group'
-import { getListCardPosition, getListCardRadius } from '../utils/card-list'
+} from '../../utils/organize-proxies-by-group'
+import { getListCardPosition, getListCardRadius } from '../../utils/card-list'
 import {
   UNGROUPED_DROP_ZONE_ID,
   getGroupDropZoneId,
   groupsMatch,
   isHoveringGroup,
   resolveDropTargetGroupId
-} from '../utils/proxy-dnd'
-import { MD3_DURATION, MD3_EASING, elevationShadow, surfaceContainer, surfaceTint } from '../theme'
-import type { ProxyFormValues } from '../validation/proxySchema'
+} from '../../utils/proxy-dnd'
+import {
+  MD3_DURATION,
+  MD3_EASING,
+  elevationShadow,
+  surfaceContainer,
+  surfaceTint
+} from '../../theme'
+import type { ProxyFormValues } from '../../validation/proxySchema'
 import ProxyCardDragOverlay from './ProxyCardDragOverlay'
 import ProxyListRow from './ProxyListRow'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'
 import ProxyDetailsDialog from './ProxyDetailsDialog'
 import ProxyFormDialog from './ProxyFormDialog'
-import ProxyGroupClearConfirmDialog from './ProxyGroupClearConfirmDialog'
-import ProxyGroupDeleteConfirmDialog from './ProxyGroupDeleteConfirmDialog'
-import ProxyGroupDeleteDeadConfirmDialog from './ProxyGroupDeleteDeadConfirmDialog'
-import ProxyGroupFormDialog from './ProxyGroupFormDialog'
-import ProxyGroupSection from './ProxyGroupSection'
+import ProxyGroupClearConfirmDialog from '../group/ProxyGroupClearConfirmDialog'
+import ProxyGroupDeleteConfirmDialog from '../group/ProxyGroupDeleteConfirmDialog'
+import ProxyGroupDeleteDeadConfirmDialog from '../group/ProxyGroupDeleteDeadConfirmDialog'
+import ProxyGroupFormDialog from '../group/ProxyGroupFormDialog'
+import ProxyGroupSection from '../group/ProxyGroupSection'
 import ProxyStatBadges from './ProxyStatBadges'
 import ProxyDropZone from './ProxyDropZone'
 import ProxyListFilters from './ProxyListFilters'
 import ProxyListSearch from './ProxyListSearch'
 import ProxyListSort from './ProxyListSort'
-import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'
+import AutoCheckCountdownBadge from '../AutoCheckCountdownBadge'
 
 function toProxyInput(values: ProxyFormValues): ProxyInput {
   return {

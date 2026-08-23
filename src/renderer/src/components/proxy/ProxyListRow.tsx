@@ -8,8 +8,8 @@ import {
   listLayoutTransition,
   proxyCardVariants,
   usePrefersReducedMotion
-} from '../utils/list-motion'
-import { useProxyStore } from '../store/proxyStore'
+} from '../../utils/list-motion'
+import { useProxyStore } from '../../store/proxyStore'
 import DraggableProxyCard from './DraggableProxyCard'
 import ProxyCard from './ProxyCard'
 

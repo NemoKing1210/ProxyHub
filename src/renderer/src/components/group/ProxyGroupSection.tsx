@@ -30,21 +30,21 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import type { Proxy, ProxyColorId, ProxyIconId } from '@shared/types/proxy'
 import type { ProxyGroup } from '@shared/types/proxy-group'
-import { getGroupColorStyles } from '../utils/proxy-group-appearance'
+import { getGroupColorStyles } from '../../utils/proxy-group-appearance'
 import {
   filterProxiesByGroupBadge,
   type ProxyGroupBadgeFilter
-} from '../utils/proxy-group-badge-filter'
-import { getGroupPagination } from '../utils/proxy-group-pagination'
-import { getProxyCheckProgress } from '../utils/proxy-check-progress'
-import { getListCardPosition, getListCardRadius } from '../utils/card-list'
-import { elevationShadow } from '../theme'
-import ProxyCheckProgressBar from './ProxyCheckProgressBar'
-import ProxyColorPickerPopover from './ProxyColorPickerPopover'
+} from '../../utils/proxy-group-badge-filter'
+import { getGroupPagination } from '../../utils/proxy-group-pagination'
+import { getProxyCheckProgress } from '../../utils/proxy-check-progress'
+import { getListCardPosition, getListCardRadius } from '../../utils/card-list'
+import { elevationShadow } from '../../theme'
+import ProxyCheckProgressBar from '../proxy/ProxyCheckProgressBar'
+import ProxyColorPickerPopover from '../proxy/ProxyColorPickerPopover'
 import ProxyGroupAvatar from './ProxyGroupAvatar'
 import ProxyGroupPagination from './ProxyGroupPagination'
-import ProxyIconPickerPopover from './ProxyIconPickerPopover'
-import ProxyStatBadges from './ProxyStatBadges'
+import ProxyIconPickerPopover from '../proxy/ProxyIconPickerPopover'
+import ProxyStatBadges from '../proxy/ProxyStatBadges'
 
 interface ContextMenuPosition {
   top: number

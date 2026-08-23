@@ -1,5 +1,5 @@
 import { DEFAULT_PROXY_ICON_ID, type ProxyIconId } from '@shared/types/proxy'
-import CountryFlag from './ui/CountryFlag'
+import CountryFlag from '../ui/CountryFlag'
 import ProxyIcon from './ProxyIcon'
 
 interface ProxyCardAvatarProps {

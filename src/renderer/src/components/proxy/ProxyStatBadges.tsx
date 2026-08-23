@@ -10,18 +10,18 @@ import { useMemo, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Proxy } from '@shared/types/proxy'
 import { isProxyEnabled } from '@shared/utils/proxy-enabled'
-import { getPalette, surfaceContainer, withThemeAlpha } from '../theme'
-import type { ProxyGroupBadgeFilter } from '../utils/proxy-group-badge-filter'
+import { getPalette, surfaceContainer, withThemeAlpha } from '../../theme'
+import type { ProxyGroupBadgeFilter } from '../../utils/proxy-group-badge-filter'
 import {
   isProxyGroupBadgeFilterActive,
   toggleProxyGroupBadgeFilter
-} from '../utils/proxy-group-badge-filter'
+} from '../../utils/proxy-group-badge-filter'
 import {
   badgeTransition,
   listLayoutTransition,
   statBadgeVariants,
   usePrefersReducedMotion
-} from '../utils/list-motion'
+} from '../../utils/list-motion'
 import { AnimatePresence, motion } from 'framer-motion'
 
 interface StatBadgeItem {

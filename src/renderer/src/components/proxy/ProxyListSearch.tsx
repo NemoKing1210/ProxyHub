@@ -4,8 +4,8 @@ import { IconButton, InputAdornment, InputBase, Stack, Typography } from '@mui/m
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDebouncedValue } from '../hooks/useDebouncedValue'
-import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
+import { useDebouncedValue } from '../../hooks/useDebouncedValue'
+import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../theme'
 
 const SEARCH_DEBOUNCE_MS = 300
 

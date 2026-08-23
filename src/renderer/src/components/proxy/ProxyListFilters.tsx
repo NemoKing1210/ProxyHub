@@ -38,10 +38,10 @@ import {
   type ProxyStatusFilter,
   countActiveFilters,
   hasActiveFilters
-} from '../utils/filter-proxies'
-import { surfaceContainer } from '../theme'
-import ContentSection from './ui/ContentSection'
-import CountryFlag from './ui/CountryFlag'
+} from '../../utils/filter-proxies'
+import { surfaceContainer } from '../../theme'
+import ContentSection from '../ui/ContentSection'
+import CountryFlag from '../ui/CountryFlag'
 
 interface ProxyListFiltersProps {
   proxies: Proxy[]

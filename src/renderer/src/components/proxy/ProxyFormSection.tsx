@@ -2,7 +2,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Collapse, IconButton, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { type ReactNode, useState } from 'react'
-import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../theme'
+import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../theme'
 
 interface ProxyFormSectionProps {
   icon: ReactNode

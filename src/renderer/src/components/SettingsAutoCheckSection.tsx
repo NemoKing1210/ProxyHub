@@ -26,7 +26,7 @@ import {
 import ContentSection from './ui/ContentSection'
 import SettingsCardList from './SettingsCardList'
 import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'
-import ProxyGroupAvatar from './ProxyGroupAvatar'
+import ProxyGroupAvatar from './group/ProxyGroupAvatar'
 import SettingsSwitchCard from './SettingsSwitchCard'
 import { MD3_DURATION, MD3_EASING, outlineVariant, surfaceContainer } from '../theme'
 

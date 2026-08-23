@@ -2,7 +2,7 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { IconButton, InputAdornment, TextField, Tooltip } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import { MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../theme'
+import { MD3_DURATION, MD3_EASING, surfaceContainer, withThemeAlpha } from '../../theme'
 
 interface ProxyQuickFillPanelProps {
   value: string

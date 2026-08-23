@@ -2,8 +2,8 @@ import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import { Box } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import type { ProxyGroup } from '@shared/types/proxy-group'
-import { getGroupColorStyles } from '../utils/proxy-group-appearance'
-import ProxyIcon from './ProxyIcon'
+import { getGroupColorStyles } from '../../utils/proxy-group-appearance'
+import ProxyIcon from '../proxy/ProxyIcon'
 
 interface ProxyGroupAvatarProps {
   group: Pick<ProxyGroup, 'icon' | 'color'>

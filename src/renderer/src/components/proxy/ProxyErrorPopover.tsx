@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ProxyCheckErrorDetail } from '@shared/types/proxy'
-import { elevationShadow, getPalette, withThemeAlpha } from '../theme'
+import { elevationShadow, getPalette, withThemeAlpha } from '../../theme'
 
 interface ProxyErrorPopoverProps {
   error: string
