@@ -25,6 +25,7 @@ interface ContentSectionProps {
   onExpandedChange?: (expanded: boolean) => void
   accent?: ContentSectionAccent
   showHeader?: boolean
+  listRadius?: string
 }
 
 function ContentSection({
@@ -38,7 +39,8 @@ function ContentSection({
   expanded,
   onExpandedChange,
   accent = 'primary',
-  showHeader = true
+  showHeader = true,
+  listRadius
 }: ContentSectionProps): React.JSX.Element {
   const theme = useTheme()
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -66,7 +68,7 @@ function ContentSection({
     <Box
       sx={{
         p: nested ? 2 : { xs: 2.5, sm: 3 },
-        borderRadius: nested ? '12px' : '16px',
+        borderRadius: listRadius ?? (nested ? '12px' : '16px'),
         bgcolor:
           accent === 'primary'
             ? surfaceContainer(theme, nested ? 'default' : 'low')

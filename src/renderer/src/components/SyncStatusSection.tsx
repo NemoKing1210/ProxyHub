@@ -21,6 +21,7 @@ interface SyncStatusSectionProps {
   googleEmail?: string
   hasPayloadPassword: boolean
   safeStorageAvailable: boolean
+  children?: React.ReactNode
 }
 
 interface StatusRowProps {
@@ -90,7 +91,8 @@ function SyncStatusSection({
   hasCredentials,
   googleEmail,
   hasPayloadPassword,
-  safeStorageAvailable
+  safeStorageAvailable,
+  children
 }: SyncStatusSectionProps): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
@@ -386,6 +388,8 @@ function SyncStatusSection({
           </Typography>
         </Stack>
       )}
+
+      {children ? <Box sx={{ pt: 1 }}>{children}</Box> : null}
     </ProxyFormSection>
   )
 }

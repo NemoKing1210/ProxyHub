@@ -41,6 +41,7 @@ import { resolveLastSyncAt } from '../../../shared/utils/sync-status'
 import { formatDateTime } from '../../../shared/utils/datetime'
 import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
 import ContentSection from './ContentSection'
+import SettingsCardList from './SettingsCardList'
 import ProxyFormSection from './ProxyFormSection'
 import SettingsSwitchCard from './SettingsSwitchCard'
 import SyncStatusSection from './SyncStatusSection'
@@ -548,370 +549,357 @@ function SettingsSyncSection({
 
   return (
     <>
-      <ContentSection
-        icon={<CloudSyncOutlinedIcon fontSize="small" />}
-        title={sectionTitle}
-        description={sectionDescription}
-        showHeader={false}
-      >
-        <Stack spacing={3}>
-          <ProxyFormSection
-            icon={<HubOutlinedIcon fontSize="small" />}
-            title={t('settings.sync.provider')}
-            description={t(`settings.sync.providers.${config.provider}`)}
+      <SettingsCardList>
+        <ProxyFormSection
+          icon={<HubOutlinedIcon fontSize="small" />}
+          title={t('settings.sync.provider')}
+          description={t(`settings.sync.providers.${config.provider}`)}
+        >
+          <TextField
+            select
+            fullWidth
+            value={selectedProviderValue}
+            disabled={isBusy}
+            helperText={!hasGoogleClientId ? t('settings.sync.googleDriveSelectHint') : undefined}
+            onChange={(event) => void handleProviderChange(event.target.value as SyncProviderType)}
           >
-            <TextField
-              select
-              fullWidth
-              value={selectedProviderValue}
-              disabled={isBusy}
-              helperText={!hasGoogleClientId ? t('settings.sync.googleDriveSelectHint') : undefined}
-              onChange={(event) =>
-                void handleProviderChange(event.target.value as SyncProviderType)
-              }
-            >
-              {PROVIDER_OPTIONS.map((provider) => {
-                const isGoogleDriveOption = provider === 'google-drive'
-                const isGoogleDriveUnavailable = isGoogleDriveOption && !hasGoogleClientId
+            {PROVIDER_OPTIONS.map((provider) => {
+              const isGoogleDriveOption = provider === 'google-drive'
+              const isGoogleDriveUnavailable = isGoogleDriveOption && !hasGoogleClientId
 
-                return (
-                  <MenuItem
-                    key={provider}
-                    value={provider}
-                    disabled={isGoogleDriveUnavailable}
-                    sx={
-                      isGoogleDriveUnavailable
-                        ? {
-                            opacity: 1,
-                            '&.Mui-disabled': {
-                              opacity: 1
-                            }
+              return (
+                <MenuItem
+                  key={provider}
+                  value={provider}
+                  disabled={isGoogleDriveUnavailable}
+                  sx={
+                    isGoogleDriveUnavailable
+                      ? {
+                          opacity: 1,
+                          '&.Mui-disabled': {
+                            opacity: 1
                           }
-                        : undefined
-                    }
-                  >
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      useFlexGap
-                      sx={{ alignItems: 'center', width: '100%' }}
-                    >
-                      <Box component="span" sx={{ flex: 1 }}>
-                        {t(`settings.sync.providers.${provider}`)}
-                      </Box>
-                      {isGoogleDriveUnavailable && (
-                        <Chip
-                          label={t('settings.sync.googleDriveNotConfiguredBadge')}
-                          size="small"
-                          variant="outlined"
-                          sx={{
-                            height: 22,
-                            fontSize: '0.68rem',
-                            fontWeight: 700,
-                            color: 'warning.main',
-                            borderColor: withThemeAlpha(theme, theme.palette.warning.main, 0.45),
-                            pointerEvents: 'none'
-                          }}
-                        />
-                      )}
-                    </Stack>
-                  </MenuItem>
-                )
-              })}
-            </TextField>
-
-            <Collapse in={isProviderEnabled}>
-              <Stack spacing={2.5}>
-                {!safeStorageAvailable && (
-                  <Alert severity="warning" variant="outlined" icon={<WarningAmberOutlinedIcon />}>
-                    {t('settings.sync.safeStorageUnavailable')}
-                  </Alert>
-                )}
-
-                <Alert severity="info" variant="outlined">
-                  {isGoogleProvider
-                    ? t('settings.sync.googleSecurityHint')
-                    : t('settings.sync.securityHint')}
-                </Alert>
-
-                {isGithubProvider && (
-                  <>
-                    <Box>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
-                        <Typography variant="subtitle2">
-                          {t('settings.sync.githubToken')}
-                        </Typography>
-                        <IconButton
-                          size="small"
-                          aria-label={t('settings.sync.createToken')}
-                          onClick={() => void window.api.openExternal(GITHUB_CREATE_TOKEN_URL)}
-                        >
-                          <LinkOutlinedIcon fontSize="small" />
-                        </IconButton>
-                      </Stack>
-                      <TextField
-                        fullWidth
-                        type="password"
-                        value={githubTokenDraft}
-                        disabled={isBusy || !safeStorageAvailable}
-                        placeholder={
-                          hasCredentials
-                            ? t('settings.sync.tokenSavedPlaceholder')
-                            : t('settings.sync.githubTokenPlaceholder')
                         }
-                        onChange={(event) => setGithubTokenDraft(event.target.value)}
-                        slotProps={{
-                          input: {
-                            endAdornment: hasCredentials ? (
-                              <InputAdornment position="end">
-                                <Typography variant="caption" color="success.main">
-                                  {t('settings.sync.tokenSaved')}
-                                </Typography>
-                              </InputAdornment>
-                            ) : undefined
-                          }
+                      : undefined
+                  }
+                >
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    useFlexGap
+                    sx={{ alignItems: 'center', width: '100%' }}
+                  >
+                    <Box component="span" sx={{ flex: 1 }}>
+                      {t(`settings.sync.providers.${provider}`)}
+                    </Box>
+                    {isGoogleDriveUnavailable && (
+                      <Chip
+                        label={t('settings.sync.googleDriveNotConfiguredBadge')}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                          height: 22,
+                          fontSize: '0.68rem',
+                          fontWeight: 700,
+                          color: 'warning.main',
+                          borderColor: withThemeAlpha(theme, theme.palette.warning.main, 0.45),
+                          pointerEvents: 'none'
                         }}
                       />
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{ mt: 0.75, display: 'block' }}
-                      >
-                        {t('settings.sync.githubTokenHint')}
-                      </Typography>
-                    </Box>
+                    )}
+                  </Stack>
+                </MenuItem>
+              )
+            })}
+          </TextField>
 
+          <Collapse in={isProviderEnabled}>
+            <Stack spacing={2.5}>
+              {!safeStorageAvailable && (
+                <Alert severity="warning" variant="outlined" icon={<WarningAmberOutlinedIcon />}>
+                  {t('settings.sync.safeStorageUnavailable')}
+                </Alert>
+              )}
+
+              <Alert severity="info" variant="outlined">
+                {isGoogleProvider
+                  ? t('settings.sync.googleSecurityHint')
+                  : t('settings.sync.securityHint')}
+              </Alert>
+
+              {isGithubProvider && (
+                <>
+                  <Box>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
+                      <Typography variant="subtitle2">{t('settings.sync.githubToken')}</Typography>
+                      <IconButton
+                        size="small"
+                        aria-label={t('settings.sync.createToken')}
+                        onClick={() => void window.api.openExternal(GITHUB_CREATE_TOKEN_URL)}
+                      >
+                        <LinkOutlinedIcon fontSize="small" />
+                      </IconButton>
+                    </Stack>
                     <TextField
                       fullWidth
-                      label={t('settings.sync.gistId')}
-                      value={remoteIdDraft}
-                      disabled={isBusy}
-                      placeholder={t('settings.sync.gistIdPlaceholder')}
-                      helperText={t('settings.sync.gistIdHint')}
-                      onChange={(event) => setRemoteIdDraft(event.target.value)}
+                      type="password"
+                      value={githubTokenDraft}
+                      disabled={isBusy || !safeStorageAvailable}
+                      placeholder={
+                        hasCredentials
+                          ? t('settings.sync.tokenSavedPlaceholder')
+                          : t('settings.sync.githubTokenPlaceholder')
+                      }
+                      onChange={(event) => setGithubTokenDraft(event.target.value)}
+                      slotProps={{
+                        input: {
+                          endAdornment: hasCredentials ? (
+                            <InputAdornment position="end">
+                              <Typography variant="caption" color="success.main">
+                                {t('settings.sync.tokenSaved')}
+                              </Typography>
+                            </InputAdornment>
+                          ) : undefined
+                        }
+                      }}
                     />
-                  </>
-                )}
-
-                {isGoogleProvider && (
-                  <Box>
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                      {t('settings.sync.googleAccount')}
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ mt: 0.75, display: 'block' }}
+                    >
+                      {t('settings.sync.githubTokenHint')}
                     </Typography>
-                    {hasCredentials ? (
-                      <Stack spacing={1.5}>
-                        <Alert severity="success" variant="outlined">
-                          {googleEmail
-                            ? t('settings.sync.googleConnectedAs', { email: googleEmail })
-                            : t('settings.sync.googleConnected')}
-                        </Alert>
-                        <Button
-                          variant="outlined"
-                          color="inherit"
-                          disabled={isBusy || isDisconnectingGoogle}
-                          onClick={() => void handleDisconnectGoogle()}
-                          startIcon={
-                            isDisconnectingGoogle ? (
-                              <CircularProgress size={18} color="inherit" />
-                            ) : (
-                              <LogoutOutlinedIcon />
-                            )
-                          }
-                        >
-                          {t('settings.sync.googleDisconnect')}
-                        </Button>
-                      </Stack>
-                    ) : (
-                      <Stack spacing={1.25}>
-                        <Typography variant="body2" color="text.secondary">
-                          {t('settings.sync.googleConnectHint')}
-                        </Typography>
-                        <Button
-                          variant="contained"
-                          disabled={
-                            isBusy ||
-                            !safeStorageAvailable ||
-                            isConnectingGoogle ||
-                            !hasGoogleClientId
-                          }
-                          onClick={() => void handleConnectGoogle()}
-                          startIcon={
-                            isConnectingGoogle ? (
-                              <CircularProgress size={18} color="inherit" />
-                            ) : (
-                              <GoogleIcon />
-                            )
-                          }
-                        >
-                          {t('settings.sync.googleConnect')}
-                        </Button>
-                      </Stack>
-                    )}
                   </Box>
-                )}
 
-                <Typography variant="subtitle2">{t('settings.sync.scope')}</Typography>
+                  <TextField
+                    fullWidth
+                    label={t('settings.sync.gistId')}
+                    value={remoteIdDraft}
+                    disabled={isBusy}
+                    placeholder={t('settings.sync.gistIdPlaceholder')}
+                    helperText={t('settings.sync.gistIdHint')}
+                    onChange={(event) => setRemoteIdDraft(event.target.value)}
+                  />
+                </>
+              )}
+
+              {isGoogleProvider && (
+                <Box>
+                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                    {t('settings.sync.googleAccount')}
+                  </Typography>
+                  {hasCredentials ? (
+                    <Stack spacing={1.5}>
+                      <Alert severity="success" variant="outlined">
+                        {googleEmail
+                          ? t('settings.sync.googleConnectedAs', { email: googleEmail })
+                          : t('settings.sync.googleConnected')}
+                      </Alert>
+                      <Button
+                        variant="outlined"
+                        color="inherit"
+                        disabled={isBusy || isDisconnectingGoogle}
+                        onClick={() => void handleDisconnectGoogle()}
+                        startIcon={
+                          isDisconnectingGoogle ? (
+                            <CircularProgress size={18} color="inherit" />
+                          ) : (
+                            <LogoutOutlinedIcon />
+                          )
+                        }
+                      >
+                        {t('settings.sync.googleDisconnect')}
+                      </Button>
+                    </Stack>
+                  ) : (
+                    <Stack spacing={1.25}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t('settings.sync.googleConnectHint')}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        disabled={
+                          isBusy ||
+                          !safeStorageAvailable ||
+                          isConnectingGoogle ||
+                          !hasGoogleClientId
+                        }
+                        onClick={() => void handleConnectGoogle()}
+                        startIcon={
+                          isConnectingGoogle ? (
+                            <CircularProgress size={18} color="inherit" />
+                          ) : (
+                            <GoogleIcon />
+                          )
+                        }
+                      >
+                        {t('settings.sync.googleConnect')}
+                      </Button>
+                    </Stack>
+                  )}
+                </Box>
+              )}
+
+              <Typography variant="subtitle2">{t('settings.sync.scope')}</Typography>
+              <ToggleButtonGroup
+                value={config.scope}
+                exclusive
+                fullWidth
+                disabled={isBusy}
+                onChange={(_event, value: SyncScope | null) => {
+                  if (value) {
+                    void handleScopeChange(value)
+                  }
+                }}
+                sx={{
+                  '& .MuiToggleButton-root': {
+                    py: 1.1,
+                    px: 1.25,
+                    fontSize: '0.82rem'
+                  }
+                }}
+              >
+                <ToggleButton value="full">{t('settings.backup.exportKindFull')}</ToggleButton>
+                <ToggleButton value="proxies">
+                  {t('settings.backup.exportKindProxies')}
+                </ToggleButton>
+                <ToggleButton value="settings">
+                  {t('settings.backup.exportKindSettings')}
+                </ToggleButton>
+              </ToggleButtonGroup>
+
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                  {t('settings.sync.pullMode')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.25 }}>
+                  {config.pullMode === 'replace'
+                    ? t('settings.backup.importModeReplaceHint')
+                    : t('settings.backup.importModeMergeHint')}
+                </Typography>
                 <ToggleButtonGroup
-                  value={config.scope}
+                  value={config.pullMode}
                   exclusive
                   fullWidth
                   disabled={isBusy}
-                  onChange={(_event, value: SyncScope | null) => {
+                  onChange={(_event, value: BackupImportMode | null) => {
                     if (value) {
-                      void handleScopeChange(value)
-                    }
-                  }}
-                  sx={{
-                    '& .MuiToggleButton-root': {
-                      py: 1.1,
-                      px: 1.25,
-                      fontSize: '0.82rem'
+                      void handlePullModeChange(value)
                     }
                   }}
                 >
-                  <ToggleButton value="full">{t('settings.backup.exportKindFull')}</ToggleButton>
-                  <ToggleButton value="proxies">
-                    {t('settings.backup.exportKindProxies')}
-                  </ToggleButton>
-                  <ToggleButton value="settings">
-                    {t('settings.backup.exportKindSettings')}
+                  <ToggleButton value="merge">{t('settings.backup.importModeMerge')}</ToggleButton>
+                  <ToggleButton value="replace">
+                    {t('settings.backup.importModeReplace')}
                   </ToggleButton>
                 </ToggleButtonGroup>
+              </Box>
 
-                <Box>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    {t('settings.sync.pullMode')}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1.25 }}>
-                    {config.pullMode === 'replace'
-                      ? t('settings.backup.importModeReplaceHint')
-                      : t('settings.backup.importModeMergeHint')}
-                  </Typography>
-                  <ToggleButtonGroup
-                    value={config.pullMode}
-                    exclusive
-                    fullWidth
-                    disabled={isBusy}
-                    onChange={(_event, value: BackupImportMode | null) => {
-                      if (value) {
-                        void handlePullModeChange(value)
-                      }
-                    }}
-                  >
-                    <ToggleButton value="merge">
-                      {t('settings.backup.importModeMerge')}
-                    </ToggleButton>
-                    <ToggleButton value="replace">
-                      {t('settings.backup.importModeReplace')}
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </Box>
+              <BackupPasswordFields
+                enabled={encryptPayload}
+                onEnabledChange={setEncryptPayload}
+                password={payloadPassword}
+                onPasswordChange={setPayloadPassword}
+                confirmPassword={payloadPasswordConfirm}
+                onConfirmPasswordChange={setPayloadPasswordConfirm}
+                disabled={isBusy || !safeStorageAvailable}
+              />
+              {hasPayloadPassword && encryptPayload && !payloadPassword && (
+                <Typography variant="caption" color="success.main">
+                  {t('settings.sync.passwordSaved')}
+                </Typography>
+              )}
 
-                <BackupPasswordFields
-                  enabled={encryptPayload}
-                  onEnabledChange={setEncryptPayload}
-                  password={payloadPassword}
-                  onPasswordChange={setPayloadPassword}
-                  confirmPassword={payloadPasswordConfirm}
-                  onConfirmPasswordChange={setPayloadPasswordConfirm}
-                  disabled={isBusy || !safeStorageAvailable}
-                />
-                {hasPayloadPassword && encryptPayload && !payloadPassword && (
-                  <Typography variant="caption" color="success.main">
-                    {t('settings.sync.passwordSaved')}
-                  </Typography>
-                )}
-
-                {(isGithubProvider || isGoogleProvider) && (
-                  <Button
-                    variant="outlined"
-                    disabled={
-                      isBusy ||
-                      !safeStorageAvailable ||
-                      (isGithubProvider && !hasCredentials && !githubTokenDraft.trim()) ||
-                      (isGoogleProvider && !hasCredentials)
-                    }
-                    onClick={() => void handleSaveProviderSettings()}
-                    startIcon={
-                      isSaving ? <CircularProgress size={18} color="inherit" /> : undefined
-                    }
-                  >
-                    {t('settings.sync.saveSettings')}
-                  </Button>
-                )}
-
+              {(isGithubProvider || isGoogleProvider) && (
                 <Button
-                  variant="text"
+                  variant="outlined"
                   disabled={
                     isBusy ||
-                    (isGithubProvider && !hasCredentials) ||
+                    !safeStorageAvailable ||
+                    (isGithubProvider && !hasCredentials && !githubTokenDraft.trim()) ||
                     (isGoogleProvider && !hasCredentials)
                   }
-                  onClick={() => void handleTestConnection()}
-                  startIcon={
-                    isTesting ? (
-                      <CircularProgress size={18} color="inherit" />
-                    ) : (
-                      <PlayArrowOutlinedIcon />
-                    )
-                  }
+                  onClick={() => void handleSaveProviderSettings()}
+                  startIcon={isSaving ? <CircularProgress size={18} color="inherit" /> : undefined}
                 >
-                  {t('settings.sync.testConnection')}
+                  {t('settings.sync.saveSettings')}
                 </Button>
-              </Stack>
-            </Collapse>
-          </ProxyFormSection>
+              )}
 
-          <Collapse in={isProviderEnabled} mountOnEnter unmountOnExit>
-            <Box sx={{ borderRadius: '16px' }}>
-              <SettingsSwitchCard
-                icon={<CloudSyncOutlinedIcon fontSize="small" />}
-                title={t('settings.sync.autoSyncEnabled')}
-                hint={t('settings.sync.autoSyncEnabledHint')}
-                checked={config.autoSyncEnabled}
-                onChange={(enabled) => void handleAutoSyncChange(enabled)}
-                disabled={isBusy}
-                accent="info"
-                clickable
-              />
+              <Button
+                variant="text"
+                disabled={
+                  isBusy ||
+                  (isGithubProvider && !hasCredentials) ||
+                  (isGoogleProvider && !hasCredentials)
+                }
+                onClick={() => void handleTestConnection()}
+                startIcon={
+                  isTesting ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : (
+                    <PlayArrowOutlinedIcon />
+                  )
+                }
+              >
+                {t('settings.sync.testConnection')}
+              </Button>
+            </Stack>
+          </Collapse>
+        </ProxyFormSection>
 
-              <Collapse in={config.autoSyncEnabled} mountOnEnter unmountOnExit>
-                <Box sx={{ px: 2.25, pb: 2.25 }}>
-                  <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
-                    <Typography variant="subtitle2">
-                      {t('settings.sync.autoSyncInterval')}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        px: 1,
-                        py: 0.25,
-                        borderRadius: '12px',
-                        fontFamily: 'monospace',
-                        bgcolor: surfaceContainer(theme, 'high')
-                      }}
-                    >
-                      {formatIntervalLabel(displayedInterval)}
-                    </Typography>
-                  </Stack>
-                  <Slider
-                    value={displayedInterval}
-                    min={SYNC_INTERVAL_MIN}
-                    max={SYNC_INTERVAL_MAX}
-                    step={1}
-                    marks={INTERVAL_MARKS}
-                    disabled={isBusy}
-                    onChange={(_event, value) => {
-                      setIsDraggingInterval(true)
-                      setIntervalDraft(
-                        clampIntervalMinutes(Array.isArray(value) ? value[0] : value)
-                      )
+        {isProviderEnabled && (
+          <ContentSection
+            icon={<CloudSyncOutlinedIcon fontSize="small" />}
+            title={t('settings.sync.autoSyncEnabled')}
+            description={t('settings.sync.autoSyncEnabledHint')}
+          >
+            <SettingsSwitchCard
+              icon={<CloudSyncOutlinedIcon fontSize="small" />}
+              title={t('settings.sync.autoSyncEnabled')}
+              hint={t('settings.sync.autoSyncEnabledHint')}
+              checked={config.autoSyncEnabled}
+              onChange={(enabled) => void handleAutoSyncChange(enabled)}
+              disabled={isBusy}
+              accent="info"
+              clickable
+            />
+
+            <Collapse in={config.autoSyncEnabled} mountOnEnter unmountOnExit>
+              <Box sx={{ px: 2.25, pb: 2.25 }}>
+                <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
+                  <Typography variant="subtitle2">{t('settings.sync.autoSyncInterval')}</Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      px: 1,
+                      py: 0.25,
+                      borderRadius: '12px',
+                      fontFamily: 'monospace',
+                      bgcolor: surfaceContainer(theme, 'high')
                     }}
-                    onChangeCommitted={() => void handleIntervalCommit()}
-                  />
-                </Box>
-              </Collapse>
+                  >
+                    {formatIntervalLabel(displayedInterval)}
+                  </Typography>
+                </Stack>
+                <Slider
+                  value={displayedInterval}
+                  min={SYNC_INTERVAL_MIN}
+                  max={SYNC_INTERVAL_MAX}
+                  step={1}
+                  marks={INTERVAL_MARKS}
+                  disabled={isBusy}
+                  onChange={(_event, value) => {
+                    setIsDraggingInterval(true)
+                    setIntervalDraft(clampIntervalMinutes(Array.isArray(value) ? value[0] : value))
+                  }}
+                  onChangeCommitted={() => void handleIntervalCommit()}
+                />
+              </Box>
+            </Collapse>
 
+            <Box sx={{ mt: 0.75 }}>
               <SettingsSwitchCard
                 icon={<FileDownloadOutlinedIcon fontSize="small" />}
                 title={t('settings.sync.syncOnStartup')}
@@ -922,7 +910,9 @@ function SettingsSyncSection({
                 accent="info"
                 clickable
               />
+            </Box>
 
+            <Box sx={{ mt: 0.75 }}>
               <SettingsSwitchCard
                 icon={<FileUploadOutlinedIcon fontSize="small" />}
                 title={t('settings.sync.pushOnChange')}
@@ -934,21 +924,19 @@ function SettingsSyncSection({
                 clickable
               />
             </Box>
-          </Collapse>
+          </ContentSection>
+        )}
 
-          {isProviderEnabled && (
-            <SyncStatusSection
-              config={config}
-              status={status}
-              hasCredentials={hasCredentials}
-              googleEmail={googleEmail}
-              hasPayloadPassword={hasPayloadPassword}
-              safeStorageAvailable={safeStorageAvailable}
-            />
-          )}
-
-          {isProviderEnabled && (
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25}>
+        {isProviderEnabled && (
+          <SyncStatusSection
+            config={config}
+            status={status}
+            hasCredentials={hasCredentials}
+            googleEmail={googleEmail}
+            hasPayloadPassword={hasPayloadPassword}
+            safeStorageAvailable={safeStorageAvailable}
+          >
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ mt: 1.5 }}>
               <Button
                 variant="contained"
                 fullWidth
@@ -980,9 +968,9 @@ function SettingsSyncSection({
                 {t('settings.sync.pull')}
               </Button>
             </Stack>
-          )}
-        </Stack>
-      </ContentSection>
+          </SyncStatusSection>
+        )}
+      </SettingsCardList>
 
       <SyncPullPreviewDialog
         open={previewOpen}

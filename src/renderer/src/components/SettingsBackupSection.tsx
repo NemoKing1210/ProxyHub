@@ -3,7 +3,6 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import DataObjectOutlinedIcon from '@mui/icons-material/DataObjectOutlined'
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined'
-import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined'
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import {
@@ -11,13 +10,11 @@ import {
   Box,
   Button,
   CircularProgress,
-  Divider,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
   Typography
 } from '@mui/material'
-import type { SxProps, Theme } from '@mui/material/styles'
 import { useTheme } from '@mui/material/styles'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
@@ -37,8 +34,9 @@ import BackupExportProxiesDialog from './BackupExportProxiesDialog'
 import BackupImportPreviewDialog from './BackupImportPreviewDialog'
 import BackupPasswordFields, { validateBackupExportPassword } from './BackupPasswordFields'
 import ContentSection from './ContentSection'
+import SettingsCardList from './SettingsCardList'
 import CsvImportPreviewDialog from './CsvImportPreviewDialog'
-import { outlineVariant, surfaceContainer, withThemeAlpha } from '../theme'
+import { surfaceContainer, withThemeAlpha } from '../theme'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '../../../shared/constants/backup-crypto'
 
 interface SettingsBackupSectionProps {
@@ -542,189 +540,143 @@ function SettingsBackupSection({
 
   const isBusy = isExporting || isSelectingFile
 
-  const nativeCardSx: SxProps<Theme> = {
-    p: { xs: 2, sm: 2.25 },
-    borderRadius: '16px',
-    bgcolor: surfaceContainer(theme, 'default'),
-    backgroundImage: `linear-gradient(135deg, ${withThemeAlpha(theme, theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.08 : 0.05)} 0%, transparent 55%)`
-  }
-
   return (
     <>
-      <ContentSection
-        icon={<SwapHorizOutlinedIcon fontSize="small" />}
-        title={t('settings.sections.backup')}
-        description={t('settings.sections.backupDescription')}
-        showHeader={false}
-      >
-        <Stack spacing={3}>
-          <Box sx={nativeCardSx}>
-            <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start', mb: 2 }}>
-              <Box
+      <SettingsCardList>
+        <ContentSection
+          icon={<ArchiveOutlinedIcon fontSize="small" />}
+          title={
+            <Stack
+              direction="row"
+              spacing={0.75}
+              useFlexGap
+              sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+            >
+              <span>{t('settings.backup.nativeTitle')}</span>
+              <Typography
+                variant="caption"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 44,
-                  height: 44,
-                  borderRadius: '16px',
-                  flexShrink: 0,
-                  bgcolor: withThemeAlpha(
-                    theme,
-                    theme.palette.primary.main,
-                    theme.palette.mode === 'dark' ? 0.24 : 0.12
-                  ),
+                  px: 0.75,
+                  py: 0.15,
+                  borderRadius: '12px',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  bgcolor: withThemeAlpha(theme, theme.palette.primary.main, 0.12),
                   color: 'primary.main'
                 }}
               >
-                <ArchiveOutlinedIcon />
-              </Box>
-              <Box sx={{ minWidth: 0, flex: 1 }}>
-                <Stack
-                  direction="row"
-                  spacing={0.75}
-                  sx={{ alignItems: 'center', flexWrap: 'wrap' }}
-                >
-                  <Typography variant="subtitle1">{t('settings.backup.nativeTitle')}</Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      px: 0.75,
-                      py: 0.15,
-                      borderRadius: '12px',
-                      fontWeight: 700,
-                      letterSpacing: '0.04em',
-                      bgcolor: withThemeAlpha(theme, theme.palette.primary.main, 0.12),
-                      color: 'primary.main'
-                    }}
-                  >
-                    .pcbackup.json
-                  </Typography>
-                </Stack>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                  {t('settings.backup.nativeDescription')}
-                </Typography>
-              </Box>
+                .pcbackup.json
+              </Typography>
             </Stack>
+          }
+          description={t('settings.backup.nativeDescription')}
+        >
+          <Alert
+            severity="warning"
+            variant="outlined"
+            icon={<WarningAmberOutlinedIcon />}
+            sx={{ mb: 2 }}
+          >
+            {t('settings.backup.securityWarning')}
+          </Alert>
 
-            <Alert
-              severity="warning"
-              variant="outlined"
-              icon={<WarningAmberOutlinedIcon />}
-              sx={{ mb: 2 }}
-            >
-              {t('settings.backup.securityWarning')}
-            </Alert>
+          <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
+            {t('settings.backup.exportKind')}
+          </Typography>
+          <ToggleButtonGroup
+            value={exportKind}
+            exclusive
+            onChange={(_event, value: BackupExportKind | null) => {
+              if (value) {
+                setExportKind(value)
+              }
+            }}
+            fullWidth
+            disabled={isBusy}
+            sx={{
+              mb: 2,
+              '& .MuiToggleButton-root': {
+                py: 1.1,
+                px: 1.25,
+                fontSize: '0.82rem'
+              }
+            }}
+          >
+            <ToggleButton value="full">{t('settings.backup.exportKindFull')}</ToggleButton>
+            <ToggleButton value="proxies">{t('settings.backup.exportKindProxies')}</ToggleButton>
+            <ToggleButton value="settings">{t('settings.backup.exportKindSettings')}</ToggleButton>
+          </ToggleButtonGroup>
 
-            <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
-              {t('settings.backup.exportKind')}
-            </Typography>
-            <ToggleButtonGroup
-              value={exportKind}
-              exclusive
-              onChange={(_event, value: BackupExportKind | null) => {
-                if (value) {
-                  setExportKind(value)
-                }
-              }}
+          <Box sx={{ mb: 2 }}>
+            <BackupPasswordFields
+              enabled={protectWithPassword}
+              onEnabledChange={setProtectWithPassword}
+              password={exportPassword}
+              onPasswordChange={setExportPassword}
+              confirmPassword={exportPasswordConfirm}
+              onConfirmPasswordChange={setExportPasswordConfirm}
+              disabled={isBusy}
+            />
+          </Box>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25}>
+            <Button
+              variant="contained"
               fullWidth
               disabled={isBusy}
-              sx={{
-                mb: 2,
-                '& .MuiToggleButton-root': {
-                  py: 1.1,
-                  px: 1.25,
-                  fontSize: '0.82rem'
-                }
-              }}
+              onClick={handleBackupExport}
+              startIcon={
+                isExporting && exportSelectMode === 'backup' ? (
+                  <CircularProgress size={18} color="inherit" />
+                ) : (
+                  <FileDownloadOutlinedIcon />
+                )
+              }
             >
-              <ToggleButton value="full">{t('settings.backup.exportKindFull')}</ToggleButton>
-              <ToggleButton value="proxies">{t('settings.backup.exportKindProxies')}</ToggleButton>
-              <ToggleButton value="settings">
-                {t('settings.backup.exportKindSettings')}
-              </ToggleButton>
-            </ToggleButtonGroup>
+              {t('settings.backup.export')}
+            </Button>
+            <Button
+              variant="outlined"
+              fullWidth
+              disabled={isBusy}
+              onClick={() => void handleSelectBackupFile()}
+              startIcon={
+                isSelectingFile && !listImportFormat ? (
+                  <CircularProgress size={18} color="inherit" />
+                ) : (
+                  <FileUploadOutlinedIcon />
+                )
+              }
+            >
+              {t('settings.backup.selectFile')}
+            </Button>
+          </Stack>
 
-            <Box sx={{ mb: 2 }}>
-              <BackupPasswordFields
-                enabled={protectWithPassword}
-                onEnabledChange={setProtectWithPassword}
-                password={exportPassword}
-                onPasswordChange={setExportPassword}
-                confirmPassword={exportPasswordConfirm}
-                onConfirmPasswordChange={setExportPasswordConfirm}
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1.5 }}>
+            {t('settings.backup.formatHint')}
+          </Typography>
+        </ContentSection>
+
+        <ContentSection
+          icon={<FileDownloadOutlinedIcon fontSize="small" />}
+          title={t('settings.backup.listFormatsTitle')}
+          description={t('settings.backup.listFormatsDescription')}
+        >
+          <Stack spacing={1.5}>
+            {LIST_FORMATS.map((config) => (
+              <ProxyListFormatCard
+                key={config.format}
+                config={config}
                 disabled={isBusy}
+                isExporting={isExporting && exportSelectMode === config.format}
+                isImporting={isSelectingFile && listImportFormat === config.format}
+                onExport={() => handleListExport(config.format)}
+                onImport={() => void handleSelectListFile(config.format)}
               />
-            </Box>
-
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25}>
-              <Button
-                variant="contained"
-                fullWidth
-                disabled={isBusy}
-                onClick={handleBackupExport}
-                startIcon={
-                  isExporting && exportSelectMode === 'backup' ? (
-                    <CircularProgress size={18} color="inherit" />
-                  ) : (
-                    <FileDownloadOutlinedIcon />
-                  )
-                }
-              >
-                {t('settings.backup.export')}
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
-                disabled={isBusy}
-                onClick={() => void handleSelectBackupFile()}
-                startIcon={
-                  isSelectingFile && !listImportFormat ? (
-                    <CircularProgress size={18} color="inherit" />
-                  ) : (
-                    <FileUploadOutlinedIcon />
-                  )
-                }
-              >
-                {t('settings.backup.selectFile')}
-              </Button>
-            </Stack>
-
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1.5 }}>
-              {t('settings.backup.formatHint')}
-            </Typography>
-          </Box>
-
-          <Divider sx={{ '&::before, &::after': { borderColor: outlineVariant(theme) } }}>
-            <Typography variant="caption" color="text.secondary" sx={{ px: 1, fontWeight: 600 }}>
-              {t('settings.backup.listFormatsTitle')}
-            </Typography>
-          </Divider>
-
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-              {t('settings.backup.listFormatsHeading')}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              {t('settings.backup.listFormatsDescription')}
-            </Typography>
-
-            <Stack spacing={1.5}>
-              {LIST_FORMATS.map((config) => (
-                <ProxyListFormatCard
-                  key={config.format}
-                  config={config}
-                  disabled={isBusy}
-                  isExporting={isExporting && exportSelectMode === config.format}
-                  isImporting={isSelectingFile && listImportFormat === config.format}
-                  onExport={() => handleListExport(config.format)}
-                  onImport={() => void handleSelectListFile(config.format)}
-                />
-              ))}
-            </Stack>
-          </Box>
-        </Stack>
-      </ContentSection>
+            ))}
+          </Stack>
+        </ContentSection>
+      </SettingsCardList>
 
       <BackupExportProxiesDialog
         open={exportSelectOpen}

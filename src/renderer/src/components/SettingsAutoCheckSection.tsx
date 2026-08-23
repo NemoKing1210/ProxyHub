@@ -24,6 +24,7 @@ import {
   type AutoCheckScope
 } from '../../../shared/types/settings'
 import ContentSection from './ContentSection'
+import SettingsCardList from './SettingsCardList'
 import AutoCheckCountdownBadge from './AutoCheckCountdownBadge'
 import ProxyGroupAvatar from './ProxyGroupAvatar'
 import SettingsSwitchCard from './SettingsSwitchCard'
@@ -116,234 +117,227 @@ function SettingsAutoCheckSection({
   const showGroupsEmpty = scope === 'groups' && groups.length === 0
 
   return (
-    <ContentSection
-      icon={<AutorenewOutlinedIcon fontSize="small" />}
-      title={
-        <Stack
-          direction="row"
-          spacing={1}
-          useFlexGap
-          sx={{ alignItems: 'center', flexWrap: 'wrap' }}
-        >
-          <span>{t('settings.sections.autoCheck')}</span>
-          <AutoCheckCountdownBadge enabled={enabled} />
-        </Stack>
-      }
-      description={t('settings.sections.autoCheckDescription')}
-      showHeader={false}
-    >
-      <Stack spacing={2}>
-        <Box
-          sx={{
-            borderRadius: '16px'
-          }}
-        >
-          <SettingsSwitchCard
-            icon={<AutorenewOutlinedIcon fontSize="small" />}
-            title={t('settings.autoCheckEnabled')}
-            hint={t('settings.autoCheckEnabledHint')}
-            checked={enabled}
-            onChange={onEnabledChange}
-            clickable
-          />
-
-          <Collapse in={enabled} mountOnEnter unmountOnExit>
-            <Box
-              sx={{
-                borderTop: `1px solid ${outlineVariant(theme)}`,
-                bgcolor: surfaceContainer(theme, 'default'),
-                px: 1.75,
-                py: 2.25
-              }}
-            >
-              <Stack spacing={2.75}>
-                <Box>
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ mb: 1.25, alignItems: 'center', justifyContent: 'space-between' }}
-                  >
-                    <Typography variant="subtitle2">{t('settings.autoCheckInterval')}</Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontWeight: 700,
-                        fontFamily: 'monospace',
-                        px: 1.5,
-                        py: 0.5,
-                        borderRadius: '12px',
-                        bgcolor: surfaceContainer(theme, 'high'),
-                        color: 'primary.main'
-                      }}
-                    >
-                      {formatIntervalLabel(displayedInterval)}
-                    </Typography>
-                  </Stack>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {t('settings.autoCheckIntervalHint')}
-                  </Typography>
-                  <Slider
-                    value={displayedInterval}
-                    onChange={(_event, value) => {
-                      const minutes = Array.isArray(value) ? value[0] : value
-                      setIsDraggingInterval(true)
-                      setIntervalDraft(clampIntervalMinutes(minutes))
-                    }}
-                    onChangeCommitted={() => {
-                      setIsDraggingInterval(false)
-                      if (intervalDraft !== intervalMinutes) {
-                        onIntervalChange(intervalDraft)
-                      }
-                    }}
-                    min={AUTO_CHECK_INTERVAL_MIN}
-                    max={360}
-                    step={1}
-                    marks={INTERVAL_MARKS}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => formatIntervalLabel(value)}
-                    sx={{ px: 0.5 }}
-                  />
-                </Box>
-
-                <Box>
-                  <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
-                    {t('settings.autoCheckScope')}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                    {t('settings.autoCheckScopeHint')}
-                  </Typography>
-                  <ToggleButtonGroup
-                    value={scope}
-                    exclusive
-                    onChange={handleScopeChange}
-                    fullWidth
-                    sx={{
-                      '& .MuiToggleButton-root': {
-                        py: 1.35,
-                        gap: 0.75,
-                        flexDirection: 'column',
-                        lineHeight: 1.2
-                      }
-                    }}
-                  >
-                    <ToggleButton value="all">
-                      <ViewListOutlinedIcon fontSize="small" />
-                      {t('settings.autoCheckScopeAll')}
-                    </ToggleButton>
-                    <ToggleButton value="favorites">
-                      <StarOutlinedIcon fontSize="small" />
-                      {t('settings.autoCheckScopeFavorites')}
-                    </ToggleButton>
-                    <ToggleButton value="groups">
-                      <FolderOutlinedIcon fontSize="small" />
-                      {t('settings.autoCheckScopeGroups')}
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </Box>
-
-                {scope === 'groups' && (
-                  <Box>
-                    {showGroupsEmpty ? (
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ fontStyle: 'italic' }}
-                      >
-                        {t('settings.autoCheckGroupsEmpty')}
-                      </Typography>
-                    ) : (
-                      <Stack spacing={0.75}>
-                        {groups.map((group) => {
-                          const checked = selectedGroupSet.has(group.id)
-
-                          return (
-                            <Box
-                              key={group.id}
-                              onClick={() => handleGroupToggle(group.id, !checked)}
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.25,
-                                px: 1.5,
-                                py: 1.1,
-                                borderRadius: '12px',
-                                cursor: 'pointer',
-                                bgcolor: checked
-                                  ? surfaceContainer(theme, 'high')
-                                  : surfaceContainer(theme, 'low'),
-                                opacity: checked ? 1 : 0.82,
-                                transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}, opacity ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
-                                '&:hover': {
-                                  bgcolor: surfaceContainer(theme, 'default'),
-                                  transform: 'translateX(2px)'
-                                }
-                              }}
-                            >
-                              <Checkbox
-                                checked={checked}
-                                size="small"
-                                tabIndex={-1}
-                                sx={{ p: 0.25, flexShrink: 0 }}
-                                onChange={(event) => {
-                                  event.stopPropagation()
-                                  handleGroupToggle(group.id, event.target.checked)
-                                }}
-                              />
-                              <ProxyGroupAvatar group={group} size={32} iconSize={18} />
-                              <Typography
-                                variant="body2"
-                                sx={{
-                                  flex: 1,
-                                  fontWeight: checked ? 600 : 500,
-                                  color: checked ? 'text.primary' : 'text.secondary'
-                                }}
-                              >
-                                {group.name}
-                              </Typography>
-                              {checked && (
-                                <CheckCircleOutlinedIcon
-                                  sx={{ fontSize: 18, color: 'primary.main', flexShrink: 0 }}
-                                />
-                              )}
-                            </Box>
-                          )
-                        })}
-                      </Stack>
-                    )}
-                  </Box>
-                )}
-
-                {showFavoritesWarning && (
-                  <Typography variant="body2" color="warning.main">
-                    {t('settings.autoCheckNoFavorites')}
-                  </Typography>
-                )}
-
-                {showGroupsWarning && !showGroupsEmpty && (
-                  <Typography variant="body2" color="warning.main">
-                    {t('settings.autoCheckNoGroupsSelected')}
-                  </Typography>
-                )}
-              </Stack>
-            </Box>
-          </Collapse>
-        </Box>
+    <SettingsCardList>
+      <ContentSection
+        icon={<AutorenewOutlinedIcon fontSize="small" />}
+        title={
+          <Stack
+            direction="row"
+            spacing={1}
+            useFlexGap
+            sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+          >
+            <span>{t('settings.autoCheckEnabled')}</span>
+            <AutoCheckCountdownBadge enabled={enabled} />
+          </Stack>
+        }
+        description={t('settings.autoCheckEnabledHint')}
+      >
+        <SettingsSwitchCard
+          icon={<AutorenewOutlinedIcon fontSize="small" />}
+          title={t('settings.autoCheckEnabled')}
+          hint={t('settings.autoCheckEnabledHint')}
+          checked={enabled}
+          onChange={onEnabledChange}
+          clickable
+        />
 
         <Collapse in={enabled} mountOnEnter unmountOnExit>
-          <Box sx={{ mt: 0.75, ml: { xs: 1, sm: 2 } }}>
-            <SettingsSwitchCard
-              icon={<NotificationsOutlinedIcon fontSize="small" />}
-              accent="info"
-              title={t('settings.autoCheckNotifications')}
-              hint={t('settings.autoCheckNotificationsHint')}
-              checked={notifications}
-              onChange={onNotificationsChange}
-              clickable
-            />
+          <Box
+            sx={{
+              borderTop: `1px solid ${outlineVariant(theme)}`,
+              bgcolor: surfaceContainer(theme, 'default'),
+              px: 1.75,
+              py: 2.25,
+              mt: 0.75
+            }}
+          >
+            <Stack spacing={2.75}>
+              <Box>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ mb: 1.25, alignItems: 'center', justifyContent: 'space-between' }}
+                >
+                  <Typography variant="subtitle2">{t('settings.autoCheckInterval')}</Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 700,
+                      fontFamily: 'monospace',
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: '12px',
+                      bgcolor: surfaceContainer(theme, 'high'),
+                      color: 'primary.main'
+                    }}
+                  >
+                    {formatIntervalLabel(displayedInterval)}
+                  </Typography>
+                </Stack>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  {t('settings.autoCheckIntervalHint')}
+                </Typography>
+                <Slider
+                  value={displayedInterval}
+                  onChange={(_event, value) => {
+                    const minutes = Array.isArray(value) ? value[0] : value
+                    setIsDraggingInterval(true)
+                    setIntervalDraft(clampIntervalMinutes(minutes))
+                  }}
+                  onChangeCommitted={() => {
+                    setIsDraggingInterval(false)
+                    if (intervalDraft !== intervalMinutes) {
+                      onIntervalChange(intervalDraft)
+                    }
+                  }}
+                  min={AUTO_CHECK_INTERVAL_MIN}
+                  max={360}
+                  step={1}
+                  marks={INTERVAL_MARKS}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(value) => formatIntervalLabel(value)}
+                  sx={{ px: 0.5 }}
+                />
+              </Box>
+
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 0.75 }}>
+                  {t('settings.autoCheckScope')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                  {t('settings.autoCheckScopeHint')}
+                </Typography>
+                <ToggleButtonGroup
+                  value={scope}
+                  exclusive
+                  onChange={handleScopeChange}
+                  fullWidth
+                  sx={{
+                    '& .MuiToggleButton-root': {
+                      py: 1.35,
+                      gap: 0.75,
+                      flexDirection: 'column',
+                      lineHeight: 1.2
+                    }
+                  }}
+                >
+                  <ToggleButton value="all">
+                    <ViewListOutlinedIcon fontSize="small" />
+                    {t('settings.autoCheckScopeAll')}
+                  </ToggleButton>
+                  <ToggleButton value="favorites">
+                    <StarOutlinedIcon fontSize="small" />
+                    {t('settings.autoCheckScopeFavorites')}
+                  </ToggleButton>
+                  <ToggleButton value="groups">
+                    <FolderOutlinedIcon fontSize="small" />
+                    {t('settings.autoCheckScopeGroups')}
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Box>
+
+              {scope === 'groups' && (
+                <Box>
+                  {showGroupsEmpty ? (
+                    <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                      {t('settings.autoCheckGroupsEmpty')}
+                    </Typography>
+                  ) : (
+                    <Stack spacing={0.75}>
+                      {groups.map((group) => {
+                        const checked = selectedGroupSet.has(group.id)
+
+                        return (
+                          <Box
+                            key={group.id}
+                            onClick={() => handleGroupToggle(group.id, !checked)}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1.25,
+                              px: 1.5,
+                              py: 1.1,
+                              borderRadius: '12px',
+                              cursor: 'pointer',
+                              bgcolor: checked
+                                ? surfaceContainer(theme, 'high')
+                                : surfaceContainer(theme, 'low'),
+                              opacity: checked ? 1 : 0.82,
+                              transition: `background-color ${MD3_DURATION.short4}ms ${MD3_EASING.standard}, transform ${MD3_DURATION.short3}ms ${MD3_EASING.standard}, opacity ${MD3_DURATION.short4}ms ${MD3_EASING.standard}`,
+                              '&:hover': {
+                                bgcolor: surfaceContainer(theme, 'default'),
+                                transform: 'translateX(2px)'
+                              }
+                            }}
+                          >
+                            <Checkbox
+                              checked={checked}
+                              size="small"
+                              tabIndex={-1}
+                              sx={{ p: 0.25, flexShrink: 0 }}
+                              onChange={(event) => {
+                                event.stopPropagation()
+                                handleGroupToggle(group.id, event.target.checked)
+                              }}
+                            />
+                            <ProxyGroupAvatar group={group} size={32} iconSize={18} />
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                flex: 1,
+                                fontWeight: checked ? 600 : 500,
+                                color: checked ? 'text.primary' : 'text.secondary'
+                              }}
+                            >
+                              {group.name}
+                            </Typography>
+                            {checked && (
+                              <CheckCircleOutlinedIcon
+                                sx={{ fontSize: 18, color: 'primary.main', flexShrink: 0 }}
+                              />
+                            )}
+                          </Box>
+                        )
+                      })}
+                    </Stack>
+                  )}
+                </Box>
+              )}
+
+              {showFavoritesWarning && (
+                <Typography variant="body2" color="warning.main">
+                  {t('settings.autoCheckNoFavorites')}
+                </Typography>
+              )}
+
+              {showGroupsWarning && !showGroupsEmpty && (
+                <Typography variant="body2" color="warning.main">
+                  {t('settings.autoCheckNoGroupsSelected')}
+                </Typography>
+              )}
+            </Stack>
           </Box>
         </Collapse>
-      </Stack>
-    </ContentSection>
+      </ContentSection>
+
+      <ContentSection
+        icon={<NotificationsOutlinedIcon fontSize="small" />}
+        title={t('settings.autoCheckNotifications')}
+        description={t('settings.autoCheckNotificationsHint')}
+      >
+        <SettingsSwitchCard
+          icon={<NotificationsOutlinedIcon fontSize="small" />}
+          accent="info"
+          title={t('settings.autoCheckNotifications')}
+          hint={t('settings.autoCheckNotificationsHint')}
+          checked={notifications}
+          disabled={!enabled}
+          onChange={onNotificationsChange}
+          clickable
+        />
+      </ContentSection>
+    </SettingsCardList>
   )
 }
 
