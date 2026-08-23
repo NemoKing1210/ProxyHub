@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { useSettingsStore } from '../store/settingsStore'
-import { isWindows } from '../utils/platform'
+import { useSettingsStore } from '../../store/settingsStore'
+import { isWindows } from '../../utils/platform'
 
 function NativeTitleBarSync(): null {
   const themeMode = useSettingsStore((state) => state.settings.theme)

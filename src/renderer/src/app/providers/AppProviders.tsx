@@ -1,35 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript'
-import { useColorScheme } from '@mui/material/styles'
 import { I18nextProvider } from 'react-i18next'
 import { HashRouter } from 'react-router-dom'
-import i18n from '../i18n'
+import i18n from '../../i18n/index'
 import App from '../App'
-import AppLoadingScreen from '../components/AppLoadingScreen'
-import AutoCheckSync from '../components/AutoCheckSync'
-import CheckNotificationSync from '../components/CheckNotificationSync'
-import CheckToastHost from '../components/CheckToastHost'
-import NativeTitleBarSync from '../components/NativeTitleBarSync'
-import ProxyDataSync from '../components/ProxyDataSync'
-import SyncBackgroundSync from '../components/SyncBackgroundSync'
-import SyncOnChangeSync from '../components/SyncOnChangeSync'
-import { useGroupStore } from '../store/groupStore'
-import { useProxyStore } from '../store/proxyStore'
-import { useSettingsStore } from '../store/settingsStore'
-import { createAppTheme } from '../theme'
+import AppLoadingScreen from '../../components/AppLoadingScreen'
+import AutoCheckSync from '../bootstrap/AutoCheckSync'
+import CheckNotificationSync from '../bootstrap/CheckNotificationSync'
+import CheckToastHost from '../bootstrap/CheckToastHost'
+import NativeTitleBarSync from '../bootstrap/NativeTitleBarSync'
+import ProxyDataSync from '../bootstrap/ProxyDataSync'
+import SyncBackgroundSync from '../bootstrap/SyncBackgroundSync'
+import SyncOnChangeSync from '../bootstrap/SyncOnChangeSync'
+import ThemeModeSync from './ThemeModeSync'
+import { useGroupStore } from '../../store/groupStore'
+import { useProxyStore } from '../../store/proxyStore'
+import { useSettingsStore } from '../../store/settingsStore'
+import { createAppTheme } from '../../theme'
 import { RTL_LANGUAGES } from '@shared/types/settings'
-
-function ThemeModeSync(): null {
-  const themeMode = useSettingsStore((state) => state.settings.theme)
-  const { setMode } = useColorScheme()
-
-  useEffect(() => {
-    setMode(themeMode)
-  }, [themeMode, setMode])
-
-  return null
-}
 
 function AppProviders(): React.JSX.Element {
   const isReady = useSettingsStore((state) => state.isReady)

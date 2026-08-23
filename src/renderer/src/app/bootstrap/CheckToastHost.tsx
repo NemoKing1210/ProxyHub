@@ -4,8 +4,8 @@ import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import { Alert, AlertTitle, Snackbar, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import type { ToastPosition } from '@shared/types/settings'
-import { useSettingsStore } from '../store/settingsStore'
-import { useToastStore } from '../store/toastStore'
+import { useSettingsStore } from '../../store/settingsStore'
+import { useToastStore } from '../../store/toastStore'
 
 const severityIcons = {
   success: CheckCircleOutlinedIcon,

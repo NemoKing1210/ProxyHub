@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { resolveAutoCheckProxyIds } from '@shared/utils/auto-check-scope'
-import { useAutoCheckStore } from '../store/autoCheckStore'
-import { useGroupStore } from '../store/groupStore'
-import { useProxyStore } from '../store/proxyStore'
-import { useSettingsStore } from '../store/settingsStore'
+import { useAutoCheckStore } from '../../store/autoCheckStore'
+import { useGroupStore } from '../../store/groupStore'
+import { useProxyStore } from '../../store/proxyStore'
+import { useSettingsStore } from '../../store/settingsStore'
 
 function serializeAutoCheckGroupIds(groupIds: string[]): string {
   return groupIds.join('\0')

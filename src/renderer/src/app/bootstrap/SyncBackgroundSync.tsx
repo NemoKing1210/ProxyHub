@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { SyncPublicState } from '@shared/types/sync'
-import { useProxyStore } from '../store/proxyStore'
-import { pushSyncWithActivity } from '../utils/sync-push'
+import { useProxyStore } from '../../store/proxyStore'
+import { pushSyncWithActivity } from '../../utils/sync-push'
 
 function SyncBackgroundSync(): null {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)

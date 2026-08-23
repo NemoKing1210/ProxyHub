@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useProxyStore } from '../store/proxyStore'
-import { useSettingsStore } from '../store/settingsStore'
+import { useProxyStore } from '../../store/proxyStore'
+import { useSettingsStore } from '../../store/settingsStore'
 import {
   buildBatchCheckToast,
   buildSingleCheckToast,
   type BatchCheckResultEntry
-} from '../utils/check-toast'
-import { showCheckNotification } from '../utils/show-check-notification'
+} from '../../utils/check-toast'
+import { showCheckNotification } from '../../utils/show-check-notification'
 
 interface BatchCheckState {
   alive: number

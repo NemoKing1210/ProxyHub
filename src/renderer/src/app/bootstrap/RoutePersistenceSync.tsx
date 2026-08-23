@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import type { AppRoute } from '@shared/types/settings'
-import { useSettingsStore } from '../store/settingsStore'
+import { useSettingsStore } from '../../store/settingsStore'
 
 const VALID_ROUTES: ReadonlySet<AppRoute> = new Set(['/', '/settings'])
 

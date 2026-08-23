@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useProxyStore } from '../store/proxyStore'
+import { useProxyStore } from '../../store/proxyStore'
 
 function ProxyDataSync(): null {
   const loadProxies = useProxyStore((state) => state.loadProxies)

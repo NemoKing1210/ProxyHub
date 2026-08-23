@@ -10,7 +10,7 @@ import PageTransition from './PageTransition'
 import AppNavigation from './AppNavigation'
 import AppTitleBar from './AppTitleBar'
 import SyncActivityIndicator from './SyncActivityIndicator'
-import TrayNavigationSync from './TrayNavigationSync'
+import TrayNavigationSync from '../app/bootstrap/TrayNavigationSync'
 
 function AppLayout(): React.JSX.Element {
   const { t } = useTranslation()
