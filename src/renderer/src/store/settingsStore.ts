@@ -10,7 +10,7 @@ import {
   type ThemeMode
 } from '@shared/types/settings'
 import { setAppLanguage } from '../i18n'
-import { notifySyncDataChange } from '../utils/sync-on-change'
+import { notifySyncDataChange } from '../services/sync-on-change'
 
 interface SettingsState {
   settings: AppSettings

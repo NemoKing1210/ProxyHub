@@ -1,7 +1,7 @@
 import { Box, CircularProgress } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { getPalette } from '../../theme'
-import { isWindows } from '../../utils/platform'
+import { isWindows } from '../../lib/platform'
 import AppTitleBar from './AppTitleBar'
 
 function AppLoadingScreen(): React.JSX.Element {

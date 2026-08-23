@@ -30,7 +30,7 @@ import type {
 import type { ProxyGroup } from '@shared/types/proxy-group'
 import { formatProxyAddress } from '@shared/utils/proxy-format'
 import { outlineVariant, surfaceContainer } from '../../../theme'
-import { getProxyProtocolStyles } from '../../../utils/proxy-protocol-styles'
+import { getProxyProtocolStyles } from '../../../lib/proxy-protocol-styles'
 import CountryFlag from '../../../components/ui/CountryFlag'
 
 const PAGE_SIZE = 50

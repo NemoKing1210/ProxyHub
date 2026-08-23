@@ -1,4 +1,3 @@
-import { useMediaQuery } from '@mui/material'
 import type { Transition, Variants } from 'framer-motion'
 import { MD3_DURATION } from '../theme'
 
@@ -29,8 +28,4 @@ export const proxyCardVariants: Variants = {
   initial: { opacity: 0, y: 16, scale: 0.985 },
   animate: { opacity: 1, y: 0, scale: 1 },
   exit: { opacity: 0, y: -12, scale: 0.985 }
-}
-
-export function usePrefersReducedMotion(): boolean {
-  return useMediaQuery('(prefers-reduced-motion: reduce)')
 }

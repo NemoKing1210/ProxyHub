@@ -2,7 +2,7 @@ import { Box, Collapse, LinearProgress, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { elevationShadow, getPalette, MD3_DURATION, MD3_EASING, withThemeAlpha } from '../../theme'
-import type { ProxyCheckProgress } from '../../utils/proxy-check-progress'
+import type { ProxyCheckProgress } from '../../lib/proxy-check-progress'
 
 interface ProxyCheckProgressBarProps {
   progress: ProxyCheckProgress | null

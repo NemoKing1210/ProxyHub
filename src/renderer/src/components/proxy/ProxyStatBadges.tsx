@@ -11,17 +11,13 @@ import { useTranslation } from 'react-i18next'
 import type { Proxy } from '@shared/types/proxy'
 import { isProxyEnabled } from '@shared/utils/proxy-enabled'
 import { getPalette, surfaceContainer, withThemeAlpha } from '../../theme'
-import type { ProxyGroupBadgeFilter } from '../../utils/proxy-group-badge-filter'
+import type { ProxyGroupBadgeFilter } from '../../lib/proxy-group-badge-filter'
 import {
   isProxyGroupBadgeFilterActive,
   toggleProxyGroupBadgeFilter
-} from '../../utils/proxy-group-badge-filter'
-import {
-  badgeTransition,
-  listLayoutTransition,
-  statBadgeVariants,
-  usePrefersReducedMotion
-} from '../../utils/list-motion'
+} from '../../lib/proxy-group-badge-filter'
+import { badgeTransition, listLayoutTransition, statBadgeVariants } from '../../lib/list-motion'
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { AnimatePresence, motion } from 'framer-motion'
 
 interface StatBadgeItem {

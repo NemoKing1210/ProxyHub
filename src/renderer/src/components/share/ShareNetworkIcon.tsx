@@ -11,7 +11,7 @@ import {
   SiWhatsapp,
   SiX
 } from 'react-icons/si'
-import type { ShareChannelNetwork } from '../../utils/proxy-share-channels'
+import type { ShareChannelNetwork } from '../../services/proxy-share-channels'
 
 type SocialNetwork = Exclude<ShareChannelNetwork, 'email' | 'system'>
 

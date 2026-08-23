@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 import type { ChangelogEntry } from '@shared/types/app'
 import { resolveGitHubAvatarUrl, resolveGitHubProfileUrl } from '@shared/utils/github'
 import { MD3_DURATION, MD3_EASING, surfaceContainer } from '../../../theme'
-import { getListCardPosition, getListCardRadius } from '../../../utils/card-list'
+import { getListCardPosition, getListCardRadius } from '../../../lib/card-list'
 
 interface ChangelogViewProps {
   version: string

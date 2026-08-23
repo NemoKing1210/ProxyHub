@@ -38,7 +38,7 @@ import {
   type ProxyStatusFilter,
   countActiveFilters,
   hasActiveFilters
-} from '../../utils/filter-proxies'
+} from '../../lib/filter-proxies'
 import { surfaceContainer } from '../../theme'
 import ContentSection from '../ui/ContentSection'
 import CountryFlag from '../ui/CountryFlag'

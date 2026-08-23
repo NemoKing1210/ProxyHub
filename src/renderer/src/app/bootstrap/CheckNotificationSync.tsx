@@ -6,8 +6,8 @@ import {
   buildBatchCheckToast,
   buildSingleCheckToast,
   type BatchCheckResultEntry
-} from '../../utils/check-toast'
-import { showCheckNotification } from '../../utils/show-check-notification'
+} from '../../lib/check-toast'
+import { showCheckNotification } from '../../services/show-check-notification'
 
 interface BatchCheckState {
   alive: number

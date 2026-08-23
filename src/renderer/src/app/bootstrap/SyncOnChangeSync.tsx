@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { startSyncOnChangeScheduler } from '../../utils/sync-on-change'
+import { startSyncOnChangeScheduler } from '../../services/sync-on-change'
 
 function SyncOnChangeSync(): null {
   useEffect(() => startSyncOnChangeScheduler(), [])

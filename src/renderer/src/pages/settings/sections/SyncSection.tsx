@@ -44,7 +44,7 @@ import SettingsSwitchCard from '../../../components/settings/SettingsSwitchCard'
 import SyncStatusSection from './SyncStatusSection'
 import SyncPullPreviewDialog from './SyncPullPreviewDialog'
 import { surfaceContainer, withThemeAlpha } from '../../../theme'
-import { pushSyncWithActivity } from '../../../utils/sync-push'
+import { pushSyncWithActivity } from '../../../services/sync-push'
 import { BACKUP_MIN_PASSWORD_LENGTH } from '@shared/constants/backup-crypto'
 
 interface SyncSectionProps {

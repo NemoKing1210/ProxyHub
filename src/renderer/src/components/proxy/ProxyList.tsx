@@ -46,25 +46,22 @@ import { useProxyListViewState } from '../../hooks/useProxyListViewState'
 import { useGroupStore } from '../../store/groupStore'
 import { useProxyStore } from '../../store/proxyStore'
 import { useSettingsStore } from '../../store/settingsStore'
-import { filterProxies, hasActiveFilters } from '../../utils/filter-proxies'
-import {
-  listItemTransition,
-  listLayoutTransition,
-  usePrefersReducedMotion
-} from '../../utils/list-motion'
-import { sortProxies, sortProxiesByFavorite } from '../../utils/sort-proxies'
+import { filterProxies, hasActiveFilters } from '../../lib/filter-proxies'
+import { listItemTransition, listLayoutTransition } from '../../lib/list-motion'
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
+import { sortProxies, sortProxiesByFavorite } from '../../lib/sort-proxies'
 import {
   organizeProxiesByGroup,
   type ProxyGroupSection as OrganizedGroupSection
-} from '../../utils/organize-proxies-by-group'
-import { getListCardPosition, getListCardRadius } from '../../utils/card-list'
+} from '../../lib/organize-proxies-by-group'
+import { getListCardPosition, getListCardRadius } from '../../lib/card-list'
 import {
   UNGROUPED_DROP_ZONE_ID,
   getGroupDropZoneId,
   groupsMatch,
   isHoveringGroup,
   resolveDropTargetGroupId
-} from '../../utils/proxy-dnd'
+} from '../../lib/proxy-dnd'
 import {
   MD3_DURATION,
   MD3_EASING,
@@ -72,7 +69,7 @@ import {
   surfaceContainer,
   surfaceTint
 } from '../../theme'
-import type { ProxyFormValues } from '../../validation/proxySchema'
+import type { ProxyFormValues } from '../../lib/proxy-schema'
 import ProxyCardDragOverlay from './ProxyCardDragOverlay'
 import ProxyListRow from './ProxyListRow'
 import ProxyDeleteConfirmDialog from './ProxyDeleteConfirmDialog'

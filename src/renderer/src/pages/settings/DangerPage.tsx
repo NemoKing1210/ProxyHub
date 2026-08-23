@@ -3,7 +3,7 @@ import DangerSection from './sections/DangerSection'
 import { useGroupStore } from '../../store/groupStore'
 import { useProxyStore } from '../../store/proxyStore'
 import { useSettingsStore } from '../../store/settingsStore'
-import { notifySyncDataChange } from '../../utils/sync-on-change'
+import { notifySyncDataChange } from '../../services/sync-on-change'
 import { useSettingsFeedback } from '../../hooks/useSettingsFeedback'
 
 function DangerPage(): React.JSX.Element {

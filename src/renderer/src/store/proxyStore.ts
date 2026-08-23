@@ -20,13 +20,13 @@ import {
   cancelDebouncedPersist,
   flushDebouncedPersist,
   scheduleDebouncedPersist
-} from '../utils/debounced-persist'
-import { notifySyncDataChange } from '../utils/sync-on-change'
+} from '../services/debounced-persist'
+import { notifySyncDataChange } from '../services/sync-on-change'
 import {
   clearProxySearchHaystackCache,
   invalidateProxySearchHaystack,
   pruneProxySearchHaystackCache
-} from '../utils/proxy-search-cache'
+} from '../lib/proxy-search-cache'
 
 interface ProxyState {
   proxies: Proxy[]

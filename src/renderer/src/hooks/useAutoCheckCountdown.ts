@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAutoCheckStore } from '../store/autoCheckStore'
 import { useProxyStore } from '../store/proxyStore'
-import { formatCountdown } from '../utils/format-countdown'
+import { formatCountdown } from '../lib/format-countdown'
 
 export function useAutoCheckCountdown(enabled: boolean): string | null {
   const { t } = useTranslation()

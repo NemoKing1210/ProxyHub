@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useSettingsSections } from './sectionsRegistry'
-import { getListCardPosition, getListCardRadius } from '../../utils/card-list'
+import { getListCardPosition, getListCardRadius } from '../../lib/card-list'
 import { surfaceContainer, withThemeAlpha } from '../../theme'
 
 /**

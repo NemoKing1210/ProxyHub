@@ -3,12 +3,8 @@ import { memo, useCallback } from 'react'
 import type { ProxyIconId } from '@shared/types/proxy'
 import type { ProxyGroup } from '@shared/types/proxy-group'
 import type { ProxyCardViewMode } from '@shared/types/settings'
-import {
-  listItemTransition,
-  listLayoutTransition,
-  proxyCardVariants,
-  usePrefersReducedMotion
-} from '../../utils/list-motion'
+import { listItemTransition, listLayoutTransition, proxyCardVariants } from '../../lib/list-motion'
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { useProxyStore } from '../../store/proxyStore'
 import DraggableProxyCard from './DraggableProxyCard'
 import ProxyCard from './ProxyCard'
